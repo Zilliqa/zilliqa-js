@@ -1,4 +1,4 @@
-# Z-Library API
+# Zilliqa-JavaScript-Library API
 
 ## API List
 
