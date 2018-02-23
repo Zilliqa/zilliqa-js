@@ -386,3 +386,6 @@ none
 **Returns**
 
 The node object
+
+## Licence 
+You can view our [licence here](https://github.com/Zilliqa/zilliqa/blob/master/LICENSE).
