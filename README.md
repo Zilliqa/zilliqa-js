@@ -97,10 +97,7 @@ Each transaction is uniquely identified by a
 
 ### getTransaction
 
-Returns the information about a transaction requested by 
- - transaction hash
- - block hash + transaction index
- - block number + transaction index
+Returns the information about a transaction requested by transaction hash
 
 **Parameters**
 
@@ -122,12 +119,10 @@ Object -
 
 ### getDsBlock
 
-Returns information about a Directory Service block by block hash or block number.
+Returns information about a Directory Service block by block number.
 
 **Parameters**
 
-DATA, 32 Bytes - Block hash
-params: '0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331'
 DATA, 32 Bytes - Block number
 params: '3'
 
@@ -154,12 +149,12 @@ signature:
 
 ### getTxBlock
 
-Returns information about a Transaction block by block hash or block number.
+Returns information about a Transaction block by block number.
 
 **Parameters**
 
-DATA, 32 Bytes - Block hash - '0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331'
-DATA, 32 Bytes - Block number - '3'
+DATA, 32 Bytes - Block number
+params: '3'
 
 **Returns**
 
@@ -256,11 +251,11 @@ QUANTITY - integer of the number of transactions send from this address
 
 ### getBlockTransactionCount
 
-Get the number of transactions in a blocks specified using block hash or number
+Get the number of transactions in a blocks specified using block number
 
 **Parameters**
 
-STRING - block number integer or block hash
+STRING - block number integer
 
 **Returns**
 
