@@ -16,11 +16,11 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
-    "browserify": "^16.1.0",
-    "jquery": "^3.3.1",
-    "valid-url": "^1.0.9",
     "bcrypto": "^0.0.2",
     "bn.js": "^4.11.8",
-    "elliptic": "^6.4.0"
+    "browserify": "^16.1.0",
+    "elliptic": "^6.4.0",
+    "request": "^2.85.0",
+    "valid-url": "^1.0.9"
   }
 }
