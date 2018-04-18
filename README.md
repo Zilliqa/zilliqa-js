@@ -2,9 +2,7 @@
 
 ## API List
 
-- getClientVersion
 - getNetworkId
-- getProtocolVersion
 - createTransaction
 - getTransaction
 - getDsBlock
@@ -12,13 +10,6 @@
 - getLatestDsBlock
 - getLatestTxBlock
 - getBalance
-- getGasPrice
-- getTransactionHistory
-- getBlockTransactionCount
-- createMessage
-- getTransactionReceipt
-- isNodeMining
-- getHashrate
 
 ## Library Methods
 
@@ -26,24 +17,10 @@
 - isConnected
 - setNode
 - currentNode
-- resetNode
 
 
 
 ## API Reference
-
-### getClientVersion
-
-Returns the current client version.
-
-**Parameters**
-
-none
-
-**Returns**
-
-String - The current client version
-
 
 ### getNetworkId
 
@@ -59,19 +36,6 @@ String - The current network id.
 
 "1": Mainnet
 "2": Testnet
-
-
-### getProtocolVersion
-
-Returns the zilliqa protocol version of the client.
-
-**Parameters**
-
-none
-
-**Returns**
-
-String - The current zilliqa protocol version
 
 
 ### createTransaction
@@ -221,111 +185,6 @@ none
 **Returns**
 
 TX Block object
-
-
-### getGasPrice
-
-Returns the current gas price per ZIL.
-
-**Parameters**
-
-none
-
-**Returns**
-
-Number - integer of the current gas price in zil
-
-
-### getTransactionHistory
-
-Returns the list of transactions sent from an address
-
-**Parameters**
-
-DATA - address.
-
-**Returns**
-
-QUANTITY - integer of the number of transactions send from this address
-
-
-### getBlockTransactionCount
-
-Get the number of transactions in a blocks specified using block number
-
-**Parameters**
-
-STRING - block number integer
-
-**Returns**
-
-QUANTITY - integer of the number of transactions in this block.
-
-
-### createMessage
-
-Executes a new message call immediately without creating a transaction
-
-**Parameters**
-
-Object - 
-- from: (optional) The address the transaction is sent from
-- to: The address the transaction is directed to
-- gas: (optional) Integer of the gas provided for the transaction execution. The message call consumes zero gas, but this parameter may be needed by some executions/methods
-- gasPrice: (optional) Integer of the gasPrice used for each paid gas
-- value: (optional) Integer of the value send with this transaction
-- data: (optional) Hash of the method signature and encoded parameters
-
-**Returns**
-
-DATA - the return value of executed contract
-
-
-### getTransactionReceipt
-
-Returns the receipt of a transaction by transaction hash. This receipt is not available for pending transactions
-
-**Parameters**
-
-DATA - hash of a transaction
-
-**Returns**
-
-Object -
-- transactionHash: hash of the transaction
-- transactionIndex: integer of the transactions index position in the block
-- blockHash: hash of the block where this transaction was mined
-- blockNumber: block number where this transaction was mined
-- cumulativeGasUsed: The total amount of gas used when this transaction was executed in the block
-- gasUsed: The amount of gas used by this specific transaction alone
-- contractAddress: The contract address created, if the transaction was a contract creation, else null
-
-
-
-### isNodeMining
-
-Returns true if client is actively mining new blocks.
-
-**Parameters**
-
-none
-
-**Returns**
-
-Boolean - returns true of the client is mining, otherwise false.
-
-
-### getHashrate
-
-Returns the number of hashes per second that the node is mining with
-
-**Parameters**
-
-none
-
-**Returns**
-
-QUANTITY - number of hashes per second.
 
 
 
