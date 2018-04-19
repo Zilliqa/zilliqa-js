@@ -1,5 +1,10 @@
 # Zilliqa-JavaScript-Library API
 
+## Build
+
+Execute `npm install`, followed by `npm install -g gulp` and `gulp build` to generate build/z-lib.min.js.
+
+
 ## API List
 
 - getNetworkId
