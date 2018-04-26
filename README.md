@@ -14,6 +14,8 @@ Execute `npm install`, followed by `npm install -g gulp` and `gulp build` to gen
 - getTxBlock
 - getLatestDsBlock
 - getLatestTxBlock
+- getNumTxnsTxEpoch
+- getNumTxnsDSEpoch
 - getBalance
 
 ## Library Methods
@@ -190,6 +192,34 @@ none
 **Returns**
 
 TX Block object
+
+
+### getNumTxnsTxEpoch
+
+Returns the number of transactions in the most recent Tx epoch.
+
+**Parameters**
+
+none
+
+**Returns**
+
+String
+
+
+
+### getNumTxnsDSEpoch
+
+Returns the number of transactions in the most recent DS epoch.
+
+**Parameters**
+
+none
+
+**Returns**
+
+String
+
 
 
 
