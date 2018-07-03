@@ -1,5 +1,5 @@
 {
-  "name": "z-lib",
+  "name": "zilliqa.js",
   "version": "0.0.1",
   "description": "zilliqa js library",
   "main": "index.js",

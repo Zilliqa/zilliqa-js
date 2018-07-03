@@ -27,7 +27,7 @@ gulp.task('build', function () {
   });
 
   return b.bundle()
-    .pipe(source('z-lib.min.js'))
+    .pipe(source('zilliqa.min.js'))
     .pipe(buffer())
     // Add transformation tasks to the pipeline here
     .pipe(uglify())

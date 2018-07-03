@@ -1,90 +1,141 @@
 # Zilliqa-JavaScript-Library API
 
-## Build
+## Installation
 
-Execute `npm install`, followed by `npm install -g gulp` and `gulp build` to generate build/z-lib.min.js.
+Include `"zilliqa.js": "github:Zilliqa/Zilliqa-JavaScript-Library"` in your `package.json` dependencies to install the zilliqa javascript library.
 
 
-## Setup
+## Usage
 
-Include `"z-lib": "github:Zilliqa/Zilliqa-JavaScript-Library"` in your `package.json` dependencies to install the zilliqa javascript library.
+### Getting Started
 
 ```js
-import { zLib } from 'z-lib';
+import { Zilliqa } from 'z-lib';
 
-let zlib = new zLib({
-  nodeUrl: 'http://localhost:4201'
+let zilliqa = new Zilliqa({
+    nodeUrl: 'http://localhost:4201'
 });
 
-let node = zlib.getNode();
+let node = zilliqa.getNode();
 
 // use API methods
 node.getBalance({ address: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7' }, callback);
 
-// use util methods
-let txn = zlib.util.createTransactionJson(privateKey, {
-	version: 0,
-	nonce: 1,
-	to: '0000000000000000000000000000000000000000',
-	amount: 0,
-	gasPrice: 1,
-	gasLimit: 50,
-	code: codeString,
-	data: JSON.stringify(initParams).replace(/\\"/g, '"')
-});
-
-node.createTransaction(txn, callback);
-
 // callback receives 2 parameters, error and result
 function callback (err, data) {
-	if (err || data.error) {
-		console.log('Error')
-	} else {
-		console.log(data.result)
-	}
+    if (err || data.error) {
+        console.log('Error')
+    } else {
+        console.log(data.result)
+    }
 }
+
+
+// generate a private key and its public address
+let pk = zilliqa.util.generatePrivateKey();
+let address = zilliqa.util.getAddressFromPrivateKey
+
 ```
+
+### Create a Transaction
+
+```js
+// transaction details
+let txnDetails = {
+    version: 0,
+    nonce: 1,
+    to: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7',
+    amount: 0,
+    gasPrice: 1,
+    gasLimit: 1
+};
+
+// sign the transaction using util methods
+let txn = zilliqa.util.createTransactionJson(privateKey, txnDetails);
+
+// send the transaction to the node
+node.createTransaction(txn, callback);
+```
+
+### Deploy a Contract
+
+```js
+// contains the scilla code as a string
+let code = "Scilla Code";
+
+// the immutable initialisation variables
+let initParams = [
+{
+    "vname" : "owner",
+    "type" : "Address",
+    "value" : "0x1234567890123456789012345678901234567890"
+},
+    {
+    "vname" : "total_tokens",
+    "type" : "Uint128",
+    "value" : "10000"
+}];
+
+// transaction details
+let txnDetails = {
+    version: 0,
+    nonce: 1,
+    to: '0000000000000000000000000000000000000000',
+    amount: 0,
+    gasPrice: 1,
+    gasLimit: 50,
+    code: code,
+    data: JSON.stringify(initParams).replace(/\\"/g, '"')
+};
+
+// sign the transaction using util methods
+let txn = zilliqa.util.createTransactionJson(privateKey, txnDetails);
+
+// send the transaction to the node
+node.createTransaction(txn, callback);
+```
+
+
+## Build Project
+
+Execute `npm install`, followed by `npm install -g gulp` and `gulp build` to generate build/z-lib.min.js.
+
 
 ## API Methods
 
-- getNetworkId
-- createTransaction
-- getTransaction
-- getDsBlock
-- getTxBlock
-- getLatestDsBlock
-- getLatestTxBlock
-- getBalance
-- getSmartContractState
-- getSmartContractCode
-- getSmartContractInit
-- getSmartContracts
-- getBlockchainInfo
-- getDSBlockListing
-- getTxBlockListing
-- getNumTxnsTxEpoch
-- getNumTxnsDSEpoch
-- getTransactionListing
+- **[getNetworkId](#getnetworkid)**
+- **[createTransaction](#createtransaction)**
+- **[getTransaction](#gettransaction)**
+- **[getDsBlock](#getdsblock)**
+- **[getTxBlock](#gettxblock)**
+- **[getLatestDsBlock](#getlatestdsblock)**
+- **[getLatestTxBlock](#getlatesttxblock)**
+- **[getBalance](#getbalance)**
+- **[getSmartContractState](#getsmartcontractstate)**
+- **[getSmartContractCode](#getsmartcontractcode)**
+- **[getSmartContractInit](#getsmartcontractinit)**
+- **[getSmartContracts](#getsmartcontracts)**
+- **[getBlockchainInfo](#getblockchaininfo)**
+- **[isConnected](#isconnected)**
 
 ## Util Methods
-- generatePrivateKey
-- verifyPrivateKey
-- getAddressFromPrivateKey
-- getPubKeyFromPrivateKey
-- createTransactionJson
+- **[generatePrivateKey](#generateprivatekey)**
+- **[verifyPrivateKey](#verifyprivatekey)**
+- **[getAddressFromPrivateKey](#getaddressfromprivatekey)**
+- **[getPubKeyFromPrivateKey](#getpubkeyfromprivatekey)**
+- **[createTransactionJson](#createtransactionjson)**
 
 ## Library Methods
 
-- getLibraryVersion
-- isConnected
-- setNode
-- currentNode
+- **[getLibraryVersion](#getlibraryversion)**
+- **[setNode](#setnode)**
+- **[currentNode](#currentnode)**
 
 
 
 ## API Reference
 
-### getNetworkId
+### `getNetworkId`
 
 Returns the current network id
 
@@ -96,8 +147,20 @@ none
 
 `result`: `String` - The current network id name
 
+**Usage**
 
-### createTransaction
+```js
+zilliqa.node.getNetworkId(function(err, data) {
+    if (err || !data.result) {
+        console.log(err)
+    } else {
+        console.log(data.result)
+    }
+})
+```
+
+
+### `createTransaction`
 
 Creates a new transaction or a contract creation, if the data field contains code
 
@@ -121,7 +184,29 @@ Each transaction is uniquely identified by a
 
 `result`: `String` - transaction id of the newly created transaction
 
-### getTransaction
+**Usage**
+
+```js
+let txn = zilliqa.util.createTransactionJson(privateKey, {
+    version: 0,
+    nonce: 1,
+    to: address,
+    amount: 0,
+    gasPrice: 1, // default
+    gasLimit: 1 // 1 - send tokens, 10 - contract invocation, 50 - contract creation
+})
+
+zilliqa.node.createTransaction(txn, function(err, data) {
+    if (err || data.error) {
+        console.log(err)
+    } else {
+        console.log(data.result)
+    }
+})
+```
+
+
+### `getTransaction`
 
 Returns the information about a transaction requested by transaction hash
 
@@ -140,8 +225,21 @@ Returns the information about a transaction requested by transaction hash
 - `pubKey` (264 bits): An EC-Schnorr public key that should be used to verify the signature. The pubkey field also determines the sending address of the transaction
 - `signature` (512 bits): An EC-Schnorr signature of the entire object
 
+**Usage**
 
-### getDsBlock
+```js
+let txnId = 'c699d0ea1d4a447762bb0617f742a43b8de6792d06c56f9a2a109f0e06532f1c' // sample 64-char hex id
+zilliqa.node.getTransaction({ txHash: txnId }, function(err, data) {
+    if (err || data.result.error || !data.result['ID']) {
+        console.log(err)
+    } else {
+        console.log(data.result)
+    }
+})
+```
+
+
+### `getDsBlock`
 
 Returns information about a Directory Service block by block number.
 
@@ -169,8 +267,20 @@ signature:
 - `signature` (512 bits): The signature is an EC-Schnorr based multisignature on the DS-Block header signed by DS nodes
 - `bitmap` (1024 bits): It records which DS nodes participated in the multisignature. We denote the bitmap by a bit vector B, where, B[i] = 1 if the i-th node signed the header else B[i] = 0.
 
+**Usage**
 
-### getTxBlock
+```js
+zilliqa.node.getDsBlock({ blockNumber: 5 }, function(err, data) {
+    if (err || !data.result) {
+        console.log(err)
+    } else {
+        console.log(data.result)
+    }
+})
+```
+
+
+### `getTxBlock`
 
 Returns information about a Transaction block by block number.
 
@@ -207,8 +317,20 @@ signature:
 - `signature` (512 bits): The signature is an EC-Schnorr based multisignature on the TX-Block header signed by a set of nodes. The signature is produced by a different set of nodes depending on whether it is a micro block or a final block
 - `bitmap` (1024 bits): It records which nodes participated in the multisignature. We denote the bitmap by a bit vector B, where, B[i] = 1 if the i-th node signed the header else B[i] = 0
 
+**Usage**
 
-### getLatestDsBlock
+```js
+zilliqa.node.getTxBlock({ blockNumber: 5 }, function(err, data) {
+    if (err || !data.result) {
+        console.log(err)
+    } else {
+        console.log(data.result)
+    }
+})
+```
+
+
+### `getLatestDsBlock`
 
 Returns the most recent DS block
 
@@ -220,8 +342,20 @@ none
 
 `result`: `Object` - DS Block object
 
+**Usage**
 
-### getLatestTxBlock
+```js
+zilliqa.node.getLatestDsBlock(function(err, data) {
+    if (err || !data.result) {
+        console.log(err)
+    } else {
+        console.log(data.result)
+    }
+})
+```
+
+
+### `getLatestTxBlock`
 
 Returns the most recent TX block
 
@@ -233,8 +367,20 @@ none
 
 `result`: `Object` - TX Block object
 
+**Usage**
 
-### getBalance
+```js
+zilliqa.node.getLatestTxBlock(function(err, data) {
+    if (err || !data.result) {
+        console.log(err)
+    } else {
+        console.log(data.result)
+    }
+})
+```
+
+
+### `getBalance`
 
 Returns the balance of a given address
 
@@ -247,7 +393,20 @@ Returns the balance of a given address
 `result.balance` - the current balance in ZIL
 `result.nonce` - the current nonce of the account
 
-### getSmartContractState
+**Usage**
+
+```js
+zilliqa.node.getBalance({ address: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7' }, function(err, data) {
+    if (err || data.error) {
+        console.log(err)
+    } else {
+        console.log(data.result)
+    }
+})
+```
+
+
+### `getSmartContractState`
 
 Returns the state variables (mutable) of a given smart contract address
 
@@ -259,8 +418,20 @@ Returns the state variables (mutable) of a given smart contract address
 
 `result` - json object of all the state variables
 
+**Usage**
 
-### getSmartContractCode
+```js
+zilliqa.node.getSmartContractState({ address: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7' }, function(err, data) {
+    if (err || (data.result && data.result.Error)) {
+        console.log(err)
+    } else {
+        console.log(data.result)
+    }
+})
+```
+
+
+### `getSmartContractCode`
 
 Returns the smart contract code of a given address smart contract address
 
@@ -272,8 +443,20 @@ Returns the smart contract code of a given address smart contract address
 
 `result.code` - string containing the code of the smart contract
 
+**Usage**
 
-### getSmartContractInit
+```js
+zilliqa.node.getSmartContractCode({ address: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7' }, function(err, data) {
+    if (err || (data.result && data.result.Error)) {
+        console.log(err)
+    } else {
+        console.log(data.result)
+    }
+})
+```
+
+
+### `getSmartContractInit`
 
 Returns the initialization parameters (immutable) of a given smart contract address
 
@@ -285,8 +468,20 @@ Returns the initialization parameters (immutable) of a given smart contract addr
 
 `result` - json object containing the initialization parameters of the smart contract
 
+**Usage**
 
-### getSmartContracts
+```js
+zilliqa.node.getSmartContractInit({ address: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7' }, function(err, data) {
+    if (err || (data.result && data.result.Error)) {
+        console.log(err)
+    } else {
+        console.log(data.result)
+    }
+})
+```
+
+
+### `getSmartContracts`
 Returns the list of smart contracts created by an account
 
 **Parameters**
@@ -297,10 +492,58 @@ Returns the list of smart contracts created by an account
 
 `result`: `Array` - list of smart contract addresses created by the given address
 
+**Usage**
 
-### getNumTxnsTxEpoch
+```js
+zilliqa.node.getSmartContractState({ address: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7' }, function(err, data) {
+    if (err || data.error) {
+        console.log(err)
+    } else {
+        console.log(data.result)
+    }
+})
+```
 
-Returns the number of transactions in the most recent Tx epoch.
+
+### `getBlockchainInfo`
+
+Returns statistics about the zilliqa node currently connected to
+
+**Parameters**
+
+empty object
+
+**Returns**
+
+`Object` - json object containing various properties
+- `NumPeers` : 
+- `NumTxBlocks` : 
+- `NumDSBlocks` : 
+- `NumTransactions` : 
+- `TransactionRate` : 
+- `TxBlockRate` : 
+- `DSBlockRate` : 
+- `CurrentMiniEpoch` :
+- `CurrentDSEpoch` : 
+- `NumTxnsDSEpoch` : 
+- `NumTxnsTxEpoch` : 
+
+**Usage**
+
+```js
+zilliqa.node.getBlockchainInfo({}, function(err, data) {
+    if (err) {
+        console.log(err)
+    } else {
+        console.log(data.result)
+    }
+})
+```
+
+
+### `isConnected`
+
+Checks whether a node is connected or not
 
 **Parameters**
 
@@ -308,23 +551,24 @@ none
 
 **Returns**
 
-`result`: `String` - number of transactions in the latest Tx block
+`Bool`
 
-### getNumTxnsDSEpoch
+**Usage**
 
-Returns the number of transactions in the most recent DS epoch.
+```js
+zilliqa.node.isConnected(function(err, data) {
+    if (err) {
+        console.log(err)
+    } else {
+        // connected
+    }
+})
+```
 
-**Parameters**
-
-none
-
-**Returns**
-
-`result`: `String` - number of transactions in the latest DS block
 
 ## Util Methods
 
-### generatePrivateKey
+### `generatePrivateKey`
 
 Generate a new private key using the secp256k1 curve
 
@@ -336,7 +580,15 @@ none
 
 `Buffer` - private key object
 
-### verifyPrivateKey
+**Usage**
+
+```js
+let pk = zilliqa.util.generatePrivateKey();
+console.log(pk.toString('hex'));
+```
+
+
+### `verifyPrivateKey`
 
 Verify if a private key is valid for the secp256k1 curve
 
@@ -348,8 +600,15 @@ Verify if a private key is valid for the secp256k1 curve
 
 `Bool` - true if input string/Buffer is a valid private key else false
 
+**Usage**
 
-### getAddressFromPrivateKey
+```js
+let pk = zilliqa.util.verifyPrivateKey();
+console.log(pk.toString('hex'));
+```
+
+
+### `getAddressFromPrivateKey`
 
 Get the public address of an account using its private key
 
@@ -361,8 +620,15 @@ Get the public address of an account using its private key
 
 `String` - the public address of the input private key
 
+**Usage**
 
-### getPubKeyFromPrivateKey
+```js
+let address = zilliqa.util.getAddressFromPrivateKey(privateKey);
+console.log(address.toString('hex'));
+```
+
+
+### `getPubKeyFromPrivateKey`
 
 Get the public key of an account using its private key
 
@@ -374,8 +640,15 @@ Get the public key of an account using its private key
 
 `String` - the public key of the input private key
 
+**Usage**
 
-### createTransactionJson
+```js
+let pubkey = zilliqa.util.getPubKeyFromPrivateKey(privateKey);
+console.log(pubkey.toString('hex'));
+```
+
+
+### `createTransactionJson`
 
 Construct the transaction object for use in `createTransaction` API
 
@@ -396,10 +669,29 @@ Construct the transaction object for use in `createTransaction` API
 
 `result`: `String` - number of transactions in the latest DS block
 
+**Usage**
+
+```js
+let privateKey = zilliqa.util.generatePrivateKey();
+
+// transaction details
+let txnDetails = {
+    version: 0,
+    nonce: 1,
+    to: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7',
+    amount: 0,
+    gasPrice: 1,
+    gasLimit: 1
+};
+
+// sign the transaction using util methods
+let txn = zilliqa.util.createTransactionJson(privateKey, txnDetails);
+```
+
 
 ## Library Methods
 
-### getLibraryVersion
+### `getLibraryVersion`
 
 Returns the library version number
 
@@ -412,20 +704,7 @@ none
 `String` - the library version
 
 
-### isConnected
-
-Checks whether a node is connected or not
-
-**Parameters**
-
-none
-
-**Returns**
-
-`Bool`
-
-
-### setNode
+### `setNode`
 
 Sets the node to connect to
 
@@ -437,7 +716,8 @@ Sets the node to connect to
 
 null
 
-### getNode
+
+### `getNode`
 
 Returns the node currently connected to
 
