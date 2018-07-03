@@ -8,12 +8,12 @@
 // warranties are given as to title or non-infringement, merchantability or fitness for purpose 
 // and, to the extent permitted by law, all liability for your use of the code is disclaimed. 
 
-var zLib = require('./lib/zLib')
+var Zilliqa = require('./lib/zilliqa')
 
-if (typeof window !== 'undefined' && typeof window.zLib === 'undefined') {
-  window.zLib = zLib
+if (typeof window !== 'undefined' && typeof window.Zilliqa === 'undefined') {
+  window.Zilliqa = Zilliqa
 }
 
 module.exports = {
-	zLib: zLib
+	Zilliqa: Zilliqa
 }

@@ -1,4 +1,4 @@
 {
-	"version": "0.1",
-	"defaultNodeUrl": "http://localhost:8123"
+	"version": "0.0.1",
+	"defaultNodeUrl": "http://localhost:4201"
 }
