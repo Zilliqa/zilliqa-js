@@ -33,7 +33,7 @@ function callback (err, data) {
 
 // generate a private key and its public address
 let pk = zilliqa.util.generatePrivateKey();
-let address = zilliqa.util.getAddressFromPrivateKey
+let address = zilliqa.util.getAddressFromPrivateKey(pk);
 
 ```
 
@@ -603,8 +603,9 @@ Verify if a private key is valid for the secp256k1 curve
 **Usage**
 
 ```js
-let pk = zilliqa.util.verifyPrivateKey();
-console.log(pk.toString('hex'));
+let pk = zilliqa.util.generatePrivateKey();
+console.log(zilliqa.util.verifyPrivateKey(pk)); // true
+console.log(zilliqa.util.verifyPrivateKey("abcxyz")); // false
 ```
 
 
@@ -618,7 +619,7 @@ Get the public address of an account using its private key
 
 **Returns**
 
-`String` - the public address of the input private key
+`Buffer` - the public address of the input private key
 
 **Usage**
 
@@ -638,7 +639,7 @@ Get the public key of an account using its private key
 
 **Returns**
 
-`String` - the public key of the input private key
+`Buffer` - the public key of the input private key
 
 **Usage**
 
