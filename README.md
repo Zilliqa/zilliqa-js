@@ -13,7 +13,7 @@ Include `"zilliqa.js": "github:Zilliqa/Zilliqa-JavaScript-Library"` in your `pac
 let Zilliqa = require('zilliqa.js');
 
 let zilliqa = new Zilliqa({
-    nodeUrl: 'http://localhost:4201'
+    nodeUrl: 'https://api-scilla.zilliqa.com'
 });
 
 let node = zilliqa.getNode();
