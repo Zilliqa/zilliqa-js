@@ -10,7 +10,7 @@ Include `"zilliqa.js": "github:Zilliqa/Zilliqa-JavaScript-Library"` in your `pac
 ### Getting Started
 
 ```js
-import { Zilliqa } from 'z-lib';
+var Zilliqa = require('zilliqa.js');
 
 let zilliqa = new Zilliqa({
     nodeUrl: 'http://localhost:4201'
