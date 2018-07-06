@@ -8,17 +8,17 @@
 // warranties are given as to title or non-infringement, merchantability or fitness for purpose 
 // and, to the extent permitted by law, all liability for your use of the code is disclaimed. 
 
-var browserify = require('browserify');
-var gulp = require('gulp');
-var source = require('vinyl-source-stream');
-var buffer = require('vinyl-buffer');
-var uglify = require('gulp-uglify');
-var gutil = require('gulp-util');
-var babelify = require('babelify');
+const browserify = require('browserify');
+const gulp = require('gulp');
+const source = require('vinyl-source-stream');
+const buffer = require('vinyl-buffer');
+const uglify = require('gulp-uglify');
+const gutil = require('gulp-util');
+const babelify = require('babelify');
 
 gulp.task('build', function () {
   // set up the browserify instance on a task basis
-  var b = browserify({
+  const b = browserify({
     entries: './index.js',
     debug: true,
     transform: [babelify.configure({
