@@ -12,8 +12,11 @@ Include `"zilliqa.js": "github:Zilliqa/Zilliqa-JavaScript-Library"` in your `pac
 ```js
 let Zilliqa = require('zilliqa.js');
 
+//For local testing, use URL = 'http://localhost:4201'
+//To connect to the external network, use URL = 'https://api-scilla.zilliqa.com'
+
 let zilliqa = new Zilliqa({
-    nodeUrl: 'https://api-scilla.zilliqa.com'
+    nodeUrl: URL
 });
 
 let node = zilliqa.getNode();
