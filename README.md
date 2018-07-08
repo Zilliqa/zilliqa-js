@@ -10,7 +10,7 @@ Include `"zilliqa.js": "github:Zilliqa/Zilliqa-JavaScript-Library"` in your `pac
 ### Getting Started
 
 ```js
-let Zilliqa = require('zilliqa.js');
+let { Zilliqa } = require('zilliqa.js');
 
 let zilliqa = new Zilliqa({
     nodeUrl: 'http://localhost:4201'
@@ -167,7 +167,7 @@ Creates a new transaction or a contract creation, if the data field contains cod
 **Parameters**
 
 - `version` (32 bits): the current version
-- `nonce` (64 bits): Counter equal to the number of transactions sent by the sender of this transaction.
+- `nonce` (64 bits): Counter equal to the number of transactions sent by the sender of this transaction. It's value is always (current account nonce + 1).
 - `to` (160 bits): Destination account address. Incase of new contract account, set as `0000000000000000000000000000000000000000`
 - `pubkey` (264 bits): An EC-Schnorr public key that should be used to verify the signature. Determines the sending address of the transaction
 - `amount` (128 bits): Transaction amount to be transferred to the destination address.
