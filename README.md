@@ -2,14 +2,35 @@
 
 ## Installation
 
-Include `"zilliqa.js": "github:Zilliqa/Zilliqa-JavaScript-Library"` in your `package.json` dependencies to install the zilliqa javascript library.
+To use Zilliqa's Javascript API library, run the following command from the root of your project directory.
 
+```
+npm install Zilliqa/Zilliqa-JavaScript-Library#master --save
+```
+This will create a dependency on your `.js` project that will point directly to the `master` branch of this repository whenever you do a `npm install`.
+
+### Build Project
+
+To build the project, run the following commands: 
+```
+npm install
+npm install -g gulp
+gulp build
+```
+The build file (`build/zilliqa.min.js`) will be generated. 
 
 ## Usage
 
 ### Getting Started
 
+To get started, you have to specify the network and set some function definitions. Once that is done, you can start to call the APIs. Here are some examples to get you started: 
+
 ```js
+
+/* 
+    Setting Up 
+*/ 
+
 let { Zilliqa } = require('zilliqa.js');
 
 //For local testing, use URL = 'http://localhost:4201'
@@ -21,8 +42,6 @@ let zilliqa = new Zilliqa({
 
 let node = zilliqa.getNode();
 
-// use API methods
-node.getBalance({ address: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7' }, callback);
 
 // callback receives 2 parameters, error and result
 function callback (err, data) {
@@ -33,14 +52,20 @@ function callback (err, data) {
     }
 }
 
+// generate a private key and its public address. You can change these to point to your own wallet if you have. 
+let privateKey = zilliqa.util.generatePrivateKey();
+let address = zilliqa.util.getAddressFromPrivateKey(privateKey);
 
-// generate a private key and its public address
-let pk = zilliqa.util.generatePrivateKey();
-let address = zilliqa.util.getAddressFromPrivateKey(pk);
+/* 
+    APIs 
+*/
+
+node.getBalance({ address: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7' }, callback);
 
 ```
+Other than `getBalance(address)`, you can also try to create a transaction or deploy a contract. 
 
-### Create a Transaction
+### Example: Create a Transaction
 
 ```js
 // transaction details
@@ -60,7 +85,7 @@ let txn = zilliqa.util.createTransactionJson(privateKey, txnDetails);
 node.createTransaction(txn, callback);
 ```
 
-### Deploy a Contract
+### Example: Deploy a Contract
 
 ```js
 // contains the scilla code as a string
@@ -97,11 +122,6 @@ let txn = zilliqa.util.createTransactionJson(privateKey, txnDetails);
 // send the transaction to the node
 node.createTransaction(txn, callback);
 ```
-
-
-## Build Project
-
-Execute `npm install`, followed by `npm install -g gulp` and `gulp build` to generate build/z-lib.min.js.
 
 
 ## API Methods
