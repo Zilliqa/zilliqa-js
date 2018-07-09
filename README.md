@@ -17,7 +17,7 @@ npm install
 npm install -g gulp
 gulp build
 ```
-The build file (`build/z-lib.min.js`) will be generated. 
+The build file (`build/zilliqa.min.js`) will be generated. 
 
 ## Usage
 
