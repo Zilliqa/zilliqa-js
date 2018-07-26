@@ -12,7 +12,7 @@ const browserify = require('browserify');
 const gulp = require('gulp');
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
-const uglify = require('gulp-uglify');
+const uglify = require('gulp-uglify-es').default;
 const gutil = require('gulp-util');
 const babelify = require('babelify');
 
