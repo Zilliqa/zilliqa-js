@@ -1,4 +1,5 @@
 # Zilliqa-JavaScript-Library API
+[![Gitter](https://img.shields.io/gitter/room/ethereum/ethereumjs-lib.svg?style=flat-square)](https://gitter.im/Zilliqa/General)
 
 ## Installation
 
