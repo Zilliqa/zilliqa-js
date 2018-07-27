@@ -1,13 +1,13 @@
-# Zilliqa-JavaScript-Library API
+# Zilliqa-JS
+
+[![Gitter](https://img.shields.io/gitter/room/ethereum/ethereumjs-lib.svg?style=flat-square)](https://gitter.im/Zilliqa/General)
 
 ## Installation
 
 To use Zilliqa's Javascript API library, run the following command from the root of your project directory.
-
 ```
-npm install Zilliqa/Zilliqa-JavaScript-Library#master --save
+npm install zilliqa-js
 ```
-This will create a dependency on your `.js` project that will point directly to the `master` branch of this repository whenever you do a `npm install`.
 
 ### Build Project
 
@@ -31,7 +31,7 @@ To get started, you have to specify the network and set some function definition
     Setting Up 
 */ 
 
-let { Zilliqa } = require('zilliqa.js');
+let { Zilliqa } = require('zilliqa-js');
 
 //For local testing, use URL = 'http://localhost:4201'
 //To connect to the external network, use URL = 'https://api-scilla.zilliqa.com'
