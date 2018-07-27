@@ -10,24 +10,24 @@
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
-    "babelify": "^8.0.0",
-    "chai": "*",
-    "gulp": "^3.9.1",
-    "gulp-uglify": "^3.0.0",
-    "gulp-util": "^3.0.8",
-    "mocha": "^5.2.0",
-    "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0"
-  },
-  "dependencies": {
     "babel-preset-env": "^1.7.0",
     "babel-preset-es2015": "^6.24.1",
+    "babelify": "^8.0.0",
+    "browserify": "^16.2.2",
+    "chai": "*",
+    "gulp": "^3.9.1",
+    "gulp-uglify": "^3.0.1",
+    "gulp-util": "^3.0.8",
+    "mocha": "^5.2.0",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^1.1.2"
+  },
+  "dependencies": {
     "bcrypto": "^0.0.2",
     "bn.js": "^4.11.8",
-    "browserify": "^16.1.0",
     "depcheck": "^0.6.9",
     "elliptic": "^6.4.0",
-    "node-fetch": "^2.1.2",
+    "node-fetch": "^2.2.0",
     "valid-url": "^1.0.9"
   }
 }
