@@ -1,7 +1,7 @@
 var assert = require('assert')
 var zWallet = require('../index')
 
-var zlib = new zLib({nodeUrl: 'http://localhost:8123'})
+var zlib = new zLib({nodeUrl: 'http://api-scilla.zilliqa.com'})
 
 describe('z-lib', function() {
   describe('#getClientVersion()', function() {
