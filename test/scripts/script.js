@@ -1,6 +1,6 @@
 // Temporary test script
 
-const { Zilliqa } = require('zilliqa-js');
+const { Zilliqa } = require('../../index.js');
 
 let zilliqa = new Zilliqa({
     nodeUrl: 'https://api-scilla.zilliqa.com'

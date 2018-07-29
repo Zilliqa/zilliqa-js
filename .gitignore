@@ -1,21 +1,25 @@
-node_modules
-.DS_STORE
 build
 
-#tests
-test
-coverage
+# Dependency directories
+node_modules/
 
-#build tools
-.travis.yml
-.jenkins.yml
-.codeclimate.yml
+.DS_Store
 
-#linters
-.jscsrc
-.jshintrc
-.eslintrc*
 
-#editor settings
-.idea
-.editorconfig
+# Swap
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+
+# Session
+Session.vim
+
+# Temporary
+.netrwhist
+*~
+# Auto-generated tag files
+tags
+# Persistent undo
+[._]*.un~
