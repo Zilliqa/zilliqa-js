@@ -1,6 +1,6 @@
 {
   "name": "zilliqa-js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Zilliqa js library",
   "license": "SEE LICENSE IN LICENSE",
   "repository": "https://github.com/Zilliqa/Zilliqa-JavaScript-Library",
@@ -25,7 +25,6 @@
   "dependencies": {
     "bcrypto": "^0.0.2",
     "bn.js": "^4.11.8",
-    "depcheck": "^0.6.9",
     "elliptic": "^6.4.0",
     "node-fetch": "^2.2.0",
     "valid-url": "^1.0.9"
