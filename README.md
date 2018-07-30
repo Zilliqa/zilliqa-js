@@ -518,7 +518,7 @@ Returns the list of smart contracts created by an account
 **Usage**
 
 ```js
-zilliqa.node.getSmartContractState({ address: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7' }, function(err, data) {
+zilliqa.node.getSmartContracts({ address: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7' }, function(err, data) {
     if (err || data.error) {
         console.log(err)
     } else {
