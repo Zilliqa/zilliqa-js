@@ -6,28 +6,32 @@
   "scripts": {
     "test": "mocha"
   },
+  "dependencies": {
+    "bn.js": "^4.11.8",
+    "bsert": "^0.0.3",
+    "crypto-js": "^3.1.9-1",
+    "elliptic": "^6.4.0",
+    "hmac-drbg": "^1.0.1",
+    "node-fetch": "^2.2.0",
+    "valid-url": "^1.0.9"
+  },
   "devDependencies": {
+    "@types/node": "^10.5.6",
     "babel-core": "^6.26.3",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
     "babelify": "^8.0.0",
+    "browserify": "^16.2.2",
     "chai": "*",
     "gulp": "^3.9.1",
     "gulp-uglify-es": "^1.0.4",
     "gulp-util": "^3.0.8",
+    "hoek": "^5.0.3",
     "mocha": "^5.2.0",
+    "tslint": "^5.11.0",
+    "typescript": "^3.0.1",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^1.1.2"
-  },
-  "dependencies": {
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-es2015": "^6.24.1",
-    "bcrypto": "^1.0.0",
-    "bn.js": "^4.11.8",
-    "browserify": "^16.2.2",
-    "bsert": "^0.0.3",
-    "elliptic": "^6.4.0",
-    "hoek": "^5.0.3",
-    "node-fetch": "^2.2.0",
-    "valid-url": "^1.0.9"
   }
 }
