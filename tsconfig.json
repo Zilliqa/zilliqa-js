@@ -1,36 +1,23 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "baseUrl": ".",
-    "outDir": "build/dist",
-    "module": "esnext",
+    "outDir": "dist",
+    "module": "commonjs",
     "target": "es5",
-    "lib": ["es6", "dom"],
+    "lib": ["es2015", "es2016", "es2017", "dom"],
     "sourceMap": true,
-    "allowJs": true,
-    "jsx": "react",
+    "resolveJsonModule": true,
     "moduleResolution": "node",
+    "declaration": true,
+    "declarationDir": "dist",
     "rootDir": "src",
     "forceConsistentCasingInFileNames": false,
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noImplicitAny": false,
-    "resolveJsonModule": true,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true,
-    "typeRoots": [
-      "node_modules/@types",
-      "./typings",
-      "./src/**/*.d.ts"
-    ]
+    "noUnusedLocals": true
   },
-  "exclude": [
-    "node_modules",
-    "build",
-    "scripts",
-    "webpack",
-    "jest",
-    "test"
-  ]
+  "include": [ "src/**/*", "typings/**/*" ]
 }

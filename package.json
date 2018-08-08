@@ -2,8 +2,10 @@
   "name": "zilliqa.js",
   "version": "0.0.1",
   "description": "zilliqa js library",
-  "main": "index.js",
+  "main": "dist/zilliqa.js",
+  "typings": "dist/index.d.ts",
   "scripts": {
+    "build": "rimraf dist/* && tsc --emitDeclarationOnly && cross-env NODE_ENV=production webpack --config webpack.config.js",
     "test": "mocha"
   },
   "dependencies": {
@@ -16,14 +18,36 @@
     "valid-url": "^1.0.9"
   },
   "devDependencies": {
+    "@babel/cli": "^7.0.0-beta.56",
+    "@babel/core": "7.0.0-beta.54",
+    "@babel/plugin-proposal-class-properties": "7.0.0-beta.54",
+    "@babel/plugin-proposal-decorators": "7.0.0-beta.54",
+    "@babel/plugin-proposal-do-expressions": "7.0.0-beta.54",
+    "@babel/plugin-proposal-export-default-from": "7.0.0-beta.54",
+    "@babel/plugin-proposal-export-namespace-from": "7.0.0-beta.54",
+    "@babel/plugin-proposal-function-sent": "7.0.0-beta.54",
+    "@babel/plugin-proposal-json-strings": "7.0.0-beta.54",
+    "@babel/plugin-proposal-logical-assignment-operators": "7.0.0-beta.54",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "7.0.0-beta.54",
+    "@babel/plugin-proposal-numeric-separator": "7.0.0-beta.54",
+    "@babel/plugin-proposal-optional-chaining": "7.0.0-beta.54",
+    "@babel/plugin-proposal-pipeline-operator": "7.0.0-beta.54",
+    "@babel/plugin-proposal-throw-expressions": "7.0.0-beta.54",
+    "@babel/plugin-syntax-dynamic-import": "7.0.0-beta.54",
+    "@babel/plugin-syntax-import-meta": "7.0.0-beta.54",
+    "@babel/plugin-transform-runtime": "^7.0.0-beta.56",
+    "@babel/polyfill": "7.0.0-beta.54",
+    "@babel/preset-env": "7.0.0-beta.54",
+    "@babel/preset-typescript": "^7.0.0-beta.56",
+    "@babel/runtime": "^7.0.0-beta.56",
     "@types/node": "^10.5.6",
-    "babel-core": "^6.26.3",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-es2015": "^6.24.1",
+    "@types/valid-url": "^1.0.2",
+    "babel-loader": "^8.0.0-beta.0",
+    "babel-plugin-transform-remove-console": "^6.9.4",
     "babelify": "^8.0.0",
     "browserify": "^16.2.2",
     "chai": "*",
+    "cross-env": "^5.2.0",
     "gulp": "^3.9.1",
     "gulp-uglify-es": "^1.0.4",
     "gulp-util": "^3.0.8",
@@ -32,6 +56,8 @@
     "tslint": "^5.11.0",
     "typescript": "^3.0.1",
     "vinyl-buffer": "^1.0.1",
-    "vinyl-source-stream": "^1.1.2"
+    "vinyl-source-stream": "^1.1.2",
+    "webpack": "^4.16.5",
+    "webpack-command": "^0.4.1"
   }
 }
