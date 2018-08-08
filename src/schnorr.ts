@@ -21,11 +21,17 @@
 import assert from 'bsert';
 import elliptic from 'elliptic';
 import BN from 'bn.js';
+import hashjs from 'hash.js';
 import DRBG from 'hmac-drbg';
-import sha256 from 'crypto-js/sha256';
 import Signature from 'elliptic/lib/elliptic/ec/signature';
 
 const curve = elliptic.ec('secp256k1').curve;
+// Public key is a point (x, y) on the curve.
+// Each coordinate requires 32 bytes.
+// In its compressed form it suffices to store the x co-ordinate
+// and the sign for y.
+// Hence a total of 33 bytes.
+const PUBKEY_COMPRESSED_SIZE_BYTES = 33;
 
 /**
  * Hash (r | M).
@@ -36,7 +42,8 @@ const curve = elliptic.ec('secp256k1').curve;
  */
 
 export const hash = (q: BN, pubkey: Buffer, msg: Buffer) => {
-  const totalLength = 66 + msg.byteLength; // 33 q + 33 pubkey + variable msgLen
+  const sha256 = hashjs.sha256();
+  const totalLength = PUBKEY_COMPRESSED_SIZE_BYTES * 2 + msg.byteLength; // 33 q + 33 pubkey + variable msgLen
   const Q = q.toArrayLike(Buffer, 'be', 33);
   const B = Buffer.allocUnsafe(totalLength);
 
@@ -44,14 +51,17 @@ export const hash = (q: BN, pubkey: Buffer, msg: Buffer) => {
   pubkey.copy(B, 33);
   msg.copy(B, 66);
 
-  return new BN(sha256.digest(B));
+  return new BN(sha256.update(B).digest('hex'));
 };
 
 /**
- * Sign message.
+ * sign
+ *
  * @param {Buffer} msg
  * @param {Buffer} key
- * @param {Buffer} pubNonce
+ * @param {Buffer} pubkey
+ * @param {Buffer} pubNonce?
+ *
  * @returns {Signature}
  */
 export const sign = (
@@ -59,7 +69,7 @@ export const sign = (
   key: Buffer,
   pubkey: Buffer,
   pubNonce?: Buffer,
-) => {
+): Signature => {
   const prv = new BN(key);
   const drbg = getDRBG(msg, key, pubNonce);
   const len = curve.n.byteLength();
@@ -77,38 +87,43 @@ export const sign = (
 };
 
 /**
- * Sign message.
+ * trySign
  *
  * @param {Buffer} msg
- * @param {BN} priv
- * @param {BN} k
- * @param {Buffer} pn
+ * @param {BN} prv - private key
+ * @param {BN} k - DRBG-generated random number
+ * @param {Buffer} pn - optional
+ * @param {Buffer)} pubKey - public key
  *
- * @returns {Signature|null}
+ * @returns {Signature | null =>}
  */
-const trySign = (msg: Buffer, prv: BN, k: BN, pn: Buffer, pubKey: Buffer) => {
+const trySign = (msg: Buffer, prv: BN, k: BN, pn: Buffer, pubKey: Buffer): Signature | null => {
   if (prv.isZero()) throw new Error('Bad private key.');
 
   if (prv.gte(curve.n)) throw new Error('Bad private key.');
 
+  // 1a. check that k is not 0
   if (k.isZero()) return null;
-
+  // 1b. check that k is < the order of the group
   if (k.gte(curve.n)) return null;
 
+  // 2. Compute commitment Q = kG, where g is the base point
   const Q = curve.g.mul(k);
+  // convert the commitment to octets first
   const compressedQ = new BN(Q.encodeCompressed());
 
-  const Q = curve.g.mul(k);
-  const compressedQ = new BN(Q.encodeCompressed());
-
+  // 3. Compute the challenge r = H(Q || pubKey || msg)
   const r = hash(compressedQ, pubKey, msg);
   const h = r.clone();
 
   if (h.isZero()) return null;
 
-  if (h.gte(curve.n)) return null;
+  if (h.eq(curve.n)) return null;
 
+  // 4. Compute s = k - r * prv
+  // 4a. Compute r * prv
   let s = h.imul(prv);
+  // 4b. Compute s = k - r * prv mod n
   s = k.isub(s);
   s = s.umod(curve.n);
 
@@ -119,13 +134,20 @@ const trySign = (msg: Buffer, prv: BN, k: BN, pn: Buffer, pubKey: Buffer) => {
 
 /**
  * Verify signature.
+ *
  * @param {Buffer} msg
  * @param {Buffer} signature
  * @param {Buffer} key
- * @returns {Buffer}
+ *
+ * @returns {boolean}
+ *
+ * 1. Check if r,s is in [1, ..., order-1]
+ * 2. Compute Q = sG + r*kpub
+ * 3. If Q = O (the neutral point), return 0;
+ * 4. r' = H(Q, kpub, m)
+ * 5. return r' == r
  */
-
-export const verify = (msg: Buffer, signature: Buffer, key: Buffer) => {
+export const verify = (msg: Buffer, signature: Signature, key: Buffer) => {
   const sig = new Signature(signature);
 
   if (sig.s.gte(curve.n)) throw new Error('Invalid S value.');
@@ -159,8 +181,8 @@ export const alg = Buffer.from('Schnorr+SHA256  ', 'ascii');
  * Instantiate an HMAC-DRBG.
  *
  * @param {Buffer} msg
- * @param {Buffer} priv
- * @param {Buffer} data
+ * @param {Buffer} priv - used as entropy input
+ * @param {Buffer} data - used as nonce
  *
  * @returns {DRBG}
  */
@@ -177,14 +199,22 @@ export const getDRBG = (msg: Buffer, priv: Buffer, data?: Buffer) => {
 
   alg.copy(pers, 32);
 
-  return new DRBG(sha256, priv, msg, pers);
+  // return new DRBG(sha256, priv, msg, pers);
+  return new DRBG({
+    hash: hashjs.sha256,
+    entropy: priv,
+    nonce: msg,
+    pers,
+  });
 };
 
 /**
  * Generate pub+priv nonce pair.
+ *
  * @param {Buffer} msg
  * @param {Buffer} priv
  * @param {Buffer} data
+ *
  * @returns {Buffer}
  */
 

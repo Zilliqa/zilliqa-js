@@ -8,14 +8,14 @@
 // warranties are given as to title or non-infringement, merchantability or fitness for purpose
 // and, to the extent permitted by law, all liability for your use of the code is disclaimed.
 import elliptic from 'elliptic';
-import sha256 from 'crypto-js/sha256';
+import hashjs from 'hash.js';
 import {isWebUri} from 'valid-url';
 import * as schnorr from './schnorr';
 
 const NUM_BYTES = 32;
 const HEX_PREFIX = '0x';
 
-const secp256k1 = elliptic.ec('secp256k1').curve;
+const secp256k1 = elliptic.ec('secp256k1');
 
 const hasCrypto = () => {
   if (
@@ -68,7 +68,11 @@ export const getAddressFromPrivateKey = (privateKey: string) => {
   const keyPair = secp256k1.keyFromPrivate(privateKey, 'hex');
   const pub = keyPair.getPublic(false, 'hex');
 
-  return sha256(pub).slice(0, 20);
+  return hashjs
+    .sha256()
+    .update(pub)
+    .digest('hex')
+    .slice(0, 40);
 };
 
 /**
@@ -94,9 +98,11 @@ export const getPubKeyFromPrivateKey = (privateKey: string) => {
  * @returns {string}
  */
 export const getAddressFromPublicKey = (pubKey: string) => {
-  const hash = sha256(pubKey); // sha256 hash of the public key
-
-  return hash.toString('hex', 12); // rightmost 160 bits/20 bytes of the hash
+  return hashjs
+    .sha256()
+    .update(pubKey)
+    .digest('hex')
+    .slice(0, 40);
 };
 
 /**
@@ -111,29 +117,17 @@ export const verifyPrivateKey = (privateKey: string): boolean => {
   return result;
 };
 
-// construct the transaction json
-// input the privateKey and transaction object
-export const createTransactionJson = (privateKey: string, txnDetails: any) => {
-  const pubKey = secp256k1
-    .keyFromPrivate(privateKey, 'hex')
-    .getPublic(false, 'hex');
-
-  let txn = {
-    version: txnDetails.version,
-    nonce: txnDetails.nonce,
-    to: txnDetails.to,
-    amount: txnDetails.amount,
-    pubKey,
-    gasPrice: txnDetails.gasPrice,
-    gasLimit: txnDetails.gasLimit,
-    code: txnDetails.code || '',
-    data: txnDetails.data || '',
-  };
-
+/**
+ * encodeTransaction
+ *
+ * @param {any} txn
+ * @returns {Buffer}
+ */
+export const encodeTransaction = (txn: any) => {
   let codeHex = new Buffer(txn.code).toString('hex');
   let dataHex = new Buffer(txn.data).toString('hex');
 
-  let msg =
+  let encoded =
     intToByteArray(txn.version, 64).join('') +
     intToByteArray(txn.nonce, 64).join('') +
     txn.to +
@@ -146,9 +140,39 @@ export const createTransactionJson = (privateKey: string, txnDetails: any) => {
     intToByteArray(txn.data.length, 8).join('') + // size of data
     dataHex;
 
+  return new Buffer(encoded, 'hex');
+};
+
+/**
+ * createTransactionJson
+ *
+ * @param {string} Key
+ * @param {any} txnDetails
+ *
+ * @returns {any}
+ */
+export const createTransactionJson = (privateKey: string, txnDetails: any) => {
+  const pubKey = secp256k1
+    .keyFromPrivate(privateKey, 'hex')
+    .getPublic(false, 'hex');
+
+  const txn = {
+    version: txnDetails.version,
+    nonce: txnDetails.nonce,
+    to: txnDetails.to,
+    amount: txnDetails.amount,
+    pubKey,
+    gasPrice: txnDetails.gasPrice,
+    gasLimit: txnDetails.gasLimit,
+    code: txnDetails.code || '',
+    data: txnDetails.data || '',
+  };
+
+  const encodedTx = encodeTransaction(txn);
+
   // sign using schnorr lib
-  let sig = schnorr.sign(
-    new Buffer(msg, 'hex'),
+  const sig = schnorr.sign(
+    encodedTx,
     new Buffer(privateKey, 'hex'),
     new Buffer(pubKey, 'hex'),
   );
@@ -161,6 +185,7 @@ export const createTransactionJson = (privateKey: string, txnDetails: any) => {
   while (s.length < 64) {
     s = '0' + s;
   }
+
   txn['signature'] = r + s;
 
   return txn;
@@ -173,7 +198,7 @@ interface ValidatorDictionary {
 // make sure each of the keys in requiredArgs is present in args
 // and each of it's validator functions return true
 export const validateArgs = (
-  args: { [key: string]: any },
+  args: {[key: string]: any},
   requiredArgs: ValidatorDictionary,
   optionalArgs?: ValidatorDictionary,
 ) => {

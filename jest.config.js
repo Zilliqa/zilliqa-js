@@ -3,8 +3,8 @@ const config = {
     '^.+\\.(t|j)s$': 'ts-jest',
   },
   testMatch: [
-    '<rootDir>/src/**/__tests__/**/*.ts?(x)',
-    '<rootDir>/src/**/?(*.)+(spec|test).ts?(x)',
+    // '<rootDir>/src/**/__tests__/**/*.ts',
+    '<rootDir>/src/**/?(*.)+(spec|test).ts',
   ],
   moduleDirectories: ['src', 'node_modules'],
   moduleFileExtensions: ['js', 'ts'],
