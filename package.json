@@ -4,6 +4,7 @@
   "description": "zilliqa js library",
   "main": "dist/zilliqa.js",
   "typings": "dist/index.d.ts",
+  "sideEffects": ["./src/index.ts"],
   "scripts": {
     "build": "rimraf dist/* && tsc --emitDeclarationOnly && cross-env NODE_ENV=production webpack --config webpack.config.js",
     "test": "jest -c jest.config.js"
@@ -14,7 +15,6 @@
     "elliptic": "^6.4.0",
     "hash.js": "^1.1.5",
     "hmac-drbg": "^1.0.1",
-    "node-fetch": "^2.2.0",
     "valid-url": "^1.0.9"
   },
   "devDependencies": {
@@ -62,6 +62,7 @@
     "ts-jest": "^23.1.3",
     "tslint": "^5.11.0",
     "typescript": "^3.0.1",
+    "uglifyjs-webpack-plugin": "^1.2.7",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^1.1.2",
     "webpack": "^4.16.5",

@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "allowJs": true,
     "esModuleInterop": true,
     "outDir": "dist",
     "module": "commonjs",

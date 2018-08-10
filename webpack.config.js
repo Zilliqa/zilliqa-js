@@ -2,12 +2,13 @@
 /* eslint import/no-extraneous-dependencies: ["error", { devDependencies: true }] */
 const path = require('path');
 const webpack = require('webpack');
+const UglifyJs = require('uglifyjs-webpack-plugin');
 
 const baseConfig = {
   entry: {
     zilliqa: './src/index.ts',
-    'zilliqa.min': './src/index.ts',
   },
+  mode: 'production',
   module: {
     rules: [
       {
@@ -20,6 +21,25 @@ const baseConfig = {
           },
         },
       },
+    ],
+  },
+  devtool: 'source-map',
+  optimization: {
+    minimizer: [
+      new UglifyJs({
+        uglifyOptions: {
+          compress: true,
+          mangle: true,
+          toplevel: false,
+          output: {
+            beautify: false,
+            comments: false,
+          },
+        },
+        include: /zilliqa\.js$/,
+        parallel: true,
+        sourceMap: true,
+      }),
     ],
   },
   output: {
