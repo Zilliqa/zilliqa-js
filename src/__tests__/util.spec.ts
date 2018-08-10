@@ -1,6 +1,8 @@
 import elliptic from 'elliptic';
+import BN from 'bn.js';
 import hashjs from 'hash.js';
 import {pairs} from './keypairs.fixtures';
+import schnorrVectors from './schnorr.fixtures';
 import * as util from '../util';
 import * as schnorr from '../schnorr';
 
@@ -34,7 +36,10 @@ describe('utils', () => {
     const publicKey = secp256k1
       .keyFromPrivate(pk, 'hex')
       .getPublic(false, 'hex');
-    const hash = hashjs.sha256().update(publicKey).digest('hex');
+    const hash = hashjs
+      .sha256()
+      .update(publicKey)
+      .digest('hex');
     const expected = hash.slice(0, 40);
     const actual = util.getAddressFromPrivateKey(pk);
 
@@ -71,5 +76,41 @@ describe('utils', () => {
     const res = schnorr.verify(encodedTx, sig, new Buffer(publicKey, 'hex'));
 
     expect(res).toBeTruthy();
+  });
+
+  it('should match the C++ implementation', () => {
+    schnorrVectors.forEach(({priv, k, r, s}, idx) => {
+      const pub = secp256k1.keyFromPrivate(priv, 'hex').getPublic(false, 'hex');
+      const fromIdx = idx === schnorrVectors.length - 1 ? idx - 2 : idx + 1;
+
+      const tx = {
+        version: 8,
+        nonce: 8,
+        from: util.getAddressFromPrivateKey(schnorrVectors[fromIdx].priv),
+        to: util.getAddressFromPublicKey(pub),
+        pubKey: pub,
+        amount: 888,
+        gasPrice: 8,
+        gasLimit: 88,
+        code: '',
+        data: '',
+      };
+
+      const encodedTx = util.encodeTransaction(tx);
+
+      let sig;
+      while (!sig) {
+        sig = schnorr.trySign(
+          encodedTx,
+          new BN(new Buffer(priv, 'hex')),
+          new BN(k),
+          new Buffer(''),
+          new Buffer(pub, 'hex'),
+        );
+      }
+
+      const res = schnorr.verify(encodedTx, sig, new Buffer(pub, 'hex'));
+      expect(res).toBeTruthy();
+    });
   });
 });

@@ -97,7 +97,7 @@ export const sign = (
  *
  * @returns {Signature | null =>}
  */
-const trySign = (msg: Buffer, prv: BN, k: BN, pn: Buffer, pubKey: Buffer): Signature | null => {
+export const trySign = (msg: Buffer, prv: BN, k: BN, pn: Buffer, pubKey: Buffer): Signature | null => {
   if (prv.isZero()) throw new Error('Bad private key.');
 
   if (prv.gte(curve.n)) throw new Error('Bad private key.');
