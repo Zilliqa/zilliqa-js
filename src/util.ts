@@ -10,7 +10,9 @@
 import elliptic from 'elliptic';
 import hashjs from 'hash.js';
 import {isWebUri} from 'valid-url';
+
 import * as schnorr from './schnorr';
+import {TxDetails} from './types';
 
 const NUM_BYTES = 32;
 const HEX_PREFIX = '0x';
@@ -123,7 +125,7 @@ export const verifyPrivateKey = (privateKey: string): boolean => {
  * @param {any} txn
  * @returns {Buffer}
  */
-export const encodeTransaction = (txn: any) => {
+export const encodeTransaction = (txn: TxDetails) => {
   let codeHex = new Buffer(txn.code).toString('hex');
   let dataHex = new Buffer(txn.data).toString('hex');
 
@@ -132,7 +134,7 @@ export const encodeTransaction = (txn: any) => {
     intToByteArray(txn.nonce, 64).join('') +
     txn.to +
     txn.pubKey +
-    intToByteArray(txn.amount, 64).join('') +
+    txn.amount.toString('hex', 64) +
     intToByteArray(txn.gasPrice, 64).join('') +
     intToByteArray(txn.gasLimit, 64).join('') +
     intToByteArray(txn.code.length, 8).join('') + // size of code
@@ -146,12 +148,16 @@ export const encodeTransaction = (txn: any) => {
 /**
  * createTransactionJson
  *
- * @param {string} Key
- * @param {any} txnDetails
+ * @param {string} privateKey
+ * @param {TxDetails} txnDetails
+ * @param {TxDetails}
  *
- * @returns {any}
+ * @returns {TxDetails}
  */
-export const createTransactionJson = (privateKey: string, txnDetails: any) => {
+export const createTransactionJson = (
+  privateKey: string,
+  txnDetails: TxDetails,
+): TxDetails => {
   const pubKey = secp256k1
     .keyFromPrivate(privateKey, 'hex')
     .getPublic(false, 'hex');
