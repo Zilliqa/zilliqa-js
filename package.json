@@ -1,10 +1,12 @@
 {
   "name": "zilliqa.js",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "zilliqa js library",
   "main": "dist/zilliqa.js",
   "typings": "dist/index.d.ts",
-  "sideEffects": ["./src/index.ts"],
+  "sideEffects": [
+    "./src/index.ts"
+  ],
   "scripts": {
     "build": "rimraf dist/* && tsc --emitDeclarationOnly && cross-env NODE_ENV=production webpack --config webpack.config.js",
     "test": "jest -c jest.config.js"
