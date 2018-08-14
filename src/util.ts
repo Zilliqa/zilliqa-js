@@ -7,6 +7,8 @@
 // another public or private blockchain network. This source code is provided ‘as is’ and no
 // warranties are given as to title or non-infringement, merchantability or fitness for purpose
 // and, to the extent permitted by law, all liability for your use of the code is disclaimed.
+// import { randomBytes } from 'crypto';
+import randomBytes from 'randombytes';
 import elliptic from 'elliptic';
 import hashjs from 'hash.js';
 import {isWebUri} from 'valid-url';
@@ -19,33 +21,14 @@ const HEX_PREFIX = '0x';
 
 const secp256k1 = elliptic.ec('secp256k1');
 
-const hasCrypto = () => {
-  if (
-    typeof window !== 'undefined' &&
-    window.crypto &&
-    window.crypto.getRandomValues
-  ) {
-    return true;
-  }
-
-  return false;
-};
-
 /**
  * generatePrivateKey
  *
  * @returns {string} - the hex-encoded private key
  */
 export const generatePrivateKey = (): string => {
-  if (!hasCrypto()) {
-    throw new Error(
-      'This browser is not capable of safely generating random numbers.',
-    );
-  }
-
   let priv = HEX_PREFIX;
-  const rand = new Uint8Array(NUM_BYTES);
-  window.crypto.getRandomValues(rand);
+  const rand = randomBytes(NUM_BYTES);
 
   for (let i = 0; i < rand.byteLength; i++) {
     // add 00 in case we get an empty byte.
