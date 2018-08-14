@@ -7,7 +7,6 @@ To use Zilliqa's Javascript API library, run the following command from the root
 ```
 yarn add zilliqa.js
 ```
-This will create a dependency on your `.js` project that will point directly to the `master` branch of this repository whenever you do a `npm install`.
 
 ### Build Project
 
@@ -21,6 +20,14 @@ yarn build
 This runs the TypeScript source files through Webpack, that in turn relies on
 Babel to transpile them to a browser-friendly bundle. Type definitions are
 also automatically generated.
+
+### Run Tests
+
+```
+yarn test
+```
+
+Will run all test suites in any folder `__tests__` within the `src` directory.
 
 ## Usage
 
