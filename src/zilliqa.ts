@@ -20,10 +20,19 @@ export default class Zilliqa {
   data: {[key: string]: any};
   version: string;
   node: Znode;
+  util: Partial<typeof util>;
 
   constructor(options: Options) {
     this.data = {};
     this.node = new Znode({url: options.nodeUrl || config.defaultNodeUrl});
+    this.util = {
+      generatePrivateKey: util.generatePrivateKey,
+      verifyPrivateKey: util.verifyPrivateKey,
+      getAddressFromPrivateKey: util.getAddressFromPrivateKey,
+      getPubKeyFromPrivateKey: util.getPubKeyFromPrivateKey,
+      createTransactionJson: util.createTransactionJson,
+    };
+
     this.version = config.version;
   }
 

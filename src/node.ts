@@ -12,18 +12,9 @@ import * as util from './util';
 
 type callback = (error: any, data: any) => any;
 
-const utils = {
-  generatePrivateKey: util.generatePrivateKey,
-  verifyPrivateKey: util.verifyPrivateKey,
-  getAddressFromPrivateKey: util.getAddressFromPrivateKey,
-  getPubKeyFromPrivateKey: util.getPubKeyFromPrivateKey,
-  createTransactionJson: util.createTransactionJson,
-};
-
 export default class ZNode {
   url: string;
   apiUrl: string;
-  utils: typeof utils;
 
   constructor(args: any) {
     validateArgs(args, {
@@ -32,7 +23,6 @@ export default class ZNode {
 
     this.url = args.url;
     this.apiUrl = 'https://api.zilliqa.com';
-    this.utils = utils;
   }
 
   /**
