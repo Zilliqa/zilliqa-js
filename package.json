@@ -1,7 +1,9 @@
 {
   "name": "zilliqa.js",
   "version": "0.1.0",
+  "license": "See LICENSE",
   "description": "zilliqa js library",
+  "repository": "https://github.com/Zilliqa/Zilliqa-Javascript-Library",
   "main": "dist/zilliqa.js",
   "typings": "dist/index.d.ts",
   "sideEffects": [
