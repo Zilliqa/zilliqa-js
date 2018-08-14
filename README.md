@@ -1,12 +1,16 @@
 # Zilliqa-JavaScript-Library API
+[![npm version](https://badge.fury.io/js/zilliqa-js.svg)](https://badge.fury.io/js/zilliqa-js)
+[![Build Status](https://travis-ci.com/Zilliqa/Zilliqa-JavaScript-Library.svg?branch=master)](https://travis-ci.com/Zilliqa/Zilliqa-JavaScript-Library)
+[![Gitter chat](http://img.shields.io/badge/chat-on%20gitter-077a8f.svg)](https://gitter.im/Zilliqa/)
 
 ## Installation
 
-To use Zilliqa's Javascript API library, run the following command from the root of your project directory.
+To use Zilliqa's Javascript API library, run ONE of the following commands from the root of your project directory.
+### Yarn  
+`yarn add zilliqa-js`
 
-```
-yarn add zilliqa.js
-```
+### NPM
+`npm install zilliqa-js`
 
 ### Build Project
 
