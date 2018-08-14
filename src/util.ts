@@ -7,7 +7,6 @@
 // another public or private blockchain network. This source code is provided ‘as is’ and no
 // warranties are given as to title or non-infringement, merchantability or fitness for purpose
 // and, to the extent permitted by law, all liability for your use of the code is disclaimed.
-// import { randomBytes } from 'crypto';
 import randomBytes from 'randombytes';
 import elliptic from 'elliptic';
 import hashjs from 'hash.js';
