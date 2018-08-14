@@ -33,6 +33,13 @@ const baseConfig = {
     ],
   },
   devtool: 'source-map',
+  resolve: {
+    extensions: ['.ts', '.js'],
+  },
+};
+
+const clientConfig = {
+  ...baseConfig,
   optimization: {
     minimizer: [
       new UglifyJs({
@@ -54,13 +61,20 @@ const baseConfig = {
   output: {
     libraryTarget: 'umd',
     library: 'zilliqa.js',
-    filename: '[name].js',
+    filename: '[name].browser.js',
     path: path.join(__dirname, 'dist'),
-    globalObject: 'typeof self !== \'undefined\' ? self : this',
   },
-  resolve: {
-    extensions: ['.ts', '.js'],
-  },
-};
+}
 
-module.exports = baseConfig;
+const serverConfig = {
+  ...baseConfig,
+  target: 'node',
+  output: {
+    filename: '[name].server.js',
+    library: 'zilliqa.js',
+    libraryTarget: 'commonjs2',
+    path: path.join(__dirname, 'dist'),
+  }
+}
+
+module.exports = [baseConfig, serverConfig];
