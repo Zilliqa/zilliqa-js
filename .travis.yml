@@ -12,4 +12,4 @@ script:
   - yarn run test
 cache:
   directories:
-  - "$HOME/.yarn-"
+  - "$HOME/.yarn-cache"
