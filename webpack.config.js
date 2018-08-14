@@ -56,6 +56,7 @@ const baseConfig = {
     library: 'zilliqa.js',
     filename: '[name].js',
     path: path.join(__dirname, 'dist'),
+    globalObject: 'typeof self !== \'undefined\' ? self : this',
   },
   resolve: {
     extensions: ['.ts', '.js'],
