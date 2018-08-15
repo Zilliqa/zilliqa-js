@@ -7,30 +7,17 @@
 // another public or private blockchain network. This source code is provided ‘as is’ and no 
 // warranties are given as to title or non-infringement, merchantability or fitness for purpose 
 // and, to the extent permitted by law, all liability for your use of the code is disclaimed. 
+import BN from 'bn.js';
 
-const browserify = require('browserify');
-const gulp = require('gulp');
-const source = require('vinyl-source-stream');
-const buffer = require('vinyl-buffer');
-const uglify = require('gulp-uglify-es').default;
-const gutil = require('gulp-util');
-const babelify = require('babelify');
-
-gulp.task('build', function () {
-  // set up the browserify instance on a task basis
-  const b = browserify({
-    entries: './index.js',
-    debug: true,
-    transform: [babelify.configure({
-      presets: ['es2015']
-    })]
-  });
-
-  return b.bundle()
-    .pipe(source('zilliqa.min.js'))
-    .pipe(buffer())
-    // Add transformation tasks to the pipeline here
-    .pipe(uglify())
-    .on('error', gutil.log)
-    .pipe(gulp.dest('./build/'));
-});
+export interface TxDetails {
+  version: number;
+  nonce: number;
+  to: string;
+  amount: BN;
+  pubKey: string;
+  gasPrice: number;
+  gasLimit: number;
+  code: string;
+  data: string;
+  signature?: string;
+}

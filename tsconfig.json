@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "outDir": "dist",
+    "module": "commonjs",
+    "target": "es5",
+    "lib": ["es2015", "es2016", "es2017", "dom"],
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "declaration": true,
+    "declarationDir": "dist",
+    "rootDir": "src",
+    "forceConsistentCasingInFileNames": false,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "noUnusedLocals": true
+  },
+  "include": [ "src/**/*", "typings/**/*" ]
+}

@@ -7,13 +7,10 @@
 // another public or private blockchain network. This source code is provided ‘as is’ and no 
 // warranties are given as to title or non-infringement, merchantability or fitness for purpose 
 // and, to the extent permitted by law, all liability for your use of the code is disclaimed. 
-
-const Zilliqa = require('./lib/zilliqa')
+import Zilliqa from './zilliqa';
+export { default as Zilliqa } from './zilliqa';
 
 if (typeof window !== 'undefined' && typeof window.Zilliqa === 'undefined') {
-  window.Zilliqa = Zilliqa
+  window.Zilliqa = Zilliqa;
 }
 
-module.exports = {
-	Zilliqa: Zilliqa
-}

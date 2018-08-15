@@ -1,23 +1,37 @@
 # Zilliqa-JavaScript-Library API
+[![npm version](https://badge.fury.io/js/zilliqa-js.svg)](https://badge.fury.io/js/zilliqa-js)
+[![Build Status](https://travis-ci.com/Zilliqa/Zilliqa-JavaScript-Library.svg?branch=master)](https://travis-ci.com/Zilliqa/Zilliqa-JavaScript-Library)
+[![Gitter chat](http://img.shields.io/badge/chat-on%20gitter-077a8f.svg)](https://gitter.im/Zilliqa/)
 
 ## Installation
 
-To use Zilliqa's Javascript API library, run the following command from the root of your project directory.
+To use Zilliqa's Javascript API library, run ONE of the following commands from the root of your project directory.
+### Yarn  
+`yarn add zilliqa-js`
 
-```
-npm install Zilliqa/Zilliqa-JavaScript-Library#master --save
-```
-This will create a dependency on your `.js` project that will point directly to the `master` branch of this repository whenever you do a `npm install`.
+### NPM
+`npm install zilliqa-js`
 
 ### Build Project
 
 To build the project, run the following commands: 
+
 ```
-npm install
-npm install -g gulp
-gulp build
+yarn install
+yarn build
 ```
-The build file (`build/zilliqa.min.js`) will be generated. 
+
+This runs the TypeScript source files through Webpack, that in turn relies on
+Babel to transpile them to a browser-friendly bundle. Type definitions are
+also automatically generated.
+
+### Run Tests
+
+```
+yarn test
+```
+
+Will run all test suites in any folder `__tests__` within the `src` directory.
 
 ## Usage
 
@@ -68,12 +82,15 @@ Other than `getBalance(address)`, you can also try to create a transaction or de
 ### Example: Create a Transaction
 
 ```js
+// always use BN for `amount` to prevent overflows.
+import BN from 'bn.js'
+
 // transaction details
-let txnDetails = {
+const txnDetails = {
     version: 0,
     nonce: 1,
     to: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7',
-    amount: 0,
+    amount: new BN(0),
     gasPrice: 1,
     gasLimit: 1
 };
