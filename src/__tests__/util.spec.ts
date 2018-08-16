@@ -81,55 +81,6 @@ describe('utils', () => {
     expect(res).toBeTruthy();
   });
 
-  it('should be able to create transactions to 0x0', () => {
-    const privateKey = pairs[1].private;
-    const publicKey = secp256k1
-      .keyFromPrivate(privateKey, 'hex')
-      .getPublic(true, 'hex');
-
-    // contains the scilla code as a string
-    const code = 'Scilla Code';
-
-    // the immutable initialisation variables
-    const initParams = [
-      {
-        vname: 'owner',
-        type: 'Address',
-        value: '0x1234567890123456789012345678901234567890',
-      },
-      {
-        vname: 'total_tokens',
-        type: 'Uint128',
-        value: '10000',
-      },
-    ];
-
-    const tx = {
-      version: 8,
-      nonce: 8,
-      to: '0'.repeat(40),
-      from: pairs[1].digest.slice(0, 40),
-      pubKey: publicKey,
-      amount: new BN('888', 10),
-      gasPrice: 8,
-      gasLimit: 88,
-      code: code,
-      data: JSON.stringify(initParams).replace(/\\"/g, '"'),
-    };
-
-    const {signature} = util.createTransactionJson(privateKey, tx);
-    const res = schnorr.verify(
-      util.encodeTransaction(tx),
-      new Signature({
-        r: new BN((signature as string).slice(0, 64), 16),
-        s: new BN((signature as string).slice(64), 16),
-      }),
-      new Buffer(publicKey, 'hex'),
-    );
-
-    expect(res).toBeTruthy();
-  });
-
   it('should sign messages correctly', () => {
     const privateKey = pairs[1].private;
     const publicKey = secp256k1
