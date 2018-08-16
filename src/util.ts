@@ -7,6 +7,7 @@
 // another public or private blockchain network. This source code is provided ‘as is’ and no
 // warranties are given as to title or non-infringement, merchantability or fitness for purpose
 // and, to the extent permitted by law, all liability for your use of the code is disclaimed.
+import BN from 'bn.js';
 import randomBytes from 'randombytes';
 import elliptic from 'elliptic';
 import hashjs from 'hash.js';
@@ -63,14 +64,25 @@ export const getAddressFromPrivateKey = (privateKey: string) => {
  * getPubKeyFromPrivateKey
  *
  * takes a hex-encoded string (private key) and returns its corresponding
- * hex-encoded 32-byte public key.
+ * hex-encoded 33-byte public key.
  *
  * @param {string} privateKey
  * @returns {string}
  */
 export const getPubKeyFromPrivateKey = (privateKey: string) => {
   const keyPair = secp256k1.keyFromPrivate(privateKey, 'hex');
-  return keyPair.getPublic(false, 'hex');
+  return keyPair.getPublic(true, 'hex');
+};
+
+/**
+ * compressPublicKey
+ *
+ * @param {string} publicKey - 65-byte public key, a point (x, y)
+ *
+ * @returns {string}
+ */
+export const compressPublicKey = (publicKey: string): string => {
+  return secp256k1.keyFromPublic(publicKey, 'hex').getPublic(true, 'hex');
 };
 
 /**

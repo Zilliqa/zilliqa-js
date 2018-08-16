@@ -19,7 +19,7 @@ describe('utils', () => {
   it('should recover a public key from a private key', () => {
     pairs.forEach(({private: priv, public: expected}) => {
       const actual = util.getPubKeyFromPrivateKey(priv);
-      expect(actual).toEqual(expected);
+      expect(actual).toEqual(util.compressPublicKey(expected));
     });
   });
 

@@ -38,7 +38,7 @@ declare module 'elliptic' {
     interface EC {
       curve: Curve;
       keyFromPrivate(priv: string, enc: string): KeyPair;
-      keyFromPublic(pub: BN, enc: string): KeyPair;
+      keyFromPublic(pub: string, enc: string): KeyPair;
     }
 
     interface KeyPair {
