@@ -23,7 +23,8 @@
     "hash.js": "^1.1.5",
     "hmac-drbg": "^1.0.1",
     "randombytes": "^2.0.6",
-    "valid-url": "^1.0.9"
+    "valid-url": "^1.0.9",
+    "whatwg-fetch": "^2.0.4"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.56",
@@ -65,6 +66,7 @@
     "gulp-util": "^3.0.8",
     "hoek": "^5.0.3",
     "jest": "^23.4.2",
+    "jest-fetch-mock": "^1.6.5",
     "jest-watch-typeahead": "^0.2.0",
     "mocha": "^5.2.0",
     "ts-jest": "^23.1.3",

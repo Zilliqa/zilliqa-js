@@ -16,7 +16,7 @@ import * as schnorr from './schnorr';
 import {TxDetails} from './types';
 
 const NUM_BYTES = 32;
-const HEX_PREFIX = '0x';
+//const HEX_PREFIX = '0x';
 
 const secp256k1 = elliptic.ec('secp256k1');
 
@@ -26,7 +26,7 @@ const secp256k1 = elliptic.ec('secp256k1');
  * @returns {string} - the hex-encoded private key
  */
 export const generatePrivateKey = (): string => {
-  let priv = HEX_PREFIX;
+  let priv = '';
   const rand = randomBytes(NUM_BYTES);
 
   for (let i = 0; i < rand.byteLength; i++) {
@@ -63,14 +63,25 @@ export const getAddressFromPrivateKey = (privateKey: string) => {
  * getPubKeyFromPrivateKey
  *
  * takes a hex-encoded string (private key) and returns its corresponding
- * hex-encoded 32-byte public key.
+ * hex-encoded 33-byte public key.
  *
  * @param {string} privateKey
  * @returns {string}
  */
 export const getPubKeyFromPrivateKey = (privateKey: string) => {
   const keyPair = secp256k1.keyFromPrivate(privateKey, 'hex');
-  return keyPair.getPublic(false, 'hex');
+  return keyPair.getPublic(true, 'hex');
+};
+
+/**
+ * compressPublicKey
+ *
+ * @param {string} publicKey - 65-byte public key, a point (x, y)
+ *
+ * @returns {string}
+ */
+export const compressPublicKey = (publicKey: string): string => {
+  return secp256k1.keyFromPublic(publicKey, 'hex').getPublic(true, 'hex');
 };
 
 /**
@@ -140,9 +151,7 @@ export const createTransactionJson = (
   privateKey: string,
   txnDetails: TxDetails,
 ): TxDetails => {
-  const pubKey = secp256k1
-    .keyFromPrivate(privateKey, 'hex')
-    .getPublic(false, 'hex');
+  const pubKey = getPubKeyFromPrivateKey(privateKey);
 
   const txn = {
     version: txnDetails.version,

@@ -15,7 +15,10 @@ const UglifyJs = require('uglifyjs-webpack-plugin');
 
 const baseConfig = {
   entry: {
-    zilliqa: './src/index.ts',
+    zilliqa: [
+      'whatwg-fetch',
+      './src/index.ts'
+    ],
   },
   mode: 'production',
   module: {
