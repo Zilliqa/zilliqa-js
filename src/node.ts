@@ -73,7 +73,9 @@ export default class ZNode {
     rpcAjax(
       this.url,
       'CreateTransaction',
-      {...args, amount: args.amount.toString(10)},
+      // FIXME: core must be able to parse amount as string; it currently does
+      // not. the issue is being tracked here: https://github.com/Zilliqa/Zilliqa/issues/524
+      {...args, amount: args.amount.toNumber()},
       cb,
     );
   };
