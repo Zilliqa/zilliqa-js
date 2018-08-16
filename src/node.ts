@@ -7,7 +7,7 @@
 // another public or private blockchain network. This source code is provided ‘as is’ and no
 // warranties are given as to title or non-infringement, merchantability or fitness for purpose
 // and, to the extent permitted by law, all liability for your use of the code is disclaimed.
-import fetch from 'cross-fetch';
+import BN from 'bn.js';
 import { validateArgs } from './util';
 import * as util from './util';
 
@@ -61,7 +61,7 @@ export default class ZNode {
       validateArgs(args, {
         to: [util.isAddress],
         pubKey: [util.isPubkey],
-        amount: [util.isNumber],
+        amount: [BN.isBN],
         gasPrice: [util.isNumber],
         gasLimit: [util.isNumber],
       });
