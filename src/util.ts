@@ -151,9 +151,7 @@ export const createTransactionJson = (
   privateKey: string,
   txnDetails: TxDetails,
 ): TxDetails => {
-  const pubKey = secp256k1
-    .keyFromPrivate(privateKey, 'hex')
-    .getPublic(true, 'hex');
+  const pubKey = getPubKeyFromPrivateKey(privateKey);
 
   const txn = {
     version: txnDetails.version,
