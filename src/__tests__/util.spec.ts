@@ -59,7 +59,6 @@ describe('utils', () => {
       version: 8,
       nonce: 8,
       to: pairs[0].digest.slice(0, 40),
-      from: pairs[1].digest.slice(0, 40),
       pubKey: publicKey,
       amount: new BN('888', 10),
       gasPrice: 8,
@@ -91,7 +90,6 @@ describe('utils', () => {
       version: 8,
       nonce: 8,
       to: pairs[0].digest.slice(0, 40),
-      from: pairs[1].digest.slice(0, 40),
       pubKey: publicKey,
       amount: new BN('888', 10),
       gasPrice: 8,
@@ -114,12 +112,10 @@ describe('utils', () => {
   it('should match the C++ implementation', () => {
     schnorrVectors.forEach(({priv, k, r, s}, idx) => {
       const pub = secp256k1.keyFromPrivate(priv, 'hex').getPublic(false, 'hex');
-      const fromIdx = idx === schnorrVectors.length - 1 ? idx - 2 : idx + 1;
 
       const tx = {
         version: 8,
         nonce: 8,
-        from: util.getAddressFromPrivateKey(schnorrVectors[fromIdx].priv),
         to: util.getAddressFromPublicKey(pub),
         pubKey: pub,
         amount: new BN('888', 10),
