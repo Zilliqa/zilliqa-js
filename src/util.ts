@@ -7,7 +7,6 @@
 // another public or private blockchain network. This source code is provided ‘as is’ and no
 // warranties are given as to title or non-infringement, merchantability or fitness for purpose
 // and, to the extent permitted by law, all liability for your use of the code is disclaimed.
-import BN from 'bn.js';
 import randomBytes from 'randombytes';
 import elliptic from 'elliptic';
 import hashjs from 'hash.js';
@@ -17,7 +16,7 @@ import * as schnorr from './schnorr';
 import {TxDetails} from './types';
 
 const NUM_BYTES = 32;
-const HEX_PREFIX = '0x';
+//const HEX_PREFIX = '0x';
 
 const secp256k1 = elliptic.ec('secp256k1');
 
@@ -27,7 +26,7 @@ const secp256k1 = elliptic.ec('secp256k1');
  * @returns {string} - the hex-encoded private key
  */
 export const generatePrivateKey = (): string => {
-  let priv = HEX_PREFIX;
+  let priv = '';
   const rand = randomBytes(NUM_BYTES);
 
   for (let i = 0; i < rand.byteLength; i++) {

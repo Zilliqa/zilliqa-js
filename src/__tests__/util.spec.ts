@@ -12,7 +12,7 @@ describe('utils', () => {
   it('should be able to generate a valid 32-byte private key', () => {
     const pk = util.generatePrivateKey();
 
-    expect(pk.slice(2)).toHaveLength(64);
+    expect(pk).toHaveLength(64);
     expect(util.verifyPrivateKey(pk)).toBeTruthy();
   });
 
