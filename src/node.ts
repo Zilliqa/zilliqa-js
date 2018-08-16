@@ -8,7 +8,7 @@
 // warranties are given as to title or non-infringement, merchantability or fitness for purpose
 // and, to the extent permitted by law, all liability for your use of the code is disclaimed.
 import BN from 'bn.js';
-import { validateArgs } from './util';
+import {validateArgs} from './util';
 import * as util from './util';
 
 type callback = (error: any, data: any) => any;
@@ -70,7 +70,12 @@ export default class ZNode {
       return;
     }
 
-    rpcAjax(this.url, 'CreateTransaction', args, cb);
+    rpcAjax(
+      this.url,
+      'CreateTransaction',
+      {...args, amount: args.amount.toString(10)},
+      cb,
+    );
   };
 
   getTransaction = (args, cb) => {
@@ -115,7 +120,7 @@ export default class ZNode {
     rpcAjax(this.url, 'GetBalance', args.address, cb);
   };
 
-  getGasPrice = (cb) => {
+  getGasPrice = cb => {
     rpcAjax(this.url, 'GetGasPrice', '', cb);
   };
 
@@ -263,7 +268,7 @@ export default class ZNode {
     rpcAjax(this.url, 'GetTransactionReceipt', args.txHash, cb);
   };
 
-  getHashrate = (cb) => {
+  getHashrate = cb => {
     rpcAjax(this.url, 'GetHashrate', '', cb);
   };
 
@@ -384,4 +389,3 @@ function postData(url, data) {
     referrer: 'no-referrer',
   }).then(response => response.json());
 }
-
