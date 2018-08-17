@@ -31,12 +31,12 @@ export default class Zilliqa {
       getAddressFromPrivateKey: util.getAddressFromPrivateKey,
       getPubKeyFromPrivateKey: util.getPubKeyFromPrivateKey,
       createTransactionJson: util.createTransactionJson,
-      getAddressFromPublicKey: util.getAddressFromPublicKey,
+      getAddressFromPubKey: util.getAddressFromPublicKey,
       isAddress: util.isAddress,
       isPrivateKey: util.isPrivateKey,
       isPubKey: util.isPubkey,
       intToByteArray: util.intToByteArray,
-      compressPublicKey: util.compressPublicKey
+      compressPubKey: util.compressPublicKey
     
     };
 
