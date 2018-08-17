@@ -49,7 +49,7 @@ let { Zilliqa } = require('zilliqa-js');
 
 //For local testing, use URL = 'http://localhost:4201'
 //To connect to the external network, use URL = 'https://api-scilla.zilliqa.com'
-URL = 'https://api-scilla.zilliqa.com
+let URL = 'https://api-scilla.zilliqa.com'
 let zilliqa = new Zilliqa({
     nodeUrl: URL
 });

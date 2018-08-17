@@ -51,7 +51,7 @@ export const hash = (q: BN, pubkey: Buffer, msg: Buffer) => {
   pubkey.copy(B, 33);
   msg.copy(B, 66);
 
-  return new BN(sha256.update(B).digest('hex'));
+  return new BN(sha256.update(B).digest('hex'), 16);
 };
 
 /**
