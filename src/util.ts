@@ -50,7 +50,7 @@ export const generatePrivateKey = (): string => {
  */
 export const getAddressFromPrivateKey = (privateKey: string) => {
   const keyPair = secp256k1.keyFromPrivate(privateKey, 'hex');
-  const pub = keyPair.getPublic(false, 'hex');
+  const pub = keyPair.getPublic(true, 'hex');
 
   return hashjs
     .sha256()
