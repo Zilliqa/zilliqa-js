@@ -164,9 +164,13 @@ node.createTransaction(txn, callback);
 - **[getAddressFromPrivateKey](#getaddressfromprivatekey)**
 - **[getPubKeyFromPrivateKey](#getpubkeyfromprivatekey)**
 - **[createTransactionJson](#createtransactionjson)**
+- **[getAddressFromPublicKey](#getaddressfrompublickey)**
+- **[isPubKey](#isPubKey)**
+- **[isAddress](#isAddress)**
+- **[intToByteArray](#intToByteArray)**
+- **[compressPublicKey](#compressPublicKey)**
 
 ## Library Methods
-
 - **[getLibraryVersion](#getlibraryversion)**
 - **[setNode](#setnode)**
 - **[currentNode](#currentnode)**
@@ -629,7 +633,6 @@ console.log(pk.toString('hex'));
 
 
 ### `verifyPrivateKey`
-
 Verify if a private key is valid for the secp256k1 curve
 
 **Parameters**
@@ -729,7 +732,90 @@ let txnDetails = {
 let txn = zilliqa.util.createTransactionJson(privateKey, txnDetails);
 ```
 
+### `getAddressFromPubKey`
 
+Get the public address of an account using its public key
+
+**Parameters**
+
+`String`/`Buffer` - the public key to get the public address of
+
+**Returns**
+
+`Buffer` - the public address of the input private key
+
+**Usage**
+
+```js
+let address = zilliqa.util.getAddressFromPubKey(pubKey);
+console.log(address.toString('hex'));
+```
+
+### `isAddress`
+
+Verify if an address syntax is valid
+
+**Parameters**
+
+`String`/`Buffer` - the address to verify
+
+**Returns**
+
+`Bool` - true if input string/buffer is a valid address syntax
+
+**Usage**
+
+```js
+let pk = zilliqa.util.generatePrivateKey();
+let address = zilliqa.util.getAddressFromPrivateKey(pk);
+console.log(zilliqa.util.isAddress(address)); // true
+console.log(zilliqa.util.isAddress('0'.repeat(30))); // false
+```
+
+### `isPubKey`
+
+Verify if an public key syntax is valid
+
+**Parameters**
+
+`String`/`Buffer` - the public key to verify
+
+**Returns**
+
+`Bool` - true if input string/buffer is a valid public key syntax
+
+**Usage**
+
+```js
+let pk = zilliqa.util.generatePrivateKey();
+let pubKey = zilliqa.util.getPubKeyFromPrivateKey(pk);
+console.log(zilliqa.util.isPubKey(pubKey)); // true
+console.log(zilliqa.util.isPubKey('0'.repeat(30))); // false
+```
+
+### `intToByteArray`
+Converts number to array representing the padded hex form
+
+**Parameters**
+* `number`: Integer to be converted into bytes
+* `paddedSize`: Integer specifying the padded size
+
+**Returns**
+* `byteArray`: Byte array of integer
+
+**Usage**
+```
+let nonceStr = zilliqa.util.intToByteArray(nonce, 64).join("");
+```
+
+### `compressPublicKey`
+Compresses a public key into fewer bytes
+
+**Parameters**
+`String` - the public key to be compressed
+
+**Returns**
+`String` - Compressed version of the public key
 ## Library Methods
 
 ### `getLibraryVersion`

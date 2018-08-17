@@ -236,7 +236,7 @@ export const isPrivateKey = (privateKey: string) => {
   return !!privateKey.match(/^[0-9a-fA-F]{64}$/);
 };
 
-export const isPubkey = (pubKey: string) => {
+export const isPubKey = (pubKey: string) => {
   return !!pubKey.match(/^[0-9a-fA-F]{66}$/);
 };
 
