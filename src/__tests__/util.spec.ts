@@ -26,7 +26,7 @@ describe('utils', () => {
 
   it('should convert a public key to an address', () => {
     pairs.forEach(({public: pub, digest}) => {
-      const expected = digest.slice(0, 40);
+      const expected = digest.slice(24);
       const actual = util.getAddressFromPublicKey(pub);
       expect(actual).toEqual(expected);
     });
@@ -52,7 +52,7 @@ describe('utils', () => {
     const tx = {
       version: 8,
       nonce: 8,
-      to: pairs[0].digest.slice(0, 40),
+      to: pairs[0].digest.slice(24),
       pubKey: publicKey,
       amount: new BN('888', 10),
       gasPrice: 8,

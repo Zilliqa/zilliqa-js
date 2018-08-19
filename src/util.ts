@@ -54,9 +54,9 @@ export const getAddressFromPrivateKey = (privateKey: string) => {
 
   return hashjs
     .sha256()
-    .update(pub)
+    .update(pub, 'hex')
     .digest('hex')
-    .slice(0, 40);
+    .slice(24);
 };
 
 /**
@@ -95,9 +95,9 @@ export const compressPublicKey = (publicKey: string): string => {
 export const getAddressFromPublicKey = (pubKey: string) => {
   return hashjs
     .sha256()
-    .update(pubKey)
+    .update(pubKey, 'hex')
     .digest('hex')
-    .slice(0, 40);
+    .slice(24);
 };
 
 /**
