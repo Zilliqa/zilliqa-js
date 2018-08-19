@@ -28,6 +28,7 @@ describe('utils', () => {
     pairs.forEach(({public: pub, digest}) => {
       const expected = digest.slice(24);
       const actual = util.getAddressFromPublicKey(pub);
+
       expect(actual).toHaveLength(40);
       expect(actual).toEqual(expected);
     });
@@ -42,6 +43,19 @@ describe('utils', () => {
 
     expect(actual).toHaveLength(40);
     expect(actual).toEqual(expected);
+  });
+
+  it('should give the same address for a given public or private key', () => {
+    pairs.forEach(({private: priv, public: pub}) => {
+      const fromPrivateKey = util.getAddressFromPrivateKey(priv);
+      const fromPublicKey = util.getAddressFromPublicKey(
+        util.compressPublicKey(pub),
+      );
+
+      expect(fromPrivateKey).toHaveLength(40);
+      expect(fromPublicKey).toHaveLength(40);
+      expect(fromPublicKey).toEqual(fromPrivateKey);
+    });
   });
 
   it('should be able to correctly create transaction json', () => {
