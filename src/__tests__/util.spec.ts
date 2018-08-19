@@ -118,9 +118,44 @@ describe('utils', () => {
     expect(res).toBeTruthy();
   });
 
+  it('should not verify a falsely signed transaction', () => {
+    schnorrVectors.forEach(({priv, k}, idx) => {
+      const pub = secp256k1.keyFromPrivate(priv, 'hex').getPublic(true, 'hex');
+      const badPrivateKey = pairs[0].private;
+
+      const tx = {
+        version: 8,
+        nonce: 8,
+        to: util.getAddressFromPublicKey(pub),
+        pubKey: pub,
+        amount: new BN('888', 10),
+        gasPrice: 8,
+        gasLimit: 88,
+        code: '',
+        data: '',
+      };
+
+      const encodedTx = util.encodeTransaction(tx);
+
+      let sig;
+      while (!sig) {
+        sig = schnorr.trySign(
+          encodedTx,
+          new BN(new Buffer(badPrivateKey, 'hex')),
+          new BN(k),
+          new Buffer(''),
+          new Buffer(pub, 'hex'),
+        );
+      }
+
+      const res = schnorr.verify(encodedTx, sig, new Buffer(pub, 'hex'));
+      expect(res).toBeFalsy();
+    });
+  });
+
   it('should match the C++ implementation', () => {
-    schnorrVectors.forEach(({priv, k, r, s}, idx) => {
-      const pub = secp256k1.keyFromPrivate(priv, 'hex').getPublic(false, 'hex');
+    schnorrVectors.forEach(({priv, k}, idx) => {
+      const pub = secp256k1.keyFromPrivate(priv, 'hex').getPublic(true, 'hex');
 
       const tx = {
         version: 8,
