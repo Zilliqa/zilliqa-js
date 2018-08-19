@@ -28,6 +28,7 @@ describe('utils', () => {
     pairs.forEach(({public: pub, digest}) => {
       const expected = digest.slice(24);
       const actual = util.getAddressFromPublicKey(pub);
+      expect(actual).toHaveLength(40);
       expect(actual).toEqual(expected);
     });
   });
