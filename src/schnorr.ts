@@ -97,7 +97,13 @@ export const sign = (
  *
  * @returns {Signature | null =>}
  */
-export const trySign = (msg: Buffer, prv: BN, k: BN, pn: Buffer, pubKey: Buffer): Signature | null => {
+export const trySign = (
+  msg: Buffer,
+  prv: BN,
+  k: BN,
+  pn: Buffer,
+  pubKey: Buffer,
+): Signature | null => {
   if (prv.isZero()) throw new Error('Bad private key.');
 
   if (prv.gte(curve.n)) throw new Error('Bad private key.');
@@ -129,7 +135,7 @@ export const trySign = (msg: Buffer, prv: BN, k: BN, pn: Buffer, pubKey: Buffer)
 
   if (s.isZero()) return null;
 
-  return new Signature({ r, s });
+  return new Signature({r, s});
 };
 
 /**
@@ -174,7 +180,6 @@ export const verify = (msg: Buffer, signature: Signature, key: Buffer) => {
  * Schnorr personalization string.
  * @const {Buffer}
  */
-
 export const alg = Buffer.from('Schnorr+SHA256  ', 'ascii');
 
 /**
@@ -186,7 +191,6 @@ export const alg = Buffer.from('Schnorr+SHA256  ', 'ascii');
  *
  * @returns {DRBG}
  */
-
 export const getDRBG = (msg: Buffer, priv: Buffer, data?: Buffer) => {
   const pers = Buffer.allocUnsafe(48);
 
@@ -199,7 +203,6 @@ export const getDRBG = (msg: Buffer, priv: Buffer, data?: Buffer) => {
 
   alg.copy(pers, 32);
 
-  // return new DRBG(sha256, priv, msg, pers);
   return new DRBG({
     hash: hashjs.sha256,
     entropy: priv,
@@ -217,7 +220,6 @@ export const getDRBG = (msg: Buffer, priv: Buffer, data?: Buffer) => {
  *
  * @returns {Buffer}
  */
-
 export const generateNoncePair = (msg: Buffer, priv: Buffer, data: Buffer) => {
   const drbg = getDRBG(msg, priv, data);
   const len = curve.n.byteLength();

@@ -2,6 +2,7 @@ import elliptic from 'elliptic';
 import Signature from 'elliptic/lib/elliptic/ec/signature';
 import BN from 'bn.js';
 import hashjs from 'hash.js';
+import {addresses} from './address.fixtures';
 import {pairs} from './keypairs.fixtures';
 import schnorrVectors from './schnorr.fixtures';
 import * as util from '../util';
@@ -26,8 +27,10 @@ describe('utils', () => {
 
   it('should convert a public key to an address', () => {
     pairs.forEach(({public: pub, digest}) => {
-      const expected = digest.slice(0, 40);
+      const expected = digest.slice(24);
       const actual = util.getAddressFromPublicKey(pub);
+
+      expect(actual).toHaveLength(40);
       expect(actual).toEqual(expected);
     });
   });
@@ -43,6 +46,19 @@ describe('utils', () => {
     expect(actual).toEqual(expected);
   });
 
+  it('should give the same address for a given public or private key', () => {
+    pairs.forEach(({private: priv, public: pub}) => {
+      const fromPrivateKey = util.getAddressFromPrivateKey(priv);
+      const fromPublicKey = util.getAddressFromPublicKey(
+        util.compressPublicKey(pub),
+      );
+
+      expect(fromPrivateKey).toHaveLength(40);
+      expect(fromPublicKey).toHaveLength(40);
+      expect(fromPublicKey).toEqual(fromPrivateKey);
+    });
+  });
+
   it('should be able to correctly create transaction json', () => {
     const privateKey = pairs[1].private;
     const publicKey = secp256k1
@@ -52,7 +68,7 @@ describe('utils', () => {
     const tx = {
       version: 8,
       nonce: 8,
-      to: pairs[0].digest.slice(0, 40),
+      to: pairs[0].digest.slice(24),
       pubKey: publicKey,
       amount: new BN('888', 10),
       gasPrice: 8,
@@ -72,6 +88,18 @@ describe('utils', () => {
     );
 
     expect(res).toBeTruthy();
+  });
+
+  it('should produce the same results as the C++ keygen util', () => {
+    addresses.forEach(({public: pub, private: priv, address}) => {
+      const generatedPub = util.getPubKeyFromPrivateKey(priv);
+      const addressFromPriv = util.getAddressFromPrivateKey(priv);
+      const addressFromPub = util.getAddressFromPrivateKey(priv);
+
+      expect(generatedPub.toUpperCase()).toEqual(pub);
+      expect(addressFromPriv.toUpperCase()).toEqual(address);
+      expect(addressFromPub.toUpperCase()).toEqual(address);
+    });
   });
 
   it('should sign messages correctly', () => {
@@ -103,9 +131,10 @@ describe('utils', () => {
     expect(res).toBeTruthy();
   });
 
-  it('should match the C++ implementation', () => {
-    schnorrVectors.forEach(({priv, k, r, s}, idx) => {
-      const pub = secp256k1.keyFromPrivate(priv, 'hex').getPublic(false, 'hex');
+  it('should not verify a falsely signed transaction', () => {
+    schnorrVectors.forEach(({priv, k}, idx) => {
+      const pub = secp256k1.keyFromPrivate(priv, 'hex').getPublic(true, 'hex');
+      const badPrivateKey = pairs[0].private;
 
       const tx = {
         version: 8,
@@ -125,7 +154,7 @@ describe('utils', () => {
       while (!sig) {
         sig = schnorr.trySign(
           encodedTx,
-          new BN(new Buffer(priv, 'hex')),
+          new BN(new Buffer(badPrivateKey, 'hex')),
           new BN(k),
           new Buffer(''),
           new Buffer(pub, 'hex'),
@@ -133,6 +162,31 @@ describe('utils', () => {
       }
 
       const res = schnorr.verify(encodedTx, sig, new Buffer(pub, 'hex'));
+      expect(res).toBeFalsy();
+    });
+  });
+
+  it('should match the C++ Schnorr implementation', () => {
+    schnorrVectors.forEach(({msg, priv, pub, k, r, s}) => {
+      let sig: Signature | null = null;
+      while (!sig) {
+        sig = schnorr.trySign(
+          new Buffer(msg, 'hex'),
+          new BN(new Buffer(priv, 'hex')),
+          new BN(k, 16),
+          new Buffer(''),
+          new Buffer(pub, 'hex'),
+        );
+      }
+
+      const res = schnorr.verify(
+        new Buffer(msg, 'hex'),
+        sig,
+        new Buffer(pub, 'hex'),
+      );
+
+      expect(sig.r.toString('hex', 64).toUpperCase()).toEqual(r);
+      expect(sig.s.toString('hex', 64).toUpperCase()).toEqual(s);
       expect(res).toBeTruthy();
     });
   });
