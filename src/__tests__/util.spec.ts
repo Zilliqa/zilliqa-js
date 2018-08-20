@@ -154,35 +154,22 @@ describe('utils', () => {
   });
 
   it('should match the C++ implementation', () => {
-    schnorrVectors.forEach(({priv, k}, idx) => {
-      const pub = secp256k1.keyFromPrivate(priv, 'hex').getPublic(true, 'hex');
-
-      const tx = {
-        version: 8,
-        nonce: 8,
-        to: util.getAddressFromPublicKey(pub),
-        pubKey: pub,
-        amount: new BN('888', 10),
-        gasPrice: 8,
-        gasLimit: 88,
-        code: '',
-        data: '',
-      };
-
-      const encodedTx = util.encodeTransaction(tx);
-
-      let sig;
+    schnorrVectors.forEach(({ msg, priv, pub, k, r, s }) => {
+      let sig: Signature | null = null;
       while (!sig) {
         sig = schnorr.trySign(
-          encodedTx,
+          new Buffer(msg, 'hex'),
           new BN(new Buffer(priv, 'hex')),
-          new BN(k),
+          new BN(k, 16),
           new Buffer(''),
           new Buffer(pub, 'hex'),
         );
       }
 
-      const res = schnorr.verify(encodedTx, sig, new Buffer(pub, 'hex'));
+      const res = schnorr.verify(new Buffer(msg, 'hex'), sig, new Buffer(pub, 'hex'));
+
+      expect(sig.r.toString('hex', 64).toUpperCase()).toEqual(r);
+      expect(sig.s.toString('hex', 64).toUpperCase()).toEqual(s);
       expect(res).toBeTruthy();
     });
   });
