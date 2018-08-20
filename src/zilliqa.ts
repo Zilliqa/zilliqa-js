@@ -31,6 +31,12 @@ export default class Zilliqa {
       getAddressFromPrivateKey: util.getAddressFromPrivateKey,
       getPubKeyFromPrivateKey: util.getPubKeyFromPrivateKey,
       createTransactionJson: util.createTransactionJson,
+      getAddressFromPublicKey: util.getAddressFromPublicKey,
+      isAddress: util.isAddress,
+      isPubKey: util.isPubKey,
+      intToByteArray: util.intToByteArray,
+      compressPublicKey: util.compressPublicKey
+    
     };
 
     this.version = config.version;

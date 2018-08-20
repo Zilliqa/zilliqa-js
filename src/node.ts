@@ -60,7 +60,7 @@ export default class ZNode {
     try {
       validateArgs(args, {
         to: [util.isAddress],
-        pubKey: [util.isPubkey],
+        pubKey: [util.isPubKey],
         amount: [BN.isBN],
         gasPrice: [util.isNumber],
         gasLimit: [util.isNumber],
