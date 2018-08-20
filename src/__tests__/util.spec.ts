@@ -2,6 +2,7 @@ import elliptic from 'elliptic';
 import Signature from 'elliptic/lib/elliptic/ec/signature';
 import BN from 'bn.js';
 import hashjs from 'hash.js';
+import {addresses} from './address.fixtures';
 import {pairs} from './keypairs.fixtures';
 import schnorrVectors from './schnorr.fixtures';
 import * as util from '../util';
@@ -89,6 +90,18 @@ describe('utils', () => {
     expect(res).toBeTruthy();
   });
 
+  it('should produce the same results as the C++ keygen util', () => {
+    addresses.forEach(({public: pub, private: priv, address}) => {
+      const generatedPub = util.getPubKeyFromPrivateKey(priv);
+      const addressFromPriv = util.getAddressFromPrivateKey(priv);
+      const addressFromPub = util.getAddressFromPrivateKey(priv);
+
+      expect(generatedPub.toUpperCase()).toEqual(pub);
+      expect(addressFromPriv.toUpperCase()).toEqual(address);
+      expect(addressFromPub.toUpperCase()).toEqual(address);
+    });
+  });
+
   it('should sign messages correctly', () => {
     const privateKey = pairs[1].private;
     const publicKey = secp256k1
@@ -153,8 +166,8 @@ describe('utils', () => {
     });
   });
 
-  it('should match the C++ implementation', () => {
-    schnorrVectors.forEach(({ msg, priv, pub, k, r, s }) => {
+  it('should match the C++ Schnorr implementation', () => {
+    schnorrVectors.forEach(({msg, priv, pub, k, r, s}) => {
       let sig: Signature | null = null;
       while (!sig) {
         sig = schnorr.trySign(
@@ -166,7 +179,11 @@ describe('utils', () => {
         );
       }
 
-      const res = schnorr.verify(new Buffer(msg, 'hex'), sig, new Buffer(pub, 'hex'));
+      const res = schnorr.verify(
+        new Buffer(msg, 'hex'),
+        sig,
+        new Buffer(pub, 'hex'),
+      );
 
       expect(sig.r.toString('hex', 64).toUpperCase()).toEqual(r);
       expect(sig.s.toString('hex', 64).toUpperCase()).toEqual(s);
