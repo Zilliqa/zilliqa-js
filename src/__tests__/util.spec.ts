@@ -1,7 +1,6 @@
 import elliptic from 'elliptic';
 import Signature from 'elliptic/lib/elliptic/ec/signature';
 import BN from 'bn.js';
-import hashjs from 'hash.js';
 import {addresses} from './address.fixtures';
 import {pairs} from './keypairs.fixtures';
 import schnorrVectors from './schnorr.fixtures';
