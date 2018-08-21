@@ -12,7 +12,8 @@
   ],
   "scripts": {
     "build": "rimraf dist/* && tsc --emitDeclarationOnly && cross-env NODE_ENV=production webpack --config webpack.config.js",
-    "test": "jest -c jest.config.js"
+    "test": "jest -c jest.config.js",
+    "publish": "yarn build && yarn publish"
   },
   "dependencies": {
     "bn.js": "^4.11.8",
