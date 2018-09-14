@@ -203,7 +203,7 @@ export const validateArgs = (
     if (args[key] === undefined) throw new Error('Key not found: ' + key);
 
     for (var i = 0; i < requiredArgs[key].length; i++) {
-      if (typeof requiredArgs[key][i] != 'function')
+      if (typeof requiredArgs[key][i] !== 'function')
         throw new Error('Validator is not a function');
 
       if (!requiredArgs[key][i](args[key]))
@@ -215,7 +215,7 @@ export const validateArgs = (
     for (var key in optionalArgs) {
       if (args[key]) {
         for (var i = 0; i < optionalArgs[key].length; i++) {
-          if (typeof optionalArgs[key][i] != 'function')
+          if (typeof optionalArgs[key][i] !== 'function')
             throw new Error('Validator is not a function');
 
           if (!optionalArgs[key][i](args[key]))
@@ -249,11 +249,11 @@ export const isHash = (txHash: string) => {
 };
 
 export const isNumber = (number: any) => {
-  return typeof number == 'number';
+  return typeof number === 'number';
 };
 
 export const isString = (string: any) => {
-  return typeof string == 'string';
+  return typeof string === 'string';
 };
 
 // convert number to array representing the padded hex form
