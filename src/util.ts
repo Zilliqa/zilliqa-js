@@ -119,8 +119,8 @@ export const verifyPrivateKey = (privateKey: string): boolean => {
  * @returns {Buffer}
  */
 export const encodeTransaction = (txn: TxDetails) => {
-  let codeHex = new Buffer(txn.code).toString('hex');
-  let dataHex = new Buffer(txn.data).toString('hex');
+  let codeHex = Buffer.from(txn.code).toString('hex');
+  let dataHex = Buffer.from(txn.data).toString('hex');
 
   let encoded =
     intToByteArray(txn.version, 64).join('') +
@@ -135,7 +135,7 @@ export const encodeTransaction = (txn: TxDetails) => {
     intToByteArray(txn.data.length, 8).join('') + // size of data
     dataHex;
 
-  return new Buffer(encoded, 'hex');
+  return Buffer.from(encoded, 'hex');
 };
 
 /**
@@ -170,8 +170,8 @@ export const createTransactionJson = (
   // sign using schnorr lib
   const sig = schnorr.sign(
     encodedTx,
-    new Buffer(privateKey, 'hex'),
-    new Buffer(pubKey, 'hex'),
+    Buffer.from(privateKey, 'hex'),
+    Buffer.from(pubKey, 'hex'),
   );
 
   let r = sig.r.toString('hex');
