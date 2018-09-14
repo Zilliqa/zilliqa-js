@@ -83,7 +83,7 @@ describe('utils', () => {
         r: new BN((signature as string).slice(0, 64), 16),
         s: new BN((signature as string).slice(64), 16),
       }),
-      new Buffer(publicKey, 'hex'),
+      Buffer.from(publicKey, 'hex'),
     );
 
     expect(res).toBeTruthy();
@@ -122,10 +122,10 @@ describe('utils', () => {
     const encodedTx = util.encodeTransaction(tx);
     const sig = schnorr.sign(
       encodedTx,
-      new Buffer(privateKey, 'hex'),
-      new Buffer(publicKey, 'hex'),
+      Buffer.from(privateKey, 'hex'),
+      Buffer.from(publicKey, 'hex'),
     );
-    const res = schnorr.verify(encodedTx, sig, new Buffer(publicKey, 'hex'));
+    const res = schnorr.verify(encodedTx, sig, Buffer.from(publicKey, 'hex'));
 
     expect(res).toBeTruthy();
   });
@@ -153,14 +153,14 @@ describe('utils', () => {
       while (!sig) {
         sig = schnorr.trySign(
           encodedTx,
-          new BN(new Buffer(badPrivateKey, 'hex')),
+          new BN(Buffer.from(badPrivateKey, 'hex')),
           new BN(k),
-          new Buffer(''),
-          new Buffer(pub, 'hex'),
+          Buffer.from(''),
+          Buffer.from(pub, 'hex'),
         );
       }
 
-      const res = schnorr.verify(encodedTx, sig, new Buffer(pub, 'hex'));
+      const res = schnorr.verify(encodedTx, sig, Buffer.from(pub, 'hex'));
       expect(res).toBeFalsy();
     });
   });
@@ -170,18 +170,18 @@ describe('utils', () => {
       let sig: Signature | null = null;
       while (!sig) {
         sig = schnorr.trySign(
-          new Buffer(msg, 'hex'),
-          new BN(new Buffer(priv, 'hex')),
+          Buffer.from(msg, 'hex'),
+          new BN(Buffer.from(priv, 'hex')),
           new BN(k, 16),
-          new Buffer(''),
-          new Buffer(pub, 'hex'),
+          Buffer.from(''),
+          Buffer.from(pub, 'hex'),
         );
       }
 
       const res = schnorr.verify(
-        new Buffer(msg, 'hex'),
+        Buffer.from(msg, 'hex'),
         sig,
-        new Buffer(pub, 'hex'),
+        Buffer.from(pub, 'hex'),
       );
 
       expect(sig.r.toString('hex', 64).toUpperCase()).toEqual(r);
