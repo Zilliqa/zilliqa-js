@@ -9,7 +9,7 @@
   "browser": "dist/zilliqa.client.js",
   "typings": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsc -b tsconfig.json",
     "test": "jest -c jest.config.js",
     "publish": "yarn build && yarn publish"
   },

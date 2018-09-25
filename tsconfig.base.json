@@ -18,6 +18,5 @@
     "resolveJsonModule": true,
     "strict": true,
     "target": "es5"
-  },
-  "exclude": ["**/*.spec.ts"]
+  }
 }

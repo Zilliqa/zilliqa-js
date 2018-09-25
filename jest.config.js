@@ -11,13 +11,13 @@ const config = {
   transform: {
     '^.+\\.ts$': 'ts-jest',
   },
-  testMatch: [
-    '<rootDir>/packages/**/?(*.)+(spec|test).ts',
-  ],
-  moduleDirectories: ['packages/*/src', 'node_modules'],
-  moduleFileExtensions: ['js', 'ts'],
+  testMatch: ['<rootDir>/packages/**/?(*.)+(spec|test).ts'],
+  moduleDirectories: ['packages/*/src', '<rootDir>/node_modules'],
+  moduleFileExtensions: ['js', 'ts', 'node', 'json'],
   globals: {
-    'ts-jest': { babelConfig: true },
+    'ts-jest': {
+      babelConfig: true,
+    },
   },
   testURL: 'http://localhost',
   coverageThreshold: {
@@ -33,6 +33,6 @@ const config = {
     'jest-watch-typeahead/filename',
     'jest-watch-typeahead/testname',
   ],
-}
+};
 
 module.exports = config;
