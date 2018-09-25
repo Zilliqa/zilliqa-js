@@ -4826,6 +4826,14 @@ nice-try@^1.0.4:
   version "1.0.4"
   resolved "https://registry.npmjs.org/nice-try/-/nice-try-1.0.4.tgz#d93962f6c52f2c1558c0fbda6d512819f1efe1c4"
 
+node-fetch-polyfill@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.npmjs.org/node-fetch-polyfill/-/node-fetch-polyfill-2.0.6.tgz#073ce3ad6826bdb995a8728cfc4e3823f204407a"
+  dependencies:
+    encoding "^0.1.11"
+    is-stream "^1.0.1"
+    node-web-streams "^0.2.1"
+
 node-fetch@2.1.2:
   version "2.1.2"
   resolved "https://registry.npmjs.org/node-fetch/-/node-fetch-2.1.2.tgz#ab884e8e7e57e38a944753cec706f788d1768bb5"
@@ -4898,6 +4906,13 @@ node-rsa@^0.4.0:
   resolved "https://registry.npmjs.org/node-rsa/-/node-rsa-0.4.2.tgz#d6391729ec16a830ed5a38042b3157d2d5d72530"
   dependencies:
     asn1 "0.2.3"
+
+node-web-streams@^0.2.1:
+  version "0.2.2"
+  resolved "https://registry.npmjs.org/node-web-streams/-/node-web-streams-0.2.2.tgz#087e76bbeb7e8dc56686b25db4e60c5ff9db091f"
+  dependencies:
+    is-stream "^1.1.0"
+    web-streams-polyfill "git://github.com/gwicke/web-streams-polyfill#spec_performance_improvements"
 
 nopt@^4.0.1:
   version "4.0.1"
@@ -6833,6 +6848,10 @@ wcwidth@^1.0.1:
   resolved "https://registry.npmjs.org/wcwidth/-/wcwidth-1.0.1.tgz#f0b0dcf915bc5ff1528afadb2c0e17b532da2fe8"
   dependencies:
     defaults "^1.0.3"
+
+"web-streams-polyfill@git://github.com/gwicke/web-streams-polyfill#spec_performance_improvements":
+  version "1.2.2"
+  resolved "git://github.com/gwicke/web-streams-polyfill#42c488428adea1dc0c0245014e4896ad456b1ded"
 
 webidl-conversions@^4.0.2:
   version "4.0.2"

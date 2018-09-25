@@ -23,6 +23,7 @@
     "encoding": "^0.1.12",
     "hash.js": "^1.1.5",
     "hmac-drbg": "^1.0.1",
+    "node-fetch-polyfill": "^2.0.6",
     "randombytes": "^2.0.6",
     "valid-url": "^1.0.9",
     "whatwg-fetch": "^2.0.4"
