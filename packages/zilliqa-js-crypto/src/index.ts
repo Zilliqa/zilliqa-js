@@ -120,5 +120,6 @@ export const sign = (
   return r + s;
 };
 
+export { schnorr };
 export * from './keystore';
 export * from './random';
