@@ -8,8 +8,8 @@ declare module 'aes-js' {
 
   class CTR {
     constructor(derivedKey: Buffer, iv: Counter);
-    encrypt(bytes: Buffer): Buffer;
-    decrypt(bytes: Buffer): Buffer;
+    encrypt(bytes: Buffer): Uint8Array;
+    decrypt(bytes: Buffer): Uint8Array;
   }
 
   export const ModeOfOperation: { ctr: typeof CTR };

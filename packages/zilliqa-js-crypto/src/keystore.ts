@@ -66,7 +66,7 @@ export const encryptPrivateKey = async (
 ): Promise<string> => {
   const address = getAddressFromPrivateKey(privateKey);
   const salt = randomBytes(32);
-  const iv = randomBytes(16);
+  const iv = Buffer.from(randomBytes(16), 'hex');
   const kdfparams = {
     salt: salt,
     n: kdf === 'pbkdf2' ? 262144 : 8192,
@@ -81,10 +81,12 @@ export const encryptPrivateKey = async (
     kdfparams,
   );
   const cipher = new aes.ModeOfOperation.ctr(
-    derivedKey,
-    new aes.Counter(Buffer.from(iv)),
+    derivedKey.slice(0, 16),
+    new aes.Counter(iv),
   );
-  const ciphertext = cipher.encrypt(Buffer.from(privateKey));
+  const ciphertext = Buffer.from(
+    cipher.encrypt(Buffer.from(privateKey, 'hex')),
+  );
 
   return JSON.stringify({
     address,
@@ -94,16 +96,13 @@ export const encryptPrivateKey = async (
         iv,
       },
       ciphertext: ciphertext.toString('hex'),
+      kdf,
+      kdfparams,
       mac: hashjs
         .sha256()
-        .update(
-          Buffer.concat([Buffer.from(derivedKey.slice(16, 32)), ciphertext]),
-          'hex',
-        )
+        .update(Buffer.concat([derivedKey.slice(16, 32), ciphertext]), 'hex')
         .digest('hex'),
     },
-    kdf,
-    kdfparams,
     id: uuid.v4({random: bytes.hexToIntArray(randomBytes(16))}),
     version: 3,
   });
@@ -146,5 +145,5 @@ export const decryptPrivateKey = async (
     new aes.Counter(iv),
   );
 
-  return cipher.decrypt(ciphertext).toString('hex');
+  return Buffer.from(cipher.decrypt(ciphertext)).toString('hex');
 };

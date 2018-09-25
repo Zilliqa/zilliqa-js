@@ -120,4 +120,5 @@ export const sign = (
   return r + s;
 };
 
+export * from './keystore';
 export * from './random';
