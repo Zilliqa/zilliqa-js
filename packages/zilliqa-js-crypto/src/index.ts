@@ -123,3 +123,4 @@ export const sign = (
 export { schnorr };
 export * from './keystore';
 export * from './random';
+export * from './types';
