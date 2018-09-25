@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": false,
+    "lib": ["es2015", "es2016", "es2017", "dom"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "paths": {
+      "*": ["typings/*"],
+      "elliptic/lib/elliptic/ec/signature": ["typings/signature"]
+    },
+    "resolveJsonModule": true,
+    "strict": true,
+    "target": "es5"
+  },
+  "exclude": ["**/*.spec.ts"]
+}

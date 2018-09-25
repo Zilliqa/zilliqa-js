@@ -9,16 +9,15 @@
 // and, to the extent permitted by law, all liability for your use of the code is disclaimed.
 const config = {
   transform: {
-    '^.+\\.(t|j)s$': 'ts-jest',
+    '^.+\\.ts$': 'ts-jest',
   },
   testMatch: [
-    // '<rootDir>/src/**/__tests__/**/*.ts',
-    '<rootDir>/src/**/?(*.)+(spec|test).ts',
+    '<rootDir>/packages/**/?(*.)+(spec|test).ts',
   ],
-  moduleDirectories: ['src', 'node_modules'],
+  moduleDirectories: ['packages/*/src', 'node_modules'],
   moduleFileExtensions: ['js', 'ts'],
   globals: {
-    'ts-jest': { useBabelrc: true },
+    'ts-jest': { babelConfig: true },
   },
   testURL: 'http://localhost',
   coverageThreshold: {

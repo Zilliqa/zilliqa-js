@@ -50,4 +50,3 @@ export const addresses = [
     address: '50F92304C892D94A385CA6CE6CD6950CE9A36839',
   },
 ];
-
