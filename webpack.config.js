@@ -71,7 +71,13 @@ const clientConfig = {
 
 const serverConfig = {
   ...baseConfig,
+  mode: 'development',
   target: 'node',
+  plugins: [
+    new webpack.ProvidePlugin({
+      fetch: ['node-fetch-polyfill', 'default'],
+    }),
+  ],
   output: {
     filename: '[name].server.js',
     library: 'zilliqa.js',
