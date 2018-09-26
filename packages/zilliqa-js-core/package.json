@@ -1,0 +1,10 @@
+{
+  "name": "zilliqa-js-core",
+  "version": "0.2.0",
+  "description": "Core abstractions that power the zilliqa JS client.",
+  "main": "dist/index.js",
+  "repository": "https://github.com/Zilliqa/Zilliqa-Javascript-Library",
+  "author": "ian@zilliqa.com",
+  "license": "GPL-3.0",
+  "private": true
+}

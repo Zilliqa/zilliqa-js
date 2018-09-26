@@ -1,14 +1,14 @@
 {
   "name": "zilliqa-js-account",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Used for signing transactions.",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "repository": "https://github.com/Zilliqa/Zilliqa-Javascript-Library",
   "license": "GPL-3.0",
   "dependencies": {
-    "zilliqa-js-crypto": "0.1.0",
-    "zilliqa-js-util": "0.1.0",
-    "bn.js": "^4.11.8"
+    "bn.js": "^4.11.8",
+    "zilliqa-js-crypto": "^0.2.0",
+    "zilliqa-js-util": "^0.2.0"
   }
 }
