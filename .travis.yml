@@ -2,14 +2,22 @@ language: node_js
 sudo: true
 dist: trusty
 node_js:
-  - 10
+- 10
 branches:
   except:
-  - /^v[0-9]/
+  - "/^v[0-9]/"
 install:
-  - yarn install --pure-lockfile
+- yarn install --pure-lockfile
 script:
-  - yarn run test
+- yarn run test
 cache:
   directories:
   - "$HOME/.yarn-cache"
+deploy:
+  provider: npm
+  email: edison@zilliqa.com
+  api_key:
+    secure: OUnQLldZSnEvz91tsDqm3ZLad2El+dtRaOuf1DTDBUzC2qsNUYZ0Od0COTwVzD4SSU/EIjV4QvSt1slRNjz6O2pBcXggPXTrnB1Nj2rUSaFg3qIFRDRHGRl58ixlJXzgFEQOlGBqFrou26weeBQyi4t/oEr7wJux9Dnvq2nf/QmsJhXkOYhbFnt/mh9RV73qmPqRx2FCwC3p6fxs+RPXcQtqqv3yIIfBbgmmSi7CqcLGG1r37Rw+s3Z4TxT0Ku7xF3PNGEypy8xBXm1s3vLnSLKS5LLct5MFBJInfOO7SYwxKg6DqEANt/IDzZGMyxdca/ezZqOmuLHfDndp/pzkz8SRvJ8AYVRAu2Or/eiu/6+2dzkKW5j0Y/uVqhSLdZ2zj+dHACREtNAbRSRQpykXzlaIyRA3sbiiuAPtRn2VzFrxGM1ee/ZFSrhbM+IDP26q77UIxTl/prPH7H/OM6+k0a8qXeAkiwhBXcZ4mbeDuyHX5NgoACkGd45pnV10ZLisBSQJhzbiLujr4T4q9euJ6NIDQKntpy+E9ufo2HbChnFbNlxnNAfi+5vH8MppGJLgx0yAntKBfddyuCB4y2qIdwR7PMbH7H0+ktfDlZkp4a7E9SOuDsEmpYO4sTqzfSCJ6Qtvm6Ym/hK+8tRrwbtmA0eu9AOTCvuQycwQadGnA/Y=
+  on:
+    tags: true
+    repo: Zilliqa/Zilliqa-JavaScript-Library
