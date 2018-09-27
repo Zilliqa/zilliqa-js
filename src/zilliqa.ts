@@ -35,7 +35,10 @@ export default class Zilliqa {
       isAddress: util.isAddress,
       isPubKey: util.isPubKey,
       intToByteArray: util.intToByteArray,
-      compressPublicKey: util.compressPublicKey
+      compressPublicKey: util.compressPublicKey,
+      isPrivateKey: util.isPrivateKey,
+      toChecksumAddress: util.toChecksumAddress,
+      isValidChecksumAddress: util.isValidChecksumAddress,
     
     };
 

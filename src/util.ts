@@ -10,10 +10,10 @@
 import randomBytes from 'randombytes';
 import elliptic from 'elliptic';
 import hashjs from 'hash.js';
-import {isWebUri} from 'valid-url';
+import { isWebUri } from 'valid-url';
 
 import * as schnorr from './schnorr';
-import {TxDetails} from './types';
+import { TxDetails } from './types';
 
 const NUM_BYTES = 32;
 //const HEX_PREFIX = '0x';
@@ -108,7 +108,7 @@ export const getAddressFromPublicKey = (pubKey: string) => {
  */
 export const verifyPrivateKey = (privateKey: string): boolean => {
   const keyPair = secp256k1.keyFromPrivate(privateKey, 'hex');
-  const {result} = keyPair.validate();
+  const { result } = keyPair.validate();
   return result;
 };
 
@@ -195,7 +195,7 @@ interface ValidatorDictionary {
 // make sure each of the keys in requiredArgs is present in args
 // and each of it's validator functions return true
 export const validateArgs = (
-  args: {[key: string]: any},
+  args: { [key: string]: any },
   requiredArgs: ValidatorDictionary,
   optionalArgs?: ValidatorDictionary,
 ) => {
@@ -276,4 +276,39 @@ export const intToByteArray = (val: number, paddedSize: number) => {
   }
 
   return arr;
+};
+
+/**
+ * toChecksumAddress
+ *
+ * takes hex-encoded string and returns the corresponding address
+ *
+ * @param {string} address
+ * @returns {string}
+ */
+export const toChecksumAddress = (address: string): string => {
+
+  address = address.toLowerCase().replace('0x', '');
+  const hash = hashjs.sha256().update(address, 'hex').digest('hex');
+  let ret = '0x';
+  for (let i = 0; i < address.length; i++) {
+    if (parseInt(hash[i], 16) >= 8) {
+      ret += address[i].toUpperCase();
+    } else {
+      ret += address[i];
+    }
+  }
+  return ret;
+};
+
+/**
+ * isValidChecksumAddress
+ *
+ * takes hex-encoded string and returns boolean if address is checksumed
+ *
+ * @param {string} address
+ * @returns {boolean}
+ */
+export const isValidChecksumAddress = (address: string): boolean => {
+  return (isAddress(address.replace('0x', '')) && toChecksumAddress(address) === address);
 };

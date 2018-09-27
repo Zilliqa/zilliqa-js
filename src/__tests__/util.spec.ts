@@ -189,4 +189,22 @@ describe('utils', () => {
       expect(res).toBeTruthy();
     });
   });
+
+  it('should return a valid checksummed address', () => {
+    const checksummed = "0x7bB3b0E8A59f3f61d9BFf038f4AEB42Cae2eccE8";
+    const actual = util.toChecksumAddress(checksummed.toLowerCase());
+    expect(actual).toEqual(checksummed);
+  });
+
+  it('should return true when a valid checksummed address is tested', () => {
+    const checksummed = "0x7bB3b0E8A59f3f61d9BFf038f4AEB42Cae2eccE8";
+    const actual = util.isValidChecksumAddress(checksummed);
+    expect(actual).toBeTruthy();
+  });
+
+  it('should return false when an invalid checksummed address is tested', () => {
+    const bad = "0x7bB3b0E8A59f3f61d9BFf038f4AEB42Cae2eccE8".toLowerCase();
+    const actual = util.isValidChecksumAddress( bad );
+    expect(actual).toBeFalsy();
+  });
 });
