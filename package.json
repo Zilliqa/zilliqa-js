@@ -1,6 +1,6 @@
 {
   "name": "zilliqa-js",
-  "version": "0.1.4",
+  "version": "0.1.19",
   "license": "SEE LICENSE in LICENSE",
   "description": "zilliqa js library",
   "repository": "https://github.com/Zilliqa/Zilliqa-Javascript-Library",
@@ -12,8 +12,7 @@
   ],
   "scripts": {
     "build": "rimraf dist/* && tsc --emitDeclarationOnly && cross-env NODE_ENV=production webpack --config webpack.config.js",
-    "test": "jest -c jest.config.js",
-    "publish": "yarn build && yarn publish"
+    "test": "jest -c jest.config.js"
   },
   "dependencies": {
     "bn.js": "^4.11.8",
