@@ -2,6 +2,7 @@ import elliptic from 'elliptic';
 import Signature from 'elliptic/lib/elliptic/ec/signature';
 import BN from 'bn.js';
 import {addresses} from './address.fixtures';
+import {checksummedStore} from './checksum.fixtures';
 import {pairs} from './keypairs.fixtures';
 import schnorrVectors from './schnorr.fixtures';
 import * as util from '../util';
@@ -187,6 +188,28 @@ describe('utils', () => {
       expect(sig.r.toString('hex', 64).toUpperCase()).toEqual(r);
       expect(sig.s.toString('hex', 64).toUpperCase()).toEqual(s);
       expect(res).toBeTruthy();
+    });
+  });
+
+  it('should return a valid 0x prefixed checksummed address', () => {
+    checksummedStore.forEach(({original: address, good: expected}) => {
+      const actual = util.toChecksumAddress(address);
+      expect(actual).toEqual(expected);
+      expect(actual.substr(0, 2)).toEqual("0x");
+    });
+  });
+
+  it('should return true when a valid checksummed address is tested', () => {
+    checksummedStore.forEach(({good: checksummed}) => {
+      const actual = util.isValidChecksumAddress(checksummed);
+      expect(actual).toBeTruthy();
+    });
+  });
+
+  it('should return false when an invalid checksummed address is tested', () => {
+    checksummedStore.forEach(({bad: badlychecksummed}) => {
+      const actual = util.isValidChecksumAddress(badlychecksummed);
+      expect(actual).toBeFalsy();
     });
   });
 });
