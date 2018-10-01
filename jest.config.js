@@ -20,6 +20,7 @@ const config = {
   globals: {
     'ts-jest': {
       babelConfig: true,
+      tsConfig: './tsconfig.test.json',
     },
   },
   testURL: 'http://localhost',
