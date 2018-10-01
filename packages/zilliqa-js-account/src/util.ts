@@ -8,8 +8,8 @@ import {Transaction} from './types';
  * @returns {Buffer} - Buffer of bytes
  */
 export const encodeTransaction = (tx: Transaction): Buffer => {
-  let codeHex = Buffer.from(tx.code).toString('hex');
-  let dataHex = Buffer.from(tx.data).toString('hex');
+  let codeHex = Buffer.from(tx.code || '').toString('hex');
+  let dataHex = Buffer.from(tx.data || '').toString('hex');
 
   let encoded =
     bytes.intToHexArray(tx.version, 64).join('') +
@@ -19,9 +19,9 @@ export const encodeTransaction = (tx: Transaction): Buffer => {
     tx.amount.toString('hex', 64) +
     bytes.intToHexArray(tx.gasPrice, 64).join('') +
     bytes.intToHexArray(tx.gasLimit, 64).join('') +
-    bytes.intToHexArray(tx.code.length, 8).join('') + // size of code
+    bytes.intToHexArray((tx.code && tx.code.length) || 0, 8).join('') + // size of code
     codeHex +
-    bytes.intToHexArray(tx.data.length, 8).join('') + // size of data
+    bytes.intToHexArray((tx.code && tx.code.length) || 0, 8).join('') + // size of data
     dataHex;
 
   return Buffer.from(encoded, 'hex');

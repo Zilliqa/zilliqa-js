@@ -6,7 +6,14 @@ export interface Account {
   publicKey: string;
 }
 
-export interface Transaction {
+export const enum TxStatus {
+  Initialised,
+  Pending,
+  Confirmed,
+  Rejected,
+}
+
+export interface TxParams {
   version: number;
   nonce: number;
   to: string;
@@ -14,7 +21,8 @@ export interface Transaction {
   pubKey: string;
   gasPrice: number;
   gasLimit: number;
-  code: string;
-  data: string;
+  code?: string;
+  data?: string;
   signature?: string;
+  status: TxStatus;
 }

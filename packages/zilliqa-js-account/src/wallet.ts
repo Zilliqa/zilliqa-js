@@ -1,8 +1,11 @@
 import * as zcrypto from 'zilliqa-js-crypto';
+
 import Account from './account';
+import Transaction from './transaction';
 
 export default class Wallet {
   accounts: {[address: string]: Account};
+  defaultAccount: Account;
 
   /**
    * constructor
@@ -18,6 +21,8 @@ export default class Wallet {
       },
       {} as any,
     );
+
+    this.defaultAccount = accounts[0];
   }
 
   /**
@@ -110,5 +115,31 @@ export default class Wallet {
     }
 
     return false;
+  }
+
+  /**
+   * sign
+   *
+   * signs the given unsigned transaction with the selected account.
+   *
+   * @param {Transaction} tx
+   * @param {string} account
+   * @returns {Transaction}
+   */
+  sign(tx: Transaction, account: string): Transaction {
+    if (!this.accounts[account]) {
+      throw new Error(
+        'The selected account does not exist on this Wallet instance.',
+      );
+    }
+
+    const signer = this.accounts[account];
+
+    return tx.map(rawTx => {
+      return {
+        ...rawTx,
+        signature: signer.signTransaction(tx),
+      };
+    });
   }
 }

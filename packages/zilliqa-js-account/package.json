@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "description": "Used for signing transactions.",
   "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "types": "dist/index.d.ts",
   "repository": "https://github.com/Zilliqa/Zilliqa-Javascript-Library",
   "license": "GPL-3.0",
   "dependencies": {

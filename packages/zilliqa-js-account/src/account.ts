@@ -1,7 +1,6 @@
 import * as zcrypto from 'zilliqa-js-crypto';
 import hash from 'hash.js';
-import {Transaction} from './types';
-import {encodeTransaction} from './util';
+import Transaction from './transaction';
 
 export default class Account {
   privateKey: string;
@@ -68,10 +67,9 @@ export default class Account {
    * the r and s values in hex, each padded to a length of 64.
    */
   signTransaction(tx: Transaction) {
-    const txBytes = encodeTransaction(tx);
     const txHash = hash
       .sha256()
-      .update(txBytes, 'hex')
+      .update(tx.bytes, 'hex')
       .digest('hex');
 
     return zcrypto.sign(txHash, this.privateKey, this.publicKey);
