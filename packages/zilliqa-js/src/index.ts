@@ -26,9 +26,9 @@ export default class Zilliqa {
       Zilliqa.setProvider(this.provider);
     }
 
-    this.blockchain = new Blockchain(this.provider);
-    this.contracts = new Contracts(this.provider);
-    this.network = new Network(this.provider);
     this.wallet = new Wallet([]);
+    this.blockchain = new Blockchain(this.provider, this.wallet);
+    this.contracts = new Contracts(this.provider, this.wallet);
+    this.network = new Network(this.provider, this.wallet);
   }
 }

@@ -1,9 +1,6 @@
-import axios from 'axios';
-import BN from 'bn.js';
+import {Provider, RPCResponse, Signable} from 'zilliqa-js-core';
 
-import {Provider, RPCResponse} from 'zilliqa-js-core';
-
-import {TxParams, TxStatus} from './types';
+import {RawTx, TxStatus} from './types';
 import {encodeTransaction} from './util';
 
 /**
@@ -13,18 +10,17 @@ import {encodeTransaction} from './util';
  * is to encode the possible states a Transaction can be in:  Confirmed,
  * Rejected, Pending, or Initialised (i.e., not broadcasted).
  */
-export default class Transaction {
+export default class Transaction implements Signable {
   /**
    * confirmed
    *
    * constructs an already-confirmed transaction.
    *
    * @static
-   * @param {TxParams} params
-   * @returns {undefined}
+   * @param {RawTx} params
    */
-  static confirmed(params: TxParams) {
-    return new Transaction({...params, status: TxStatus.Confirmed});
+  static confirmed(params: RawTx) {
+    return new Transaction(params, TxStatus.Confirmed);
   }
 
   /**
@@ -52,16 +48,22 @@ export default class Transaction {
     Transaction.provider = provider;
   }
 
-  private params: TxParams;
+  private rawTx: RawTx;
   private provider: Provider;
   private request: Promise<RPCResponse> | undefined;
+  signature: string = '';
+  status: TxStatus;
 
   get bytes(): Buffer {
-    return encodeTransaction(this);
+    return encodeTransaction(this.rawTx);
   }
 
-  constructor(params: TxParams) {
-    this.params = params;
+  constructor(
+    rawTx: Omit<RawTx, 'status'>,
+    status: TxStatus = TxStatus.Initialised,
+  ) {
+    this.rawTx = rawTx;
+    this.status = status;
     this.provider = Transaction.provider;
   }
 
@@ -71,7 +73,7 @@ export default class Transaction {
    * @returns {boolean}
    */
   isPending(): boolean {
-    return this.params.status === TxStatus.Pending;
+    return this.status === TxStatus.Pending;
   }
 
   /**
@@ -80,7 +82,7 @@ export default class Transaction {
    * @returns {boolean}
    */
   isInitialised(): boolean {
-    return this.params.status === TxStatus.Initialised;
+    return this.status === TxStatus.Initialised;
   }
 
   /**
@@ -89,7 +91,7 @@ export default class Transaction {
    * @returns {boolean}
    */
   isConfirmed(): boolean {
-    return this.params.status === TxStatus.Confirmed;
+    return this.status === TxStatus.Confirmed;
   }
 
   /**
@@ -98,7 +100,7 @@ export default class Transaction {
    * @returns {boolean}
    */
   isRejected(): boolean {
-    return this.params.status === TxStatus.Rejected;
+    return this.status === TxStatus.Rejected;
   }
 
   /**
@@ -107,15 +109,15 @@ export default class Transaction {
    * @returns {Transaction}
    */
   broadcast(): Transaction {
-    if (!this.params.signature) {
+    if (!this.signature) {
       throw new Error(
         'Cannot broadcast a transaction that has not been signed.',
       );
     }
 
-    this.provider.send('CreateTransaction', this.params).then(res => {
+    this.provider.send('CreateTransaction', this.rawTx).then(res => {
       if (res.error) {
-        this.params.status = TxStatus.Rejected;
+        this.status = TxStatus.Rejected;
         return;
       }
 
@@ -124,7 +126,7 @@ export default class Transaction {
         this.pollTxConfirmation,
       );
 
-      this.params.status = TxStatus.Pending;
+      this.status = TxStatus.Pending;
     });
 
     return this;
@@ -133,23 +135,27 @@ export default class Transaction {
   /**
    * bind
    *
-   * only runs if TxStatus is Confirmed.
+   * only runs if TxStatus is Confirmed or Initialiased.
    *
-   * @param {(tx: TxParams) => Transaction} fn
+   * @param {(tx: RawTx) => Transaction} fn
    * @returns {Transaction}
    */
-  bind(fn: (tx: TxParams) => Transaction): Transaction {
-    return this.isConfirmed() ? fn(this.params) : this;
+  bind(fn: (tx: RawTx) => Transaction): Transaction {
+    return this.isConfirmed() || this.isInitialised() ? fn(this.rawTx) : this;
   }
 
   /**
    * map
    *
-   * @param {(tx: TxParams) => TxParams} fn
+   * only runs if TxStatus is Confirmed or Initialiased.
+   *
+   * @param {(tx: RawTx) => RawTx} fn
    * @returns {Transaction}
    */
-  map(fn: (tx: TxParams) => TxParams): Transaction {
-    return this.isConfirmed() ? Transaction.confirmed(fn(this.params)) : this;
+  map(fn: (tx: RawTx) => RawTx): Transaction {
+    return this.isConfirmed() || this.isInitialised()
+      ? Transaction.confirmed(fn(this.rawTx))
+      : this;
   }
 
   /**
@@ -157,10 +163,10 @@ export default class Transaction {
    *
    * Gives back the unboxed parameters
    *
-   * @returns {TxParams}
+   * @returns {RawTx}
    */
-  return(): TxParams {
-    return this.params;
+  return(): RawTx {
+    return this.rawTx;
   }
 
   private pollTxConfirmation(response: RPCResponse) {
@@ -176,6 +182,6 @@ export default class Transaction {
     }
 
     this.request = undefined;
-    this.params.status = TxStatus.Confirmed;
+    this.status = TxStatus.Confirmed;
   }
 }

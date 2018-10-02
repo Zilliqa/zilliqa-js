@@ -6,6 +6,8 @@
     "declarationMap": true,
     "sourceMap": true,
 
+    "rootDir": "src",
+    "outDir": "dist",
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": false,

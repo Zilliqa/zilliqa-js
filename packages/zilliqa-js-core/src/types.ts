@@ -16,11 +16,11 @@ export interface Provider {
 }
 
 export interface Signer {
-  sign<T extends Signable>(payload: T): Required<T>;
+  sign(payload: Signable): Signable;
 }
 
 export interface Signable {
-  signature?: string;
+  signature: string;
 }
 
 interface RPCBase {
@@ -46,7 +46,7 @@ export interface RPCResponse extends RPCBase {
  *
  * This interface must be implemented by all top-level modules.
  */
-export interface ZilliqaModule {
-  provider: Provider;
-  signer: Signer;
+export abstract class ZilliqaModule {
+  abstract provider: Provider;
+  abstract signer: Signer;
 }

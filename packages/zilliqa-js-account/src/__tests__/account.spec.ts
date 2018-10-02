@@ -3,7 +3,7 @@ import hashjs from 'hash.js';
 import Signature from 'elliptic/lib/elliptic/ec/signature';
 import * as zcrypto from 'zilliqa-js-crypto';
 import Account from '../account';
-import {encodeTransaction} from '../util';
+import Transaction from '../transaction';
 
 describe('Account', () => {
   it('should be able to encode itself as a keystore file', async () => {
@@ -42,13 +42,15 @@ describe('Account', () => {
       code: '',
       data: 'some_data',
     };
-    const rawSignature = account.signTransaction(rawTx);
+
+    const tx = new Transaction(rawTx);
+    const rawSignature = account.signTransaction(tx);
 
     const lgtm = zcrypto.schnorr.verify(
       Buffer.from(
         hashjs
           .sha256()
-          .update(encodeTransaction(rawTx), 'hex')
+          .update(tx.bytes, 'hex')
           .digest('hex'),
         'hex',
       ),

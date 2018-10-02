@@ -120,13 +120,24 @@ export default class Wallet {
   /**
    * sign
    *
-   * signs the given unsigned transaction with the selected account.
+   * signs an unsigned transaction with the default account.
    *
    * @param {Transaction} tx
    * @param {string} account
    * @returns {Transaction}
    */
-  sign(tx: Transaction, account: string): Transaction {
+  sign(tx: Transaction): Transaction {
+    return this.signWith(tx, this.defaultAccount.address);
+  }
+
+  /**
+   * signWith
+   *
+   * @param {Transaction} tx
+   * @param {string} account
+   * @returns {Transaction}
+   */
+  signWith(tx: Transaction, account: string): Transaction {
     if (!this.accounts[account]) {
       throw new Error(
         'The selected account does not exist on this Wallet instance.',

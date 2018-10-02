@@ -13,7 +13,7 @@ export const enum TxStatus {
   Rejected,
 }
 
-export interface TxParams {
+export interface RawTx {
   version: number;
   nonce: number;
   to: string;
@@ -23,6 +23,4 @@ export interface TxParams {
   gasLimit: number;
   code?: string;
   data?: string;
-  signature?: string;
-  status: TxStatus;
 }

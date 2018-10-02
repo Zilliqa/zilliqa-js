@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "description": "Utilities for working with Zillia.",
   "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "types": "dist/index.d.ts",
   "repository": "https://github.com/zilliqa/zilliqa-javascript-library/",
   "license": "GPL-3.0"
 }
