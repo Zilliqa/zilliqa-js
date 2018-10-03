@@ -1,2 +1,2 @@
-export { sign } from './sign';
-export { format } from './format';
+export {format} from './format';
+export {sign} from './sign';

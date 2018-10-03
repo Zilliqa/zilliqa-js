@@ -13,15 +13,16 @@ export const enum TxStatus {
   Rejected,
 }
 
-export interface RawTx {
+export interface BaseTx {
   version: number;
   nonce: number;
   to: string;
   amount: BN;
-  pubKey: string;
   gasPrice: number;
   gasLimit: number;
   code?: string;
   data?: string;
+  pubKey?: string;
   signature?: string;
 }
+

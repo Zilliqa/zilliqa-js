@@ -10,17 +10,17 @@ export interface Provider {
   subscribers: Subscribers;
   // TODO: strict typing when we have a better idea of how to generalise the
   // payloads sent to lookup nodes - protobuf?
-  send(method: string, payload?: any): Promise<RPCResponse>;
+  send(method: string, ...params: any[]): Promise<RPCResponse>;
   subscribe(event: string, subscriber: Subscriber): Symbol;
   unsubscribe(token: Symbol): void;
 }
 
-export interface Signer {
-  sign(payload: Signable): Signable;
+export abstract class Signer {
+  abstract sign(payload: Signable): Signable;
 }
 
 export interface Signable {
-  signature: string;
+  bytes: Buffer;
 }
 
 interface RPCBase {
@@ -46,7 +46,7 @@ export interface RPCResponse extends RPCBase {
  *
  * This interface must be implemented by all top-level modules.
  */
-export abstract class ZilliqaModule {
-  abstract provider: Provider;
-  abstract signer: Signer;
+export interface ZilliqaModule {
+  provider: Provider;
+  signer: Signer;
 }

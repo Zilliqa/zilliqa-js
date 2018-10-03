@@ -1,9 +1,10 @@
+import {Signer} from 'zilliqa-js-core';
 import * as zcrypto from 'zilliqa-js-crypto';
 
 import Account from './account';
 import Transaction from './transaction';
 
-export default class Wallet {
+export default class Wallet extends Signer {
   accounts: {[address: string]: Account} = {};
   defaultAccount?: Account;
 
@@ -15,6 +16,7 @@ export default class Wallet {
    * @param {Account[]} accounts
    */
   constructor(accounts: Account[] = []) {
+    super();
     if (accounts.length) {
       this.accounts = accounts.reduce(
         (acc, account) => {
@@ -175,11 +177,12 @@ export default class Wallet {
 
     const signer = this.accounts[account];
 
-    return tx.map(rawTx => {
-      return {
+    return tx.bind(rawTx => {
+      return new Transaction({
         ...rawTx,
+        pubKey: signer.publicKey,
         signature: signer.signTransaction(tx),
-      };
+      });
     });
   }
 }

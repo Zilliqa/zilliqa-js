@@ -1,18 +1,32 @@
-import {ZilliqaModule, Signable} from '../types';
+import {Signable, ZilliqaModule} from '../types';
 
-export const sign = <T extends typeof ZilliqaModule>(target: T) => {
-  if (!target.prototype.provider || !target.prototype.signer) {
-    return target;
+/**
+ * sign
+ *
+ * This decorates a method by attempting to sign the first argument of the
+ * intercepted method.
+ *
+ * @param {T} target
+ * @param {K} key
+ * @param {PropertyDescriptor} descriptor
+ * @returns {PropertyDescriptor | undefined}
+ */
+export const sign = <T, K extends keyof T>(
+  target: T,
+  key: K,
+  descriptor: PropertyDescriptor,
+) => {
+  const original = descriptor.value;
+
+  if (!original) {
+    return;
   }
 
-  const sendFn = target.prototype.provider.send;
+  function interceptor(this: ZilliqaModule, arg: Signable): any {
+    const signed = this.signer.sign(arg);
+    return original ? original.call(this, signed) : undefined;
+  }
 
-  const wrappedSigner = (method: string, payload: Signable) => {
-    if (method === 'CreateTransaction') {
-      const signed = target.prototype.signer.sign(payload);
-      return target.prototype.provider.send(method, signed);
-    }
-
-    return target.prototype.provider.send(method, payload);
-  };
+  descriptor.value = interceptor;
+  return descriptor;
 };

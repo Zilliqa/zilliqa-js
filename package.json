@@ -58,6 +58,7 @@
     "hoek": "^5.0.3",
     "jest": "^23.4.2",
     "jest-fetch-mock": "^1.6.5",
+    "jest-mock-axios": "^2.1.11",
     "jest-watch-typeahead": "^0.2.0",
     "lerna": "^3.4.0",
     "mocha": "^5.2.0",

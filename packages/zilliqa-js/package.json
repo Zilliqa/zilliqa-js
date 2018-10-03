@@ -1,5 +1,5 @@
 {
-  "name": "zilliqa-js",
+  "name": "@zilliqa/zilliqa-js",
   "version": "0.2.0",
   "description": "Main entry point to the Zilliqa JS client.",
   "main": "dist/index.js",

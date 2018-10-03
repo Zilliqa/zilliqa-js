@@ -1,5 +1,5 @@
-import {Provider, ZilliqaModule} from 'zilliqa-js-core';
-import {Wallet} from 'zilliqa-js-account';
+import {Provider, ZilliqaModule, sign} from 'zilliqa-js-core';
+import {Transaction, Wallet} from 'zilliqa-js-account';
 import {TransactionObj} from './types';
 
 const enum BlockchainMethods {
@@ -46,7 +46,8 @@ export default class Blockchain implements ZilliqaModule {
    * @param {any} payload
    * @returns {Promise<any>}
    */
-  createTransaction(payload: any): Promise<any> {
+  @sign
+  createTransaction(payload: Transaction): Promise<any> {
     return this.provider.send(BlockchainMethods.CreateTransaction, payload);
   }
 
