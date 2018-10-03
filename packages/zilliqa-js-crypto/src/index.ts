@@ -1,7 +1,7 @@
 import elliptic from 'elliptic';
 import hashjs from 'hash.js';
 
-import { randomBytes } from './random';
+import {randomBytes} from './random';
 import * as schnorr from './schnorr';
 
 const NUM_BYTES = 32;
@@ -98,12 +98,12 @@ export const verifyPrivateKey = (privateKey: string): boolean => {
  * @returns {string} the signature
  */
 export const sign = (
-  hash: string,
+  msg: Buffer,
   privateKey: string,
   pubKey: string,
 ): string => {
   const sig = schnorr.sign(
-    Buffer.from(hash, 'hex'),
+    msg,
     Buffer.from(privateKey, 'hex'),
     Buffer.from(pubKey, 'hex'),
   );
@@ -120,7 +120,7 @@ export const sign = (
   return r + s;
 };
 
-export { schnorr };
+export {schnorr};
 export * from './keystore';
 export * from './random';
 export * from './types';

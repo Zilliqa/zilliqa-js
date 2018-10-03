@@ -4,8 +4,8 @@ import Account from './account';
 import Transaction from './transaction';
 
 export default class Wallet {
-  accounts: {[address: string]: Account};
-  defaultAccount: Account;
+  accounts: {[address: string]: Account} = {};
+  defaultAccount?: Account;
 
   /**
    * constructor
@@ -14,13 +14,15 @@ export default class Wallet {
    *
    * @param {Account[]} accounts
    */
-  constructor(accounts: Account[]) {
-    this.accounts = accounts.reduce(
-      (acc, account) => {
-        return {...acc, [account.address]: account};
-      },
-      {} as any,
-    );
+  constructor(accounts: Account[] = []) {
+    if (accounts.length) {
+      this.accounts = accounts.reduce(
+        (acc, account) => {
+          return {...acc, [account.address]: account};
+        },
+        {} as any,
+      );
+    }
 
     this.defaultAccount = accounts[0];
   }
@@ -39,6 +41,10 @@ export default class Wallet {
 
     this.accounts = {...this.accounts, [newAccount.address]: newAccount};
 
+    if (!this.defaultAccount) {
+      this.defaultAccount = newAccount;
+    }
+
     return newAccount.address;
   }
 
@@ -53,6 +59,10 @@ export default class Wallet {
   addByPrivateKey(privateKey: string): string {
     const newAccount = new Account(privateKey);
     this.accounts = {...this.accounts, [newAccount.address]: newAccount};
+
+    if (!this.defaultAccount) {
+      this.defaultAccount = newAccount;
+    }
 
     return newAccount.address;
   }
@@ -71,6 +81,10 @@ export default class Wallet {
   async addByKeystore(keystore: string, passphrase: string): Promise<string> {
     const newAccount = await Account.fromFile(keystore, passphrase);
     this.accounts = {...this.accounts, [newAccount.address]: newAccount};
+
+    if (!this.defaultAccount) {
+      this.defaultAccount = newAccount;
+    }
 
     return newAccount.address;
   }
@@ -118,6 +132,17 @@ export default class Wallet {
   }
 
   /**
+   * setDefault
+   *
+   * Sets the default account of the wallet.
+   *
+   * @param {string} address
+   */
+  setDefault(address: string) {
+    this.defaultAccount = this.accounts[address];
+  }
+
+  /**
    * sign
    *
    * signs an unsigned transaction with the default account.
@@ -127,6 +152,10 @@ export default class Wallet {
    * @returns {Transaction}
    */
   sign(tx: Transaction): Transaction {
+    if (!this.defaultAccount) {
+      throw new Error('This wallet has no default account.');
+    }
+
     return this.signWith(tx, this.defaultAccount.address);
   }
 

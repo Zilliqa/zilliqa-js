@@ -67,11 +67,6 @@ export default class Account {
    * the r and s values in hex, each padded to a length of 64.
    */
   signTransaction(tx: Transaction) {
-    const txHash = hash
-      .sha256()
-      .update(tx.bytes, 'hex')
-      .digest('hex');
-
-    return zcrypto.sign(txHash, this.privateKey, this.publicKey);
+    return zcrypto.sign(tx.bytes, this.privateKey, this.publicKey);
   }
 }

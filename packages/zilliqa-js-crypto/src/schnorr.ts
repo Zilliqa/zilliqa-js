@@ -44,15 +44,10 @@ export const hash = (q: BN, pubkey: Buffer, msg: Buffer) => {
  *
  * @returns {Signature}
  */
-export const sign = (
-  msg: Buffer,
-  key: Buffer,
-  pubkey: Buffer,
-): Signature => {
+export const sign = (msg: Buffer, key: Buffer, pubkey: Buffer): Signature => {
   const prv = new BN(key);
   const drbg = getDRBG(msg, key);
   const len = curve.n.byteLength();
-
 
   let sig;
   while (!sig) {
@@ -152,6 +147,13 @@ export const verify = (msg: Buffer, signature: Signature, key: Buffer) => {
   return r1.eq(sig.r);
 };
 
+export const toSignature = (serialised: string): Signature => {
+  const r = serialised.slice(0, 64);
+  const s = serialised.slice(64);
+
+  return new Signature({r, s});
+};
+
 /**
  * Schnorr personalization string.
  * @const {Buffer}
@@ -207,4 +209,4 @@ export const generateNoncePair = (msg: Buffer, priv: Buffer, data: Buffer) => {
   }
 
   return Buffer.from(curve.g.mul(k).encode('array', true));
-}
+};

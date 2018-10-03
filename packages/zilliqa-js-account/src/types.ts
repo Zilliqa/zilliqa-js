@@ -23,4 +23,5 @@ export interface RawTx {
   gasLimit: number;
   code?: string;
   data?: string;
+  signature?: string;
 }

@@ -47,13 +47,7 @@ describe('Account', () => {
     const rawSignature = account.signTransaction(tx);
 
     const lgtm = zcrypto.schnorr.verify(
-      Buffer.from(
-        hashjs
-          .sha256()
-          .update(tx.bytes, 'hex')
-          .digest('hex'),
-        'hex',
-      ),
+      tx.bytes,
       new Signature({
         r: new BN(rawSignature.slice(0, 64), 16),
         s: new BN(rawSignature.slice(64), 16),

@@ -93,7 +93,7 @@ export const encryptPrivateKey = async (
     crypto: {
       cipher: 'aes-128-ctr',
       cipherparams: {
-        iv,
+        iv: iv.toString('hex'),
       },
       ciphertext: ciphertext.toString('hex'),
       kdf,
