@@ -18,9 +18,9 @@ export const sign = <T, K extends keyof T>(
 ) => {
   const original = descriptor.value;
 
-  function interceptor(this: ZilliqaModule, arg: Signable) {
+  async function interceptor(this: ZilliqaModule, arg: Signable) {
     if (original && arg.bytes) {
-      const signed = this.signer.sign(arg);
+      const signed = await this.signer.sign(arg);
       return original.call(this, signed);
     }
   }

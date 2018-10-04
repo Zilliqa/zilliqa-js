@@ -16,7 +16,7 @@ export interface Provider {
 }
 
 export abstract class Signer {
-  abstract sign(payload: Signable): Signable;
+  abstract sign(payload: Signable): Promise<Signable>;
 }
 
 export interface Signable {

@@ -1,6 +1,5 @@
-import {Provider, ZilliqaModule, sign} from 'zilliqa-js-core';
+import {Provider, ZilliqaModule, sign, RPCResponse} from 'zilliqa-js-core';
 import {Transaction, Wallet} from 'zilliqa-js-account';
-import {TransactionObj} from './types';
 
 const enum BlockchainMethods {
   GetDSBlock = 'GetDSBlock',
@@ -43,12 +42,15 @@ export default class Blockchain implements ZilliqaModule {
    * receipt. If, within the timeout, no transaction is found, the transaction
    * is considered as lost.
    *
-   * @param {any} payload
+   * @param {Transaction} payload
    * @returns {Promise<any>}
    */
   @sign
-  createTransaction(payload: Transaction): Promise<any> {
-    return this.provider.send(BlockchainMethods.CreateTransaction, payload);
+  createTransaction(tx: Transaction): Promise<RPCResponse> {
+    const raw = tx.return();
+    return this.provider.send(BlockchainMethods.CreateTransaction, [
+      {...raw, amount: raw.amount.toNumber()},
+    ]);
   }
 
   /**

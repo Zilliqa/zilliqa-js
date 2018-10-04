@@ -7,7 +7,7 @@ import {abi} from './test.abi';
 const provider = new HTTPProvider(
   'http://a180b4d13c2ec11e898940694eb531e8-907388293.us-west-2.elb.amazonaws.com',
 );
-const contracts = new Contracts(provider, new Wallet([]));
+const contracts = new Contracts(provider, new Wallet(provider));
 
 describe.skip('[Integration]: Contracts', () => {
   it('should be able to deploy a contract', async () => {

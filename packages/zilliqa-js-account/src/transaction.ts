@@ -25,25 +25,6 @@ export default class Transaction implements Signable {
     return new Transaction(params, TxStatus.Confirmed);
   }
 
-  /**
-   * at
-   *
-   * Convenience method that constructs a requested transaction if it exists.
-   *
-   * @static
-   * @param {string} txHash
-   * @returns {undefined}
-   */
-  static at(txHash: string): Promise<Transaction> {
-    return Transaction.provider.send('GetTransaction', txHash).then(res => {
-      if (res.error) {
-        throw new Error(res.error.message);
-      }
-
-      return Transaction.confirm(res.result);
-    });
-  }
-
   static provider: Provider;
 
   static setProvider(provider: Provider) {
@@ -51,6 +32,7 @@ export default class Transaction implements Signable {
   }
 
   private baseTx: BaseTx;
+  private queued: any[];
 
   get bytes(): Buffer {
     return encodeTransaction({...this.baseTx});
@@ -59,8 +41,9 @@ export default class Transaction implements Signable {
   status: TxStatus;
 
   constructor(baseTx: BaseTx, status: TxStatus = TxStatus.Initialised) {
-    this.baseTx = baseTx;
+    this.baseTx = {code: '', data: '', ...baseTx};
     this.status = status;
+    this.queued = [];
   }
 
   /**
@@ -100,7 +83,7 @@ export default class Transaction implements Signable {
   }
 
   /**
-   * confirm
+   * confirmReceipt
    *
    * Similar to the Promise API. This sets the Transaction instance to a state
    * of pending. Calling this function kicks off a passive loop that polls the
@@ -110,40 +93,81 @@ export default class Transaction implements Signable {
    * directly.
    *
    * @param {string} txHash
-   * @param {Handler} confirm
-   * @param {Handler} reject
-   * @returns {Promise<Transaction>}
+   * @param {number} timeout
+   * @returns {Transaction}
    */
-  confirm(
-    txHash: string,
-    confirm: Handler,
-    reject: Handler,
-  ): Promise<Transaction> {
-    // TODO
-    return Promise.resolve(this);
+  confirmReceipt(txHash: string, timeout: number = 60000): Transaction {
+    this.trackTx(txHash);
+    setTimeout(() => {
+      this.status = TxStatus.Rejected;
+    }, timeout);
+
+    return this;
+  }
+
+  private trackTx(txHash: string) {
+    if (this.isRejected()) {
+      return;
+    }
+
+    this.status = TxStatus.Pending;
+    // TODO: regex validation for txHash so we don't get garbage
+    const result = Transaction.provider.send('GetTransaction', [txHash]);
+
+    result.then((res: RPCResponse) => {
+      if (res.result.error) {
+        this.trackTx(txHash);
+        return;
+      }
+
+      this.baseTx = {
+        ...this.baseTx,
+        id: res.result['ID'],
+        receipt: res.result.receipt,
+      };
+
+      this.handleConfirm(this.baseTx);
+    });
+  }
+
+  private handleConfirm(res: BaseTx) {
+    this.status === TxStatus.Confirmed;
+    this.queued.forEach(fn => {
+      fn(res);
+    });
   }
 
   /**
    * bind
    *
-   * only runs if TxStatus is Confirmed or Initialiased.
+   * Only runs if TxStatus is Confirmed or Initialiased. Bind can be used like
+   * Promise.prototype.then.
    *
    * @param {BaseTx => Transaction} fn
    * @returns {Transaction}
    */
   bind(fn: (tx: BaseTx) => Transaction): Transaction {
+    if (this.isPending()) {
+      this.queued.push(fn);
+    }
+
     return this.isConfirmed() || this.isInitialised() ? fn(this.baseTx) : this;
   }
 
   /**
    * map
    *
-   * only runs if TxStatus is Confirmed or Initialiased.
+   * Only runs if TxStatus is Confirmed or Initialiased. Map can be used like
+   * Promise.prototype.then.
    *
    * @param {(tx: BaseTx) => Signable} fn
    * @returns {Transaction}
    */
   map(fn: (tx: BaseTx) => BaseTx): Transaction {
+    if (this.isPending()) {
+      this.queued.push(fn);
+    }
+
     if (this.isConfirmed() || this.isInitialised()) {
       this.baseTx = fn(this.baseTx);
     }

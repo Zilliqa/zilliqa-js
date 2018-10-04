@@ -1,4 +1,4 @@
-import {Signer} from 'zilliqa-js-core';
+import {Signer, Provider, RPCResponse} from 'zilliqa-js-core';
 import * as zcrypto from 'zilliqa-js-crypto';
 
 import Account from './account';
@@ -7,6 +7,7 @@ import Transaction from './transaction';
 export default class Wallet extends Signer {
   accounts: {[address: string]: Account} = {};
   defaultAccount?: Account;
+  provider: Provider;
 
   /**
    * constructor
@@ -15,7 +16,7 @@ export default class Wallet extends Signer {
    *
    * @param {Account[]} accounts
    */
-  constructor(accounts: Account[] = []) {
+  constructor(provider: Provider, accounts: Account[] = []) {
     super();
     if (accounts.length) {
       this.accounts = accounts.reduce(
@@ -26,6 +27,7 @@ export default class Wallet extends Signer {
       );
     }
 
+    this.provider = provider;
     this.defaultAccount = accounts[0];
   }
 
@@ -153,7 +155,7 @@ export default class Wallet extends Signer {
    * @param {string} account
    * @returns {Transaction}
    */
-  sign(tx: Transaction): Transaction {
+  sign(tx: Transaction): Promise<Transaction> {
     if (!this.defaultAccount) {
       throw new Error('This wallet has no default account.');
     }
@@ -168,21 +170,32 @@ export default class Wallet extends Signer {
    * @param {string} account
    * @returns {Transaction}
    */
-  signWith(tx: Transaction, account: string): Transaction {
+  async signWith(tx: Transaction, account: string): Promise<Transaction> {
     if (!this.accounts[account]) {
       throw new Error(
         'The selected account does not exist on this Wallet instance.',
       );
     }
 
-    const signer = this.accounts[account];
+    try {
+      const signer = this.accounts[account];
+      const balance = await this.provider.send('GetBalance', [signer.address]);
 
-    return tx.bind(rawTx => {
-      return new Transaction({
-        ...rawTx,
-        pubKey: signer.publicKey,
-        signature: signer.signTransaction(tx),
+      return tx.bind(rawTx => {
+        const withNonce = new Transaction({
+          ...rawTx,
+          nonce: balance.result.nonce + 1,
+          pubKey: signer.publicKey,
+        });
+
+        // @ts-ignore
+        return new Transaction({
+          ...withNonce.return(),
+          signature: signer.signTransaction(withNonce),
+        });
       });
-    });
+    } catch (err) {
+      throw err;
+    }
   }
 }

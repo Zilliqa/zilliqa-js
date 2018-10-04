@@ -20,9 +20,11 @@ export interface BaseTx {
   amount: BN;
   gasPrice: number;
   gasLimit: number;
+
+  id?: string;
   code?: string;
   data?: string;
+  receipt?: { success: boolean, cumulative_gas: number },
   pubKey?: string;
   signature?: string;
 }
-

@@ -1,23 +1,26 @@
 import BN from 'bn.js';
 import hash from 'hash.js';
+import {HTTPProvider} from 'zilliqa-js-core';
 import {
   getPubKeyFromPrivateKey,
   generatePrivateKey,
   schnorr,
 } from 'zilliqa-js-crypto';
+import mockAxios from 'jest-mock-axios';
 import {createWallet} from './util';
 import Account from '../account';
 import Wallet from '../wallet';
 import Transaction from '../transaction';
 
 describe('Module: Wallet', () => {
+  const provider = new HTTPProvider('https://mock.com');
   it('should be able to bootstrap with an array of Accounts ', () => {
     const accounts: Account[] = [];
     for (let i = 0; i < 10; i++) {
       accounts.push(new Account(generatePrivateKey()));
     }
 
-    const wallet = new Wallet(accounts);
+    const wallet = new Wallet(provider, accounts);
     expect(Object.keys(wallet.accounts).length).toEqual(10);
   });
 
@@ -47,12 +50,20 @@ describe('Module: Wallet', () => {
       pubKey,
     });
 
-    const bytes = tx.bytes;
     const signed = wallet.sign(tx);
-    const signature = schnorr.toSignature(signed.return().signature as string);
-    const lgtm = schnorr.verify(bytes, signature, Buffer.from(pubKey, 'hex'));
+    mockAxios.mockResponse({
+      data: {
+        result: {nonce: 1},
+      },
+    });
 
-    expect(lgtm).toBeTruthy();
+    return signed.then(tx => {
+      const bytes = tx.bytes;
+      const signature = schnorr.toSignature(tx.return().signature as string);
+      const lgtm = schnorr.verify(bytes, signature, Buffer.from(pubKey, 'hex'));
+
+      expect(lgtm).toBeTruthy();
+    });
   });
 
   it('should throw an error if asked to sign with no accounts available', () => {

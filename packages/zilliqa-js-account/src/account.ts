@@ -6,6 +6,7 @@ export default class Account {
   privateKey: string;
   publicKey: string;
   address: string;
+  nonce: number;
 
   /**
    * fromFile
@@ -28,10 +29,11 @@ export default class Account {
     }
   }
 
-  constructor(privateKey: string) {
+  constructor(privateKey: string, nonce?: number) {
     this.privateKey = privateKey;
     this.publicKey = zcrypto.getPubKeyFromPrivateKey(this.privateKey);
     this.address = zcrypto.getAddressFromPublicKey(this.publicKey);
+    this.nonce = nonce || 0;
   }
 
   /**

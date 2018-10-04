@@ -19,7 +19,7 @@ export default class HTTPProvider implements Provider {
   }
 
   buildPayload(method: string, payload: any): RPCRequest {
-    return {jsonrpc: '2.0', method, params: [payload], id: 1};
+    return {jsonrpc: '2.0', method, params: payload, id: 1};
   }
 
   send(method: string, payload: any) {

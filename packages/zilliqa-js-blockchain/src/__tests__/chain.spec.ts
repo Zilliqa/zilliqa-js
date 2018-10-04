@@ -8,13 +8,18 @@ import Blockchain from '../chain';
 
 describe('Module: Blockchain', () => {
   const provider = new HTTPProvider('https://mock.com');
-  const wallet = new Wallet();
+  const wallet = new Wallet(provider);
   for (let i = 0; i < 10; i++) {
     wallet.create();
   }
+
   const blockchain = new Blockchain(provider, wallet);
 
-  it('should sign and send transactions', async () => {
+  afterEach(() => {
+    mockAxios.reset();
+  });
+
+  it('should sign and send transactions', () => {
     const tx = new Transaction({
       version: 1,
       nonce: 1,
@@ -24,8 +29,10 @@ describe('Module: Blockchain', () => {
       gasLimit: 1000,
     });
 
-    blockchain.createTransaction(tx);
-    console.log(mockAxios.lastReqGet());
-    // expect(tx.return().pubKey).toEqual(wallet.defaultAccount && wallet.defaultAccount.publicKey as string);
+    blockchain.createTransaction(tx).then(() => {
+      const req = mockAxios.lastReqGet().data;
+      expect(req.params[0]).toHaveProperty('signature');
+      expect(req.params[0]).toHaveProperty('pubKey');
+    });
   });
 });
