@@ -13,7 +13,7 @@ export const encodeTransaction = (tx: BaseTx): Buffer => {
 
   let encoded =
     bytes.intToHexArray(tx.version, 64).join('') +
-    bytes.intToHexArray(tx.nonce, 64).join('') +
+    bytes.intToHexArray(tx.nonce || 0, 64).join('') +
     tx.to +
     tx.pubKey +
     tx.amount.toString('hex', 64) +

@@ -15,7 +15,6 @@ export const enum TxStatus {
 
 export interface BaseTx {
   version: number;
-  nonce: number;
   to: string;
   amount: BN;
   gasPrice: number;
@@ -24,7 +23,8 @@ export interface BaseTx {
   id?: string;
   code?: string;
   data?: string;
-  receipt?: { success: boolean, cumulative_gas: number },
+  receipt?: {success: boolean; cumulative_gas: number};
+  nonce?: number;
   pubKey?: string;
   signature?: string;
 }

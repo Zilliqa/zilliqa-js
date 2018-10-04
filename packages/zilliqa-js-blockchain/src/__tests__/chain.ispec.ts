@@ -19,7 +19,6 @@ describe('[Integration]: Blockchain', () => {
   it('should be able to send a transaction', async done => {
     const transaction = new Transaction({
       version: 0,
-      nonce: 0,
       to: '8254b2c9acdf181d5d6796d63320fbb20d4edd12',
       amount: new BN(1000),
       gasPrice: 1000,

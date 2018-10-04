@@ -24,8 +24,7 @@ describe('Module: Transaction', () => {
   it('should poll and call queued handlers on confirmation', () => {
     const tx = wallet.sign(
       new Transaction({
-        version: 1,
-        nonce: 1,
+        version: 0,
         to: '0x1234567890123456789012345678901234567890',
         amount: new BN(0),
         gasPrice: 1000,
