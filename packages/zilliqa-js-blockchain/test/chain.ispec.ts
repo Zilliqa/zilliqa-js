@@ -4,7 +4,6 @@ import {Account, Transaction, Wallet} from 'zilliqa-js-account';
 import Blockchain from '../src/chain';
 
 jest.setTimeout(90000);
-jest.unmock('axios');
 
 const accounts = [new Account(process.env.TEST_ACCOUNT as string)];
 const provider = new HTTPProvider(process.env.HTTP_PROVIDER as string);

@@ -1,14 +1,16 @@
-import mockAxios from 'jest-mock-axios';
-import {HTTPProvider} from 'zilliqa-js-core';
+import axios from 'axios';
 import BN from 'bn.js';
+import MockAdapter from 'axios-mock-adapter';
+import {HTTPProvider} from 'zilliqa-js-core';
 
 import Transaction from '../src/transaction';
 import Wallet from '../src/wallet';
 
+const mock = new MockAdapter(axios);
+const provider = new HTTPProvider('https://mock.com');
+const wallet = new Wallet(provider);
+
 describe('Module: Transaction', () => {
-  // set up mock provider
-  const provider = new HTTPProvider('https://mock.com');
-  const wallet = new Wallet(provider);
   for (let i = 0; i < 10; i++) {
     wallet.create();
   }
@@ -17,11 +19,14 @@ describe('Module: Transaction', () => {
   Transaction.setProvider(provider);
 
   afterEach(() => {
-    mockAxios.reset();
+    mock.reset();
   });
 
-  it('should poll and call queued handlers on confirmation', () => {
-    const tx = wallet.sign(
+  it('should poll and call queued handlers on confirmation', async () => {
+    mock.onPost().reply(200, {
+      result: {nonce: 1},
+    });
+    const tx = await wallet.sign(
       new Transaction({
         version: 0,
         to: '0x1234567890123456789012345678901234567890',
@@ -30,41 +35,29 @@ describe('Module: Transaction', () => {
         gasLimit: 1000,
       }),
     );
-    mockAxios.mockResponse({data: {result: {nonce: 1}}});
 
-    tx.then(tx => {
-      provider.send('CreateTransaction', tx.return());
-      mockAxios.mockResponse({
-        data: {
-          result: {
-            TranID: 'some_hash',
-          },
-        },
-      });
-
-      return tx;
+    mock.onPost().reply(200, {
+      result: {
+        TranID: 'some_hash',
+      },
     });
+    const response = await provider.send('CreateTransaction', tx.return());
 
-    return tx.then(tx => {
-      tx.confirmReceipt('some_hash').map(txObj => {
-        expect(txObj.id).toEqual('some_hash');
-        expect(txObj.receipt).toEqual({succcess: true, cumulative_gas: 1000});
-        expect(tx.isPending()).toBeFalsy();
-        expect(tx.isConfirmed()).toBeTruthy();
-        return txObj;
-      });
-
-      mockAxios.mockResponse({
-        data: {
-          result: {
-            ID: 'some_hash',
-            receipt: {
-              success: true,
-              cumulative_gas: 1000,
-            },
-          },
+    mock.onPost().reply(200, {
+      result: {
+        ID: 'some_hash',
+        receipt: {
+          success: true,
+          cumulative_gas: 1000,
         },
-      });
+      },
+    });
+    tx.confirmReceipt('some_hash').map(txObj => {
+      expect(txObj.id).toEqual('some_hash');
+      expect(txObj.receipt).toEqual({success: true, cumulative_gas: 1000});
+      expect(tx.isPending()).toBeFalsy();
+      expect(tx.isConfirmed()).toBeTruthy();
+      return txObj;
     });
   });
 });

@@ -5,14 +5,21 @@ import {
   generatePrivateKey,
   schnorr,
 } from 'zilliqa-js-crypto';
-import mockAxios from 'jest-mock-axios';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
 import {createWallet} from './util';
 import Account from '../src/account';
 import Wallet from '../src/wallet';
 import Transaction from '../src/transaction';
 
-describe('Module: Wallet', () => {
-  const provider = new HTTPProvider('https://mock.com');
+const mock = new MockAdapter(axios);
+const provider = new HTTPProvider('https://mock.com');
+
+describe('Wallet', () => {
+  afterEach(() => {
+    mock.reset();
+  });
+
   it('should be able to bootstrap with an array of Accounts ', () => {
     const accounts: Account[] = [];
     for (let i = 0; i < 10; i++) {
@@ -34,7 +41,7 @@ describe('Module: Wallet', () => {
     expect(importedAddress).toEqual(address);
   });
 
-  it('should sign transactions with the default account', () => {
+  it('should sign transactions with the default account', async () => {
     const [wallet] = createWallet(1);
     const pubKey = (wallet.defaultAccount &&
       wallet.defaultAccount.publicKey) as string;
@@ -49,20 +56,19 @@ describe('Module: Wallet', () => {
       pubKey,
     });
 
-    const signed = wallet.sign(tx);
-    mockAxios.mockResponse({
-      data: {
-        result: {nonce: 1},
-      },
+    mock.onPost().reply(200, {
+      result: {nonce: 1},
     });
+    const signed = await wallet.sign(tx);
 
-    return signed.then(tx => {
-      const bytes = tx.bytes;
-      const signature = schnorr.toSignature(tx.return().signature as string);
-      const lgtm = schnorr.verify(bytes, signature, Buffer.from(pubKey, 'hex'));
+    const signature = schnorr.toSignature(signed.return().signature as string);
+    const lgtm = schnorr.verify(
+      signed.bytes,
+      signature,
+      Buffer.from(pubKey, 'hex'),
+    );
 
-      expect(lgtm).toBeTruthy();
-    });
+    expect(lgtm).toBeTruthy();
   });
 
   it('should throw an error if asked to sign with no accounts available', () => {
