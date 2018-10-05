@@ -43,7 +43,7 @@ export default class Blockchain implements ZilliqaModule {
    * is considered as lost.
    *
    * @param {Transaction} payload
-   * @returns {Promise<any>}
+   * @returns {Promise<RPCResponse>}
    */
   @sign
   createTransaction(tx: Transaction): Promise<RPCResponse> {

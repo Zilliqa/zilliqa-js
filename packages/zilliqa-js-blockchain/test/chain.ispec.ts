@@ -26,9 +26,17 @@ describe('[Integration]: Blockchain', () => {
 
     const response = await bc.createTransaction(transaction);
 
-    transaction.confirmReceipt(response.result.TranID).map(tx => {
-      done();
-      return tx;
-    });
+    transaction.confirmReceipt(response.result.TranID).bimap(
+      tx => {
+        expect(tx.id).toEqual(response.result.TranID);
+        done();
+        return tx;
+      },
+      err => {
+        console.log(err);
+        expect(err).toBeUndefined;
+        done();
+      },
+    );
   });
 });

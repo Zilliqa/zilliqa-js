@@ -9,3 +9,4 @@
 // and, to the extent permitted by law, all liability for your use of the code is disclaimed.
 window.crypto = require('@trust/webcrypto');
 window.fetch = require('jest-fetch-mock');
+require('dotenv').config('.env');
