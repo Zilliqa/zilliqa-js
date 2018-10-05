@@ -17,12 +17,19 @@ export interface Field {
   type: string;
 }
 
+export interface Value {
+  vname: string;
+  type: string;
+  value: string;
+}
+
 export type Param = Field;
 export type TransitionParam = Field;
+
+export type Init = Value[];
+export type State = Value[];
 
 export interface Transition {
   name: string;
   params: TransitionParam[];
 }
-
-

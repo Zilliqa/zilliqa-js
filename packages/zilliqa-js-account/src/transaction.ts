@@ -40,7 +40,7 @@ export default class Transaction implements Signable {
   private queued: Handler[];
 
   get bytes(): Buffer {
-    return encodeTransaction({...this.baseTx});
+    return encodeTransaction(this.baseTx);
   }
 
   status: TxStatus;
@@ -104,12 +104,16 @@ export default class Transaction implements Signable {
   confirmReceipt(txHash: string, timeout: number = 60000): Transaction {
     const token = setTimeout(() => {
       this.status = TxStatus.Rejected;
-      this.handleReject('err');
+      this.handleReject(
+        new Error(
+          'The transaction is taking unusually long to be confirmed. It may be lost.',
+        ),
+      );
     }, timeout);
 
     const cancelTimeout = () => {
       clearTimeout(token);
-    }
+    };
 
     this.trackTx(txHash, cancelTimeout);
 
@@ -127,19 +131,21 @@ export default class Transaction implements Signable {
 
     result
       .then((res: RPCResponse) => {
-        if (res.result.error) {
+        if (res.result && res.result.error) {
           this.trackTx(txHash, cancelTimeout);
           return;
         }
 
-        this.baseTx = {
-          ...this.baseTx,
-          id: res.result['ID'],
-          receipt: res.result.receipt,
-        };
+        if (res.result) {
+          this.baseTx = {
+            ...this.baseTx,
+            id: res.result['ID'],
+            receipt: res.result.receipt,
+          };
 
-        cancelTimeout();
-        this.handleConfirm(this.baseTx);
+          cancelTimeout();
+          this.handleConfirm(this.baseTx);
+        }
       })
       .catch(err => {
         cancelTimeout();
