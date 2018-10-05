@@ -20,12 +20,12 @@ describe('Contracts', () => {
     const contractFactory = new Contracts(provider, wallet);
     const contract = contractFactory.new(abi, testContract, [
       {
-        name: 'contractOwner',
+        vname: 'contractOwner',
         type: 'ByStr20',
         value: '0x124567890124567890124567890124567890',
       },
-      {name: 'name', type: 'String', value: 'NonFungibleToken'},
-      {name: 'symbol', type: 'String', value: 'NFT'},
+      {vname: 'name', type: 'String', value: 'NonFungibleToken'},
+      {vname: 'symbol', type: 'String', value: 'NFT'},
     ]);
 
     mock
