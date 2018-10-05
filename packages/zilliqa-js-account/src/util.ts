@@ -21,7 +21,7 @@ export const encodeTransaction = (tx: BaseTx): Buffer => {
     bytes.intToHexArray(tx.gasLimit, 64).join('') +
     bytes.intToHexArray((tx.code && tx.code.length) || 0, 8).join('') + // size of code
     codeHex +
-    bytes.intToHexArray((tx.code && tx.code.length) || 0, 8).join('') + // size of data
+    bytes.intToHexArray((tx.data && tx.data.length) || 0, 8).join('') + // size of data
     dataHex;
 
   return Buffer.from(encoded, 'hex');
