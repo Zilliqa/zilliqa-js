@@ -3,7 +3,12 @@ import {Provider, RPCResponse, Signable} from 'zilliqa-js-core';
 import {BaseTx, TxStatus} from './types';
 import {encodeTransaction} from './util';
 
-type Handler = (tx: BaseTx) => BaseTx;
+type ConfirmationHandler = (tx: BaseTx) => BaseTx | Transaction;
+type RejectionHandler = (err: any) => BaseTx | void;
+interface Handler {
+  confirmed: ConfirmationHandler;
+  rejected?: RejectionHandler;
+}
 
 /**
  * Transaction
@@ -32,7 +37,7 @@ export default class Transaction implements Signable {
   }
 
   private baseTx: BaseTx;
-  private queued: any[];
+  private queued: Handler[];
 
   get bytes(): Buffer {
     return encodeTransaction({...this.baseTx});
@@ -97,15 +102,21 @@ export default class Transaction implements Signable {
    * @returns {Transaction}
    */
   confirmReceipt(txHash: string, timeout: number = 60000): Transaction {
-    this.trackTx(txHash);
-    setTimeout(() => {
+    const token = setTimeout(() => {
       this.status = TxStatus.Rejected;
+      this.handleReject('err');
     }, timeout);
+
+    const cancelTimeout = () => {
+      clearTimeout(token);
+    }
+
+    this.trackTx(txHash, cancelTimeout);
 
     return this;
   }
 
-  private trackTx(txHash: string) {
+  private trackTx(txHash: string, cancelTimeout: () => void) {
     if (this.isRejected()) {
       return;
     }
@@ -114,26 +125,42 @@ export default class Transaction implements Signable {
     // TODO: regex validation for txHash so we don't get garbage
     const result = Transaction.provider.send('GetTransaction', [txHash]);
 
-    result.then((res: RPCResponse) => {
-      if (res.result.error) {
-        this.trackTx(txHash);
-        return;
-      }
+    result
+      .then((res: RPCResponse) => {
+        if (res.result.error) {
+          this.trackTx(txHash, cancelTimeout);
+          return;
+        }
 
-      this.baseTx = {
-        ...this.baseTx,
-        id: res.result['ID'],
-        receipt: res.result.receipt,
-      };
+        this.baseTx = {
+          ...this.baseTx,
+          id: res.result['ID'],
+          receipt: res.result.receipt,
+        };
 
-      this.handleConfirm(this.baseTx);
-    });
+        cancelTimeout();
+        this.handleConfirm(this.baseTx);
+      })
+      .catch(err => {
+        cancelTimeout();
+        this.status = TxStatus.Rejected;
+        this.handleReject(err);
+      });
   }
 
   private handleConfirm(res: BaseTx) {
     this.status === TxStatus.Confirmed;
-    this.queued.forEach(fn => {
-      fn(res);
+    this.queued.forEach(({confirmed}) => {
+      confirmed(res);
+    });
+  }
+
+  private handleReject(err: any) {
+    this.status === TxStatus.Rejected;
+    this.queued.forEach(({rejected}) => {
+      if (rejected) {
+        rejected(err);
+      }
     });
   }
 
@@ -148,28 +175,31 @@ export default class Transaction implements Signable {
    */
   bind(fn: (tx: BaseTx) => Transaction): Transaction {
     if (this.isPending()) {
-      this.queued.push(fn);
+      this.queued.push({confirmed: fn});
     }
 
     return this.isConfirmed() || this.isInitialised() ? fn(this.baseTx) : this;
   }
 
   /**
-   * map
+   * bimap
    *
-   * Only runs if TxStatus is Confirmed or Initialiased. Map can be used like
+   * Only runs if TxStatus is Confirmed or Initialiased. Bimap can be used like
    * Promise.prototype.then.
    *
    * @param {(tx: BaseTx) => Signable} fn
    * @returns {Transaction}
    */
-  map(fn: (tx: BaseTx) => BaseTx): Transaction {
+  bimap(
+    confirmed: (tx: BaseTx) => BaseTx,
+    rejected?: (err: any) => BaseTx | void,
+  ): Transaction {
     if (this.isPending()) {
-      this.queued.push(fn);
+      this.queued.push({confirmed, rejected});
     }
 
     if (this.isConfirmed() || this.isInitialised()) {
-      this.baseTx = fn(this.baseTx);
+      this.baseTx = confirmed(this.baseTx);
     }
 
     return this;
