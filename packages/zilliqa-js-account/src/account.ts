@@ -1,5 +1,4 @@
 import * as zcrypto from 'zilliqa-js-crypto';
-import hash from 'hash.js';
 import Transaction from './transaction';
 
 export default class Account {

@@ -5,5 +5,8 @@
     "outDir": "dist"
   },
   "include": ["src", "../../typings/**/*.d.ts"],
-  "references": [{"path": "../zilliqa-js-core"}]
+  "references": [
+    {"path": "../zilliqa-js-account"},
+    {"path": "../zilliqa-js-core"},
+  ]
 }

@@ -1,5 +1,4 @@
 import BN from 'bn.js';
-import hash from 'hash.js';
 import {HTTPProvider} from 'zilliqa-js-core';
 import {
   getPubKeyFromPrivateKey,
@@ -8,9 +7,9 @@ import {
 } from 'zilliqa-js-crypto';
 import mockAxios from 'jest-mock-axios';
 import {createWallet} from './util';
-import Account from '../account';
-import Wallet from '../wallet';
-import Transaction from '../transaction';
+import Account from '../src/account';
+import Wallet from '../src/wallet';
+import Transaction from '../src/transaction';
 
 describe('Module: Wallet', () => {
   const provider = new HTTPProvider('https://mock.com');

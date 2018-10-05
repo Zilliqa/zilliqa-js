@@ -1,5 +1,5 @@
 import {addresses} from './address.fixtures';
-import * as crypto from '../index';
+import * as crypto from '../src/index';
 
 describe('addresses', () => {
   it('should produce the same results as the C++ keygen crypto', () => {

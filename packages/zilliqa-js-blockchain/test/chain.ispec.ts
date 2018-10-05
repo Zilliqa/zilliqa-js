@@ -1,7 +1,7 @@
 import BN from 'bn.js';
 import {HTTPProvider} from 'zilliqa-js-core';
 import {Account, Transaction, Wallet} from 'zilliqa-js-account';
-import Blockchain from '../chain';
+import Blockchain from '../src/chain';
 
 jest.setTimeout(90000);
 jest.unmock('axios');

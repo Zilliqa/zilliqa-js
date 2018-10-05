@@ -1,6 +1,6 @@
 import {HTTPProvider} from 'zilliqa-js-core';
 import {Wallet} from 'zilliqa-js-account';
-import {Contracts} from '../index';
+import {Contracts} from '../src/index';
 import {testContract} from './fixtures';
 import {abi} from './test.abi';
 

@@ -1,10 +1,9 @@
 import mockAxios from 'jest-mock-axios';
 import {HTTPProvider} from 'zilliqa-js-core';
-import * as zcrypto from 'zilliqa-js-crypto';
 import BN from 'bn.js';
 
-import Transaction from '../transaction';
-import Wallet from '../wallet';
+import Transaction from '../src/transaction';
+import Wallet from '../src/wallet';
 
 describe('Module: Transaction', () => {
   // set up mock provider

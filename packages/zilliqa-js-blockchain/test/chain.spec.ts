@@ -1,10 +1,9 @@
 import mockAxios from 'jest-mock-axios';
 import {Transaction, Wallet} from 'zilliqa-js-account';
-import * as zcrypto from 'zilliqa-js-crypto';
 import {HTTPProvider} from 'zilliqa-js-core';
 import BN from 'bn.js';
 
-import Blockchain from '../chain';
+import Blockchain from '../src/chain';
 
 describe('Module: Blockchain', () => {
   const provider = new HTTPProvider('https://mock.com');

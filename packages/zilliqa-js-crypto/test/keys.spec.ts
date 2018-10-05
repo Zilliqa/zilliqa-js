@@ -1,5 +1,5 @@
 import {pairs} from './keypairs.fixtures';
-import * as crypto from '../index';
+import * as crypto from '../src/index';
 
 describe('keypairs', () => {
   it('should be able to generate a valid 32-byte private key', () => {

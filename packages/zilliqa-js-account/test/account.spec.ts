@@ -1,9 +1,8 @@
 import BN from 'bn.js';
-import hashjs from 'hash.js';
 import Signature from 'elliptic/lib/elliptic/ec/signature';
 import * as zcrypto from 'zilliqa-js-crypto';
-import Account from '../account';
-import Transaction from '../transaction';
+import Account from '../src/account';
+import Transaction from '../src/transaction';
 
 describe('Account', () => {
   it('should be able to encode itself as a keystore file', async () => {

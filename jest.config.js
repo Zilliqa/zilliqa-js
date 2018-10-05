@@ -11,7 +11,7 @@ const config = {
   transform: {
     '^.+\\.ts$': 'ts-jest',
   },
-  testMatch: ['<rootDir>/packages/**/?(*.)+(spec|test).ts'],
+  testMatch: ['<rootDir>/packages/**/test/?(*.)+(spec|test).ts'],
   moduleDirectories: ['packages/*/src', '<rootDir>/node_modules'],
   moduleFileExtensions: ['js', 'ts', 'node', 'json'],
   moduleNameMapper: {

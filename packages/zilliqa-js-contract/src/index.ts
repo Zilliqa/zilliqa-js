@@ -1,7 +1,12 @@
 import BN from 'bn.js';
-import * as zaccount from 'zilliqa-js-account';
+import {Wallet, Transaction} from 'zilliqa-js-account';
 import {Provider, ZilliqaModule, format} from 'zilliqa-js-core';
 import {ABI} from './types';
+
+const enum ContractStatus {
+  Deployed,
+  Initialised,
+}
 
 /**
  * Contracts
@@ -13,47 +18,65 @@ import {ABI} from './types';
  */
 export class Contracts implements ZilliqaModule {
   provider: Provider;
-  signer: zaccount.Wallet;
+  signer: Wallet;
 
-  constructor(provider: Provider, signer: zaccount.Wallet) {
+  constructor(provider: Provider, signer: Wallet) {
     this.provider = provider;
     this.signer = signer;
     Contract.setProvider(this.provider);
   }
 
-  at(abi: ABI, address: string): Contract {
-    return new Contract(abi, address);
+  at(
+    address: string,
+    abi: ABI,
+    code: string,
+    init?: any,
+    state?: any,
+  ): Contract {
+    return new Contract(abi, address, code, init, state);
   }
 
-  new(abi: ABI, code: string): Contract {
-    return new Contract(abi, undefined, code);
+  new(abi: ABI, code: string, init: any): Contract {
+    return new Contract(abi, code, undefined, init);
   }
 }
 
 class Contract {
   static provider: Provider;
+  static signer: Wallet;
   static setProvider(provider: Provider) {
     Contract.provider = provider;
   }
 
   abi: ABI;
+  init: any;
+  state: any;
+  status: ContractStatus;
+
   address?: string;
   code?: string;
-  isDeployed: boolean = false;
 
-  constructor(abi: ABI, address?: string, code?: string) {
+  constructor(
+    abi: ABI,
+    code: string,
+    address?: string,
+    init?: any,
+    state?: any,
+  ) {
     // assume that we are accessing an existing contract
     if (address && address.length) {
       // TODO: reject malformed address
       this.abi = abi;
       this.address = address;
-      this.isDeployed = true;
+      this.init = init;
+      this.state = state;
+      this.status = ContractStatus.Deployed;
     } else {
       // assume we're deploying
       // TODO
       this.abi = abi;
       this.code = code;
-      this.isDeployed = false;
+      this.status = ContractStatus.Initialised;
     }
   }
 
@@ -72,11 +95,6 @@ class Contract {
 
   deploy(gasPrice: BN, gasLimit: BN): Promise<any> {
     return Contract.provider.send('CreateTransaction', {});
-  }
-
-  @format((x: any) => x, (x: number) => x.toString())
-  on(event: string, subscriber: any): number {
-    return 1;
   }
 
   call(transition: string, params: any) {}
