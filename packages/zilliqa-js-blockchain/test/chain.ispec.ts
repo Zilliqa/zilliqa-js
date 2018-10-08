@@ -15,7 +15,7 @@ describe('[Integration]: Blockchain', () => {
     const response = await bc.getLatestDSBlock();
   });
 
-  it('should be able to send a transaction', async done => {
+  it('should be able to send a transaction', async () => {
     const transaction = new Transaction({
       version: 0,
       to: '8254b2c9acdf181d5d6796d63320fbb20d4edd12',
@@ -24,19 +24,8 @@ describe('[Integration]: Blockchain', () => {
       gasLimit: 1000,
     });
 
-    const response = await bc.createTransaction(transaction);
+    const {receipt} = await bc.createTransaction(transaction);
 
-    transaction.confirmReceipt(response.result.TranID).bimap(
-      tx => {
-        expect(tx.id).toEqual(response.result.TranID);
-        done();
-        return tx;
-      },
-      err => {
-        console.log(err);
-        expect(err).toBeUndefined;
-        done();
-      },
-    );
+    expect(receipt && receipt.success).toBeTruthy;
   });
 });
