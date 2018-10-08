@@ -61,7 +61,7 @@ describe('Wallet', () => {
     });
     const signed = await wallet.sign(tx);
 
-    const signature = schnorr.toSignature(signed.return().signature as string);
+    const signature = schnorr.toSignature(signed.txParams.signature as string);
     const lgtm = schnorr.verify(
       signed.bytes,
       signature,

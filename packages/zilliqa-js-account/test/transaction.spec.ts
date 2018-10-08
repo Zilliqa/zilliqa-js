@@ -26,7 +26,8 @@ describe('Transaction', () => {
     mock.onPost().reply(200, {
       result: {nonce: 1},
     });
-    const tx = await wallet.sign(
+
+    const pending = await wallet.sign(
       new Transaction({
         version: 0,
         to: '0x1234567890123456789012345678901234567890',
@@ -41,7 +42,7 @@ describe('Transaction', () => {
         TranID: 'some_hash',
       },
     });
-    const response = await provider.send('CreateTransaction', tx.return());
+    const response = await provider.send('CreateTransaction', pending.txParams);
 
     mock.onPost().reply(200, {
       result: {
@@ -52,14 +53,16 @@ describe('Transaction', () => {
         },
       },
     });
-    tx.confirmReceipt('some_hash').bimap(txObj => {
-      expect(txObj.id).toEqual('some_hash');
-      expect(txObj.receipt).toEqual({success: true, cumulative_gas: 1000});
-      expect(tx.isPending()).toBeFalsy();
-      expect(tx.isConfirmed()).toBeTruthy();
-      return txObj;
-    });
+
+    const confirmed = await pending.confirm('some_hash');
+    const state = confirmed.txParams;
+
+    expect(confirmed.isConfirmed()).toBeTruthy();
+    expect(state.id).toEqual('some_hash');
+    expect(state.receipt).toEqual({success: true, cumulative_gas: 1000});
   });
+
+  it('should be awaitable', () => {});
 
   it('should call rejection handlers', async () => {
     mock.onPost().reply(200, {
@@ -80,14 +83,14 @@ describe('Transaction', () => {
         TranID: 'some_hash',
       },
     });
-    const response = await provider.send('CreateTransaction', tx.return());
+    const response = await provider.send('CreateTransaction', tx.txParams);
 
     const spy = jest.fn();
     mock.onPost().reply(400);
-    tx.confirmReceipt('some_hash').bimap(spy, err => {
-      expect(spy).toBeCalledTimes(0);
+    try {
+      tx.confirm('some_hash');
+    } catch (err) {
       expect(err).toBeDefined;
-      expect(err.message).toEqual('Request failed with status code 400');
-    });
+    }
   });
 });

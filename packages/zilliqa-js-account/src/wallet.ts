@@ -181,18 +181,20 @@ export default class Wallet extends Signer {
       const signer = this.accounts[account];
       const balance = await this.provider.send('GetBalance', [signer.address]);
 
-      return tx.bind(rawTx => {
-        const withNonce = new Transaction({
-          ...rawTx,
+      const withNonce = tx.map(txObj => {
+        return {
+          ...txObj,
           nonce: balance.result.nonce + 1,
           pubKey: signer.publicKey,
-        });
+        };
+      });
 
+      return withNonce.map(txObj => {
         // @ts-ignore
-        return new Transaction({
-          ...withNonce.return(),
-          signature: signer.signTransaction(withNonce),
-        });
+        return {
+          ...txObj,
+          signature: signer.signTransaction(withNonce.bytes),
+        };
       });
     } catch (err) {
       throw err;

@@ -9,7 +9,8 @@ import {testContract} from './fixtures';
 
 const mock = new MockAdapter(axios);
 const provider = new HTTPProvider('https://mock.com');
-const wallet = new Wallet(provider);
+const wallet = new Wallet(provider)
+wallet.create();
 
 describe('Contracts', () => {
   afterEach(() => {
@@ -45,9 +46,7 @@ describe('Contracts', () => {
       });
 
     const deployTx = await contract.deploy(new BN(1000), new BN(1000));
-    deployTx.bimap(tx => {
-      expect(contract.status).toEqual(ContractStatus.Deployed);
-      return tx;
-    });
+
+    expect(deployTx.status).toEqual(ContractStatus.Deployed);
   });
 });

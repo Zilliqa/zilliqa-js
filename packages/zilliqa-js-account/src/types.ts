@@ -13,7 +13,7 @@ export const enum TxStatus {
   Rejected,
 }
 
-export interface BaseTx {
+export interface TxParams {
   version: number;
   to: string;
   amount: BN;

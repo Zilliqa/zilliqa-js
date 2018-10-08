@@ -62,12 +62,12 @@ export default class Account {
   /**
    * signTransaction
    *
-   * @param {Transaction} tx - JSON-encoded transaction
+   * @param {Buffer} bytes - the data to be signed
    *
    * @returns {string} - the hex encoded signature. it is a concatenation of
    * the r and s values in hex, each padded to a length of 64.
    */
-  signTransaction(tx: Transaction) {
-    return zcrypto.sign(tx.bytes, this.privateKey, this.publicKey);
+  signTransaction(bytes: Buffer) {
+    return zcrypto.sign(bytes, this.privateKey, this.publicKey);
   }
 }

@@ -47,9 +47,10 @@ export default class Blockchain implements ZilliqaModule {
    */
   @sign
   createTransaction(tx: Transaction): Promise<RPCResponse> {
-    const raw = tx.return();
+    const {id, ...json} = tx.txParams;
+
     return this.provider.send(BlockchainMethods.CreateTransaction, [
-      {...raw, amount: raw.amount.toNumber()},
+      {...json, amount: json.amount.toNumber()},
     ]);
   }
 

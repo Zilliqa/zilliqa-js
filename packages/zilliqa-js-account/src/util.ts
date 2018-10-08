@@ -1,13 +1,13 @@
 import {bytes} from 'zilliqa-js-util';
-import {BaseTx} from './types';
+import {TxParams} from './types';
 
 /**
  * encodeTransaction
  *
- * @param {Transaction} tx - JSON-encoded tx to convert to a byte array
+ * @param {TxParams} tx - JSON-encoded tx to convert to a byte array
  * @returns {Buffer} - Buffer of bytes
  */
-export const encodeTransaction = (tx: BaseTx): Buffer => {
+export const encodeTransaction = (tx: TxParams): Buffer => {
   let codeHex = Buffer.from(tx.code || '').toString('hex');
   let dataHex = Buffer.from(tx.data || '').toString('hex');
 

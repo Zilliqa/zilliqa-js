@@ -1,21 +1,14 @@
+import BN from 'bn.js';
 import {Provider, RPCResponse, Signable} from 'zilliqa-js-core';
 
-import {BaseTx, TxStatus} from './types';
+import {TxParams, TxStatus} from './types';
 import {encodeTransaction} from './util';
-
-type ConfirmationHandler = (tx: BaseTx) => BaseTx | Transaction;
-type RejectionHandler = (err: any) => BaseTx | void;
-interface Handler {
-  confirmed: ConfirmationHandler;
-  rejected?: RejectionHandler;
-}
 
 /**
  * Transaction
  *
- * Transaction is a monad-like class. Its purpose
- * is to encode the possible states a Transaction can be in:  Confirmed,
- * Rejected, Pending, or Initialised (i.e., not broadcasted).
+ * Transaction is a functor. Its purpose is to encode the possible states a
+ * Transaction can be in:  Confirmed, Rejected, Pending, or Initialised (i.e., not broadcasted).
  */
 export default class Transaction implements Signable {
   /**
@@ -26,7 +19,7 @@ export default class Transaction implements Signable {
    * @static
    * @param {BaseTx} params
    */
-  static confirm(params: BaseTx) {
+  static confirm(params: TxParams) {
     return new Transaction(params, TxStatus.Confirmed);
   }
 
@@ -35,20 +28,59 @@ export default class Transaction implements Signable {
   static setProvider(provider: Provider) {
     Transaction.provider = provider;
   }
+  // parameters
+  version: number;
+  to: string;
+  amount: BN;
+  gasPrice: number;
+  gasLimit: number;
+  id?: string;
+  code?: string;
+  data?: string;
+  receipt?: {success: boolean; cumulative_gas: number};
+  nonce?: number;
+  pubKey?: string;
+  signature?: string;
 
-  private baseTx: BaseTx;
-  private queued: Handler[];
-
-  get bytes(): Buffer {
-    return encodeTransaction(this.baseTx);
-  }
-
+  // internal state
   status: TxStatus;
 
-  constructor(baseTx: BaseTx, status: TxStatus = TxStatus.Initialised) {
-    this.baseTx = {code: '', data: '', ...baseTx};
+  get bytes(): Buffer {
+    return encodeTransaction(this.txParams);
+  }
+
+  get txParams(): TxParams {
+    return {
+      version: 0,
+      id: this.id,
+      to: this.to,
+      nonce: this.nonce,
+      pubKey: this.pubKey,
+      amount: this.amount,
+      gasPrice: this.gasPrice,
+      gasLimit: this.gasLimit,
+      code: this.code,
+      data: this.data,
+      signature: this.signature,
+      receipt: this.receipt,
+    };
+  }
+
+  constructor(params: TxParams, status: TxStatus = TxStatus.Initialised) {
+    this.version = params.version;
+    this.id = params.id;
+    this.to = params.to;
+    this.nonce = params.nonce;
+    this.pubKey = params.pubKey;
+    this.amount = params.amount;
+    this.code = params.code;
+    this.data = params.data;
+    this.signature = params.signature;
+    this.gasPrice = params.gasPrice;
+    this.gasLimit = params.gasLimit;
+    this.receipt = params.receipt;
+
     this.status = status;
-    this.queued = [];
   }
 
   /**
@@ -99,126 +131,83 @@ export default class Transaction implements Signable {
    *
    * @param {string} txHash
    * @param {number} timeout
-   * @returns {Transaction}
+   * @returns {Promise<Transaction>}
    */
-  confirmReceipt(txHash: string, timeout: number = 60000): Transaction {
-    const token = setTimeout(() => {
-      this.status = TxStatus.Rejected;
-      this.handleReject(
-        new Error(
-          'The transaction is taking unusually long to be confirmed. It may be lost.',
-        ),
-      );
-    }, timeout);
+  confirm(txHash: string, timeout: number = 60000): Promise<Transaction> {
+    this.status = TxStatus.Pending;
 
-    const cancelTimeout = () => {
-      clearTimeout(token);
-    };
+    return new Promise((resolve, reject) => {
+      const token = setTimeout(() => {
+        this.status = TxStatus.Rejected;
+        reject(
+          new Error(
+            'The transaction is taking unusually long to be confirmed. It may be lost.',
+          ),
+        );
+      }, timeout);
 
-    this.trackTx(txHash, cancelTimeout);
+      const cancelTimeout = () => {
+        clearTimeout(token);
+      };
+
+      this.trackTx(txHash, resolve, reject, cancelTimeout);
+    });
+  }
+
+  map(fn: (prev: TxParams) => TxParams): Transaction {
+    const newParams = fn(this.txParams);
+    this.setParams(newParams);
 
     return this;
   }
 
-  private trackTx(txHash: string, cancelTimeout: () => void) {
+  private setParams(params: TxParams) {
+    this.version = params.version;
+    this.id = params.id;
+    this.to = params.to;
+    this.nonce = params.nonce;
+    this.pubKey = params.pubKey;
+    this.amount = params.amount;
+    this.code = params.code;
+    this.data = params.data;
+    this.signature = params.signature;
+    this.gasPrice = params.gasPrice;
+    this.gasLimit = params.gasLimit;
+    this.receipt = params.receipt;
+  }
+
+  private trackTx(
+    txHash: string,
+    resolve: (self: Transaction) => void,
+    reject: (err: any) => void,
+    cancelTimeout: () => void,
+  ) {
     if (this.isRejected()) {
       return;
     }
 
-    this.status = TxStatus.Pending;
     // TODO: regex validation for txHash so we don't get garbage
     const result = Transaction.provider.send('GetTransaction', [txHash]);
 
     result
       .then((res: RPCResponse) => {
         if (res.result && res.result.error) {
-          this.trackTx(txHash, cancelTimeout);
+          this.trackTx(txHash, resolve, reject, cancelTimeout);
           return;
         }
 
         if (res.result) {
-          this.baseTx = {
-            ...this.baseTx,
-            id: res.result['ID'],
-            receipt: res.result.receipt,
-          };
-
+          this.id = res.result['ID'];
+          this.receipt = res.result.receipt;
+          this.status = TxStatus.Confirmed;
           cancelTimeout();
-          this.handleConfirm(this.baseTx);
+          resolve(this);
         }
       })
       .catch(err => {
         cancelTimeout();
         this.status = TxStatus.Rejected;
-        this.handleReject(err);
+        reject(err);
       });
-  }
-
-  private handleConfirm(res: BaseTx) {
-    this.status === TxStatus.Confirmed;
-    this.queued.forEach(({confirmed}) => {
-      confirmed(res);
-    });
-  }
-
-  private handleReject(err: any) {
-    this.status === TxStatus.Rejected;
-    this.queued.forEach(({rejected}) => {
-      if (rejected) {
-        rejected(err);
-      }
-    });
-  }
-
-  /**
-   * bind
-   *
-   * Only runs if TxStatus is Confirmed or Initialiased. Bind can be used like
-   * Promise.prototype.then.
-   *
-   * @param {BaseTx => Transaction} fn
-   * @returns {Transaction}
-   */
-  bind(fn: (tx: BaseTx) => Transaction): Transaction {
-    if (this.isPending()) {
-      this.queued.push({confirmed: fn});
-    }
-
-    return this.isConfirmed() || this.isInitialised() ? fn(this.baseTx) : this;
-  }
-
-  /**
-   * bimap
-   *
-   * Only runs if TxStatus is Confirmed or Initialiased. Bimap can be used like
-   * Promise.prototype.then.
-   *
-   * @param {(tx: BaseTx) => Signable} fn
-   * @returns {Transaction}
-   */
-  bimap(
-    confirmed: (tx: BaseTx) => BaseTx,
-    rejected?: (err: any) => BaseTx | void,
-  ): Transaction {
-    if (this.isPending()) {
-      this.queued.push({confirmed, rejected});
-    }
-
-    if (this.isConfirmed() || this.isInitialised()) {
-      this.baseTx = confirmed(this.baseTx);
-    }
-
-    return this;
-  }
-
-  /**
-   * return
-   *
-   * Gives back the unboxed parameters
-   *
-   * @returns {RawTx}
-   */
-  return(): BaseTx {
-    return this.baseTx;
   }
 }

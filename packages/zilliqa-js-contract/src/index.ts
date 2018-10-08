@@ -2,6 +2,7 @@ import BN from 'bn.js';
 import hash from 'hash.js';
 import {Wallet, Transaction} from 'zilliqa-js-account';
 import {Provider, ZilliqaModule, sign} from 'zilliqa-js-core';
+import {bytes} from 'zilliqa-js-util';
 import {ABI, Init, State} from './types';
 
 export const enum ContractStatus {
@@ -83,22 +84,22 @@ class Contract {
 
   @sign
   async prepareTx(tx: Transaction): Promise<Transaction> {
-    const raw = tx.return();
+    const raw = tx.txParams;
     const {code, ...rest} = raw;
     const response = await this.provider.send('CreateTransaction', [
       {...raw, amount: raw.amount.toNumber()},
     ]);
 
-    return tx.confirmReceipt(response.result.TranID);
+    return tx.confirm(response.result.TranID);
   }
 
-  async deploy(gasPrice: BN, gasLimit: BN): Promise<Transaction> {
+  async deploy(gasPrice: BN, gasLimit: BN): Promise<Contract> {
     if (!this.code || !this.init) {
       throw new Error('Cannot deploy without code or ABI.');
     }
 
-    Transaction.setProvider(this.provider);
     try {
+      Transaction.setProvider(this.provider);
       const tx = await this.prepareTx(
         new Transaction({
           version: 0,
@@ -112,25 +113,18 @@ class Contract {
         }),
       );
 
-      return tx.bimap(
-        tx => {
-          const address = hash
-            .sha256()
-            .update(tx.pubKey, 'hex')
-            .update(tx.nonce as number)
-            .digest('hex')
-            .slice(-40);
+      const {nonce, pubKey} = tx;
+      const address = hash
+        .sha256()
+        .update(tx.pubKey, 'hex')
+        .update(bytes.intToHexArray(tx.nonce || 1, 64).join(''), 'hex')
+        .digest('hex')
+        .slice(-40);
 
-          this.status = ContractStatus.Deployed;
-          this.address = address;
+      this.address = address;
+      this.status = ContractStatus.Deployed;
 
-          return tx;
-        },
-        err => {
-          this.status = ContractStatus.Rejected;
-          throw err;
-        },
-      );
+      return this;
     } catch (err) {
       throw err;
     }

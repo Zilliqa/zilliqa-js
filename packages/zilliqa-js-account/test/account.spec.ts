@@ -43,7 +43,7 @@ describe('Account', () => {
     };
 
     const tx = new Transaction(rawTx);
-    const rawSignature = account.signTransaction(tx);
+    const rawSignature = account.signTransaction(tx.bytes);
 
     const lgtm = zcrypto.schnorr.verify(
       tx.bytes,
