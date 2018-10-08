@@ -62,9 +62,32 @@ describe('Transaction', () => {
     expect(state.receipt).toEqual({success: true, cumulative_gas: 1000});
   });
 
-  it('should be awaitable', () => {});
+  it('should reject the promise if there is a network error', async () => {
+    mock.onPost().reply(200, {
+      result: {nonce: 1},
+    });
+    const tx = await wallet.sign(
+      new Transaction({
+        version: 0,
+        to: '0x1234567890123456789012345678901234567890',
+        amount: new BN(0),
+        gasPrice: 1000,
+        gasLimit: 1000,
+      }),
+    );
 
-  it('should call rejection handlers', async () => {
+    mock.onPost().reply(400, {
+      result: {
+        TranID: 'some_hash',
+      },
+    });
+
+    await expect(
+      provider.send('CreateTransaction', tx.txParams),
+    ).rejects.toThrow(/Request failed/g);
+  });
+
+  it('should not reject the promise if receipt.success === false', async () => {
     mock.onPost().reply(200, {
       result: {nonce: 1},
     });
@@ -83,14 +106,19 @@ describe('Transaction', () => {
         TranID: 'some_hash',
       },
     });
-    const response = await provider.send('CreateTransaction', tx.txParams);
+    const res = await provider.send('CreateTransaction', tx.txParams);
 
-    const spy = jest.fn();
-    mock.onPost().reply(400);
-    try {
-      tx.confirm('some_hash');
-    } catch (err) {
-      expect(err).toBeDefined;
-    }
+    mock.onPost().reply(200, {
+      result: {
+        ID: 'some_hash',
+        receipt: {
+          success: true,
+          cumulative_gas: 1000,
+        },
+      },
+    });
+    const rejected = await tx.confirm(res.result.TranID);
+
+    await expect(rejected.receipt && rejected.receipt.success).toBeFalsy;
   });
 });
