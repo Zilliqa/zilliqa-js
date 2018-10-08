@@ -113,6 +113,11 @@ class Contract {
         }),
       );
 
+      if (!tx.receipt || !tx.receipt.success) {
+        this.status = ContractStatus.Rejected;
+        return this;
+      }
+
       const {nonce, pubKey} = tx;
       const address = hash
         .sha256()
