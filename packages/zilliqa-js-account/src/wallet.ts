@@ -181,6 +181,10 @@ export default class Wallet extends Signer {
       const signer = this.accounts[account];
       const balance = await this.provider.send('GetBalance', [signer.address]);
 
+      if (typeof balance.result.nonce !== 'number') {
+        throw new Error('Could not get nonce');
+      }
+
       const withNonce = tx.map(txObj => {
         return {
           ...txObj,
