@@ -133,7 +133,27 @@ describe('Contracts', () => {
         result: {
           ID: 'some_hash',
           receipt: {
-            success: false,
+            success: true,
+            cumulative_gas: 1000,
+          },
+        },
+      });
+
+    mock
+      .onPost()
+      .replyOnce(200, {
+        result: {nonce: 2},
+      })
+      .onPost()
+      .replyOnce(200, {
+        result: {TranID: 'some_hash'},
+      })
+      .onPost()
+      .replyOnce(200, {
+        result: {
+          ID: 'some_hash',
+          receipt: {
+            success: true,
             cumulative_gas: 1000,
           },
         },
@@ -151,11 +171,11 @@ describe('Contracts', () => {
       ])
       .deploy(new BN(1000), new BN(1000));
 
-      const callTx = await contract.call('myTransition', [
-        {vname: 'param_1', type: 'String', value: 'hello'},
-        {vname: 'param_2', type: 'String', value: 'world'},
-      ]);
+    const callTx = await contract.call('myTransition', [
+      {vname: 'param_1', type: 'String', value: 'hello'},
+      {vname: 'param_2', type: 'String', value: 'world'},
+    ]);
 
-      expect(callTx.receipt.success).toEqual(true);
+    expect(callTx.receipt && callTx.receipt.success).toEqual(true);
   });
 });

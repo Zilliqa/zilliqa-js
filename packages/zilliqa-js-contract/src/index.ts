@@ -3,7 +3,7 @@ import hash from 'hash.js';
 import {Wallet, Transaction} from 'zilliqa-js-account';
 import {Provider, ZilliqaModule, sign} from 'zilliqa-js-core';
 import {bytes} from 'zilliqa-js-util';
-import {ABI, Init, State} from './types';
+import {ABI, Init, Message, State, Value} from './types';
 
 export const enum ContractStatus {
   Deployed,
@@ -142,13 +142,30 @@ class Contract {
    * @param {any} params
    * @returns {Promise<Transaction>}
    */
-  async call(transition: string, params: any): Promise<Transaction> {
-    const payload = new Transaction({
-      version: 0,
-      to: '0x1234567890123456789012345678901234567890',
-      amount: new BN(0),
-      gasPrice: 1000,
-      gasLimit: 1000,
-    });
+  async call(
+    transition: string,
+    params: Value[],
+    amount: BN = new BN(0),
+  ): Promise<Transaction> {
+    const msg = {
+      _tag: transition,
+      // TODO: this should be string, but is not yet supported by lookup.
+      params,
+    };
+
+    try {
+      return await this.prepareTx(
+        new Transaction({
+          version: 0,
+          to: '0x1234567890123456789012345678901234567890',
+          amount: new BN(0),
+          gasPrice: 1000,
+          gasLimit: 1000,
+          data: JSON.stringify(msg),
+        }),
+      );
+    } catch (err) {
+      throw err;
+    }
   }
 }

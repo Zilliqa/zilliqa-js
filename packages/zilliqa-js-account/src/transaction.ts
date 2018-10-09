@@ -154,6 +154,14 @@ export default class Transaction implements Signable {
     });
   }
 
+  /**
+   * map
+   *
+   * maps over the transaction, allowing for manipulation.
+   *
+   * @param {(prev: TxParams) => TxParams} fn - mapper
+   * @returns {Transaction}
+   */
   map(fn: (prev: TxParams) => TxParams): Transaction {
     const newParams = fn(this.txParams);
     this.setParams(newParams);

@@ -8,7 +8,7 @@ export interface ContractObj {
 export interface ABI {
   name: string;
   fields: Field[];
-  params: Param[];
+  params: Field[];
   transitions: Transition[];
 }
 
@@ -23,13 +23,20 @@ export interface Value {
   value: string;
 }
 
-export type Param = Field;
-export type TransitionParam = Field;
+export type Param = Value;
+export type TransitionParam = Value;
 
 export type Init = Value[];
 export type State = Value[];
+export interface Message {
+  // the name of the transtion to be called
+  _tag: string;
+  // amount to send to the contract, if any
+  _amount: string;
+  params: Value[];
+}
 
 export interface Transition {
   name: string;
-  params: TransitionParam[];
+  params: Field[];
 }
