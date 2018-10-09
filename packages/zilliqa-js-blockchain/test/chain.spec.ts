@@ -42,13 +42,14 @@ describe('Module: Blockchain', () => {
       })
       .onPost()
       .replyOnce(200, {
-        result: {receipt: {success: true}},
+        result: {ID: 'some_hash', receipt: {success: true}},
       });
 
     const {txParams} = await blockchain.createTransaction(tx);
 
     expect(txParams).toHaveProperty('signature');
     expect(txParams).toHaveProperty('pubKey');
+    expect(txParams.id).toEqual('some_hash');
     expect(tx.isConfirmed()).toEqual(true);
   });
 });

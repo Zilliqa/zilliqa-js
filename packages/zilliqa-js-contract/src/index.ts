@@ -135,5 +135,20 @@ class Contract {
     }
   }
 
-  call(transition: string, params: any) {}
+  /**
+   * call
+   *
+   * @param {string} transition
+   * @param {any} params
+   * @returns {Promise<Transaction>}
+   */
+  async call(transition: string, params: any): Promise<Transaction> {
+    const payload = new Transaction({
+      version: 0,
+      to: '0x1234567890123456789012345678901234567890',
+      amount: new BN(0),
+      gasPrice: 1000,
+      gasLimit: 1000,
+    });
+  }
 }
