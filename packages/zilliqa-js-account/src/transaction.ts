@@ -37,8 +37,8 @@ export default class Transaction implements Signable {
   private gasPrice: number;
   private gasLimit: number;
   private id?: string;
-  private code?: string;
-  private data?: string;
+  private code: string;
+  private data: string;
   private receipt?: {success: boolean; cumulative_gas: number};
   private nonce?: number;
   private pubKey?: string;
@@ -83,8 +83,8 @@ export default class Transaction implements Signable {
     this.nonce = params.nonce;
     this.pubKey = params.pubKey;
     this.amount = params.amount;
-    this.code = params.code;
-    this.data = params.data;
+    this.code = params.code || '';
+    this.data = params.data || '';
     this.signature = params.signature;
     this.gasPrice = params.gasPrice;
     this.gasLimit = params.gasLimit;
@@ -143,7 +143,7 @@ export default class Transaction implements Signable {
    * @param {number} timeout
    * @returns {Promise<Transaction>}
    */
-  confirm(txHash: string, timeout: number = 60000): Promise<Transaction> {
+  confirm(txHash: string, timeout: number = 120000): Promise<Transaction> {
     this.status = TxStatus.Pending;
 
     return new Promise((resolve, reject) => {
@@ -186,8 +186,8 @@ export default class Transaction implements Signable {
     this.nonce = params.nonce;
     this.pubKey = params.pubKey;
     this.amount = params.amount;
-    this.code = params.code;
-    this.data = params.data;
+    this.code = params.code || '';
+    this.data = params.data || '';
     this.signature = params.signature;
     this.gasPrice = params.gasPrice;
     this.gasLimit = params.gasLimit;
