@@ -3,7 +3,7 @@ import hash from 'hash.js';
 import {Account, Wallet, Transaction} from 'zilliqa-js-account';
 import {Provider, ZilliqaModule, sign} from 'zilliqa-js-core';
 import {bytes} from 'zilliqa-js-util';
-import {ABI, Init, Message, State, Value} from './types';
+import {ABI, Init, State, Value} from './types';
 
 const NIL_ADDRESS = '0000000000000000000000000000000000000000';
 
@@ -30,11 +30,15 @@ export class Contracts implements ZilliqaModule {
    * @param {Transaction} tx - transaction used to create the contract
    * @returns {string} - the contract address
    */
-  static getAddressForContract(deployer: string, tx: Transaction): string {
+  static getAddressForContract(tx: Transaction): string {
+    // always subtract 1 from the tx nonce, as contract addresses are computed
+    // based on the nonce in the global state.
+    const nonce = tx.txParams.nonce ? tx.txParams.nonce - 1 : 0;
+
     return hash
       .sha256()
-      .update(deployer, 'hex')
-      .update(bytes.intToHexArray(tx.txParams.nonce || 1, 64), 'hex')
+      .update(tx.senderAddress, 'hex')
+      .update(bytes.intToHexArray(nonce, 64).join(''), 'hex')
       .digest('hex')
       .slice(24);
   }
@@ -62,7 +66,7 @@ export class Contracts implements ZilliqaModule {
   }
 }
 
-class Contract {
+export class Contract {
   factory: Contracts;
   provider: Provider;
   signer: Wallet;
@@ -126,7 +130,7 @@ class Contract {
           // amount should be 0.  we don't accept implicitly anymore.
           amount: new BN(0),
           gasPrice: gasPrice.toNumber(),
-          gasLimit: gasPrice.toNumber(),
+          gasLimit: gasLimit.toNumber(),
           code: this.code,
           data: JSON.stringify(this.init).replace(/\\"/g, '"'),
         }),
@@ -140,8 +144,7 @@ class Contract {
       }
 
       this.status = ContractStatus.Deployed;
-
-      this.address = Contracts.getAddressForContract(tx.senderAddress, tx);
+      this.address = Contracts.getAddressForContract(tx);
 
       return this;
     } catch (err) {
@@ -160,6 +163,8 @@ class Contract {
     transition: string,
     params: Value[],
     amount: BN = new BN(0),
+    gasLimit: BN = new BN(1000),
+    gasPrice: BN = new BN(10),
   ): Promise<Transaction> {
     const msg = {
       _tag: transition,
@@ -167,19 +172,35 @@ class Contract {
       params,
     };
 
+    if (!this.address) {
+      return Promise.reject('Contract has not been deployed!');
+    }
+
     try {
       return await this.prepareTx(
         new Transaction({
           version: 0,
-          to: NIL_ADDRESS,
+          to: this.address,
           amount: new BN(0),
-          gasPrice: 1000,
-          gasLimit: 1000,
+          gasPrice: gasPrice.toNumber(),
+          gasLimit: gasLimit.toNumber(),
           data: JSON.stringify(msg),
         }),
       );
     } catch (err) {
       throw err;
     }
+  }
+
+  async getState(): Promise<State> {
+    if (this.status !== ContractStatus.Deployed) {
+      return Promise.resolve([]);
+    }
+
+    const response = await this.provider.send('GetSmartContractState', [
+      this.address,
+    ]);
+
+    return response.result;
   }
 }

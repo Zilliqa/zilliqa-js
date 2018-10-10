@@ -1,30 +1,52 @@
 import BN from 'bn.js';
 import {HTTPProvider} from 'zilliqa-js-core';
 import {Account, Wallet} from 'zilliqa-js-account';
-import {Contracts, ContractStatus} from '../src/index';
+import {Contracts, Contract, ContractStatus} from '../src/index';
 import {abi} from './test.abi';
 import {testContract} from './fixtures';
 
-const accounts = [new Account(process.env.TEST_ACCOUNT as string)];
+const accounts = [new Account(process.env.GENESIS_PRIV_KEY as string)];
 const provider = new HTTPProvider(process.env.HTTP_PROVIDER as string);
 const contractFactory = new Contracts(provider, new Wallet(provider, accounts));
 
-jest.setTimeout(90000);
+jest.setTimeout(180000);
 
-describe('[Integration]: Contracts', () => {
-  it('should be able to deploy a contract', async () => {
-    const contract = await contractFactory
+describe('Contract - hello world', () => {
+  let contract: Contract;
+
+  it('should be able to deploy the contract', async () => {
+    contract = await contractFactory
       .new(abi, testContract, [
         {
-          vname: 'contractOwner',
+          vname: 'owner',
           type: 'ByStr20',
-          value: '0xCC02A3C906612CC5BDB087A30E6093C9F0AA04FC',
+          value: `0x${process.env.GENESIS_ADDRESS}`,
         },
-        {vname: 'name', type: 'String', value: 'NonFungibleToken'},
-        {vname: 'symbol', type: 'String', value: 'NFT'},
       ])
       .deploy(new BN(1000), new BN(1000));
 
     expect(contract.status).toEqual(ContractStatus.Deployed);
+  });
+
+  it('should be able to call mint', async () => {
+    // now let's transfer some tokens
+    const call = await contract.call('setHello', [
+      {
+        vname: 'welcome_msg',
+        type: 'String',
+        value: 'Hello World',
+      },
+    ]);
+
+    expect(call.txParams.receipt && call.txParams.receipt.success).toBeTruthy;
+
+    const state = await contract.getState();
+    console.log(state);
+
+    expect(
+      state.filter(v => {
+        return v.vname === 'welcome_msg';
+      })[0].value,
+    ).toEqual('Hello World');
   });
 });

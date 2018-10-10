@@ -5,7 +5,7 @@ import Blockchain from '../src/chain';
 
 jest.setTimeout(90000);
 
-const accounts = [new Account(process.env.TEST_ACCOUNT as string)];
+const accounts = [new Account(process.env.GENESIS_PRIV_KEY as string)];
 const provider = new HTTPProvider(process.env.HTTP_PROVIDER as string);
 const bc = new Blockchain(provider, new Wallet(provider, accounts));
 Transaction.setProvider(provider);
@@ -24,7 +24,9 @@ describe('[Integration]: Blockchain', () => {
       gasLimit: 1000,
     });
 
-    const {receipt} = await bc.createTransaction(transaction);
+    const {
+      txParams: {receipt},
+    } = await bc.createTransaction(transaction);
 
     expect(receipt && receipt.success).toBeTruthy;
   });

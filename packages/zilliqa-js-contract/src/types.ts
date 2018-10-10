@@ -5,6 +5,11 @@ export interface ContractObj {
   state: any;
 }
 
+export interface Transition {
+  name: string;
+  params: Field[];
+}
+
 export interface ABI {
   name: string;
   fields: Field[];
@@ -26,17 +31,15 @@ export interface Value {
 export type Param = Value;
 export type TransitionParam = Value;
 
+
 export type Init = Value[];
+
 export type State = Value[];
-export interface Message {
+
+export interface TransitionPayload {
   // the name of the transtion to be called
   _tag: string;
   // amount to send to the contract, if any
   _amount: string;
   params: Value[];
-}
-
-export interface Transition {
-  name: string;
-  params: Field[];
 }
