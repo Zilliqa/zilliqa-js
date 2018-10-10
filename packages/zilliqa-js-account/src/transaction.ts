@@ -1,5 +1,6 @@
 import BN from 'bn.js';
 import {Provider, RPCResponse, Signable} from 'zilliqa-js-core';
+import {getAddressFromPublicKey} from 'zilliqa-js-crypto';
 
 import {TxParams, TxStatus} from './types';
 import {encodeTransaction} from './util';
@@ -28,25 +29,34 @@ export default class Transaction implements Signable {
   static setProvider(provider: Provider) {
     Transaction.provider = provider;
   }
+
   // parameters
-  version: number;
-  to: string;
-  amount: BN;
-  gasPrice: number;
-  gasLimit: number;
-  id?: string;
-  code?: string;
-  data?: string;
-  receipt?: {success: boolean; cumulative_gas: number};
-  nonce?: number;
-  pubKey?: string;
-  signature?: string;
+  private version: number;
+  private to: string;
+  private amount: BN;
+  private gasPrice: number;
+  private gasLimit: number;
+  private id?: string;
+  private code?: string;
+  private data?: string;
+  private receipt?: {success: boolean; cumulative_gas: number};
+  private nonce?: number;
+  private pubKey?: string;
+  private signature?: string;
 
   // internal state
   status: TxStatus;
 
   get bytes(): Buffer {
     return encodeTransaction(this.txParams);
+  }
+
+  get senderAddress(): string {
+    if (!this.pubKey) {
+      return '0'.repeat(40);
+    }
+
+    return getAddressFromPublicKey(this.pubKey);
   }
 
   get txParams(): TxParams {
