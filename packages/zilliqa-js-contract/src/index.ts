@@ -1,9 +1,11 @@
 import BN from 'bn.js';
 import hash from 'hash.js';
-import {Wallet, Transaction} from 'zilliqa-js-account';
+import {Account, Wallet, Transaction} from 'zilliqa-js-account';
 import {Provider, ZilliqaModule, sign} from 'zilliqa-js-core';
 import {bytes} from 'zilliqa-js-util';
 import {ABI, Init, Message, State, Value} from './types';
+
+const NIL_ADDRESS = '0000000000000000000000000000000000000000';
 
 export const enum ContractStatus {
   Deployed,
@@ -20,6 +22,23 @@ export const enum ContractStatus {
  * `Contracts.new` (to deploy a new contract).
  */
 export class Contracts implements ZilliqaModule {
+  /**
+   * getAddressForContract
+   *
+   * @static
+   * @param {string} deployer - address of the contract deployer
+   * @param {Transaction} tx - transaction used to create the contract
+   * @returns {string} - the contract address
+   */
+  static getAddressForContract(deployer: string, tx: Transaction): string {
+    return hash
+      .sha256()
+      .update(deployer, 'hex')
+      .update(bytes.intToHexArray(tx.txParams.nonce || 1, 64), 'hex')
+      .digest('hex')
+      .slice(24);
+  }
+
   provider: Provider;
   signer: Wallet;
 
@@ -103,7 +122,7 @@ class Contract {
       const tx = await this.prepareTx(
         new Transaction({
           version: 0,
-          to: '0000000000000000000000000000000000000000',
+          to: NIL_ADDRESS,
           // amount should be 0.  we don't accept implicitly anymore.
           amount: new BN(0),
           gasPrice: gasPrice.toNumber(),
@@ -113,21 +132,16 @@ class Contract {
         }),
       );
 
-      if (!tx.receipt || !tx.receipt.success) {
+      const {receipt} = tx.txParams;
+
+      if (!receipt || !receipt.success) {
         this.status = ContractStatus.Rejected;
         return this;
       }
 
-      const {nonce, pubKey} = tx;
-      const address = hash
-        .sha256()
-        .update(tx.pubKey, 'hex')
-        .update(bytes.intToHexArray(tx.nonce || 1, 64).join(''), 'hex')
-        .digest('hex')
-        .slice(-40);
-
-      this.address = address;
       this.status = ContractStatus.Deployed;
+
+      this.address = Contracts.getAddressForContract(tx.senderAddress, tx);
 
       return this;
     } catch (err) {
@@ -157,7 +171,7 @@ class Contract {
       return await this.prepareTx(
         new Transaction({
           version: 0,
-          to: '0x1234567890123456789012345678901234567890',
+          to: NIL_ADDRESS,
           amount: new BN(0),
           gasPrice: 1000,
           gasLimit: 1000,

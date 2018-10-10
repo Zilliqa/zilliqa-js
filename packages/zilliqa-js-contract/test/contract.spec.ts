@@ -18,7 +18,7 @@ describe('Contracts', () => {
     mock.reset();
   });
 
-  it('should be able to deploy a instance', async () => {
+  it('should be able to deploy a contract', async () => {
     const contract = contractFactory.new(abi, testContract, [
       {
         vname: 'contractOwner',
@@ -52,6 +52,7 @@ describe('Contracts', () => {
     const deployTx = await contract.deploy(new BN(1000), new BN(1000));
 
     expect(deployTx.status).toEqual(ContractStatus.Deployed);
+    expect(contract.address).toMatch(/[A-F0-9]+/);
   });
 
   it('should not swallow network errors', async () => {
@@ -176,6 +177,9 @@ describe('Contracts', () => {
       {vname: 'param_2', type: 'String', value: 'world'},
     ]);
 
-    expect(callTx.receipt && callTx.receipt.success).toEqual(true);
+    const {receipt} = callTx.txParams;
+
+    expect(receipt).toBeDefined;
+    expect(receipt && receipt.success).toBeTruthy;
   });
 });
