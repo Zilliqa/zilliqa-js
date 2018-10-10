@@ -119,6 +119,6 @@ describe('Transaction', () => {
     });
     const rejected = await tx.confirm(res.result.TranID);
 
-    await expect(rejected.receipt && rejected.receipt.success).toBeFalsy;
+    await expect(rejected.txParams.receipt && rejected.txParams.receipt.success).toBeFalsy;
   });
 });
