@@ -28,7 +28,7 @@ describe('Contract - hello world', () => {
     expect(contract.status).toEqual(ContractStatus.Deployed);
   });
 
-  it('should be able to call mint', async () => {
+  it.skip('should be able to call setHello', async () => {
     // now let's transfer some tokens
     const call = await contract.call('setHello', [
       {
@@ -41,12 +41,27 @@ describe('Contract - hello world', () => {
     expect(call.txParams.receipt && call.txParams.receipt.success).toBeTruthy;
 
     const state = await contract.getState();
-    console.log(state);
 
     expect(
       state.filter(v => {
         return v.vname === 'welcome_msg';
       })[0].value,
     ).toEqual('Hello World');
+  });
+
+  it('should have success: false if a non-existent contract is called', async () => {
+    // setup a non-existent address
+    const original = contract.address;
+    contract.address = '0123456789'.repeat(4);
+    const call = await contract.call('setHello', [
+      {
+        vname: 'welcome_msg',
+        type: 'String',
+        value: 'Hello World',
+      },
+    ]);
+
+    contract.address = original;
+    expect(call.txParams.receipt && call.txParams.receipt.success).toEqual('false');
   });
 });
