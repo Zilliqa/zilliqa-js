@@ -42,7 +42,7 @@ describe('Module: Blockchain', () => {
       })
       .onPost()
       .replyOnce(200, {
-        result: {ID: 'some_hash', receipt: {success: true}},
+        result: {ID: 'some_hash', receipt: {success: 'true'}},
       });
 
     const {txParams} = await blockchain.createTransaction(tx);
