@@ -26,14 +26,6 @@ const config = {
   testURL: 'http://localhost',
   collectCoverage: true,
   collectCoverageFrom: ['<rootDir>/packages/*/src/**/*.{ts,js}', '!**/node_modules/**'],
-  coverageThreshold: {
-    global: {
-      branches: 80,
-      functions: 80,
-      lines: 80,
-      statements: 80,
-    },
-  },
   setupFiles: ['<rootDir>/jest-setup.js'],
   watchPlugins: [
     'jest-watch-typeahead/filename',

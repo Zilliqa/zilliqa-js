@@ -1,6 +1,7 @@
 # Zilliqa-JavaScript-Library API
 [![npm version](https://badge.fury.io/js/zilliqa-js.svg)](https://badge.fury.io/js/zilliqa-js)
 [![Build Status](https://travis-ci.com/Zilliqa/Zilliqa-JavaScript-Library.svg?branch=master)](https://travis-ci.com/Zilliqa/Zilliqa-JavaScript-Library)
+[![codecov](https://codecov.io/gh/Zilliqa/Zilliqa-JavaScript-Library/branch/feature/monorepo/graph/badge.svg)](https://codecov.io/gh/Zilliqa/Zilliqa)
 [![Gitter chat](http://img.shields.io/badge/chat-on%20gitter-077a8f.svg)](https://gitter.im/Zilliqa/)
 
 ## Installation
