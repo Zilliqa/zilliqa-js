@@ -13,6 +13,16 @@ export const enum TxStatus {
   Rejected,
 }
 
+export interface TxReceipt {
+  success: 'true' | 'false';
+  cumulative_gas: number;
+}
+
+export interface TxIncluded {
+  ID: string;
+  receipt: TxReceipt;
+}
+
 export interface TxParams {
   version: number;
   to: string;
@@ -23,7 +33,7 @@ export interface TxParams {
   id?: string;
   code?: string;
   data?: string;
-  receipt?: {success: boolean; cumulative_gas: number};
+  receipt?: TxReceipt;
   nonce?: number;
   pubKey?: string;
   signature?: string;

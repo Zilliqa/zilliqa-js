@@ -48,7 +48,7 @@ describe('Transaction', () => {
       result: {
         ID: 'some_hash',
         receipt: {
-          success: true,
+          success: 'true',
           cumulative_gas: 1000,
         },
       },
@@ -59,7 +59,7 @@ describe('Transaction', () => {
 
     expect(confirmed.isConfirmed()).toBeTruthy();
     expect(state.id).toEqual('some_hash');
-    expect(state.receipt).toEqual({success: true, cumulative_gas: 1000});
+    expect(state.receipt).toEqual({success: 'true', cumulative_gas: 1000});
   });
 
   it('should reject the promise if there is a network error', async () => {
@@ -112,13 +112,15 @@ describe('Transaction', () => {
       result: {
         ID: 'some_hash',
         receipt: {
-          success: true,
+          success: 'false',
           cumulative_gas: 1000,
         },
       },
     });
     const rejected = await tx.confirm(res.result.TranID);
 
-    await expect(rejected.txParams.receipt && rejected.txParams.receipt.success).toBeFalsy;
+    await expect(
+      rejected.txParams.receipt && rejected.txParams.receipt.success,
+    ).toEqual('false');
   });
 });

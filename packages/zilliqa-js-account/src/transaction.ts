@@ -1,8 +1,9 @@
 import BN from 'bn.js';
 import {Provider, RPCResponse, Signable} from 'zilliqa-js-core';
 import {getAddressFromPublicKey} from 'zilliqa-js-crypto';
+import {types} from 'zilliqa-js-util';
 
-import {TxParams, TxStatus} from './types';
+import {TxParams, TxReceipt, TxStatus, TxIncluded} from './types';
 import {encodeTransaction} from './util';
 
 /**
@@ -39,7 +40,7 @@ export default class Transaction implements Signable {
   private id?: string;
   private code: string;
   private data: string;
-  private receipt?: {success: boolean; cumulative_gas: number};
+  private receipt?: TxReceipt;
   private nonce?: number;
   private pubKey?: string;
   private signature?: string;
@@ -130,6 +131,19 @@ export default class Transaction implements Signable {
   }
 
   /**
+   * setStatus
+   *
+   * Escape hatch to imperatively set the state of the transaction.
+   *
+   * @param {TxStatus} status
+   * @returns {undefined}
+   */
+  setStatus(status: TxStatus) {
+    this.status = status;
+    return this;
+  }
+
+  /**
    * confirmReceipt
    *
    * Similar to the Promise API. This sets the Transaction instance to a state
@@ -208,17 +222,15 @@ export default class Transaction implements Signable {
     const result = Transaction.provider.send('GetTransaction', [txHash]);
 
     result
-      .then((res: RPCResponse) => {
-        if (res.result && res.result.error) {
+      .then((res: RPCResponse<TxIncluded, string>) => {
+        if (types.isError(res)) {
           this.trackTx(txHash, resolve, reject, cancelTimeout);
           return;
-        }
-
-        if (res.result) {
+        } else {
           this.id = res.result['ID'];
           this.receipt = res.result.receipt;
           this.status =
-            this.receipt && this.receipt.success
+            this.receipt && this.receipt.success === 'true'
               ? TxStatus.Confirmed
               : TxStatus.Rejected;
           cancelTimeout();
