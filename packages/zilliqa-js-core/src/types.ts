@@ -40,11 +40,11 @@ export interface RPCResponseSuccess<R = any> extends RPCBase {
   result: R;
 }
 
-export interface RPCResponseError<E extends string = string> extends RPCBase {
+export interface RPCResponseError<E> extends RPCBase {
   result: {Error: E};
 }
 
-export type RPCResponse<R, E> = RPCResponseSuccess<R> | RPCResponseError;
+export type RPCResponse<R, E> = RPCResponseSuccess<R> | RPCResponseError<E>;
 
 /**
  * ZilliqaModule
