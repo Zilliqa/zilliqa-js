@@ -6,16 +6,14 @@ export type Subscribers = Map<SubscriptionToken, Subscriber>;
 type SubscriptionToken = symbol;
 
 export interface Provider {
-  broadcaster: Emitter;
-  subscribers: Subscribers;
   // TODO: strict typing when we have a better idea of how to generalise the
   // payloads sent to lookup nodes - protobuf?
   send<R = any, E = string>(
     method: string,
     ...params: any[]
   ): Promise<RPCResponse<R, E>>;
-  subscribe(event: string, subscriber: Subscriber): Symbol;
-  unsubscribe(token: Symbol): void;
+  subscribe?(event: string, subscriber: Subscriber): Symbol;
+  unsubscribe?(token: Symbol): void;
 }
 
 export abstract class Signer {

@@ -10,12 +10,9 @@ import {
 
 export default class HTTPProvider implements Provider {
   nodeURL: string;
-  broadcaster: Emitter;
-  subscribers: Subscribers = new Map();
 
   constructor(nodeURL: string) {
     this.nodeURL = nodeURL;
-    this.broadcaster = new Mitt();
   }
 
   buildPayload(method: string, payload: any): RPCRequest {
@@ -30,15 +27,11 @@ export default class HTTPProvider implements Provider {
       });
   }
 
-  subscribe(event: string, subscriber: Subscriber) {
-    const subToken = Symbol();
-    this.subscribers.set(subToken, subscriber);
-    return subToken;
+  subscribe(event: string, subscriber: Subscriber): Symbol {
+    throw new Error('HTTPProvider does not support subscriptions.');
   }
 
   unsubscribe(token: symbol) {
-    if (this.subscribers.has(token)) {
-      this.subscribers.delete(token);
-    }
+    throw new Error('HTTPProvider does not support subscriptions.');
   }
 }
