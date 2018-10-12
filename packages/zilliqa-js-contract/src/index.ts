@@ -1,9 +1,9 @@
 import BN from 'bn.js';
 import hash from 'hash.js';
-import {Account, Wallet, Transaction} from 'zilliqa-js-account';
+import {Account, Wallet, Transaction, TxStatus} from 'zilliqa-js-account';
 import {Provider, ZilliqaModule, sign} from 'zilliqa-js-core';
-import {bytes} from 'zilliqa-js-util';
-import {ABI, Init, State, Value} from './types';
+import {bytes, types} from 'zilliqa-js-util';
+import {ABI, Init, State, Value, DeployError, DeploySuccess} from './types';
 
 const NIL_ADDRESS = '0000000000000000000000000000000000000000';
 
@@ -109,16 +109,21 @@ export class Contract {
   async prepareTx(tx: Transaction): Promise<Transaction> {
     const raw = tx.txParams;
     const {code, ...rest} = raw;
-    const response = await this.provider.send('CreateTransaction', [
-      {...raw, amount: raw.amount.toNumber()},
-    ]);
+    const response = await this.provider.send<DeploySuccess, DeployError>(
+      'CreateTransaction',
+      [{...raw, amount: raw.amount.toNumber()}],
+    );
 
-    return tx.confirm(response.result.TranID);
+    return types.isError(response)
+      ? tx.setStatus(TxStatus.Rejected)
+      : tx.confirm(response.result.TranID);
   }
 
   async deploy(gasPrice: BN, gasLimit: BN): Promise<Contract> {
     if (!this.code || !this.init) {
-      throw new Error('Cannot deploy without code or ABI.');
+      throw new Error(
+        'Cannot deploy without code or initialisation parameters.',
+      );
     }
 
     try {
@@ -136,9 +141,7 @@ export class Contract {
         }),
       );
 
-      const {receipt} = tx.txParams;
-
-      if (!receipt || !receipt.success) {
+      if (tx.isRejected()) {
         this.status = ContractStatus.Rejected;
         return this;
       }

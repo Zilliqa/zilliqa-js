@@ -28,7 +28,7 @@ describe('Contract - hello world', () => {
     expect(contract.status).toEqual(ContractStatus.Deployed);
   });
 
-  it.skip('should be able to call setHello', async () => {
+  it('should be able to call setHello', async () => {
     // now let's transfer some tokens
     const call = await contract.call('setHello', [
       {
@@ -49,7 +49,7 @@ describe('Contract - hello world', () => {
     ).toEqual('Hello World');
   });
 
-  it('should have success: false if a non-existent contract is called', async () => {
+  it('should be rejected by the server if a non-existent contract is called', async () => {
     // setup a non-existent address
     const original = contract.address;
     contract.address = '0123456789'.repeat(4);
@@ -62,6 +62,6 @@ describe('Contract - hello world', () => {
     ]);
 
     contract.address = original;
-    expect(call.txParams.receipt && call.txParams.receipt.success).toEqual('false');
+    expect(call.isRejected()).toBeTruthy;
   });
 });

@@ -43,7 +43,7 @@ describe('Contracts', () => {
         result: {
           ID: 'some_hash',
           receipt: {
-            success: true,
+            success: 'true',
             cumulative_gas: 1000,
           },
         },
@@ -83,7 +83,32 @@ describe('Contracts', () => {
     );
   });
 
-  it('if the underlying transaction is unsuccessful, status should be rejected', async () => {
+  it('if the underlying transaction is rejected, status should be rejected', async () => {
+    mock
+      .onPost()
+      .replyOnce(200, {
+        result: {nonce: 1},
+      })
+      .onPost()
+      .replyOnce(200, {
+        result: {Error: 'Mega fail'},
+      });
+
+    const contract = await contractFactory
+      .new(abi, testContract, [
+        {
+          vname: 'contractOwner',
+          type: 'ByStr20',
+          value: '0x124567890124567890124567890124567890',
+        },
+        {vname: 'name', type: 'String', value: 'NonFungibleToken'},
+        {vname: 'symbol', type: 'String', value: 'NFT'},
+      ])
+      .deploy(new BN(1000), new BN(1000));
+    expect(contract.status).toEqual(ContractStatus.Rejected);
+  });
+
+  it('if the transaction.receipt.success === false, status should be rejected', async () => {
     mock
       .onPost()
       .replyOnce(200, {
@@ -98,7 +123,7 @@ describe('Contracts', () => {
         result: {
           ID: 'some_hash',
           receipt: {
-            success: false,
+            success: 'false',
             cumulative_gas: 1000,
           },
         },
@@ -134,7 +159,7 @@ describe('Contracts', () => {
         result: {
           ID: 'some_hash',
           receipt: {
-            success: true,
+            success: 'true',
             cumulative_gas: 1000,
           },
         },
@@ -154,7 +179,7 @@ describe('Contracts', () => {
         result: {
           ID: 'some_hash',
           receipt: {
-            success: true,
+            success: 'true',
             cumulative_gas: 1000,
           },
         },
@@ -180,6 +205,6 @@ describe('Contracts', () => {
     const {receipt} = callTx.txParams;
 
     expect(receipt).toBeDefined;
-    expect(receipt && receipt.success).toBeTruthy;
+    expect(receipt && receipt.success).toEqual('true');
   });
 });

@@ -31,7 +31,6 @@ export interface Value {
 export type Param = Value;
 export type TransitionParam = Value;
 
-
 export type Init = Value[];
 
 export type State = Value[];
@@ -42,4 +41,17 @@ export interface TransitionPayload {
   // amount to send to the contract, if any
   _amount: string;
   params: Value[];
+}
+
+/** RPC Responses **/
+export type DeployError =
+  | 'Code is empty and To addr is null'
+  | 'To Addr is null'
+  | 'Non - contract address called'
+  | 'Could not create Transaction'
+  | 'Unable to process';
+
+export interface DeploySuccess {
+  TranID: string;
+  Info: String;
 }
