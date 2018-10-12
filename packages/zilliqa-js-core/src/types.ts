@@ -10,7 +10,10 @@ export interface Provider {
   subscribers: Subscribers;
   // TODO: strict typing when we have a better idea of how to generalise the
   // payloads sent to lookup nodes - protobuf?
-  send(method: string, ...params: any[]): Promise<RPCResponse>;
+  send<R = any, E = string>(
+    method: string,
+    ...params: any[]
+  ): Promise<RPCResponse<R, E>>;
   subscribe(event: string, subscriber: Subscriber): Symbol;
   unsubscribe(token: Symbol): void;
 }
@@ -33,13 +36,15 @@ export interface RPCRequest extends RPCBase {
   params: any[];
 }
 
-export interface RPCResponse extends RPCBase {
-  result?: any;
-  error?: {
-    code: number;
-    message: string;
-  };
+export interface RPCResponseSuccess<R = any> extends RPCBase {
+  result: R;
 }
+
+export interface RPCResponseError<E extends string = string> extends RPCBase {
+  result: {Error: E};
+}
+
+export type RPCResponse<R, E> = RPCResponseSuccess<R> | RPCResponseError;
 
 /**
  * ZilliqaModule

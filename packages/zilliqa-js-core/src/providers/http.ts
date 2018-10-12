@@ -22,9 +22,9 @@ export default class HTTPProvider implements Provider {
     return {jsonrpc: '2.0', method, params: payload, id: 1};
   }
 
-  send(method: string, payload: any) {
+  send<R = any, E = string>(method: string, payload: any) {
     return axios
-      .post<RPCResponse>(this.nodeURL, this.buildPayload(method, payload))
+      .post<RPCResponse<R, E>>(this.nodeURL, this.buildPayload(method, payload))
       .then(response => {
         return response.data;
       });
