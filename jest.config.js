@@ -24,6 +24,8 @@ const config = {
     },
   },
   testURL: 'http://localhost',
+  collectCoverage: true,
+  collectCoverageFrom: ['<rootDir>/packages/*/src/**/*.{ts,js}', '!**/node_modules/**'],
   coverageThreshold: {
     global: {
       branches: 80,
