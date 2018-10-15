@@ -1,15 +1,18 @@
 {
   "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "composite": true,
     "declaration": true,
     "declarationMap": true,
-    "sourceMap": true,
-    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
     "lib": ["esnext", "dom"],
-    "module": "es2015",
+    "module": "commonjs",
     "moduleResolution": "node",
+    "sourceMap": true,
     "paths": {
       "*": ["typings/*"],
       "elliptic/lib/elliptic/ec/signature": ["typings/signature"]
