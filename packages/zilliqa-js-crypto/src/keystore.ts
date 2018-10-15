@@ -6,9 +6,9 @@ import uuid from 'uuid';
 
 import {bytes} from '@zilliqa/zilliqa-js-util';
 
-import {getAddressFromPrivateKey} from './index';
 import {randomBytes} from './random';
 import {KeystoreV3, KDF, KDFParams} from './types';
+import {getAddressFromPrivateKey} from './util';
 
 /**
  * getDerivedKey
