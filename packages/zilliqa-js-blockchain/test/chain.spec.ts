@@ -2,8 +2,8 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import BN from 'bn.js';
 
-import {Transaction, Wallet} from 'zilliqa-js-account';
-import {HTTPProvider} from 'zilliqa-js-core';
+import {Transaction, Wallet} from '@zilliqa/zilliqa-js-account';
+import {HTTPProvider} from '@zilliqa/zilliqa-js-core';
 
 import Blockchain from '../src/chain';
 
@@ -27,8 +27,8 @@ describe('Module: Blockchain', () => {
         version: 1,
         to: '0x1234567890123456789012345678901234567890',
         amount: new BN(0),
-        gasPrice: 1000,
-        gasLimit: 1000,
+        gasPrice: new BN(1000),
+        gasLimit: new BN(1000),
       },
       provider,
     );

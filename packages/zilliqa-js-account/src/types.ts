@@ -27,8 +27,8 @@ export interface TxParams {
   version: number;
   to: string;
   amount: BN;
-  gasPrice: number;
-  gasLimit: number;
+  gasPrice: BN;
+  gasLimit: BN;
 
   id?: string;
   code?: string;

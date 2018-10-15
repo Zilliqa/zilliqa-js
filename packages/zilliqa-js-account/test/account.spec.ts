@@ -37,8 +37,8 @@ describe('Account', () => {
       to: 'another_person',
       amount: new BN(888),
       pubKey: account.publicKey,
-      gasPrice: 888,
-      gasLimit: 888888,
+      gasPrice: new BN(888),
+      gasLimit: new BN(888888),
       code: '',
       data: 'some_data',
     };

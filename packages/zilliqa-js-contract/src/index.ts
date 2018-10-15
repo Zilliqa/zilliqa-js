@@ -114,11 +114,11 @@ export class Contract {
 
   @sign
   async prepareTx(tx: Transaction): Promise<Transaction> {
-    const raw = tx.txParams;
-    const {code, ...rest} = raw;
+    const payload = tx.payload;
+    const {code, ...rest} = payload;
     const response = await this.provider.send<DeploySuccess, DeployError>(
       'CreateTransaction',
-      [{...raw, amount: raw.amount.toNumber()}],
+      [payload],
     );
 
     return types.isError(response)
@@ -141,8 +141,8 @@ export class Contract {
             to: NIL_ADDRESS,
             // amount should be 0.  we don't accept implicitly anymore.
             amount: new BN(0),
-            gasPrice: gasPrice.toNumber(),
-            gasLimit: gasLimit.toNumber(),
+            gasPrice,
+            gasLimit,
             code: this.code,
             data: JSON.stringify(this.init).replace(/\\"/g, '"'),
           },
@@ -195,8 +195,8 @@ export class Contract {
             version: 0,
             to: this.address,
             amount: new BN(0),
-            gasPrice: gasPrice.toNumber(),
-            gasLimit: gasLimit.toNumber(),
+            gasPrice,
+            gasLimit,
             data: JSON.stringify(msg),
           },
           this.provider,

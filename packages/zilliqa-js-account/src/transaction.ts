@@ -32,8 +32,8 @@ export default class Transaction implements Signable {
   private version: number;
   private to: string;
   private amount: BN;
-  private gasPrice: number;
-  private gasLimit: number;
+  private gasPrice: BN;
+  private gasLimit: BN;
   private id?: string;
   private code: string;
   private data: string;
@@ -67,6 +67,23 @@ export default class Transaction implements Signable {
       amount: this.amount,
       gasPrice: this.gasPrice,
       gasLimit: this.gasLimit,
+      code: this.code,
+      data: this.data,
+      signature: this.signature,
+      receipt: this.receipt,
+    };
+  }
+
+  get payload() {
+    return {
+      version: 0,
+      id: this.id,
+      to: this.to,
+      nonce: this.nonce,
+      pubKey: this.pubKey,
+      amount: this.amount.toNumber(),
+      gasPrice: this.gasPrice.toNumber(),
+      gasLimit: this.gasLimit.toNumber(),
       code: this.code,
       data: this.data,
       signature: this.signature,
