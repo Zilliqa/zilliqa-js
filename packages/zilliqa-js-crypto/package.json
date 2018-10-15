@@ -1,5 +1,5 @@
 {
-  "name": "zilliqa-js-crypto",
+  "name": "@zilliqa/zilliqa-js-crypto",
   "version": "0.2.0",
   "description": "Core crypto utilities for signing/verification/hashing Zilliqa transactions.",
   "main": "dist/index.js",
@@ -17,6 +17,6 @@
     "randombytes": "^2.0.6",
     "scrypt.js": "^0.2.0",
     "uuid": "^3.3.2",
-    "zilliqa-js-util": "^0.2.0"
+    "@zilliqa/zilliqa-js-util": "^0.2.0"
   }
 }

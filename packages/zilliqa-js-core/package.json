@@ -1,5 +1,5 @@
 {
-  "name": "zilliqa-js-core",
+  "name": "@zilliqa/zilliqa-js-core",
   "version": "0.2.0",
   "description": "Core abstractions that power the zilliqa JS client.",
   "main": "dist/index.js",

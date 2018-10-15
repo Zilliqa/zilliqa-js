@@ -1,8 +1,15 @@
 import BN from 'bn.js';
 import hash from 'hash.js';
-import {Account, Wallet, Transaction, TxStatus} from 'zilliqa-js-account';
-import {Provider, ZilliqaModule, sign} from 'zilliqa-js-core';
-import {bytes, types} from 'zilliqa-js-util';
+
+import {
+  Account,
+  Wallet,
+  Transaction,
+  TxStatus,
+} from '@zilliqa/zilliqa-js-account';
+import {Provider, ZilliqaModule, sign} from '@zilliqa/zilliqa-js-core';
+import {bytes, types} from '@zilliqa/zilliqa-js-util';
+
 import {ABI, Init, State, Value, DeployError, DeploySuccess} from './types';
 
 const NIL_ADDRESS = '0000000000000000000000000000000000000000';
@@ -127,18 +134,20 @@ export class Contract {
     }
 
     try {
-      Transaction.setProvider(this.provider);
       const tx = await this.prepareTx(
-        new Transaction({
-          version: 0,
-          to: NIL_ADDRESS,
-          // amount should be 0.  we don't accept implicitly anymore.
-          amount: new BN(0),
-          gasPrice: gasPrice.toNumber(),
-          gasLimit: gasLimit.toNumber(),
-          code: this.code,
-          data: JSON.stringify(this.init).replace(/\\"/g, '"'),
-        }),
+        new Transaction(
+          {
+            version: 0,
+            to: NIL_ADDRESS,
+            // amount should be 0.  we don't accept implicitly anymore.
+            amount: new BN(0),
+            gasPrice: gasPrice.toNumber(),
+            gasLimit: gasLimit.toNumber(),
+            code: this.code,
+            data: JSON.stringify(this.init).replace(/\\"/g, '"'),
+          },
+          this.provider,
+        ),
       );
 
       if (tx.isRejected()) {
@@ -181,14 +190,17 @@ export class Contract {
 
     try {
       return await this.prepareTx(
-        new Transaction({
-          version: 0,
-          to: this.address,
-          amount: new BN(0),
-          gasPrice: gasPrice.toNumber(),
-          gasLimit: gasLimit.toNumber(),
-          data: JSON.stringify(msg),
-        }),
+        new Transaction(
+          {
+            version: 0,
+            to: this.address,
+            amount: new BN(0),
+            gasPrice: gasPrice.toNumber(),
+            gasLimit: gasLimit.toNumber(),
+            data: JSON.stringify(msg),
+          },
+          this.provider,
+        ),
       );
     } catch (err) {
       throw err;

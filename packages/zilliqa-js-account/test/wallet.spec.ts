@@ -1,12 +1,14 @@
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
 import BN from 'bn.js';
-import {HTTPProvider} from 'zilliqa-js-core';
+
+import {HTTPProvider} from '@zilliqa/zilliqa-js-core';
 import {
   getPubKeyFromPrivateKey,
   generatePrivateKey,
   schnorr,
-} from 'zilliqa-js-crypto';
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
+} from '@zilliqa/zilliqa-js-crypto';
+
 import {createWallet} from './util';
 import Account from '../src/account';
 import Wallet from '../src/wallet';
@@ -46,15 +48,18 @@ describe('Wallet', () => {
     const pubKey = (wallet.defaultAccount &&
       wallet.defaultAccount.publicKey) as string;
 
-    const tx = new Transaction({
-      version: 1,
-      nonce: 1,
-      to: '0x1234567890123456789012345678901234567890',
-      amount: new BN(0),
-      gasPrice: 1000,
-      gasLimit: 1000,
-      pubKey,
-    });
+    const tx = new Transaction(
+      {
+        version: 1,
+        nonce: 1,
+        to: '0x1234567890123456789012345678901234567890',
+        amount: new BN(0),
+        gasPrice: 1000,
+        gasLimit: 1000,
+        pubKey,
+      },
+      provider,
+    );
 
     mock.onPost().reply(200, {
       result: {nonce: 1},
@@ -75,15 +80,18 @@ describe('Wallet', () => {
     const pubKey = getPubKeyFromPrivateKey(generatePrivateKey());
     const [wallet] = createWallet(0);
 
-    const tx = new Transaction({
-      version: 1,
-      nonce: 1,
-      to: '0x1234567890123456789012345678901234567890',
-      amount: new BN(0),
-      gasPrice: 1000,
-      gasLimit: 1000,
-      pubKey,
-    });
+    const tx = new Transaction(
+      {
+        version: 1,
+        nonce: 1,
+        to: '0x1234567890123456789012345678901234567890',
+        amount: new BN(0),
+        gasPrice: 1000,
+        gasLimit: 1000,
+        pubKey,
+      },
+      provider,
+    );
 
     try {
       wallet.sign(tx);

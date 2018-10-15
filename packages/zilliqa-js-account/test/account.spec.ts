@@ -1,6 +1,7 @@
 import BN from 'bn.js';
 import Signature from 'elliptic/lib/elliptic/ec/signature';
-import * as zcrypto from 'zilliqa-js-crypto';
+import { HTTPProvider } from '@zilliqa/zilliqa-js-core';
+import * as zcrypto from '@zilliqa/zilliqa-js-crypto';
 import Account from '../src/account';
 import Transaction from '../src/transaction';
 
@@ -42,7 +43,7 @@ describe('Account', () => {
       data: 'some_data',
     };
 
-    const tx = new Transaction(rawTx);
+    const tx = new Transaction(rawTx, new HTTPProvider('https://mock-provider.com'));
     const rawSignature = account.signTransaction(tx.bytes);
 
     const lgtm = zcrypto.schnorr.verify(

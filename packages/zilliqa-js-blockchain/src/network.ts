@@ -1,5 +1,5 @@
-import {Provider, ZilliqaModule} from 'zilliqa-js-core';
-import {Wallet} from 'zilliqa-js-account';
+import {Provider, ZilliqaModule} from '@zilliqa/zilliqa-js-core';
+import {Wallet} from '@zilliqa/zilliqa-js-account';
 
 const enum NetworkMethods {
   GetClientVersion = 'GetClientVersion',

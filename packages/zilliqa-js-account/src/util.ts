@@ -1,4 +1,4 @@
-import {bytes} from 'zilliqa-js-util';
+import {bytes} from '@zilliqa/zilliqa-js-util';
 import {TxParams} from './types';
 
 /**

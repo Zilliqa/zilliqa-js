@@ -22,14 +22,16 @@ describe('Module: Blockchain', () => {
   });
 
   it('should sign and send transactions', async () => {
-    Transaction.setProvider(provider);
-    const tx = new Transaction({
-      version: 1,
-      to: '0x1234567890123456789012345678901234567890',
-      amount: new BN(0),
-      gasPrice: 1000,
-      gasLimit: 1000,
-    });
+    const tx = new Transaction(
+      {
+        version: 1,
+        to: '0x1234567890123456789012345678901234567890',
+        amount: new BN(0),
+        gasPrice: 1000,
+        gasLimit: 1000,
+      },
+      provider,
+    );
 
     mock
       .onPost()

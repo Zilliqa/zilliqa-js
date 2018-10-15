@@ -4,7 +4,7 @@ import {pbkdf2sync} from 'pbkdf2';
 import scrypt from 'scrypt.js';
 import uuid from 'uuid';
 
-import {bytes} from 'zilliqa-js-util';
+import {bytes} from '@zilliqa/zilliqa-js-util';
 
 import {getAddressFromPrivateKey} from './index';
 import {randomBytes} from './random';

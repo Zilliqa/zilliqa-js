@@ -1,5 +1,5 @@
 {
-  "name": "zilliqa-js-blockchain",
+  "name": "@zilliqa/zilliqa-js-blockchain",
   "version": "0.2.0",
   "description": "Class(es) for interacting with the Zilliqa blockchain.",
   "main": "dist/index.js",
@@ -8,7 +8,7 @@
   "author": "ian@zilliqa.com",
   "license": "GPL-3.0",
   "dependencies": {
-    "zilliqa-js-account": "0.2.0",
-    "zilliqa-js-core": "0.2.0"
+    "@zilliqa/zilliqa-js-account": "0.2.0",
+    "@zilliqa/zilliqa-js-core": "0.2.0"
   }
 }

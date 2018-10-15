@@ -1,5 +1,10 @@
-import {Provider, ZilliqaModule, sign, RPCResponse} from 'zilliqa-js-core';
-import {Transaction, Wallet} from 'zilliqa-js-account';
+import {Transaction, Wallet} from '@zilliqa/zilliqa-js-account';
+import {
+  Provider,
+  ZilliqaModule,
+  sign,
+  RPCResponse,
+} from '@zilliqa/zilliqa-js-core';
 
 const enum BlockchainMethods {
   GetDSBlock = 'GetDSBlock',

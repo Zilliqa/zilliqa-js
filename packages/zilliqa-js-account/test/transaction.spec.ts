@@ -1,7 +1,7 @@
 import axios from 'axios';
 import BN from 'bn.js';
 import MockAdapter from 'axios-mock-adapter';
-import {HTTPProvider} from 'zilliqa-js-core';
+import {HTTPProvider} from '@zilliqa/zilliqa-js-core';
 
 import Transaction from '../src/transaction';
 import Wallet from '../src/wallet';
@@ -15,9 +15,6 @@ describe('Transaction', () => {
     wallet.create();
   }
 
-  // set mock provider on Transaction
-  Transaction.setProvider(provider);
-
   afterEach(() => {
     mock.reset();
   });
@@ -28,13 +25,16 @@ describe('Transaction', () => {
     });
 
     const pending = await wallet.sign(
-      new Transaction({
-        version: 0,
-        to: '0x1234567890123456789012345678901234567890',
-        amount: new BN(0),
-        gasPrice: 1000,
-        gasLimit: 1000,
-      }),
+      new Transaction(
+        {
+          version: 0,
+          to: '0x1234567890123456789012345678901234567890',
+          amount: new BN(0),
+          gasPrice: 1000,
+          gasLimit: 1000,
+        },
+        provider,
+      ),
     );
 
     mock.onPost().reply(200, {
@@ -67,13 +67,16 @@ describe('Transaction', () => {
       result: {nonce: 1},
     });
     const tx = await wallet.sign(
-      new Transaction({
-        version: 0,
-        to: '0x1234567890123456789012345678901234567890',
-        amount: new BN(0),
-        gasPrice: 1000,
-        gasLimit: 1000,
-      }),
+      new Transaction(
+        {
+          version: 0,
+          to: '0x1234567890123456789012345678901234567890',
+          amount: new BN(0),
+          gasPrice: 1000,
+          gasLimit: 1000,
+        },
+        provider,
+      ),
     );
 
     mock.onPost().reply(400, {
@@ -92,13 +95,16 @@ describe('Transaction', () => {
       result: {nonce: 1},
     });
     const tx = await wallet.sign(
-      new Transaction({
-        version: 0,
-        to: '0x1234567890123456789012345678901234567890',
-        amount: new BN(0),
-        gasPrice: 1000,
-        gasLimit: 1000,
-      }),
+      new Transaction(
+        {
+          version: 0,
+          to: '0x1234567890123456789012345678901234567890',
+          amount: new BN(0),
+          gasPrice: 1000,
+          gasLimit: 1000,
+        },
+        provider,
+      ),
     );
 
     mock.onPost().reply(200, {

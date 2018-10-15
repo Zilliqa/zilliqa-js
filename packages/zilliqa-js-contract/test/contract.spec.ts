@@ -1,8 +1,10 @@
-import BN from 'bn.js';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import {HTTPProvider} from 'zilliqa-js-core';
-import {Wallet} from 'zilliqa-js-account';
+import BN from 'bn.js';
+
+import {Wallet} from '@zilliqa/zilliqa-js-account';
+import {HTTPProvider} from '@zilliqa/zilliqa-js-core';
+
 import {ContractStatus, Contracts} from '../src/index';
 import {abi} from './test.abi';
 import {testContract} from './fixtures';

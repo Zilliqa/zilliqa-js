@@ -1,5 +1,5 @@
 {
-  "name": "zilliqa-js-account",
+  "name": "@zilliqa/zilliqa-js-account",
   "version": "0.2.0",
   "description": "Used for signing transactions.",
   "main": "dist/index.js",
@@ -8,7 +8,7 @@
   "license": "GPL-3.0",
   "dependencies": {
     "bn.js": "^4.11.8",
-    "zilliqa-js-crypto": "^0.2.0",
-    "zilliqa-js-util": "^0.2.0"
+    "@zilliqa/zilliqa-js-crypto": "^0.2.0",
+    "@zilliqa/zilliqa-js-util": "^0.2.0"
   }
 }

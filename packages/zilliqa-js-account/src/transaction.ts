@@ -1,7 +1,8 @@
 import BN from 'bn.js';
-import {Provider, RPCResponse, Signable} from 'zilliqa-js-core';
-import {getAddressFromPublicKey} from 'zilliqa-js-crypto';
-import {types} from 'zilliqa-js-util';
+
+import {Provider, RPCResponse, Signable} from '@zilliqa/zilliqa-js-core';
+import {getAddressFromPublicKey} from '@zilliqa/zilliqa-js-crypto';
+import {types} from '@zilliqa/zilliqa-js-util';
 
 import {TxParams, TxReceipt, TxStatus, TxIncluded} from './types';
 import {encodeTransaction} from './util';
@@ -21,15 +22,11 @@ export default class Transaction implements Signable {
    * @static
    * @param {BaseTx} params
    */
-  static confirm(params: TxParams) {
-    return new Transaction(params, TxStatus.Confirmed);
+  static confirm(params: TxParams, provider: Provider) {
+    return new Transaction(params, provider, TxStatus.Confirmed);
   }
 
-  static provider: Provider;
-
-  static setProvider(provider: Provider) {
-    Transaction.provider = provider;
-  }
+  provider: Provider;
 
   // parameters
   private version: number;
@@ -77,7 +74,12 @@ export default class Transaction implements Signable {
     };
   }
 
-  constructor(params: TxParams, status: TxStatus = TxStatus.Initialised) {
+  constructor(
+    params: TxParams,
+    provider: Provider,
+    status: TxStatus = TxStatus.Initialised,
+  ) {
+    // private members
     this.version = params.version;
     this.id = params.id;
     this.to = params.to;
@@ -91,6 +93,8 @@ export default class Transaction implements Signable {
     this.gasLimit = params.gasLimit;
     this.receipt = params.receipt;
 
+    // public members
+    this.provider = provider;
     this.status = status;
   }
 
@@ -128,6 +132,17 @@ export default class Transaction implements Signable {
    */
   isRejected(): boolean {
     return this.status === TxStatus.Rejected;
+  }
+
+  /**
+   * setProvider
+   *
+   * Sets the provider on this instance.
+   *
+   * @param {Provider} provider
+   */
+  setProvider(provider: Provider) {
+    this.provider = provider;
   }
 
   /**
@@ -219,7 +234,7 @@ export default class Transaction implements Signable {
     }
 
     // TODO: regex validation for txHash so we don't get garbage
-    const result = Transaction.provider.send('GetTransaction', [txHash]);
+    const result = this.provider.send('GetTransaction', [txHash]);
 
     result
       .then((res: RPCResponse<TxIncluded, string>) => {
