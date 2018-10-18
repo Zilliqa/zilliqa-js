@@ -14,8 +14,7 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "paths": {
-      "*": ["typings/*"],
-      "elliptic/lib/elliptic/ec/signature": ["typings/signature"]
+      "*": ["typings/*"]
     },
     "resolveJsonModule": true,
     "strict": true,

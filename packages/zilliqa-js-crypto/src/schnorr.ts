@@ -3,7 +3,7 @@ import elliptic from 'elliptic';
 import BN from 'bn.js';
 import hashjs from 'hash.js';
 import DRBG from 'hmac-drbg';
-import Signature from 'elliptic/lib/elliptic/ec/signature';
+import Signature from './signature';
 
 const curve = elliptic.ec('secp256k1').curve;
 // Public key is a point (x, y) on the curve.

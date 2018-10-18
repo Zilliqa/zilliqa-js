@@ -1,13 +1,13 @@
 import BN from 'bn.js';
-import { randomBytes } from 'crypto';
+import {randomBytes} from 'crypto';
 import elliptic from 'elliptic';
-import Signature from 'elliptic/lib/elliptic/ec/signature';
 
 import {pairs} from './keypairs.fixtures';
 import schnorrVectors from './schnorr.fixtures';
 
 import * as crypto from '../src/index';
 import * as schnorr from '../src/schnorr';
+import Signature from '../src/signature';
 
 const secp256k1 = elliptic.ec('secp256k1');
 

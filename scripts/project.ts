@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import camelcase from 'camelcase';
 import * as lernaJson from '../lerna.json';
 
 const rootPath = path.resolve(__dirname, '..');
@@ -7,11 +8,21 @@ const packagesPath = path.join(rootPath, 'packages');
 
 export default {
   lerna: lernaJson,
+  preprocess: [
+    {
+      name: 'elliptic',
+      path: path.resolve(__dirname, '../node_modules/elliptic'),
+      entry: 'lib/elliptic.js',
+      out: 'elliptic.js',
+      outDir: 'dist',
+    },
+  ],
   packages: fs
     .readdirSync(packagesPath)
     .filter(p => fs.lstatSync(path.join(packagesPath, p)).isDirectory())
     .map(p => {
       const pkgName = path.basename(p);
+      const pkgGlobalName = camelcase(pkgName.replace('zilliqa-js', 'zjs'));
       const pkgPath = path.join(packagesPath, p);
       const pkgSrc = path.join(pkgPath, 'src');
       const pkgScopedName = `@zilliqa/${p}`;
@@ -26,16 +37,13 @@ export default {
 
       return {
         name: pkgName,
+        globalName: pkgGlobalName,
+        scopedName: pkgScopedName,
         path: pkgPath,
         src: pkgSrc,
-        scopedName: pkgScopedName,
         dist: pkgDist,
         umd: pkgUmd,
         esm: pkgEsm,
-        system: pkgSystem,
-        amd: pkgAmd,
-        cjs: pkgCjs,
-        iife: pkgIife,
       };
     }),
 };

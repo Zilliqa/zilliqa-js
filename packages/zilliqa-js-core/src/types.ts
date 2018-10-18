@@ -1,11 +1,15 @@
 import {Emitter} from 'mitt';
-import {AxiosPromise} from 'axios';
+import {RPCRequest, RPCResponse} from './net';
 
 export type Subscriber = (event: any) => void;
 export type Subscribers = Map<SubscriptionToken, Subscriber>;
 type SubscriptionToken = symbol;
 
 export interface Provider {
+  middleware: {
+    request: Middleware;
+    response: Middleware;
+  };
   // TODO: strict typing when we have a better idea of how to generalise the
   // payloads sent to lookup nodes - protobuf?
   send<R = any, E = string>(
@@ -23,26 +27,6 @@ export abstract class Signer {
 export interface Signable {
   bytes: Buffer;
 }
-
-interface RPCBase {
-  id: 1;
-  jsonrpc: '2.0';
-}
-
-export interface RPCRequest extends RPCBase {
-  method: string;
-  params: any[];
-}
-
-export interface RPCResponseSuccess<R = any> extends RPCBase {
-  result: R;
-}
-
-export interface RPCResponseError<E> extends RPCBase {
-  result: {Error: E};
-}
-
-export type RPCResponse<R, E> = RPCResponseSuccess<R> | RPCResponseError<E>;
 
 /**
  * ZilliqaModule

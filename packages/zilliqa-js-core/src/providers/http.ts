@@ -1,30 +1,43 @@
 import axios from 'axios';
 import Mitt, {Emitter} from 'mitt';
+import BaseProvider from './base';
 import {
+  RPCMethod,
   RPCRequest,
+  RPCRequestPayload,
   RPCResponse,
-  Provider,
-  Subscriber,
-  Subscribers,
-} from '../types';
+  performRPC,
+} from '../net';
+import {composeMiddleware, MiddlewareFn} from '../util';
+import {Provider, Subscriber, Subscribers} from '../types';
 
-export default class HTTPProvider implements Provider {
+export default class HTTPProvider extends BaseProvider implements Provider {
   nodeURL: string;
 
-  constructor(nodeURL: string) {
+  constructor(
+    nodeURL: string,
+    reqMiddleware: MiddlewareFn[] = [],
+    resMiddleware: MiddlewareFn[] = [],
+  ) {
+    super(reqMiddleware, resMiddleware);
     this.nodeURL = nodeURL;
   }
 
-  buildPayload(method: string, payload: any): RPCRequest {
-    return {jsonrpc: '2.0', method, params: payload, id: 1};
+  buildPayload<T>(method: RPCMethod, params: T): RPCRequest<T> {
+    return {
+      url: this.nodeURL,
+      method,
+      payload: {id: 1, jsonrpc: '2.0', params},
+    };
   }
 
-  send<R = any, E = string>(method: string, payload: any) {
-    return axios
-      .post<RPCResponse<R, E>>(this.nodeURL, this.buildPayload(method, payload))
-      .then(response => {
-        return response.data;
-      });
+  send<P, R = any, E = string>(method: RPCMethod, params: P): Promise<P> {
+    const tReq = composeMiddleware(...this.reqMiddleware);
+    const tRes = composeMiddleware(...this.resMiddleware);
+
+    const req = tReq(this.buildPayload(method, params));
+
+    return performRPC(req, tRes);
   }
 
   subscribe(event: string, subscriber: Subscriber): Symbol {

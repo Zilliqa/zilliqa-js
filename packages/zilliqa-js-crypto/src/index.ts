@@ -43,6 +43,8 @@ export const sign = (
 };
 
 export {schnorr};
+export * from './util';
 export * from './keystore';
 export * from './random';
 export * from './types';
+export * from './signature';

@@ -6,15 +6,6 @@ import {
   RPCResponse,
 } from '@zilliqa/zilliqa-js-core';
 
-const enum BlockchainMethods {
-  GetDSBlock = 'GetDSBlock',
-  GetLatestDSBlock = 'GetLatestDsBlock',
-  GetTxBlock = 'GetTSBlock',
-  GetLatestTxBlock = 'GetLatestTxBlock',
-  CreateTransaction = 'CreateTransaction',
-  GetTransaction = 'GetTransaction',
-}
-
 export default class Blockchain implements ZilliqaModule {
   signer: Wallet;
   provider: Provider;
