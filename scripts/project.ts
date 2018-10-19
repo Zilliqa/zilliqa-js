@@ -4,6 +4,7 @@ import camelcase from 'camelcase';
 import * as lernaJson from '../lerna.json';
 
 const rootPath = path.resolve(__dirname, '..');
+const includesPath = path.join(rootPath, 'includes');
 const packagesPath = path.join(rootPath, 'packages');
 
 export default {
@@ -13,8 +14,7 @@ export default {
       name: 'elliptic',
       path: path.resolve(__dirname, '../node_modules/elliptic'),
       entry: 'lib/elliptic.js',
-      out: 'elliptic.js',
-      outDir: 'dist',
+      outDir: path.join(includesPath, 'elliptic'),
     },
   ],
   packages: fs

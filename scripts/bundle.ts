@@ -2,9 +2,7 @@ import * as path from 'path';
 import * as rollup from 'rollup';
 import project from './project';
 import alias from 'rollup-plugin-alias';
-import builtins from 'rollup-plugin-node-builtins';
 import commonjs from 'rollup-plugin-commonjs';
-import globals from 'rollup-plugin-node-globals';
 import json from 'rollup-plugin-json';
 import resolve from 'rollup-plugin-node-resolve';
 import typescript2 from 'rollup-plugin-typescript2';
@@ -32,8 +30,8 @@ function preProcess() {
         output: {
           filename: '[name].js',
           library: mod.name,
-          libraryTarget: 'umd',
-          path: path.join(mod.path, mod.outDir),
+          libraryTarget: 'commonjs2',
+          path: mod.outDir,
         },
         mode: 'production',
         optimization: {
@@ -72,9 +70,23 @@ async function bundle() {
       const logPrefix = c.grey(`[${++cur}/${count}] ${pkg.scopedName}`);
       logBundle(`${logPrefix} creating bundle`);
 
+      const externals = project.packages
+        .filter(p => p.name !== pkg.name)
+        .map(p => p.scopedName);
+
+      logBundle(`externals: ${externals}`);
       const bundle = await rollup.rollup({
         input: path.join(pkg.src, 'index.ts'),
         plugins: [
+          alias({
+            elliptic: 'includes/elliptic/elliptic.js',
+          }),
+          resolve({
+            browser: true,
+            jsnext: true,
+            preferBuiltins: false,
+          }),
+          commonjs(),
           json(),
           typescript2({
             tsconfig: path.join(pkg.path, 'tsconfig.json'),
@@ -89,17 +101,6 @@ async function bundle() {
               sourceMap: true,
             },
           }),
-          globals(),
-          builtins(),
-          alias({
-            elliptic: 'node_modules/elliptic/dist/elliptic.js',
-          }),
-          resolve({
-            browser: true,
-            jsnext: true,
-            preferBuiltins: false,
-          }),
-          commonjs(),
         ],
         // mark all packages that are not *this* package as external so they don't get included in the bundle
         // include tslib in the bundles since only __decorate is really used by multiple packages (we can figure out a way to deduplicate that later on if need be)
