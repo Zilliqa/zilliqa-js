@@ -13,14 +13,24 @@ export const enum TxStatus {
   Rejected,
 }
 
-export interface TxReceipt {
-  success: 'true' | 'false';
-  cumulative_gas: number;
+export interface TxCreated {
+  Info: string;
+  TranID: string;
+  ContractAddress?: string;
+}
+
+export interface TxRejected {
+  Error: string;
 }
 
 export interface TxIncluded {
   ID: string;
   receipt: TxReceipt;
+}
+
+export interface TxReceipt {
+  success: 'true' | 'false';
+  cumulative_gas: number;
 }
 
 export interface TxParams {

@@ -1,12 +1,11 @@
-import axios from 'axios';
 import BN from 'bn.js';
-import MockAdapter from 'axios-mock-adapter';
-import {HTTPProvider} from '@zilliqa/zilliqa-js-core';
+import {RPCMethod, HTTPProvider} from '@zilliqa/zilliqa-js-core';
 
 import Transaction from '../src/transaction';
 import Wallet from '../src/wallet';
 
-const mock = new MockAdapter(axios);
+import fetch from 'jest-fetch-mock';
+
 const provider = new HTTPProvider('https://mock.com');
 const wallet = new Wallet(provider);
 
@@ -16,13 +15,38 @@ describe('Transaction', () => {
   }
 
   afterEach(() => {
-    mock.reset();
+    fetch.resetMocks();
   });
 
   it('should poll and call queued handlers on confirmation', async () => {
-    mock.onPost().reply(200, {
-      result: {nonce: 1},
-    });
+    const responses = [
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: 888,
+          nonce: 1,
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          TranID: 'some_hash',
+          Info: 'Non-contract txn, sent to shard',
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          ID: 'some_hash',
+          receipt: {cumulative_gas: '1000', success: true},
+        },
+      },
+    ].map(res => [JSON.stringify({data: res})] as [string]);
+
+    fetch.mockResponses(...responses);
 
     const pending = await wallet.sign(
       new Transaction(
@@ -36,36 +60,35 @@ describe('Transaction', () => {
         provider,
       ),
     );
-
-    mock.onPost().reply(200, {
-      result: {
-        TranID: 'some_hash',
-      },
-    });
-    const response = await provider.send('CreateTransaction', pending.txParams);
-
-    mock.onPost().reply(200, {
-      result: {
-        ID: 'some_hash',
-        receipt: {
-          success: 'true',
-          cumulative_gas: 1000,
-        },
-      },
-    });
-
+    const response = await provider.send(
+      RPCMethod.CreateTransaction,
+      pending.txParams,
+    );
     const confirmed = await pending.confirm('some_hash');
+
     const state = confirmed.txParams;
 
     expect(confirmed.isConfirmed()).toBeTruthy();
     expect(state.id).toEqual('some_hash');
-    expect(state.receipt).toEqual({success: 'true', cumulative_gas: 1000});
+    expect(state.receipt).toEqual({success: true, cumulative_gas: '1000'});
   });
 
   it('should reject the promise if there is a network error', async () => {
-    mock.onPost().reply(200, {
-      result: {nonce: 1},
-    });
+    fetch
+      .once(
+        JSON.stringify({
+          data: {
+            id: 1,
+            jsonrpc: '2.0',
+            result: {
+              balance: 888,
+              nonce: 1,
+            },
+          },
+        }),
+      )
+      .mockRejectOnce(new Error('something bad happened'));
+
     const tx = await wallet.sign(
       new Transaction(
         {
@@ -79,21 +102,41 @@ describe('Transaction', () => {
       ),
     );
 
-    mock.onPost().reply(400, {
-      result: {
-        TranID: 'some_hash',
-      },
-    });
-
     await expect(
-      provider.send('CreateTransaction', tx.txParams),
-    ).rejects.toThrow(/Request failed/g);
+      provider.send(RPCMethod.CreateTransaction, tx.txParams),
+    ).rejects.toThrow();
   });
 
   it('should not reject the promise if receipt.success === false', async () => {
-    mock.onPost().reply(200, {
-      result: {nonce: 1},
-    });
+    const responses = [
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: 888,
+          nonce: 1,
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          TranID: 'some_hash',
+          Info: 'Non-contract txn, sent to shard',
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          ID: 'some_hash',
+          receipt: {cumulative_gas: '1000', success: false},
+        },
+      },
+    ].map(res => [JSON.stringify({data: res})] as [string]);
+
+    fetch.mockResponses(...responses);
+
     const tx = await wallet.sign(
       new Transaction(
         {
@@ -107,26 +150,11 @@ describe('Transaction', () => {
       ),
     );
 
-    mock.onPost().reply(200, {
-      result: {
-        TranID: 'some_hash',
-      },
-    });
-    const res = await provider.send('CreateTransaction', tx.txParams);
-
-    mock.onPost().reply(200, {
-      result: {
-        ID: 'some_hash',
-        receipt: {
-          success: 'false',
-          cumulative_gas: 1000,
-        },
-      },
-    });
+    const res = await provider.send(RPCMethod.CreateTransaction, tx.txParams);
     const rejected = await tx.confirm(res.result.TranID);
 
     await expect(
       rejected.txParams.receipt && rejected.txParams.receipt.success,
-    ).toEqual('false');
+    ).toEqual(false);
   });
 });
