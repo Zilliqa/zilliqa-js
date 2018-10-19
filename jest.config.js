@@ -12,10 +12,10 @@ const config = {
     '^.+\\.ts$': 'ts-jest',
   },
   testMatch: ['<rootDir>/packages/**/test/?(*.)+(spec|test).ts'],
-  moduleDirectories: ['packages/*/src', '<rootDir>/node_modules'],
+  moduleDirectories: ['packages/*/src', '<rootDir>/node_modules', '<rootDir>/*/node_modules'],
   moduleFileExtensions: ['js', 'ts', 'node', 'json'],
   moduleNameMapper: {
-    '^zilliqa-js-(.*)$': '<rootDir>/packages/zilliqa-js-$1/src/index.ts',
+    '^@zilliqa/zilliqa-js-(.*)$': '<rootDir>/packages/zilliqa-js-$1/src/index.ts',
   },
   globals: {
     'ts-jest': {
