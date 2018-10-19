@@ -1,3 +1,4 @@
+import {Provider} from '../types';
 import {ReqMiddlewareFn, ResMiddlewareFn} from '../util';
 
 const enum MiddlewareType {
@@ -11,13 +12,13 @@ export default class BaseProvider {
 
   middleware = {
     request: {
-      use: (fn: ReqMiddlewareFn) => {
+      use: <I, O>(fn: ReqMiddlewareFn<I, O>) => {
         this.pushMiddleware<MiddlewareType.REQ>(fn, MiddlewareType.REQ);
       },
     },
     response: {
-      use: (fn: ResMiddlewareFn) => {
-        this.pushMiddleware(fn, MiddlewareType.RES);
+      use: <I, O, E>(fn: ResMiddlewareFn<I, O, E>) => {
+        this.pushMiddleware<MiddlewareType.RES>(fn, MiddlewareType.RES);
       },
     },
   };

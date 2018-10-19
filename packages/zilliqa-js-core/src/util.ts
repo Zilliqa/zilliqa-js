@@ -1,28 +1,36 @@
 import {RPCRequest, RPCResponse} from './net';
-interface Middleware {
-  // use(fn: MiddlewareFn): void;
+export interface Middleware {
+  request: {
+    use: <I, O>(fn: ReqMiddlewareFn<I, O>) => void;
+  };
+  response: {
+    use: <I, O, E>(fn: ResMiddlewareFn<I, O, E>) => void;
+  };
 }
-
 export type Transformer<I, O> = (payload: I) => O;
-export type ReqMiddlewareFn<I, O> = Transformer<RPCRequest<I>, RPCRequest<O>>;
-export type ResMiddlewareFn<I, O, E> = Transformer<
+export type ReqMiddlewareFn<I = any, O = any> = Transformer<
+  RPCRequest<I>,
+  RPCRequest<O>
+>;
+export type ResMiddlewareFn<I = any, O = any, E = any> = Transformer<
   RPCResponse<I, E>,
   RPCResponse<O, E>
 >;
-export type MiddlewareFn<I, O, E> =
-  | ReqMiddlewareFn<I, O>
-  | ResMiddlewareFn<I, O, E>;
 
-export const composeMiddleware = <T extends Transformer<I, O>, I, O>(
-  ...fns: T[]
-): T => {
+export function composeMiddleware<T extends ReqMiddlewareFn[]>(
+  ...fns: T
+): ReqMiddlewareFn;
+export function composeMiddleware<T extends ResMiddlewareFn[]>(
+  ...fns: T
+): ResMiddlewareFn;
+export function composeMiddleware(...fns: any[]): any {
   if (fns.length === 0) {
-    return ((arg: any) => arg) as T;
+    return (arg: any) => arg;
   }
 
   if (fns.length === 1) {
     return fns[0];
   }
 
-  return fns.reduce((a, b) => (arg: I) => a(b(arg)));
-};
+  return fns.reduce((a, b) => (arg: any) => a(b(arg)));
+}
