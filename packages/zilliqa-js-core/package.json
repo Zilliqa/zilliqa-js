@@ -2,7 +2,7 @@
   "name": "@zilliqa/zilliqa-js-core",
   "version": "0.2.0",
   "description": "Core abstractions that power the zilliqa JS client.",
-  "main": "dist/index.umd.js",
+  "main": "dist/index.js",
   "node": "dist/index.js",
   "browser": "dist/index.umd.js",
   "module": "dist/index.esm.js",

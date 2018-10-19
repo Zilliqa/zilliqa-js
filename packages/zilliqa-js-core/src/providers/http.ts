@@ -1,4 +1,3 @@
-import axios from 'axios';
 import Mitt, {Emitter} from 'mitt';
 import BaseProvider from './base';
 import {
@@ -8,7 +7,7 @@ import {
   RPCResponse,
   performRPC,
 } from '../net';
-import {composeMiddleware, MiddlewareFn} from '../util';
+import {composeMiddleware, ReqMiddlewareFn, ResMiddlewareFn} from '../util';
 import {Provider, Subscriber, Subscribers} from '../types';
 
 export default class HTTPProvider extends BaseProvider implements Provider {
@@ -16,14 +15,14 @@ export default class HTTPProvider extends BaseProvider implements Provider {
 
   constructor(
     nodeURL: string,
-    reqMiddleware: MiddlewareFn[] = [],
-    resMiddleware: MiddlewareFn[] = [],
+    reqMiddleware: ReqMiddlewareFn[] = [],
+    resMiddleware: ResMiddlewareFn[] = [],
   ) {
     super(reqMiddleware, resMiddleware);
     this.nodeURL = nodeURL;
   }
 
-  buildPayload<T>(method: RPCMethod, params: T): RPCRequest<T> {
+  buildPayload<T extends any[]>(method: RPCMethod, params: T): RPCRequest<T> {
     return {
       url: this.nodeURL,
       method,
@@ -31,7 +30,10 @@ export default class HTTPProvider extends BaseProvider implements Provider {
     };
   }
 
-  send<P, R = any, E = string>(method: RPCMethod, params: P): Promise<P> {
+  send<P extends any[], R = any, E = string>(
+    method: RPCMethod,
+    ...params: P
+  ): Promise<RPCResponse<R, E>> {
     const tReq = composeMiddleware(...this.reqMiddleware);
     const tRes = composeMiddleware(...this.resMiddleware);
 
