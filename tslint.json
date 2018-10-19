@@ -12,6 +12,7 @@
     "member-access": false,
     "no-console": false,
     "no-empty-interface": false,
+    "no-implicit-dependencies": true,
     "no-submodule-imports": false,
     "object-literal-sort-keys": false,
     "object-literal-key-quotes": [
