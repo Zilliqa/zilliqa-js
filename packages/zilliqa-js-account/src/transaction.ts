@@ -262,7 +262,7 @@ export default class Transaction implements Signable {
           this.id = res.result['ID'];
           this.receipt = res.result.receipt;
           this.status =
-            this.receipt && this.receipt.success === 'true'
+            this.receipt && this.receipt.success
               ? TxStatus.Confirmed
               : TxStatus.Rejected;
           cancelTimeout();
