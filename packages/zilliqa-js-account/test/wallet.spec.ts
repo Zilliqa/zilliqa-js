@@ -1,5 +1,4 @@
 import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
 import BN from 'bn.js';
 
 import {HTTPProvider} from '@zilliqa/zilliqa-js-core';
@@ -9,17 +8,18 @@ import {
   schnorr,
 } from '@zilliqa/zilliqa-js-crypto';
 
+import fetch from 'jest-fetch-mock';
+
 import {createWallet} from './util';
 import Account from '../src/account';
 import Wallet from '../src/wallet';
 import Transaction from '../src/transaction';
 
-const mock = new MockAdapter(axios);
 const provider = new HTTPProvider('https://mock.com');
 
 describe('Wallet', () => {
   afterEach(() => {
-    mock.reset();
+    fetch.resetMocks();
   });
 
   it('should be able to bootstrap with an array of Accounts ', () => {
@@ -61,11 +61,20 @@ describe('Wallet', () => {
       provider,
     );
 
-    mock.onPost().reply(200, {
-      result: {nonce: 1},
-    });
-    const signed = await wallet.sign(tx);
+    fetch.once(
+      JSON.stringify({
+        data: {
+          id: 1,
+          jsonrpc: '2.0',
+          result: {
+            balance: 888,
+            nonce: 1,
+          },
+        },
+      }),
+    );
 
+    const signed = await wallet.sign(tx);
     const signature = schnorr.toSignature(signed.txParams.signature as string);
     const lgtm = schnorr.verify(
       signed.bytes,

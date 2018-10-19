@@ -1,15 +1,15 @@
 import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
 import BN from 'bn.js';
 
 import {Wallet} from '@zilliqa/zilliqa-js-account';
 import {HTTPProvider} from '@zilliqa/zilliqa-js-core';
 
+import fetch from 'jest-fetch-mock';
+
 import {ContractStatus, Contracts} from '../src/index';
 import {abi} from './test.abi';
 import {testContract} from './fixtures';
 
-const mock = new MockAdapter(axios);
 const provider = new HTTPProvider('https://mock.com');
 const wallet = new Wallet(provider);
 const contractFactory = new Contracts(provider, wallet);
@@ -17,7 +17,7 @@ wallet.create();
 
 describe('Contracts', () => {
   afterEach(() => {
-    mock.reset();
+    fetch.resetMocks();
   });
 
   it('should be able to deploy a contract', async () => {
@@ -31,25 +31,34 @@ describe('Contracts', () => {
       {vname: 'symbol', type: 'String', value: 'NFT'},
     ]);
 
-    mock
-      .onPost()
-      .replyOnce(200, {
-        result: {nonce: 1},
-      })
-      .onPost()
-      .replyOnce(200, {
-        result: {TranID: 'some_hash'},
-      })
-      .onPost()
-      .replyOnce(200, {
+    const responses = [
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: 888,
+          nonce: 1,
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          TranID: 'some_hash',
+          Info: 'Non-contract txn, sent to shard',
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
         result: {
           ID: 'some_hash',
-          receipt: {
-            success: 'true',
-            cumulative_gas: 1000,
-          },
+          receipt: {success: true, cumulative_gas: '1000'},
         },
-      });
+      },
+    ].map(res => [JSON.stringify({data: res})] as [string]);
+
+    fetch.mockResponses(...responses);
 
     const deployTx = await contract.deploy(new BN(1000), new BN(1000));
 
@@ -68,33 +77,52 @@ describe('Contracts', () => {
       {vname: 'symbol', type: 'String', value: 'NFT'},
     ]);
 
-    mock
-      .onPost()
-      .replyOnce(200, {
-        result: {nonce: 1},
-      })
-      .onPost()
-      .replyOnce(200, {
-        result: {TranID: 'some_hash'},
-      })
-      .onPost()
-      .replyOnce(400);
+    const responses = [
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: 888,
+          nonce: 1,
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          TranID: 'some_hash',
+          Info: 'Non-contract txn, sent to shard',
+        },
+      },
+    ].map(res => [JSON.stringify({data: res})] as [string]);
 
-    await expect(contract.deploy(new BN(1000), new BN(1000))).rejects.toThrow(
-      /Request failed/g,
-    );
+    fetch
+      .mockResponses(...responses)
+      .mockRejectOnce(new Error('something bad happened'));
+
+    await expect(contract.deploy(new BN(1000), new BN(1000))).rejects.toThrow();
   });
 
   it('if the underlying transaction is rejected, status should be rejected', async () => {
-    mock
-      .onPost()
-      .replyOnce(200, {
-        result: {nonce: 1},
-      })
-      .onPost()
-      .replyOnce(200, {
-        result: {Error: 'Mega fail'},
-      });
+    const responses = [
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: 888,
+          nonce: 1,
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          Error: 'Mega fail',
+        },
+      },
+    ].map(res => [JSON.stringify({data: res})] as [string]);
+
+    fetch.mockResponses(...responses);
 
     const contract = await contractFactory
       .new(abi, testContract, [
@@ -107,29 +135,41 @@ describe('Contracts', () => {
         {vname: 'symbol', type: 'String', value: 'NFT'},
       ])
       .deploy(new BN(1000), new BN(1000));
+
     expect(contract.status).toEqual(ContractStatus.Rejected);
   });
 
   it('if the transaction.receipt.success === false, status should be rejected', async () => {
-    mock
-      .onPost()
-      .replyOnce(200, {
-        result: {nonce: 1},
-      })
-      .onPost()
-      .replyOnce(200, {
-        result: {TranID: 'some_hash'},
-      })
-      .onPost()
-      .replyOnce(200, {
+    const responses = [
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: 888,
+          nonce: 1,
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          TranID: 'some_hash',
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
         result: {
           ID: 'some_hash',
           receipt: {
-            success: 'false',
+            success: false,
             cumulative_gas: 1000,
           },
         },
-      });
+      },
+    ].map(res => [JSON.stringify({data: res})] as [string]);
+
+    fetch.mockResponses(...responses);
 
     const contract = await contractFactory
       .new(abi, testContract, [
@@ -146,46 +186,63 @@ describe('Contracts', () => {
     expect(contract.status).toEqual(ContractStatus.Rejected);
   });
 
-  it('should be able to call a transaction', async () => {
-    mock
-      .onPost()
-      .replyOnce(200, {
-        result: {nonce: 1},
-      })
-      .onPost()
-      .replyOnce(200, {
-        result: {TranID: 'some_hash'},
-      })
-      .onPost()
-      .replyOnce(200, {
+  it('should be able to call a transition', async () => {
+    const responses = [
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: 888,
+          nonce: 1,
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          TranID: 'some_hash',
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
         result: {
           ID: 'some_hash',
           receipt: {
-            success: 'true',
+            success: true,
             cumulative_gas: 1000,
           },
         },
-      });
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: 888,
+          nonce: 2,
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          TranID: 'some_hash',
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          ID: 'some_hash',
+          receipt: {
+            success: true,
+            cumulative_gas: 1000,
+          },
+        },
+      },
+    ].map(res => [JSON.stringify({data: res})] as [string]);
 
-    mock
-      .onPost()
-      .replyOnce(200, {
-        result: {nonce: 2},
-      })
-      .onPost()
-      .replyOnce(200, {
-        result: {TranID: 'some_hash'},
-      })
-      .onPost()
-      .replyOnce(200, {
-        result: {
-          ID: 'some_hash',
-          receipt: {
-            success: 'true',
-            cumulative_gas: 1000,
-          },
-        },
-      });
+    fetch.mockResponses(...responses);
 
     const contract = await contractFactory
       .new(abi, testContract, [
@@ -207,6 +264,6 @@ describe('Contracts', () => {
     const {receipt} = callTx.txParams;
 
     expect(receipt).toBeDefined;
-    expect(receipt && receipt.success).toEqual('true');
+    expect(receipt && receipt.success).toEqual(true);
   });
 });
