@@ -1,13 +1,12 @@
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
 import BN from 'bn.js';
 
-import {Transaction, Wallet} from '@zilliqa/zilliqa-js-account';
-import {HTTPProvider} from '@zilliqa/zilliqa-js-core';
+import {Transaction, Wallet, TxCreated} from '@zilliqa/zilliqa-js-account';
+import {HTTPProvider, RPCResponseSuccess} from '@zilliqa/zilliqa-js-core';
 
 import Blockchain from '../src/chain';
 
-const mock = new MockAdapter(axios);
+import fetch from 'jest-fetch-mock';
+
 const provider = new HTTPProvider('https://mock.com');
 const wallet = new Wallet(provider);
 for (let i = 0; i < 10; i++) {
@@ -18,7 +17,7 @@ const blockchain = new Blockchain(provider, wallet);
 
 describe('Module: Blockchain', () => {
   afterEach(() => {
-    mock.reset();
+    fetch.mockReset();
   });
 
   it('should sign and send transactions', async () => {
@@ -33,19 +32,34 @@ describe('Module: Blockchain', () => {
       provider,
     );
 
-    mock
-      .onPost()
-      .replyOnce(200, {
-        result: {nonce: 1},
-      })
-      .onPost()
-      .replyOnce(200, {
-        result: {TranID: 'some_hash'},
-      })
-      .onPost()
-      .replyOnce(200, {
-        result: {ID: 'some_hash', receipt: {success: 'true'}},
-      });
+    const responses = [
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: 888,
+          nonce: 1,
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          TranID: 'some_hash',
+          Info: 'Non-contract txn, sent to shard',
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          ID: 'some_hash',
+          receipt: {success: true},
+        },
+      },
+    ].map(res => [JSON.stringify({data: res})] as [string]);
+
+    fetch.mockResponses(...responses);
 
     const {txParams} = await blockchain.createTransaction(tx);
 

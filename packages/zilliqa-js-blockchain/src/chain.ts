@@ -2,8 +2,9 @@ import {Transaction, Wallet} from '@zilliqa/zilliqa-js-account';
 import {
   Provider,
   ZilliqaModule,
-  sign,
   RPCResponse,
+  RPCMethod,
+  sign,
 } from '@zilliqa/zilliqa-js-core';
 
 export default class Blockchain implements ZilliqaModule {
@@ -16,19 +17,19 @@ export default class Blockchain implements ZilliqaModule {
   }
 
   getDSBlock(blockNum: number): Promise<any> {
-    return this.provider.send(BlockchainMethods.GetDSBlock, {});
+    return this.provider.send(RPCMethod.GetDSBlock, {});
   }
 
   getLatestDSBlock(): Promise<any> {
-    return this.provider.send(BlockchainMethods.GetLatestTxBlock, {});
+    return this.provider.send(RPCMethod.GetLatestTxBlock, {});
   }
 
   getTxBlock(blockNum: number): Promise<any> {
-    return this.provider.send(BlockchainMethods.GetTxBlock, {});
+    return this.provider.send(RPCMethod.GetTxBlock, {});
   }
 
   getLatestTxBlock(): Promise<any> {
-    return this.provider.send(BlockchainMethods.GetLatestTxBlock, {});
+    return this.provider.send(RPCMethod.GetLatestTxBlock, {});
   }
 
   /**
@@ -46,10 +47,9 @@ export default class Blockchain implements ZilliqaModule {
     try {
       const {id, ...json} = tx.txParams;
 
-      const response = await this.provider.send(
-        BlockchainMethods.CreateTransaction,
-        [{...json, amount: json.amount.toNumber()}],
-      );
+      const response = await this.provider.send(RPCMethod.CreateTransaction, [
+        {...json, amount: json.amount.toNumber()},
+      ]);
 
       return tx.confirm(response.result.TranID);
     } catch (err) {
@@ -64,6 +64,6 @@ export default class Blockchain implements ZilliqaModule {
    * @returns {Promise<any>}
    */
   getTransaction(txHash: string): Promise<any> {
-    return this.provider.send(BlockchainMethods.GetTransaction);
+    return this.provider.send(RPCMethod.GetTransaction);
   }
 }
