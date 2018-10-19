@@ -1,18 +1,5 @@
 {
-  "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "downlevelIteration": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "forceConsistentCasingInFileNames": true,
-    "lib": ["esnext", "dom"],
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "preserveConstEnums": true,
-    "skipLibCheck": true,
-    "sourceMap": true,
-    "target": "es2018"
-  },
+  "extends": "./tsconfig.base.json",
   "files": [],
   "include": ["./typings/**/*.d.ts"],
   "references": [
