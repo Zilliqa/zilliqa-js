@@ -100,5 +100,8 @@ export const performRPC = async <R, E, D, T = RPCResponse<R, E>>(
     },
   });
 
-  return response.json().then(handler);
+  return response
+    .json()
+    .then(body => body.data)
+    .then(handler);
 };
