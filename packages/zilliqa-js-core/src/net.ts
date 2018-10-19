@@ -91,17 +91,21 @@ export const performRPC = async <R, E, D, T = RPCResponse<R, E>>(
   request: RPCRequest<D>,
   handler: RPCResponseHandler<R, E, T>,
 ): Promise<T> => {
-  const response = await fetch(request.url, {
-    method: (request.options && request.options.method) || 'POST',
-    body: JSON.stringify(request.payload),
-    headers: {
-      ...DEFAULT_HEADERS,
-      ...((request.options && request.options.headers) || {}),
-    },
-  });
+  try {
+    const response = await fetch(request.url, {
+      method: (request.options && request.options.method) || 'POST',
+      body: JSON.stringify(request.payload),
+      headers: {
+        ...DEFAULT_HEADERS,
+        ...((request.options && request.options.headers) || {}),
+      },
+    });
 
-  return response
-    .json()
-    .then(body => body.data)
-    .then(handler);
+    return response
+      .json()
+      .then(body => body.data)
+      .then(handler);
+  } catch (err) {
+    throw err;
+  }
 };
