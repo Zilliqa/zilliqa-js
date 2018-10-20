@@ -8,8 +8,12 @@ branches:
   - /^v[0-9]/
 install:
   - yarn install --pure-lockfile
+  - yarn global add codecov
 script:
+  - yarn build
   - yarn run test
+after_success:
+  - codecov
 cache:
   directories:
   - "$HOME/.yarn-cache"

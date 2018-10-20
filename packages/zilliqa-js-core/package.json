@@ -1,0 +1,21 @@
+{
+  "name": "@zilliqa/zilliqa-js-core",
+  "version": "0.2.0",
+  "description": "Core abstractions that power the zilliqa JS client.",
+  "main": "dist/index.js",
+  "node": "dist/index.js",
+  "browser": "dist/index.umd.js",
+  "module": "dist/index.esm.js",
+  "jsnext:main": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "typings": "dist/index.d.ts",
+  "repository": "https://github.com/Zilliqa/Zilliqa-Javascript-Library",
+  "author": "ian@zilliqa.com",
+  "license": "GPL-3.0",
+  "private": true,
+  "dependencies": {
+    "axios": "^0.18.0",
+    "cross-fetch": "^2.2.2",
+    "mitt": "^1.1.3"
+  }
+}

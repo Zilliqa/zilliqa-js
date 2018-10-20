@@ -1,7 +1,8 @@
 node_modules
-\.DS_STORE
-\.rpt2_cache
-yarn-error\.log
-package-lock.json
-yarn.lock
+.DS_STORE
+.rpt2_cache
+yarn-error.log
 dist
+includes
+.env
+coverage

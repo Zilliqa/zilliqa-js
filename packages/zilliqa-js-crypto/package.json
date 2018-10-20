@@ -1,0 +1,27 @@
+{
+  "name": "@zilliqa/zilliqa-js-crypto",
+  "version": "0.2.0",
+  "description": "Core crypto utilities for signing/verification/hashing Zilliqa transactions.",
+  "main": "dist/index.js",
+  "node": "dist/index.js",
+  "browser": "dist/index.umd.js",
+  "module": "dist/index.esm.js",
+  "jsnext:main": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "typings": "dist/index.d.ts",
+  "repository": "https://github.com/zilliqa/zilliqa-javascript-library/",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "aes-js": "^3.1.1",
+    "bn.js": "^4.11.8",
+    "bsert": "^0.0.4",
+    "elliptic": "^6.4.1",
+    "hash.js": "^1.1.5",
+    "hmac-drbg": "^1.0.1",
+    "pbkdf2": "^3.0.16",
+    "randombytes": "^2.0.6",
+    "scrypt.js": "^0.2.0",
+    "uuid": "^3.3.2",
+    "@zilliqa/zilliqa-js-util": "^0.2.0"
+  }
+}
