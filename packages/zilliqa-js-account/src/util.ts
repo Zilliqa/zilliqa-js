@@ -26,3 +26,4 @@ export const encodeTransaction = (tx: TxParams): Buffer => {
 
   return Buffer.from(encoded, 'hex');
 };
+

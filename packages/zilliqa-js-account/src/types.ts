@@ -29,7 +29,7 @@ export interface TxIncluded {
 }
 
 export interface TxReceipt {
-  success: 'true' | 'false';
+  success: boolean;
   cumulative_gas: number;
 }
 

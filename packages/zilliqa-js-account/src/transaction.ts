@@ -15,7 +15,7 @@ import {encodeTransaction} from './util';
  */
 export default class Transaction implements Signable {
   /**
-   * confirmed
+   * confirm
    *
    * constructs an already-confirmed transaction.
    *
@@ -24,6 +24,18 @@ export default class Transaction implements Signable {
    */
   static confirm(params: TxParams, provider: Provider) {
     return new Transaction(params, provider, TxStatus.Confirmed);
+  }
+
+  /**
+   * reject
+   *
+   * constructs an already-rejected transaction.
+   *
+   * @static
+   * @param {BaseTx} params
+   */
+  static reject(params: TxParams, provider: Provider) {
+    return new Transaction(params, provider, TxStatus.Rejected);
   }
 
   provider: Provider;
