@@ -88,7 +88,7 @@ export default class Transaction implements Signable {
 
   get payload() {
     return {
-      version: 0,
+      version: 1,
       id: this.id,
       to: this.to,
       nonce: this.nonce,
@@ -263,7 +263,7 @@ export default class Transaction implements Signable {
     }
 
     // TODO: regex validation for txHash so we don't get garbage
-    const result = this.provider.send('GetTransaction', [txHash]);
+    const result = this.provider.send('GetTransaction', txHash);
 
     result
       .then((res: RPCResponse<TxIncluded, string>) => {

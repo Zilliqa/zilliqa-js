@@ -1,4 +1,4 @@
-import {Transaction, Wallet} from '@zilliqa/zilliqa-js-account';
+import {Transaction, Wallet, util} from '@zilliqa/zilliqa-js-account';
 import {
   Provider,
   ZilliqaModule,
@@ -16,6 +16,7 @@ export default class Blockchain implements ZilliqaModule {
 
   constructor(provider: Provider, signer: Wallet) {
     this.provider = provider;
+    this.provider.middleware.request.use(util.formatOutgoingTx);
     this.signer = signer;
   }
 
@@ -106,11 +107,10 @@ export default class Blockchain implements ZilliqaModule {
   @sign
   async createTransaction(tx: Transaction): Promise<Transaction> {
     try {
-      const {id, ...json} = tx.txParams;
-
-      const response = await this.provider.send(RPCMethod.CreateTransaction, [
-        {...json, amount: json.amount.toNumber()},
-      ]);
+      const response = await this.provider.send(
+        RPCMethod.CreateTransaction,
+        tx.txParams,
+      );
 
       return tx.confirm(response.result.TranID);
     } catch (err) {
