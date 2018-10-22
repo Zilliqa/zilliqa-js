@@ -57,6 +57,7 @@ export interface RPCBasePayload {
 }
 
 export interface RPCRequestPayload<T> extends RPCBasePayload {
+  method: RPCMethod;
   params: T;
 }
 
@@ -67,7 +68,6 @@ interface RPCRequestOptions {
 
 export interface RPCRequest<T> {
   url: string;
-  method: RPCMethod;
   payload: RPCRequestPayload<T>;
   options?: RPCRequestOptions;
 }
@@ -87,7 +87,7 @@ export type RPCResponseHandler<R, E, T> = (response: RPCResponse<R, E>) => T;
 const DEFAULT_TIMEOUT = 120000;
 const DEFAULT_HEADERS = {'Content-Type': 'application/json'};
 
-export const performRPC = async <R, E, D, T = RPCResponse<R, E>>(
+export const performRPC = async <R, E, D extends any[], T = RPCResponse<R, E>>(
   request: RPCRequest<D>,
   handler: RPCResponseHandler<R, E, T>,
 ): Promise<T> => {

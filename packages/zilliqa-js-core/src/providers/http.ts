@@ -25,8 +25,7 @@ export default class HTTPProvider extends BaseProvider implements Provider {
   buildPayload<T extends any[]>(method: RPCMethod, params: T): RPCRequest<T> {
     return {
       url: this.nodeURL,
-      method,
-      payload: {id: 1, jsonrpc: '2.0', params},
+      payload: {id: 1, jsonrpc: '2.0', method, params},
     };
   }
 

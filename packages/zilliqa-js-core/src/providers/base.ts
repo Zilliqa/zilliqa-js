@@ -6,7 +6,7 @@ const enum MiddlewareType {
   RES,
 }
 
-export default class BaseProvider {
+export default class BaseProvider  {
   protected reqMiddleware: ReqMiddlewareFn[];
   protected resMiddleware: ResMiddlewareFn[];
 
