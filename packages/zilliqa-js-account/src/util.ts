@@ -1,6 +1,11 @@
-import {bytes} from '@zilliqa/zilliqa-js-util';
-import {TxParams} from './types';
-
+import {
+  ReqMiddlewareFn,
+  RPCRequest,
+  RPCRequestPayload,
+  RPCMethod,
+} from '@zilliqa/zilliqa-js-core';
+import {bytes, validation} from '@zilliqa/zilliqa-js-util';
+import {TxReceipt, TxParams} from './types';
 /**
  * encodeTransaction
  *
@@ -27,3 +32,51 @@ export const encodeTransaction = (tx: TxParams): Buffer => {
   return Buffer.from(encoded, 'hex');
 };
 
+export const isTxReceipt = (x: unknown): x is TxReceipt => {
+  return validation.isPlainObject(x) && validation.matchesObject(x, {});
+};
+
+export const isTxParams = (obj: unknown): obj is TxParams => {
+  const validator = {
+    version: [validation.required(validation.isNumber)],
+    to: [validation.required(validation.isAddress)],
+    amount: [validation.required(validation.isBN)],
+    gasPrice: [validation.required(validation.isBN)],
+    gasLimit: [validation.required(validation.isBN)],
+    code: [validation.isString],
+    data: [validation.isString],
+    receipt: [isTxReceipt],
+    nonce: [validation.required(validation.isNumber)],
+    signature: [validation.required(validation.isSignature)],
+  };
+
+  return validation.matchesObject(obj, validator);
+};
+
+export const formatOutgoingTx: ReqMiddlewareFn<[unknown]> = req => {
+  if (
+    req.payload.method === RPCMethod.CreateTransaction &&
+    isTxParams(req.payload.params[0])
+  ) {
+    const txConfig = req.payload.params[0];
+
+    const ret = {
+      ...req,
+      payload: {
+        ...req.payload,
+        params: [
+          {
+            ...txConfig,
+            amount: txConfig.amount.toNumber(),
+            gasLimit: txConfig.gasLimit.toNumber(),
+            gasPrice: txConfig.gasPrice.toNumber(),
+          },
+        ],
+      },
+    };
+
+    return ret;
+  }
+
+  return req;
+};
