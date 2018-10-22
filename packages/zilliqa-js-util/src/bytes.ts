@@ -52,6 +52,31 @@ export const hexToIntArray = (hex: string): number[] => {
 };
 
 /**
+ * compareBytes
+ *
+ * A constant time HMAC comparison function.
+ *
+ * @param {string} a
+ * @param {string} b
+ * @returns {boolean}
+ */
+export const isEqual = (a: string, b: string): boolean => {
+  const bzA = hexToIntArray(a);
+  const bzB = hexToIntArray(b);
+
+  if (bzA.length !== bzB.length) {
+    return false;
+  }
+
+  let result = 0;
+  for (let i = 0; i < bzA.length; i++) {
+    result |= bzA[i] ^ bzB[i];
+  }
+
+  return result === 0;
+};
+
+/**
  * isHex
  *
  * @param {string} str - string to be tested

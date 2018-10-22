@@ -136,7 +136,9 @@ export const decryptPrivateKey = async (
     .update(Buffer.concat([derivedKey.slice(16, 32), ciphertext]), 'hex')
     .digest('hex');
 
-  if (mac.toUpperCase() !== keystore.crypto.mac.toUpperCase()) {
+  // we need to do a byte-by-byte comparison to avoid non-constant time side
+  // channel attacks.
+  if (!bytes.isEqual(mac.toUpperCase(), keystore.crypto.mac.toUpperCase())) {
     return Promise.reject('Failed to decrypt.');
   }
 
