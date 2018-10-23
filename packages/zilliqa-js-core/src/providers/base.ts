@@ -79,7 +79,7 @@ export default class BaseProvider {
     const resFns: ResMiddlewareFn[] = [];
 
     for (const [key, transformers] of this.reqMiddleware.entries()) {
-      if (typeof key === 'string' && key !== '*') {
+      if (typeof key === 'string' && key !== '*' && key === method) {
         reqFns.push(...transformers);
       }
 
@@ -93,7 +93,7 @@ export default class BaseProvider {
     }
 
     for (const [key, transformers] of this.resMiddleware.entries()) {
-      if (typeof key === 'string') {
+      if (typeof key === 'string' && key !== '*' && key === method) {
         resFns.push(...transformers);
       }
 

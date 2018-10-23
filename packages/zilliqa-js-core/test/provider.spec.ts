@@ -62,4 +62,58 @@ describe('HTTPProvider', () => {
 
     expect(res.result).toEqual('SOMETHING');
   });
+
+  it('should select only matching middleware', async () => {
+    const spyReqMiddleware = jest.fn(x => x);
+    const spyResMiddleware = jest.fn(x => x);
+    const spyAllReq = jest.fn(x => x);
+    const spyAllRes = jest.fn(x => x);
+
+    const withMiddleware = new HTTPProvider('https://mock-provider.com');
+    withMiddleware.middleware.request.use(
+      spyReqMiddleware,
+      RPCMethod.GetTransaction,
+    );
+    withMiddleware.middleware.response.use(
+      spyResMiddleware,
+      RPCMethod.GetBalance,
+    );
+
+    withMiddleware.middleware.request.use(
+      spyAllReq,
+      '*',
+    );
+    withMiddleware.middleware.response.use(
+      spyAllRes,
+      '*',
+    );
+
+    const responses = [
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          ID: 'some_hash',
+          receipt: {success: true},
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: 888,
+          nonce: 1,
+        },
+      },
+    ].map(res => [JSON.stringify({data: res})] as [string]);
+
+    fetch.mockResponses(...responses);
+    await withMiddleware.send(RPCMethod.GetTransaction, 'some_hash');
+    await withMiddleware.send(RPCMethod.GetBalance, 'some_hash');
+
+    expect(spyReqMiddleware).toHaveBeenCalledTimes(1);
+    expect(spyResMiddleware).toHaveBeenCalledTimes(1);
+    expect(spyAllReq).toHaveBeenCalledTimes(2);
+    expect(spyAllRes).toHaveBeenCalledTimes(2);
+  });
 });
