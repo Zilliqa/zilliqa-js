@@ -34,7 +34,7 @@ describe('Account', () => {
     const rawTx = {
       version: 1,
       nonce: 1,
-      to: 'another_person',
+      toAddr: 'another_person',
       amount: new BN(888),
       pubKey: account.publicKey,
       gasPrice: new BN(888),
