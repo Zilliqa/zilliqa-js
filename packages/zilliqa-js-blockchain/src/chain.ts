@@ -16,7 +16,10 @@ export default class Blockchain implements ZilliqaModule {
 
   constructor(provider: Provider, signer: Wallet) {
     this.provider = provider;
-    this.provider.middleware.request.use(util.formatOutgoingTx);
+    this.provider.middleware.request.use(
+      util.formatOutgoingTx,
+      RPCMethod.CreateTransaction,
+    );
     this.signer = signer;
   }
 

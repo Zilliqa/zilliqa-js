@@ -53,7 +53,7 @@ export const isTxParams = (obj: unknown): obj is TxParams => {
   return validation.matchesObject(obj, validator);
 };
 
-export const formatOutgoingTx: ReqMiddlewareFn<[unknown]> = req => {
+export const formatOutgoingTx: ReqMiddlewareFn<[TxParams]> = req => {
   if (
     req.payload.method === RPCMethod.CreateTransaction &&
     isTxParams(req.payload.params[0])
