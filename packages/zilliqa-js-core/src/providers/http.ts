@@ -11,17 +11,6 @@ import {composeMiddleware, ReqMiddlewareFn, ResMiddlewareFn} from '../util';
 import {Provider, Subscriber, Subscribers} from '../types';
 
 export default class HTTPProvider extends BaseProvider implements Provider {
-  nodeURL: string;
-
-  constructor(
-    nodeURL: string,
-    reqMiddleware: ReqMiddlewareFn[] = [],
-    resMiddleware: ResMiddlewareFn[] = [],
-  ) {
-    super(reqMiddleware, resMiddleware);
-    this.nodeURL = nodeURL;
-  }
-
   buildPayload<T extends any[]>(method: RPCMethod, params: T): RPCRequest<T> {
     return {
       url: this.nodeURL,
@@ -33,12 +22,13 @@ export default class HTTPProvider extends BaseProvider implements Provider {
     method: RPCMethod,
     ...params: P
   ): Promise<RPCResponse<R, E>> {
-    const tReq = composeMiddleware(...this.reqMiddleware);
-    const tRes = composeMiddleware(...this.resMiddleware);
+    const [tReq, tRes] = this.getMiddleware(method);
+    const reqMiddleware = composeMiddleware(...tReq);
+    const resMiddleware = composeMiddleware(...tRes);
 
-    const req = tReq(this.buildPayload(method, params));
+    const req = reqMiddleware(this.buildPayload(method, params));
 
-    return performRPC(req, tRes);
+    return performRPC(req, resMiddleware);
   }
 
   subscribe(event: string, subscriber: Subscriber): Symbol {

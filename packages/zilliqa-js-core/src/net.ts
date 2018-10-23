@@ -1,4 +1,5 @@
 import 'cross-fetch/polyfill';
+import {WithRequest} from './util';
 import {createError, Errors, ZjsError} from './errors';
 
 /**
@@ -51,12 +52,9 @@ export const enum RPCMethod {
   GetBalance = 'GetBalance',
 }
 
-export interface RPCBasePayload {
+export interface RPCRequestPayload<T> {
   id: 1;
   jsonrpc: '2.0';
-}
-
-export interface RPCRequestPayload<T> extends RPCBasePayload {
   method: RPCMethod;
   params: T;
 }
@@ -72,17 +70,19 @@ export interface RPCRequest<T> {
   options?: RPCRequestOptions;
 }
 
-export interface RPCResponseSuccess<R = any> extends RPCBasePayload {
+export interface RPCResponseSuccess<R = any> {
   result: R;
 }
 
-export interface RPCResponseError<E> extends RPCBasePayload {
+export interface RPCResponseError<E> {
   result: {Error: E};
 }
 
 export type RPCResponse<R, E> = RPCResponseSuccess<R> | RPCResponseError<E>;
 
-export type RPCResponseHandler<R, E, T> = (response: RPCResponse<R, E>) => T;
+export type RPCResponseHandler<R, E, T> = (
+  response: WithRequest<RPCResponse<R, E>>,
+) => T;
 
 const DEFAULT_TIMEOUT = 120000;
 const DEFAULT_HEADERS = {'Content-Type': 'application/json'};
@@ -103,7 +103,7 @@ export const performRPC = async <R, E, D extends any[], T = RPCResponse<R, E>>(
 
     return response
       .json()
-      .then(body => body.data)
+      .then(body => ({result: body.data.result || body.data, req: request}))
       .then(handler);
   } catch (err) {
     throw err;

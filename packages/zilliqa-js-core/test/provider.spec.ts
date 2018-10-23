@@ -2,7 +2,7 @@ import fetch from 'jest-fetch-mock';
 import {RPCMethod} from '../src/net';
 import HTTPProvider from '../src/providers/http';
 
-import {mockReqMiddleware} from './mockMiddleware';
+import {mockReqMiddleware, mockResMiddleware} from './mockMiddleware';
 
 const http = new HTTPProvider('https://mock-provider.com');
 
@@ -19,6 +19,7 @@ describe('HTTPProvider', () => {
     expect(payload).toMatchObject({
       id: 1,
       jsonrpc: '2.0',
+      method: RPCMethod.CreateTransaction,
       params: ['MyParam'],
     });
   });
@@ -44,7 +45,21 @@ describe('HTTPProvider', () => {
     expect(payload).toMatchObject({
       id: 1,
       jsonrpc: '2.0',
+      method: RPCMethod.CreateTransaction,
       params: ['first param', 'I am a test'],
     });
+  });
+
+  it('should use middleware to transform incoming responses', async () => {
+    const withMiddleware = new HTTPProvider('https://mock-provider.com');
+    withMiddleware.middleware.response.use(mockResMiddleware);
+
+    fetch.mockResponseOnce(JSON.stringify({data: 'something'}));
+    const res = await withMiddleware.send(
+      RPCMethod.CreateTransaction,
+      'some param',
+    );
+
+    expect(res.result).toEqual('SOMETHING');
   });
 });

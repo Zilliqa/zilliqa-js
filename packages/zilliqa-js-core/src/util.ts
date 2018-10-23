@@ -1,20 +1,33 @@
-import {RPCRequest, RPCResponse} from './net';
+import {RPCMethod, RPCRequest, RPCResponse} from './net';
+
+export type WithRequest<T, I = any> = T & {req: RPCRequest<I>};
+
+export type Matcher = RPCMethod | '*' | RegExp;
+
 export interface Middleware {
   request: {
-    use: <I, O>(fn: ReqMiddlewareFn<I, O>) => void;
+    use: <I, O>(
+      fn: ReqMiddlewareFn<I, O>,
+      match?: Matcher,
+    ) => void;
   };
   response: {
-    use: <I, O, E>(fn: ResMiddlewareFn<I, O, E>) => void;
+    use: <I, O, E>(
+      fn: ResMiddlewareFn<I, O, E>,
+      match?: Matcher,
+    ) => void;
   };
 }
+
 export type Transformer<I, O> = (payload: I) => O;
+
 export type ReqMiddlewareFn<I = any, O = any> = Transformer<
   RPCRequest<I>,
   RPCRequest<O>
 >;
 export type ResMiddlewareFn<I = any, O = any, E = any> = Transformer<
-  RPCResponse<I, E>,
-  RPCResponse<O, E>
+  WithRequest<RPCResponse<I, E>>,
+  WithRequest<RPCResponse<O, E>>
 >;
 
 export function composeMiddleware<T extends ReqMiddlewareFn[]>(
