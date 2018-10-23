@@ -93,7 +93,11 @@ export const performRPC = async <R, E, D extends any[], T = RPCResponse<R, E>>(
 ): Promise<T> => {
   try {
     const response = await fetch(request.url, {
-      method: (request.options && request.options.method) || 'POST',
+      method: 'POST',
+      cache: 'no-cache',
+      mode: 'cors',
+      redirect: 'follow',
+      referrer: 'no-referrer',
       body: JSON.stringify(request.payload),
       headers: {
         ...DEFAULT_HEADERS,
@@ -103,7 +107,9 @@ export const performRPC = async <R, E, D extends any[], T = RPCResponse<R, E>>(
 
     return response
       .json()
-      .then(body => ({result: body.data.result || body.data, req: request}))
+      .then(body => {
+        return {result: body.result || body, req: request};
+      })
       .then(handler);
   } catch (err) {
     throw err;

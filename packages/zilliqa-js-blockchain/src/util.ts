@@ -28,7 +28,7 @@ export function toTxParams(
   return {
     ...rest,
     version: parseInt(version, 10),
-    to: toAddr,
+    toAddr,
     gasPrice: new BN(gasPrice),
     gasLimit: new BN(gasLimit),
     amount: new BN(amount),

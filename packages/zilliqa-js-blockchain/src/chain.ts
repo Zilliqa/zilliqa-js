@@ -43,7 +43,7 @@ export default class Blockchain implements ZilliqaModule {
    * @returns {Promise<RPCResponse<DsBlockObj, string>>}
    */
   getLatestDSBlock(): Promise<RPCResponse<DsBlockObj, string>> {
-    return this.provider.send(RPCMethod.GetLatestTxBlock);
+    return this.provider.send(RPCMethod.GetLatestDSBlock);
   }
 
   /**

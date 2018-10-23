@@ -19,7 +19,7 @@ export const encodeTransaction = (tx: TxParams): Buffer => {
   let encoded =
     bytes.intToHexArray(tx.version, 64).join('') +
     bytes.intToHexArray(tx.nonce || 0, 64).join('') +
-    tx.to +
+    tx.toAddr +
     tx.pubKey +
     tx.amount.toString('hex', 64) +
     tx.gasPrice.toString('hex', 64) +
@@ -39,7 +39,7 @@ export const isTxReceipt = (x: unknown): x is TxReceipt => {
 export const isTxParams = (obj: unknown): obj is TxParams => {
   const validator = {
     version: [validation.required(validation.isNumber)],
-    to: [validation.required(validation.isAddress)],
+    toAddr: [validation.required(validation.isAddress)],
     amount: [validation.required(validation.isBN)],
     gasPrice: [validation.required(validation.isBN)],
     gasLimit: [validation.required(validation.isBN)],
@@ -67,9 +67,9 @@ export const formatOutgoingTx: ReqMiddlewareFn<[TxParams]> = req => {
         params: [
           {
             ...txConfig,
-            amount: txConfig.amount.toNumber(),
-            gasLimit: txConfig.gasLimit.toNumber(),
-            gasPrice: txConfig.gasPrice.toNumber(),
+            amount: txConfig.amount.toString(),
+            gasLimit: txConfig.gasLimit.toString(),
+            gasPrice: txConfig.gasPrice.toString(),
           },
         ],
       },

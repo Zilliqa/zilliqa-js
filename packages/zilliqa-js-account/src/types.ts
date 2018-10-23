@@ -35,7 +35,7 @@ export interface TxReceipt {
 
 export interface TxParams {
   version: number;
-  to: string;
+  toAddr: string;
   amount: BN;
   gasPrice: BN;
   gasLimit: BN;

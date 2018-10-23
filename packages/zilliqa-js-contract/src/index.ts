@@ -138,7 +138,7 @@ export class Contract {
         new Transaction(
           {
             version: 0,
-            to: NIL_ADDRESS,
+            toAddr: NIL_ADDRESS,
             // amount should be 0.  we don't accept implicitly anymore.
             amount: new BN(0),
             gasPrice,
@@ -193,7 +193,7 @@ export class Contract {
         new Transaction(
           {
             version: 0,
-            to: this.address,
+            toAddr: this.address,
             amount: new BN(0),
             gasPrice,
             gasLimit,

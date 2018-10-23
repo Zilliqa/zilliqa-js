@@ -56,7 +56,7 @@ describe('Contracts', () => {
           receipt: {success: true, cumulative_gas: '1000'},
         },
       },
-    ].map(res => [JSON.stringify({data: res})] as [string]);
+    ].map(res => [JSON.stringify(res)] as [string]);
 
     fetch.mockResponses(...responses);
 
@@ -94,7 +94,7 @@ describe('Contracts', () => {
           Info: 'Non-contract txn, sent to shard',
         },
       },
-    ].map(res => [JSON.stringify({data: res})] as [string]);
+    ].map(res => [JSON.stringify(res)] as [string]);
 
     fetch
       .mockResponses(...responses)
@@ -120,7 +120,7 @@ describe('Contracts', () => {
           Error: 'Mega fail',
         },
       },
-    ].map(res => [JSON.stringify({data: res})] as [string]);
+    ].map(res => [JSON.stringify(res)] as [string]);
 
     fetch.mockResponses(...responses);
 
@@ -167,7 +167,7 @@ describe('Contracts', () => {
           },
         },
       },
-    ].map(res => [JSON.stringify({data: res})] as [string]);
+    ].map(res => [JSON.stringify(res)] as [string]);
 
     fetch.mockResponses(...responses);
 
@@ -240,7 +240,7 @@ describe('Contracts', () => {
           },
         },
       },
-    ].map(res => [JSON.stringify({data: res})] as [string]);
+    ].map(res => [JSON.stringify(res)] as [string]);
 
     fetch.mockResponses(...responses);
 

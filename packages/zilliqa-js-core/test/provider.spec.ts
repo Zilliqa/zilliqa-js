@@ -54,7 +54,7 @@ describe('HTTPProvider', () => {
     const withMiddleware = new HTTPProvider('https://mock-provider.com');
     withMiddleware.middleware.response.use(mockResMiddleware);
 
-    fetch.mockResponseOnce(JSON.stringify({data: 'something'}));
+    fetch.mockResponseOnce(JSON.stringify('something'));
     const res = await withMiddleware.send(
       RPCMethod.CreateTransaction,
       'some param',
@@ -79,14 +79,8 @@ describe('HTTPProvider', () => {
       RPCMethod.GetBalance,
     );
 
-    withMiddleware.middleware.request.use(
-      spyAllReq,
-      '*',
-    );
-    withMiddleware.middleware.response.use(
-      spyAllRes,
-      '*',
-    );
+    withMiddleware.middleware.request.use(spyAllReq, '*');
+    withMiddleware.middleware.response.use(spyAllRes, '*');
 
     const responses = [
       {

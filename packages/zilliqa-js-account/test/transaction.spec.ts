@@ -44,7 +44,7 @@ describe('Transaction', () => {
           receipt: {cumulative_gas: '1000', success: true},
         },
       },
-    ].map(res => [JSON.stringify({data: res})] as [string]);
+    ].map(res => [JSON.stringify(res)] as [string]);
 
     fetch.mockResponses(...responses);
 
@@ -52,7 +52,7 @@ describe('Transaction', () => {
       new Transaction(
         {
           version: 0,
-          to: '0x1234567890123456789012345678901234567890',
+          toAddr: '0x1234567890123456789012345678901234567890',
           amount: new BN(0),
           gasPrice: new BN(1000),
           gasLimit: new BN(1000),
@@ -77,13 +77,11 @@ describe('Transaction', () => {
     fetch
       .once(
         JSON.stringify({
-          data: {
-            id: 1,
-            jsonrpc: '2.0',
-            result: {
-              balance: 888,
-              nonce: 1,
-            },
+          id: 1,
+          jsonrpc: '2.0',
+          result: {
+            balance: 888,
+            nonce: 1,
           },
         }),
       )
@@ -93,7 +91,7 @@ describe('Transaction', () => {
       new Transaction(
         {
           version: 0,
-          to: '0x1234567890123456789012345678901234567890',
+          toAddr: '0x1234567890123456789012345678901234567890',
           amount: new BN(0),
           gasPrice: new BN(1000),
           gasLimit: new BN(1000),
@@ -133,7 +131,7 @@ describe('Transaction', () => {
           receipt: {cumulative_gas: '1000', success: false},
         },
       },
-    ].map(res => [JSON.stringify({data: res})] as [string]);
+    ].map(res => [JSON.stringify(res)] as [string]);
 
     fetch.mockResponses(...responses);
 
@@ -141,7 +139,7 @@ describe('Transaction', () => {
       new Transaction(
         {
           version: 0,
-          to: '0x1234567890123456789012345678901234567890',
+          toAddr: '0x1234567890123456789012345678901234567890',
           amount: new BN(0),
           gasPrice: new BN(1000),
           gasLimit: new BN(1000),

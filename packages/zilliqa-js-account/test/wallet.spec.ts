@@ -52,7 +52,7 @@ describe('Wallet', () => {
       {
         version: 1,
         nonce: 1,
-        to: '0x1234567890123456789012345678901234567890',
+        toAddr: '0x1234567890123456789012345678901234567890',
         amount: new BN(0),
         gasPrice: new BN(1000),
         gasLimit: new BN(1000),
@@ -63,13 +63,11 @@ describe('Wallet', () => {
 
     fetch.once(
       JSON.stringify({
-        data: {
-          id: 1,
-          jsonrpc: '2.0',
-          result: {
-            balance: 888,
-            nonce: 1,
-          },
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: 888,
+          nonce: 1,
         },
       }),
     );
@@ -93,7 +91,7 @@ describe('Wallet', () => {
       {
         version: 1,
         nonce: 1,
-        to: '0x1234567890123456789012345678901234567890',
+        toAddr: '0x1234567890123456789012345678901234567890',
         amount: new BN(0),
         gasPrice: new BN(1000),
         gasLimit: new BN(1000),

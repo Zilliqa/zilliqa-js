@@ -42,7 +42,7 @@ export default class Transaction implements Signable {
 
   // parameters
   private version: number;
-  private to: string;
+  private toAddr: string;
   private amount: BN;
   private gasPrice: BN;
   private gasLimit: BN;
@@ -73,7 +73,7 @@ export default class Transaction implements Signable {
     return {
       version: 0,
       id: this.id,
-      to: this.to,
+      toAddr: this.toAddr,
       nonce: this.nonce,
       pubKey: this.pubKey,
       amount: this.amount,
@@ -90,7 +90,7 @@ export default class Transaction implements Signable {
     return {
       version: 1,
       id: this.id,
-      to: this.to,
+      toAddr: this.toAddr,
       nonce: this.nonce,
       pubKey: this.pubKey,
       amount: this.amount.toNumber(),
@@ -111,7 +111,7 @@ export default class Transaction implements Signable {
     // private members
     this.version = params.version;
     this.id = params.id;
-    this.to = params.to;
+    this.toAddr = params.toAddr;
     this.nonce = params.nonce;
     this.pubKey = params.pubKey;
     this.amount = params.amount;
@@ -240,7 +240,7 @@ export default class Transaction implements Signable {
   private setParams(params: TxParams) {
     this.version = params.version;
     this.id = params.id;
-    this.to = params.to;
+    this.toAddr = params.toAddr;
     this.nonce = params.nonce;
     this.pubKey = params.pubKey;
     this.amount = params.amount;
