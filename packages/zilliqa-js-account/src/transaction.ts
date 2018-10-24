@@ -72,7 +72,6 @@ export default class Transaction implements Signable {
   get txParams(): TxParams {
     return {
       version: 0,
-      id: this.id,
       toAddr: this.toAddr,
       nonce: this.nonce,
       pubKey: this.pubKey,
@@ -88,8 +87,7 @@ export default class Transaction implements Signable {
 
   get payload() {
     return {
-      version: 1,
-      id: this.id,
+      version: 0,
       toAddr: this.toAddr,
       nonce: this.nonce,
       pubKey: this.pubKey,
@@ -110,7 +108,6 @@ export default class Transaction implements Signable {
   ) {
     // private members
     this.version = params.version;
-    this.id = params.id;
     this.toAddr = params.toAddr;
     this.nonce = params.nonce;
     this.pubKey = params.pubKey;
@@ -239,7 +236,6 @@ export default class Transaction implements Signable {
 
   private setParams(params: TxParams) {
     this.version = params.version;
-    this.id = params.id;
     this.toAddr = params.toAddr;
     this.nonce = params.nonce;
     this.pubKey = params.pubKey;

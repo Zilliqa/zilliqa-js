@@ -40,7 +40,6 @@ export interface TxParams {
   gasPrice: BN;
   gasLimit: BN;
 
-  id?: string;
   code?: string;
   data?: string;
   receipt?: TxReceipt;
