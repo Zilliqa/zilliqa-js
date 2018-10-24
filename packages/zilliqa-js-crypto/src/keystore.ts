@@ -4,11 +4,11 @@ import pbkdf2 from 'pbkdf2';
 import scrypt from 'scrypt.js';
 import uuid from 'uuid';
 
-import {bytes} from '@zilliqa/zilliqa-js-util';
+import { bytes } from '@zilliqa/zilliqa-js-util';
 
-import {randomBytes} from './random';
-import {KeystoreV3, KDF, KDFParams} from './types';
-import {getAddressFromPrivateKey} from './util';
+import { randomBytes } from './random';
+import { KeystoreV3, KDF, KDFParams } from './types';
+import { getAddressFromPrivateKey } from './util';
 
 /**
  * getDerivedKey
@@ -21,13 +21,9 @@ import {getAddressFromPrivateKey} from './util';
  *
  * @returns {Promise<Buffer>}
  */
-const getDerivedKey = (
-  key: Buffer,
-  kdf: KDF,
-  params: KDFParams,
-): Promise<Buffer> => {
+const getDerivedKey = (key: Buffer, kdf: KDF, params: KDFParams): Promise<Buffer> => {
   return new Promise((resolve, reject) => {
-    const {n, r, p, dklen} = params;
+    const { n, r, p, dklen } = params;
     const salt = Buffer.from(params.salt);
 
     if (kdf !== 'pbkdf2' && kdf !== 'scrypt') {
@@ -75,18 +71,9 @@ export const encryptPrivateKey = async (
     dklen: 32,
   };
 
-  const derivedKey = await getDerivedKey(
-    Buffer.from(passphrase),
-    kdf,
-    kdfparams,
-  );
-  const cipher = new aes.ModeOfOperation.ctr(
-    derivedKey.slice(0, 16),
-    new aes.Counter(iv),
-  );
-  const ciphertext = Buffer.from(
-    cipher.encrypt(Buffer.from(privateKey, 'hex')),
-  );
+  const derivedKey = await getDerivedKey(Buffer.from(passphrase), kdf, kdfparams);
+  const cipher = new aes.ModeOfOperation.ctr(derivedKey.slice(0, 16), new aes.Counter(iv));
+  const ciphertext = Buffer.from(cipher.encrypt(Buffer.from(privateKey, 'hex')));
 
   return JSON.stringify({
     address,
@@ -103,7 +90,7 @@ export const encryptPrivateKey = async (
         .update(Buffer.concat([derivedKey.slice(16, 32), ciphertext]), 'hex')
         .digest('hex'),
     },
-    id: uuid.v4({random: bytes.hexToIntArray(randomBytes(16))}),
+    id: uuid.v4({ random: bytes.hexToIntArray(randomBytes(16)) }),
     version: 3,
   });
 };
@@ -125,11 +112,7 @@ export const decryptPrivateKey = async (
   const iv = Buffer.from(keystore.crypto.cipherparams.iv, 'hex');
   const kdfparams = keystore.crypto.kdfparams;
 
-  const derivedKey = await getDerivedKey(
-    Buffer.from(passphrase),
-    keystore.crypto.kdf,
-    kdfparams,
-  );
+  const derivedKey = await getDerivedKey(Buffer.from(passphrase), keystore.crypto.kdf, kdfparams);
 
   const mac = hashjs
     .sha256()
@@ -142,10 +125,7 @@ export const decryptPrivateKey = async (
     return Promise.reject('Failed to decrypt.');
   }
 
-  const cipher = new aes.ModeOfOperation.ctr(
-    derivedKey.slice(0, 16),
-    new aes.Counter(iv),
-  );
+  const cipher = new aes.ModeOfOperation.ctr(derivedKey.slice(0, 16), new aes.Counter(iv));
 
   return Buffer.from(cipher.decrypt(ciphertext)).toString('hex');
 };

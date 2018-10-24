@@ -19,8 +19,8 @@ export default {
   ],
   packages: fs
     .readdirSync(packagesPath)
-    .filter(p => fs.lstatSync(path.join(packagesPath, p)).isDirectory())
-    .map(p => {
+    .filter((p) => fs.lstatSync(path.join(packagesPath, p)).isDirectory())
+    .map((p) => {
       const pkgName = path.basename(p);
       const pkgGlobalName = camelcase(pkgName.replace('zilliqa-js', 'zjs'));
       const pkgPath = path.join(packagesPath, p);

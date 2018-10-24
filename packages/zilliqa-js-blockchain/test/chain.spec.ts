@@ -1,7 +1,7 @@
 import BN from 'bn.js';
 
-import {Transaction, Wallet, TxCreated} from '@zilliqa/zilliqa-js-account';
-import {HTTPProvider, RPCResponseSuccess} from '@zilliqa/zilliqa-js-core';
+import { Transaction, Wallet, TxCreated } from '@zilliqa/zilliqa-js-account';
+import { HTTPProvider, RPCResponseSuccess } from '@zilliqa/zilliqa-js-core';
 
 import Blockchain from '../src/chain';
 
@@ -54,14 +54,14 @@ describe('Module: Blockchain', () => {
         jsonrpc: '2.0',
         result: {
           ID: 'some_hash',
-          receipt: {success: true},
+          receipt: { success: true },
         },
       },
-    ].map(res => [JSON.stringify(res)] as [string]);
+    ].map((res) => [JSON.stringify(res)] as [string]);
 
     fetch.mockResponses(...responses);
 
-    const {txParams} = await blockchain.createTransaction(tx);
+    const { txParams } = await blockchain.createTransaction(tx);
 
     expect(txParams).toHaveProperty('signature');
     expect(txParams).toHaveProperty('pubKey');

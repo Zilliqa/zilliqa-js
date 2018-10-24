@@ -8,7 +8,7 @@ import resolve from 'rollup-plugin-node-resolve';
 import typescript2 from 'rollup-plugin-typescript2';
 import webpack from 'webpack';
 import ts from 'typescript';
-import {createLogger, c} from './logger';
+import { createLogger, c } from './logger';
 
 const logPreProcess = createLogger('preprocess');
 const logBundle = createLogger('bundle');
@@ -21,7 +21,7 @@ const logBundle = createLogger('bundle');
  * with rollup due to things like circular dependencies.
  */
 function preProcess() {
-  const modules = project.preprocess.map(mod => {
+  const modules = project.preprocess.map((mod) => {
     return new Promise((resolve, reject) => {
       const compiler = webpack({
         entry: {
@@ -44,9 +44,7 @@ function preProcess() {
           reject(err);
         } else {
           logPreProcess(
-            `Successfully preprocessed ${Object.keys(
-              stats.compilation.assets,
-            ).join(' ,')}`,
+            `Successfully preprocessed ${Object.keys(stats.compilation.assets).join(' ,')}`,
           );
           resolve(stats);
         }
@@ -71,8 +69,8 @@ async function bundle() {
       logBundle(`${logPrefix} creating bundle`);
 
       const externals = project.packages
-        .filter(p => p.name !== pkg.name)
-        .map(p => p.scopedName);
+        .filter((p) => p.name !== pkg.name)
+        .map((p) => p.scopedName);
 
       logBundle(`externals: ${externals}`);
       const bundle = await rollup.rollup({
@@ -104,9 +102,7 @@ async function bundle() {
         ],
         // mark all packages that are not *this* package as external so they don't get included in the bundle
         // include tslib in the bundles since only __decorate is really used by multiple packages (we can figure out a way to deduplicate that later on if need be)
-        external: project.packages
-          .filter(p => p.name !== pkg.name)
-          .map(p => p.scopedName),
+        external: project.packages.filter((p) => p.name !== pkg.name).map((p) => p.scopedName),
       });
 
       //'amd' | 'cjs' | 'system' | 'es' | 'esm' | 'iife' | 'umd'

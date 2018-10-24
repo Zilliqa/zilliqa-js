@@ -1,9 +1,9 @@
 import BN from 'bn.js';
-import {HTTPProvider} from '@zilliqa/zilliqa-js-core';
-import {Account, Wallet} from '@zilliqa/zilliqa-js-account';
-import {Contracts, Contract, ContractStatus} from '../src/index';
-import {abi} from './test.abi';
-import {testContract} from './fixtures';
+import { HTTPProvider } from '@zilliqa/zilliqa-js-core';
+import { Account, Wallet } from '@zilliqa/zilliqa-js-account';
+import { Contracts, Contract, ContractStatus } from '../src/index';
+import { abi } from './test.abi';
+import { testContract } from './fixtures';
 
 const accounts = [new Account(process.env.GENESIS_PRIV_KEY as string)];
 const provider = new HTTPProvider(process.env.HTTP_PROVIDER as string);
@@ -43,7 +43,7 @@ describe('Contract - hello world', () => {
     const state = await contract.getState();
 
     expect(
-      state.filter(v => {
+      state.filter((v) => {
         return v.vname === 'welcome_msg';
       })[0].value,
     ).toEqual('Hello World');

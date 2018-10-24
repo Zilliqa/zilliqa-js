@@ -1,6 +1,6 @@
 import 'cross-fetch/polyfill';
-import {WithRequest} from './util';
-import {createError, Errors, ZjsError} from './errors';
+import { WithRequest } from './util';
+import { createError, Errors, ZjsError } from './errors';
 
 /**
  * TODO: Enable commented-out methods when they are implemented
@@ -75,17 +75,15 @@ export interface RPCResponseSuccess<R = any> {
 }
 
 export interface RPCResponseError<E> {
-  result: {Error: E};
+  result: { Error: E };
 }
 
 export type RPCResponse<R, E> = RPCResponseSuccess<R> | RPCResponseError<E>;
 
-export type RPCResponseHandler<R, E, T> = (
-  response: WithRequest<RPCResponse<R, E>>,
-) => T;
+export type RPCResponseHandler<R, E, T> = (response: WithRequest<RPCResponse<R, E>>) => T;
 
 const DEFAULT_TIMEOUT = 120000;
-const DEFAULT_HEADERS = {'Content-Type': 'application/json'};
+const DEFAULT_HEADERS = { 'Content-Type': 'application/json' };
 
 export const performRPC = async <R, E, D extends any[], T = RPCResponse<R, E>>(
   request: RPCRequest<D>,
@@ -107,8 +105,8 @@ export const performRPC = async <R, E, D extends any[], T = RPCResponse<R, E>>(
 
     return response
       .json()
-      .then(body => {
-        return {result: body.result || body, req: request};
+      .then((body) => {
+        return { result: body.result || body, req: request };
       })
       .then(handler);
   } catch (err) {

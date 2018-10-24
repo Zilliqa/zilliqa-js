@@ -1,20 +1,14 @@
-import Mitt, {Emitter} from 'mitt';
+import Mitt, { Emitter } from 'mitt';
 import BaseProvider from './base';
-import {
-  RPCMethod,
-  RPCRequest,
-  RPCRequestPayload,
-  RPCResponse,
-  performRPC,
-} from '../net';
-import {composeMiddleware, ReqMiddlewareFn, ResMiddlewareFn} from '../util';
-import {Provider, Subscriber, Subscribers} from '../types';
+import { RPCMethod, RPCRequest, RPCRequestPayload, RPCResponse, performRPC } from '../net';
+import { composeMiddleware, ReqMiddlewareFn, ResMiddlewareFn } from '../util';
+import { Provider, Subscriber, Subscribers } from '../types';
 
 export default class HTTPProvider extends BaseProvider implements Provider {
   buildPayload<T extends any[]>(method: RPCMethod, params: T): RPCRequest<T> {
     return {
       url: this.nodeURL,
-      payload: {id: 1, jsonrpc: '2.0', method, params},
+      payload: { id: 1, jsonrpc: '2.0', method, params },
     };
   }
 

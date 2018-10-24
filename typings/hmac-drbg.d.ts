@@ -2,7 +2,7 @@ declare module 'hmac-drbg' {
   import hash from 'hash.js';
 
   interface DRBGOpt {
-    hash: typeof hash[keyof typeof hash]
+    hash: typeof hash[keyof typeof hash];
     entropy: string | Buffer;
     entropyEnc?: 'hex';
     nonce: string | Buffer;
@@ -13,7 +13,12 @@ declare module 'hmac-drbg' {
 
   export default class HmacDRBG {
     constructor(opt: DRBGOpt);
-    reseed(entropy: string | Buffer, entropyEnc: 'hex', add: string | Buffer, addEnc: 'hex'): HmacDRBG;
+    reseed(
+      entropy: string | Buffer,
+      entropyEnc: 'hex',
+      add: string | Buffer,
+      addEnc: 'hex',
+    ): HmacDRBG;
     generate(len: number, enc?: 'hex', add?: string | Buffer, addEnc?: 'hex'): string;
   }
 }

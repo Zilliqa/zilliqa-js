@@ -65,13 +65,13 @@ export const enum Errors {
 export class ZjsError extends Error {
   reason: string = '';
   code: Errors;
-  params: {[key: string]: string};
+  params: { [key: string]: string };
 
   constructor(
     message: string,
     reason: string,
     code: Errors,
-    params: {[key: string]: string} = {},
+    params: { [key: string]: string } = {},
   ) {
     super(message);
     this.reason = reason;
@@ -98,7 +98,7 @@ export const createError = (
   code: Errors = Errors.UNKNOWN_ERROR,
   params: any = {},
 ): ZjsError => {
-  const details = Object.keys(params).map(key => {
+  const details = Object.keys(params).map((key) => {
     try {
       return `${key}=${JSON.stringify(params[key])}`;
     } catch (error) {

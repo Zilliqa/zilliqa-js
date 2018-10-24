@@ -69,12 +69,7 @@ export const sign = (msg: Buffer, key: Buffer, pubkey: Buffer): Signature => {
  *
  * @returns {Signature | null =>}
  */
-export const trySign = (
-  msg: Buffer,
-  prv: BN,
-  k: BN,
-  pubKey: Buffer,
-): Signature | null => {
+export const trySign = (msg: Buffer, prv: BN, k: BN, pubKey: Buffer): Signature | null => {
   if (prv.isZero()) throw new Error('Bad private key.');
 
   if (prv.gte(curve.n)) throw new Error('Bad private key.');
@@ -106,7 +101,7 @@ export const trySign = (
 
   if (s.isZero()) return null;
 
-  return new Signature({r, s});
+  return new Signature({ r, s });
 };
 
 /**
@@ -151,7 +146,7 @@ export const toSignature = (serialised: string): Signature => {
   const r = serialised.slice(0, 64);
   const s = serialised.slice(64);
 
-  return new Signature({r, s});
+  return new Signature({ r, s });
 };
 
 /**

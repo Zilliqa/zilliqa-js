@@ -21,8 +21,8 @@ declare module 'elliptic/lib/elliptic/ec/signature' {
   }
 
   var Signature: {
-    new(opt: Options): Signature;
-    new(data: Buffer): Signature;
+    new (opt: Options): Signature;
+    new (data: Buffer): Signature;
   };
 
   export = Signature;

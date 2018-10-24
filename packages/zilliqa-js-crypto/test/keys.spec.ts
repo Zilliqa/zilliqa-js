@@ -1,4 +1,4 @@
-import {pairs} from './keypairs.fixtures';
+import { pairs } from './keypairs.fixtures';
 import * as crypto from '../src/index';
 
 describe('keypairs', () => {
@@ -10,14 +10,14 @@ describe('keypairs', () => {
   });
 
   it('should recover a public key from a private key', () => {
-    pairs.forEach(({private: priv, public: expected}) => {
+    pairs.forEach(({ private: priv, public: expected }) => {
       const actual = crypto.getPubKeyFromPrivateKey(priv);
       expect(actual).toEqual(crypto.compressPublicKey(expected));
     });
   });
 
   it('should convert a public key to an address', () => {
-    pairs.forEach(({public: pub, digest}) => {
+    pairs.forEach(({ public: pub, digest }) => {
       const expected = digest.slice(24);
       const actual = crypto.getAddressFromPublicKey(pub);
 
@@ -28,9 +28,7 @@ describe('keypairs', () => {
 
   it('should be able to recover an address from a private key', () => {
     const [pair] = pairs;
-    const expected = crypto.getAddressFromPublicKey(
-      crypto.compressPublicKey(pair.public),
-    );
+    const expected = crypto.getAddressFromPublicKey(crypto.compressPublicKey(pair.public));
     const actual = crypto.getAddressFromPrivateKey(pair.private);
 
     expect(actual).toHaveLength(40);
@@ -38,11 +36,9 @@ describe('keypairs', () => {
   });
 
   it('should give the same address for a given public or private key', () => {
-    pairs.forEach(({private: priv, public: pub}) => {
+    pairs.forEach(({ private: priv, public: pub }) => {
       const fromPrivateKey = crypto.getAddressFromPrivateKey(priv);
-      const fromPublicKey = crypto.getAddressFromPublicKey(
-        crypto.compressPublicKey(pub),
-      );
+      const fromPublicKey = crypto.getAddressFromPublicKey(crypto.compressPublicKey(pub));
 
       expect(fromPrivateKey).toHaveLength(40);
       expect(fromPublicKey).toHaveLength(40);

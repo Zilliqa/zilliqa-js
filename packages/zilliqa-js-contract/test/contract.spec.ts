@@ -1,14 +1,14 @@
 import axios from 'axios';
 import BN from 'bn.js';
 
-import {Wallet} from '@zilliqa/zilliqa-js-account';
-import {HTTPProvider} from '@zilliqa/zilliqa-js-core';
+import { Wallet } from '@zilliqa/zilliqa-js-account';
+import { HTTPProvider } from '@zilliqa/zilliqa-js-core';
 
 import fetch from 'jest-fetch-mock';
 
-import {ContractStatus, Contracts} from '../src/index';
-import {abi} from './test.abi';
-import {testContract} from './fixtures';
+import { ContractStatus, Contracts } from '../src/index';
+import { abi } from './test.abi';
+import { testContract } from './fixtures';
 
 const provider = new HTTPProvider('https://mock.com');
 const wallet = new Wallet(provider);
@@ -27,8 +27,8 @@ describe('Contracts', () => {
         type: 'ByStr20',
         value: '0x124567890124567890124567890124567890',
       },
-      {vname: 'name', type: 'String', value: 'NonFungibleToken'},
-      {vname: 'symbol', type: 'String', value: 'NFT'},
+      { vname: 'name', type: 'String', value: 'NonFungibleToken' },
+      { vname: 'symbol', type: 'String', value: 'NFT' },
     ]);
 
     const responses = [
@@ -53,10 +53,10 @@ describe('Contracts', () => {
         jsonrpc: '2.0',
         result: {
           ID: 'some_hash',
-          receipt: {success: true, cumulative_gas: '1000'},
+          receipt: { success: true, cumulative_gas: '1000' },
         },
       },
-    ].map(res => [JSON.stringify(res)] as [string]);
+    ].map((res) => [JSON.stringify(res)] as [string]);
 
     fetch.mockResponses(...responses);
 
@@ -73,8 +73,8 @@ describe('Contracts', () => {
         type: 'ByStr20',
         value: '0x124567890124567890124567890124567890',
       },
-      {vname: 'name', type: 'String', value: 'NonFungibleToken'},
-      {vname: 'symbol', type: 'String', value: 'NFT'},
+      { vname: 'name', type: 'String', value: 'NonFungibleToken' },
+      { vname: 'symbol', type: 'String', value: 'NFT' },
     ]);
 
     const responses = [
@@ -94,11 +94,9 @@ describe('Contracts', () => {
           Info: 'Non-contract txn, sent to shard',
         },
       },
-    ].map(res => [JSON.stringify(res)] as [string]);
+    ].map((res) => [JSON.stringify(res)] as [string]);
 
-    fetch
-      .mockResponses(...responses)
-      .mockRejectOnce(new Error('something bad happened'));
+    fetch.mockResponses(...responses).mockRejectOnce(new Error('something bad happened'));
 
     await expect(contract.deploy(new BN(1000), new BN(1000))).rejects.toThrow();
   });
@@ -120,7 +118,7 @@ describe('Contracts', () => {
           Error: 'Mega fail',
         },
       },
-    ].map(res => [JSON.stringify(res)] as [string]);
+    ].map((res) => [JSON.stringify(res)] as [string]);
 
     fetch.mockResponses(...responses);
 
@@ -131,8 +129,8 @@ describe('Contracts', () => {
           type: 'ByStr20',
           value: '0x124567890124567890124567890124567890',
         },
-        {vname: 'name', type: 'String', value: 'NonFungibleToken'},
-        {vname: 'symbol', type: 'String', value: 'NFT'},
+        { vname: 'name', type: 'String', value: 'NonFungibleToken' },
+        { vname: 'symbol', type: 'String', value: 'NFT' },
       ])
       .deploy(new BN(1000), new BN(1000));
 
@@ -167,7 +165,7 @@ describe('Contracts', () => {
           },
         },
       },
-    ].map(res => [JSON.stringify(res)] as [string]);
+    ].map((res) => [JSON.stringify(res)] as [string]);
 
     fetch.mockResponses(...responses);
 
@@ -178,8 +176,8 @@ describe('Contracts', () => {
           type: 'ByStr20',
           value: '0x124567890124567890124567890124567890',
         },
-        {vname: 'name', type: 'String', value: 'NonFungibleToken'},
-        {vname: 'symbol', type: 'String', value: 'NFT'},
+        { vname: 'name', type: 'String', value: 'NonFungibleToken' },
+        { vname: 'symbol', type: 'String', value: 'NFT' },
       ])
       .deploy(new BN(1000), new BN(1000));
 
@@ -240,7 +238,7 @@ describe('Contracts', () => {
           },
         },
       },
-    ].map(res => [JSON.stringify(res)] as [string]);
+    ].map((res) => [JSON.stringify(res)] as [string]);
 
     fetch.mockResponses(...responses);
 
@@ -251,17 +249,17 @@ describe('Contracts', () => {
           type: 'ByStr20',
           value: '0x124567890124567890124567890124567890',
         },
-        {vname: 'name', type: 'String', value: 'NonFungibleToken'},
-        {vname: 'symbol', type: 'String', value: 'NFT'},
+        { vname: 'name', type: 'String', value: 'NonFungibleToken' },
+        { vname: 'symbol', type: 'String', value: 'NFT' },
       ])
       .deploy(new BN(1000), new BN(1000));
 
     const callTx = await contract.call('myTransition', [
-      {vname: 'param_1', type: 'String', value: 'hello'},
-      {vname: 'param_2', type: 'String', value: 'world'},
+      { vname: 'param_1', type: 'String', value: 'hello' },
+      { vname: 'param_2', type: 'String', value: 'world' },
     ]);
 
-    const {receipt} = callTx.txParams;
+    const { receipt } = callTx.txParams;
 
     expect(receipt).toBeDefined;
     expect(receipt && receipt.success).toEqual(true);

@@ -13,4 +13,4 @@ export function createLogger(name: string): typeof log {
   return logger;
 }
 
-export {chalk as c};
+export { chalk as c };

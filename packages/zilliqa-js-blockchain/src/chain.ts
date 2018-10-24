@@ -1,14 +1,8 @@
-import {Transaction, Wallet, util} from '@zilliqa/zilliqa-js-account';
-import {
-  Provider,
-  ZilliqaModule,
-  RPCResponse,
-  RPCMethod,
-  sign,
-} from '@zilliqa/zilliqa-js-core';
+import { Transaction, Wallet, util } from '@zilliqa/zilliqa-js-account';
+import { Provider, ZilliqaModule, RPCResponse, RPCMethod, sign } from '@zilliqa/zilliqa-js-core';
 
-import {DsBlockObj, BlockList, TxBlockObj, TransactionObj} from './types';
-import {isError, toTxParams} from './util';
+import { DsBlockObj, BlockList, TxBlockObj, TransactionObj } from './types';
+import { isError, toTxParams } from './util';
 
 export default class Blockchain implements ZilliqaModule {
   signer: Wallet;
@@ -16,10 +10,7 @@ export default class Blockchain implements ZilliqaModule {
 
   constructor(provider: Provider, signer: Wallet) {
     this.provider = provider;
-    this.provider.middleware.request.use(
-      util.formatOutgoingTx,
-      RPCMethod.CreateTransaction,
-    );
+    this.provider.middleware.request.use(util.formatOutgoingTx, RPCMethod.CreateTransaction);
     this.signer = signer;
   }
 
@@ -110,10 +101,7 @@ export default class Blockchain implements ZilliqaModule {
   @sign
   async createTransaction(tx: Transaction): Promise<Transaction> {
     try {
-      const response = await this.provider.send(
-        RPCMethod.CreateTransaction,
-        tx.txParams,
-      );
+      const response = await this.provider.send(RPCMethod.CreateTransaction, tx.txParams);
 
       return tx.confirm(response.result.TranID);
     } catch (err) {
@@ -134,9 +122,7 @@ export default class Blockchain implements ZilliqaModule {
    */
   async getTransaction(txHash: string): Promise<Transaction> {
     try {
-      const response = await this.provider.send<TransactionObj>(
-        RPCMethod.GetTransaction,
-      );
+      const response = await this.provider.send<TransactionObj>(RPCMethod.GetTransaction);
 
       if (isError(response)) {
         return Promise.reject(response.result.Error);
