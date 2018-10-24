@@ -1,11 +1,11 @@
-import {Signer, Provider, RPCResponse} from '@zilliqa/zilliqa-js-core';
+import { Signer, Provider, RPCResponse } from '@zilliqa/zilliqa-js-core';
 import * as zcrypto from '@zilliqa/zilliqa-js-crypto';
 
 import Account from './account';
 import Transaction from './transaction';
 
 export default class Wallet extends Signer {
-  accounts: {[address: string]: Account} = {};
+  accounts: { [address: string]: Account } = {};
   defaultAccount?: Account;
   provider: Provider;
 
@@ -21,7 +21,7 @@ export default class Wallet extends Signer {
     if (accounts.length) {
       this.accounts = accounts.reduce(
         (acc, account) => {
-          return {...acc, [account.address]: account};
+          return { ...acc, [account.address]: account };
         },
         {} as any,
       );
@@ -43,7 +43,7 @@ export default class Wallet extends Signer {
     const privateKey = zcrypto.randomBytes(32);
     const newAccount = new Account(privateKey);
 
-    this.accounts = {...this.accounts, [newAccount.address]: newAccount};
+    this.accounts = { ...this.accounts, [newAccount.address]: newAccount };
 
     if (!this.defaultAccount) {
       this.defaultAccount = newAccount;
@@ -62,7 +62,7 @@ export default class Wallet extends Signer {
    */
   addByPrivateKey(privateKey: string): string {
     const newAccount = new Account(privateKey);
-    this.accounts = {...this.accounts, [newAccount.address]: newAccount};
+    this.accounts = { ...this.accounts, [newAccount.address]: newAccount };
 
     if (!this.defaultAccount) {
       this.defaultAccount = newAccount;
@@ -84,7 +84,7 @@ export default class Wallet extends Signer {
    */
   async addByKeystore(keystore: string, passphrase: string): Promise<string> {
     const newAccount = await Account.fromFile(keystore, passphrase);
-    this.accounts = {...this.accounts, [newAccount.address]: newAccount};
+    this.accounts = { ...this.accounts, [newAccount.address]: newAccount };
 
     if (!this.defaultAccount) {
       this.defaultAccount = newAccount;
@@ -103,11 +103,7 @@ export default class Wallet extends Signer {
    * @param {KDF} kdf='scrypt'
    * @returns {Promise<string>}
    */
-  export(
-    address: string,
-    passphrase: string,
-    kdf: zcrypto.KDF = 'scrypt',
-  ): Promise<string> {
+  export(address: string, passphrase: string, kdf: zcrypto.KDF = 'scrypt'): Promise<string> {
     if (!this.accounts[address]) {
       throw new Error(`No account with address ${address} exists`);
     }
@@ -126,7 +122,7 @@ export default class Wallet extends Signer {
    */
   remove(address: string): boolean {
     if (this.accounts[address]) {
-      const {[address]: toRemove, ...rest} = this.accounts;
+      const { [address]: toRemove, ...rest } = this.accounts;
 
       this.accounts = rest;
       return true;
@@ -172,9 +168,7 @@ export default class Wallet extends Signer {
    */
   async signWith(tx: Transaction, account: string): Promise<Transaction> {
     if (!this.accounts[account]) {
-      throw new Error(
-        'The selected account does not exist on this Wallet instance.',
-      );
+      throw new Error('The selected account does not exist on this Wallet instance.');
     }
 
     try {
@@ -185,7 +179,7 @@ export default class Wallet extends Signer {
         throw new Error('Could not get nonce');
       }
 
-      const withNonce = tx.map(txObj => {
+      const withNonce = tx.map((txObj) => {
         return {
           ...txObj,
           nonce: balance.result.nonce + 1,
@@ -193,7 +187,7 @@ export default class Wallet extends Signer {
         };
       });
 
-      return withNonce.map(txObj => {
+      return withNonce.map((txObj) => {
         // @ts-ignore
         return {
           ...txObj,

@@ -11,11 +11,7 @@ import BN from 'bn.js';
 
 declare namespace Elliptic {
   type CurveTypes = 'short' | 'edwards' | 'mont';
-  type PrivateKey =
-    | string
-    | Buffer
-    | {x: Buffer; y: Buffer}
-    | {x: string; y: string};
+  type PrivateKey = string | Buffer | { x: Buffer; y: Buffer } | { x: string; y: string };
 
   interface Curve {
     type: CurveTypes;
@@ -48,7 +44,7 @@ declare namespace Elliptic {
     // _follow_ mandatory ones.
     getPublic(compact: boolean, enc: string): string;
     getPrivate(enc: string): Array<number>;
-    validate(): {result: boolean; reason: string | null};
+    validate(): { result: boolean; reason: string | null };
   }
 
   export function ec(curve: string): EC;

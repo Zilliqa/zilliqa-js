@@ -1,5 +1,5 @@
 import BN from 'bn.js';
-import {RPCMethod, HTTPProvider} from '@zilliqa/zilliqa-js-core';
+import { RPCMethod, HTTPProvider } from '@zilliqa/zilliqa-js-core';
 
 import Transaction from '../src/transaction';
 import Wallet from '../src/wallet';
@@ -41,10 +41,10 @@ describe('Transaction', () => {
         jsonrpc: '2.0',
         result: {
           ID: 'some_hash',
-          receipt: {cumulative_gas: '1000', success: true},
+          receipt: { cumulative_gas: '1000', success: true },
         },
       },
-    ].map(res => [JSON.stringify(res)] as [string]);
+    ].map((res) => [JSON.stringify(res)] as [string]);
 
     fetch.mockResponses(...responses);
 
@@ -60,10 +60,7 @@ describe('Transaction', () => {
         provider,
       ),
     );
-    const response = await provider.send(
-      RPCMethod.CreateTransaction,
-      pending.txParams,
-    );
+    const response = await provider.send(RPCMethod.CreateTransaction, pending.txParams);
     const confirmed = await pending.confirm('some_hash');
 
     const state = confirmed.txParams;
@@ -99,9 +96,7 @@ describe('Transaction', () => {
       ),
     );
 
-    await expect(
-      provider.send(RPCMethod.CreateTransaction, tx.txParams),
-    ).rejects.toThrow();
+    await expect(provider.send(RPCMethod.CreateTransaction, tx.txParams)).rejects.toThrow();
   });
 
   it('should not reject the promise if receipt.success === false', async () => {
@@ -127,10 +122,10 @@ describe('Transaction', () => {
         jsonrpc: '2.0',
         result: {
           ID: 'some_hash',
-          receipt: {cumulative_gas: '1000', success: false},
+          receipt: { cumulative_gas: '1000', success: false },
         },
       },
-    ].map(res => [JSON.stringify(res)] as [string]);
+    ].map((res) => [JSON.stringify(res)] as [string]);
 
     fetch.mockResponses(...responses);
 
@@ -150,8 +145,6 @@ describe('Transaction', () => {
     const res = await provider.send(RPCMethod.CreateTransaction, tx.txParams);
     const rejected = await tx.confirm(res.result.TranID);
 
-    await expect(
-      rejected.txParams.receipt && rejected.txParams.receipt.success,
-    ).toEqual(false);
+    await expect(rejected.txParams.receipt && rejected.txParams.receipt.success).toEqual(false);
   });
 });

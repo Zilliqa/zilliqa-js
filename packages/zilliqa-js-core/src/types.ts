@@ -1,6 +1,6 @@
-import {Emitter} from 'mitt';
-import {RPCRequest, RPCResponse} from './net';
-import {Middleware} from './util';
+import { Emitter } from 'mitt';
+import { RPCRequest, RPCResponse } from './net';
+import { Middleware } from './util';
 
 export type Subscriber = (event: any) => void;
 export type Subscribers = Map<SubscriptionToken, Subscriber>;
@@ -10,10 +10,7 @@ export interface Provider {
   middleware: Middleware;
   // TODO: strict typing when we have a better idea of how to generalise the
   // payloads sent to lookup nodes - protobuf?
-  send<R = any, E = string>(
-    method: string,
-    ...params: any[]
-  ): Promise<RPCResponse<R, E>>;
+  send<R = any, E = string>(method: string, ...params: any[]): Promise<RPCResponse<R, E>>;
   subscribe?(event: string, subscriber: Subscriber): Symbol;
   unsubscribe?(token: Symbol): void;
 }

@@ -1,6 +1,6 @@
-import {RPCMethod} from '../net';
-import {Provider} from '../types';
-import {Matcher, ReqMiddlewareFn, ResMiddlewareFn} from '../util';
+import { RPCMethod } from '../net';
+import { Provider } from '../types';
+import { Matcher, ReqMiddlewareFn, ResMiddlewareFn } from '../util';
 
 const enum MiddlewareType {
   REQ,
@@ -72,9 +72,7 @@ export default class BaseProvider {
    * @param {Matcher} match
    * @returns {[ReqMiddlewareFn[], ResMiddlewareFn[]]}
    */
-  protected getMiddleware(
-    method: RPCMethod,
-  ): [ReqMiddlewareFn[], ResMiddlewareFn[]] {
+  protected getMiddleware(method: RPCMethod): [ReqMiddlewareFn[], ResMiddlewareFn[]] {
     const reqFns: ReqMiddlewareFn[] = [];
     const resFns: ResMiddlewareFn[] = [];
 

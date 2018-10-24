@@ -1,7 +1,7 @@
 import elliptic from 'elliptic';
 import hashjs from 'hash.js';
 
-import {randomBytes} from './random';
+import { randomBytes } from './random';
 import * as schnorr from './schnorr';
 
 const NUM_BYTES = 32;
@@ -76,6 +76,6 @@ export const getAddressFromPublicKey = (publicKey: string) => {
  */
 export const verifyPrivateKey = (privateKey: string): boolean => {
   const keyPair = secp256k1.keyFromPrivate(privateKey, 'hex');
-  const {result} = keyPair.validate();
+  const { result } = keyPair.validate();
   return result;
 };

@@ -4,8 +4,8 @@ import {
   RPCRequestPayload,
   RPCMethod,
 } from '@zilliqa/zilliqa-js-core';
-import {bytes, validation} from '@zilliqa/zilliqa-js-util';
-import {TxReceipt, TxParams} from './types';
+import { bytes, validation } from '@zilliqa/zilliqa-js-util';
+import { TxReceipt, TxParams } from './types';
 /**
  * encodeTransaction
  *
@@ -53,11 +53,8 @@ export const isTxParams = (obj: unknown): obj is TxParams => {
   return validation.matchesObject(obj, validator);
 };
 
-export const formatOutgoingTx: ReqMiddlewareFn<[TxParams]> = req => {
-  if (
-    req.payload.method === RPCMethod.CreateTransaction &&
-    isTxParams(req.payload.params[0])
-  ) {
+export const formatOutgoingTx: ReqMiddlewareFn<[TxParams]> = (req) => {
+  if (req.payload.method === RPCMethod.CreateTransaction && isTxParams(req.payload.params[0])) {
     const txConfig = req.payload.params[0];
 
     const ret = {

@@ -42,19 +42,12 @@ export default class Account {
    * @param {kdf} 'pbkdf2' | 'scrypt'
    * @returns {Promise<string>}
    */
-  async toFile(
-    passphrase: string,
-    kdf: 'pbkdf2' | 'scrypt' = 'scrypt',
-  ): Promise<string> {
+  async toFile(passphrase: string, kdf: 'pbkdf2' | 'scrypt' = 'scrypt'): Promise<string> {
     if (!passphrase || !passphrase.length) {
       throw new Error('Passphrase cannot have a length of 0');
     }
 
-    const keystore = await zcrypto.encryptPrivateKey(
-      kdf,
-      this.privateKey,
-      passphrase,
-    );
+    const keystore = await zcrypto.encryptPrivateKey(kdf, this.privateKey, passphrase);
 
     return keystore;
   }

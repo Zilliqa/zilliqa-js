@@ -1,4 +1,5 @@
 const baseConfig = require('./jest.config');
-module.exports = { ...baseConfig,
+module.exports = {
+  ...baseConfig,
   testMatch: ['<rootDir>/packages/**/test/*.ispec.ts'],
-}
+};

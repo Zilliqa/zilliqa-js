@@ -1,11 +1,11 @@
 import BN from 'bn.js';
 
-import {Provider, RPCResponse, Signable} from '@zilliqa/zilliqa-js-core';
-import {getAddressFromPublicKey} from '@zilliqa/zilliqa-js-crypto';
-import {types} from '@zilliqa/zilliqa-js-util';
+import { Provider, RPCResponse, Signable } from '@zilliqa/zilliqa-js-core';
+import { getAddressFromPublicKey } from '@zilliqa/zilliqa-js-crypto';
+import { types } from '@zilliqa/zilliqa-js-util';
 
-import {TxParams, TxReceipt, TxStatus, TxIncluded} from './types';
-import {encodeTransaction} from './util';
+import { TxParams, TxReceipt, TxStatus, TxIncluded } from './types';
+import { encodeTransaction } from './util';
 
 /**
  * Transaction
@@ -101,11 +101,7 @@ export default class Transaction implements Signable {
     };
   }
 
-  constructor(
-    params: TxParams,
-    provider: Provider,
-    status: TxStatus = TxStatus.Initialised,
-  ) {
+  constructor(params: TxParams, provider: Provider, status: TxStatus = TxStatus.Initialised) {
     // private members
     this.version = params.version;
     this.toAddr = params.toAddr;
@@ -205,9 +201,7 @@ export default class Transaction implements Signable {
       const token = setTimeout(() => {
         this.status = TxStatus.Rejected;
         reject(
-          new Error(
-            'The transaction is taking unusually long to be confirmed. It may be lost.',
-          ),
+          new Error('The transaction is taking unusually long to be confirmed. It may be lost.'),
         );
       }, timeout);
 
@@ -270,14 +264,12 @@ export default class Transaction implements Signable {
           this.id = res.result['ID'];
           this.receipt = res.result.receipt;
           this.status =
-            this.receipt && this.receipt.success
-              ? TxStatus.Confirmed
-              : TxStatus.Rejected;
+            this.receipt && this.receipt.success ? TxStatus.Confirmed : TxStatus.Rejected;
           cancelTimeout();
           resolve(this);
         }
       })
-      .catch(err => {
+      .catch((err) => {
         cancelTimeout();
         this.status = TxStatus.Rejected;
         reject(err);

@@ -1,4 +1,4 @@
-import {randomBytes} from './random';
+import { randomBytes } from './random';
 import * as schnorr from './schnorr';
 
 const NUM_BYTES = 32;
@@ -19,16 +19,8 @@ export const generatePrivateKey = (): string => {
  *
  * @returns {string} the signature
  */
-export const sign = (
-  msg: Buffer,
-  privateKey: string,
-  pubKey: string,
-): string => {
-  const sig = schnorr.sign(
-    msg,
-    Buffer.from(privateKey, 'hex'),
-    Buffer.from(pubKey, 'hex'),
-  );
+export const sign = (msg: Buffer, privateKey: string, pubKey: string): string => {
+  const sig = schnorr.sign(msg, Buffer.from(privateKey, 'hex'), Buffer.from(pubKey, 'hex'));
 
   let r = sig.r.toString('hex');
   let s = sig.s.toString('hex');
@@ -42,7 +34,7 @@ export const sign = (
   return r + s;
 };
 
-export {schnorr};
+export { schnorr };
 export * from './util';
 export * from './keystore';
 export * from './random';

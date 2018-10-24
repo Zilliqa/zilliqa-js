@@ -1,4 +1,4 @@
-import {Signable, ZilliqaModule} from '../types';
+import { Signable, ZilliqaModule } from '../types';
 
 /**
  * sign
@@ -11,11 +11,7 @@ import {Signable, ZilliqaModule} from '../types';
  * @param {PropertyDescriptor} descriptor
  * @returns {PropertyDescriptor | undefined}
  */
-export const sign = <T, K extends keyof T>(
-  target: T,
-  key: K,
-  descriptor: PropertyDescriptor,
-) => {
+export const sign = <T, K extends keyof T>(target: T, key: K, descriptor: PropertyDescriptor) => {
   const original = descriptor.value;
 
   async function interceptor(this: ZilliqaModule, arg: Signable) {

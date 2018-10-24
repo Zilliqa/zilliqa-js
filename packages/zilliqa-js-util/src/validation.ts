@@ -32,7 +32,7 @@ export const isString = (x: unknown): x is string => {
   return typeof x === 'string';
 };
 
-export const isPlainObject = (x: unknown): x is {[key: string]: any} => {
+export const isPlainObject = (x: unknown): x is { [key: string]: any } => {
   if (typeof x === 'object' && x !== null) {
     const proto = Object.getPrototypeOf(x);
     return proto === Object.prototype || proto === null;
@@ -59,7 +59,7 @@ export const required = <T extends Function>(fn: T): Validator => {
 
 export const matchesObject = <T extends Object>(
   x: unknown,
-  test: {[key: string]: Validator[]},
+  test: { [key: string]: Validator[] },
 ): x is T => {
   if (isPlainObject(x)) {
     for (var key in test) {
@@ -74,11 +74,9 @@ export const matchesObject = <T extends Object>(
           continue;
         }
 
-        if (typeof test[key][i] !== 'function')
-          throw new Error('Validator is not a function');
+        if (typeof test[key][i] !== 'function') throw new Error('Validator is not a function');
 
-        if (!test[key][i](x[key]))
-          throw new Error('Validation failed for ' + key);
+        if (!test[key][i](x[key])) throw new Error('Validation failed for ' + key);
       }
     }
   }

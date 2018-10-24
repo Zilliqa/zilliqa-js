@@ -1,4 +1,4 @@
-import {Provider, HTTPProvider} from '@zilliqa/zilliqa-js-core';
+import { Provider, HTTPProvider } from '@zilliqa/zilliqa-js-core';
 import Wallet from '../src/wallet';
 
 export const createWallet = (

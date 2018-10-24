@@ -498,7 +498,7 @@ declare module 'bn.js' {
     /**
      * @description Extended GCD results `({ a: ..., b: ..., gcd: ... })`
      */
-    egcd(b: BN): {a: BN; b: BN; gcd: BN};
+    egcd(b: BN): { a: BN; b: BN; gcd: BN };
 
     /**
      * @description inverse `a` modulo `b`
