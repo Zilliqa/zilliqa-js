@@ -65,7 +65,6 @@ describe('Module: Blockchain', () => {
 
     expect(txParams).toHaveProperty('signature');
     expect(txParams).toHaveProperty('pubKey');
-    expect(txParams.id).toEqual('some_hash');
     expect(tx.isConfirmed()).toEqual(true);
   });
 });

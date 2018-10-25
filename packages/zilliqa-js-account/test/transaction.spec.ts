@@ -69,7 +69,6 @@ describe('Transaction', () => {
     const state = confirmed.txParams;
 
     expect(confirmed.isConfirmed()).toBeTruthy();
-    expect(state.id).toEqual('some_hash');
     expect(state.receipt).toEqual({success: true, cumulative_gas: '1000'});
   });
 
