@@ -75,7 +75,7 @@ export interface RPCResponseSuccess<R = any> {
 }
 
 export interface RPCResponseError<E> {
-  result: { Error: E };
+  result: { error: E; Error: E };
 }
 
 export type RPCResponse<R, E> = RPCResponseSuccess<R> | RPCResponseError<E>;
