@@ -12,9 +12,15 @@
   "repository": "https://github.com/Zilliqa/Zilliqa-Javascript-Library",
   "license": "GPL-3.0",
   "dependencies": {
-    "bn.js": "^4.11.8",
     "@zilliqa/zilliqa-js-core": "^0.2.0",
     "@zilliqa/zilliqa-js-crypto": "^0.2.0",
-    "@zilliqa/zilliqa-js-util": "^0.2.0"
+    "@zilliqa/zilliqa-js-util": "^0.2.0",
+    "bip39": "^2.5.0",
+    "bn.js": "^4.11.8",
+    "hdkey": "^1.1.0"
+  },
+  "devDependencies": {
+    "@types/bip39": "^2.4.0",
+    "@types/hdkey": "^0.7.0"
   }
 }

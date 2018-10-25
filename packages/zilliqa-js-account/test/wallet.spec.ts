@@ -28,7 +28,29 @@ describe('Wallet', () => {
     expect(Object.keys(wallet.accounts).length).toEqual(10);
   });
 
-  // it('should be able to bootstrap from a mnemonic', () => {});
+  it('should be able to bootstrap from a mnemonic', async () => {
+    const mnemonic = 'cart hat drip lava jelly keep device journey bean mango rocket festival';
+    const wallet = new Wallet(provider);
+    const addresses = [];
+    for (let i = 0; i < 10; i++) {
+      const address = await wallet.addByMnemonic(mnemonic, i);
+      addresses.push(address);
+    }
+    expect(Object.keys(wallet.accounts).length).toEqual(10);
+    expect(Object.keys(wallet.accounts).sort()).toEqual(addresses.sort());
+    expect(Object.keys(wallet.accounts).sort()).toEqual([
+      '01d12dc972d0c5c8c32d356944926cd43f627efc',
+      '02346211a65964e35b05adae342ff966baec7ba4',
+      '24729a40ebb8b42550276b44a3a7dc81645c972d',
+      '3093240469df6ae2c2a25883b550f0677a689da4',
+      '546c5dda129fb0d352c5de66f32d8d0e4bc89041',
+      '64f0d859455b45947c6a8c22ce73bf3ec90fdb9d',
+      '6ecdec7d36071ae28f00b4067167c3a75c87be20',
+      'cd1eb2531cc4abf0b19a5163c2fa16b1cffebe87',
+      'd836fcdaa723c7ba2daba0b1898060b8dffae592',
+      'ef6f3e6c15bd0ced75a857795a5e86bd4ff50c78',
+    ]);
+  });
 
   it('should be able to export a json keystore', async () => {
     const [walletA, [address]] = createWallet(1);

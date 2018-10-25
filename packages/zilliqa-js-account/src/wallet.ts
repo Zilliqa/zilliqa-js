@@ -1,3 +1,5 @@
+import bip39 from 'bip39';
+import hdkey from 'hdkey';
 import { Signer, Provider, RPCResponse } from '@zilliqa/zilliqa-js-core';
 import * as zcrypto from '@zilliqa/zilliqa-js-crypto';
 
@@ -91,6 +93,24 @@ export default class Wallet extends Signer {
     }
 
     return newAccount.address;
+  }
+
+  private isValidMnemonic(phrase: string): boolean {
+    if (phrase.trim().split(/\s+/g).length < 12) {
+      return false;
+    }
+    return bip39.validateMnemonic(phrase);
+  }
+
+  async addByMnemonic(phrase: string, index: number = 0): Promise<string> {
+    if (!this.isValidMnemonic(phrase)) {
+      throw new Error(`Invalid mnemonic phrase: ${phrase}`);
+    }
+    const seed = bip39.mnemonicToSeed(phrase);
+    const hdKey = hdkey.fromMasterSeed(seed);
+    const childKey = hdKey.derive(`m/44'/8888'/0'/0/${index}`);
+    const privateKey = childKey.privateKey.toString('hex');
+    return this.addByPrivateKey(privateKey);
   }
 
   /**
