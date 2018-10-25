@@ -1,3 +1,22 @@
+export interface BlockchainInfo {
+  NumPeers: number;
+  NumTxBlocks: string;
+  NumDSBlocks: string;
+  NumTransactions: string;
+  TransactionRate: number;
+  TxBlockRate: number;
+  DSBlockRate: number;
+  CurrentMiniEpoch: string;
+  CurrentDSEpoch: string;
+  NumTxnsDSEpoch: string;
+  NumTxnsTxEpoch: number;
+  ShardingStructure: ShardingStructure;
+}
+
+export interface ShardingStructure {
+  NumPeers: number[];
+}
+
 export interface TransactionObj {
   ID: string;
   version: string;
