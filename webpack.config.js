@@ -15,10 +15,7 @@ const UglifyJs = require('uglifyjs-webpack-plugin');
 
 const baseConfig = {
   entry: {
-    zilliqa: [
-      'whatwg-fetch',
-      './src/index.ts'
-    ],
+    zilliqa: ['whatwg-fetch', './src/index.ts'],
   },
   mode: 'production',
   module: {
@@ -64,10 +61,10 @@ const clientConfig = {
   output: {
     libraryTarget: 'umd',
     library: 'zilliqa.js',
-    filename: '[name].browser.js',
+    filename: '[name].client.js',
     path: path.join(__dirname, 'dist'),
   },
-}
+};
 
 const serverConfig = {
   ...baseConfig,
@@ -83,7 +80,7 @@ const serverConfig = {
     library: 'zilliqa.js',
     libraryTarget: 'commonjs2',
     path: path.join(__dirname, 'dist'),
-  }
-}
+  },
+};
 
-module.exports = [baseConfig, serverConfig];
+module.exports = [serverConfig, clientConfig];
