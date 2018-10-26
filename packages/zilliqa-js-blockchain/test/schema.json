@@ -232,11 +232,11 @@
     "TxBlockHeader": {
       "type": "object",
       "properties": {
-        "type": {
+        "Type": {
           "enum": [0, 1],
           "type": "number"
         },
-        "version": {
+        "Version": {
           "type": "number"
         },
         "GasLimit": {
@@ -245,22 +245,34 @@
         "GasUsed": {
           "type": "string"
         },
-        "MinerPubKey": {
+        "Rewards": {
           "type": "string"
         },
-        "NumMicroBlocks": {
-          "type": "number"
+        "PrevBlockHash": {
+          "type": "string"
         },
-        "NumTxns": {
-          "type": "number"
-        },
-        "StateHash": {
+        "BlockNum": {
           "type": "string"
         },
         "Timestamp": {
           "type": "string"
         },
         "TxnHash": {
+          "type": "string"
+        },
+        "StateHash": {
+          "type": "string"
+        },
+        "NumTxns": {
+          "type": "number"
+        },
+        "NumMicroBlocks": {
+          "type": "number"
+        },
+        "MinerPubKey": {
+          "type": "string"
+        },
+        "DSBlockNum": {
           "type": "string"
         }
       }
@@ -291,11 +303,11 @@
         "header": {
           "type": "object",
           "properties": {
-            "type": {
+            "Type": {
               "enum": [0, 1],
               "type": "number"
             },
-            "version": {
+            "Version": {
               "type": "number"
             },
             "GasLimit": {
@@ -304,16 +316,13 @@
             "GasUsed": {
               "type": "string"
             },
-            "MinerPubKey": {
+            "Rewards": {
               "type": "string"
             },
-            "NumMicroBlocks": {
-              "type": "number"
+            "PrevBlockHash": {
+              "type": "string"
             },
-            "NumTxns": {
-              "type": "number"
-            },
-            "StateHash": {
+            "BlockNum": {
               "type": "string"
             },
             "Timestamp": {
@@ -321,7 +330,36 @@
             },
             "TxnHash": {
               "type": "string"
+            },
+            "StateHash": {
+              "type": "string"
+            },
+            "NumTxns": {
+              "type": "number"
+            },
+            "NumMicroBlocks": {
+              "type": "number"
+            },
+            "MinerPubKey": {
+              "type": "string"
+            },
+            "DSBlockNum": {
+              "type": "string"
             }
+          }
+        }
+      }
+    },
+    "TxList": {
+      "type": "object",
+      "properties": {
+        "number": {
+          "type": "number"
+        },
+        "TxnHashes": {
+          "type": "array",
+          "items": {
+            "type": "string"
           }
         }
       }

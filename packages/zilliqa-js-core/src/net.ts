@@ -34,7 +34,7 @@ export const enum RPCMethod {
   // Transaction-related methods
   CreateTransaction = 'CreateTransaction',
   GetTransaction = 'GetTransaction',
-  GetTransactionReceipt = 'GetTransactionReceipt',
+  // GetTransactionReceipt = 'GetTransactionReceipt',
   GetRecentTransactions = 'GetRecentTransactions',
   GetNumTxnsTxEpoch = 'GetNumTxnsTxEpoch',
   GetNumTxnsDSEpoch = 'GetNumTxnsDSEpoch',
@@ -80,7 +80,9 @@ export interface RPCResponseError<E> {
 
 export type RPCResponse<R, E> = RPCResponseSuccess<R> | RPCResponseError<E>;
 
-export type RPCResponseHandler<R, E, T> = (response: WithRequest<RPCResponse<R, E>>) => T;
+export type RPCResponseHandler<R, E, T> = (
+  response: WithRequest<RPCResponse<R, E>>,
+) => T;
 
 const DEFAULT_TIMEOUT = 120000;
 const DEFAULT_HEADERS = { 'Content-Type': 'application/json' };

@@ -1,9 +1,9 @@
 import BN from 'bn.js';
-import { HTTPProvider } from '@zilliqa/zilliqa-js-core';
+import { HTTPProvider, RPCResponse } from '@zilliqa/zilliqa-js-core';
 import { Account, Transaction, Wallet } from '@zilliqa/zilliqa-js-account';
 
 import Blockchain from '../src/chain';
-import { DsBlockObj } from '../src/types';
+import { DsBlockObj, TxBlockObj, BlockList } from '../src/types';
 import schemas from './schema.json';
 
 jest.setTimeout(90000);
@@ -28,12 +28,97 @@ describe('[Integration]: Blockchain', () => {
     expect(response.result).toMatchSchema(schemas.definitions.DsBlockObj);
   });
 
+  it('should be able to get the total number of DS blocks', async () => {
+    const response = await bc.getNumDSBlocks();
+    expect(typeof response.result).toBe('string');
+  });
+
   it('should be able to get a list of DS blocks', async () => {
     const response = await bc.getLatestDSBlock();
     const latestBlock = (<DsBlockObj>response.result).header.blockNum;
-    const responseDsList = await bc.getDsBlockListing(1);
+    const responseDsList = await bc.getDSBlockListing(1);
 
     expect(responseDsList.result).toMatchSchema(schemas.definitions.BlockList);
+  });
+
+  it('should be able to get a Tx block', async () => {
+    const { result } = await bc.getNumTxBlocks();
+    const blockNum = Math.floor(parseInt(<string>result, 10) / 2);
+    const response = await bc.getTxBlock(blockNum);
+
+    expect(response.result).toMatchSchema(schemas.definitions.TxBlockObj);
+  });
+
+  it('should be able to get the latest Tx block', async () => {
+    const { result } = await bc.getNumTxBlocks();
+    const response = await bc.getLatestTxBlock();
+
+    expect(response.result).toMatchSchema(schemas.definitions.TxBlockObj);
+    expect(parseInt((<TxBlockObj>response.result).header.BlockNum, 10)).toEqual(
+      parseInt(<string>result, 10) - 1,
+    );
+  });
+
+  it('should be able to get the number of Tx blocks', async () => {
+    const { result: txBlock } = await bc.getLatestTxBlock();
+    const { result: numTxBlocks } = await bc.getNumTxBlocks();
+
+    expect(parseInt(<string>numTxBlocks) - 1).toEqual(
+      parseInt((<TxBlockObj>txBlock).header.BlockNum),
+    );
+  });
+
+  it('should be able to get the Tx block rate', async () => {
+    const { result: rate } = await bc.getTxBlockRate();
+    expect(<number>rate).toBeGreaterThan(0);
+  });
+
+  it('should be able to get a list of TxBlocks', async () => {
+    const { result } = await bc.getNumTxBlocks();
+    const numTxBlocks = parseInt(<string>result, 10);
+
+    if (numTxBlocks > 10) {
+      const numPages =
+        numTxBlocks % 10 === 0
+          ? numTxBlocks / 10
+          : (numTxBlocks - (numTxBlocks % 10)) / 10 + 1;
+      const pages: Array<Promise<RPCResponse<BlockList, string>>> = [];
+
+      for (let i = 1; i <= numPages; i++) {
+        pages.push(bc.getTxBlockListing(i));
+      }
+
+      const resolved = await Promise.all(pages);
+      const receivedNumTxBlocks = resolved.reduce((n, list) => {
+        return n + (<BlockList>list.result).data.length;
+      }, 0);
+
+      expect(resolved.length).toEqual(numPages);
+      expect(receivedNumTxBlocks).toEqual(numTxBlocks);
+    } else {
+      const response = await bc.getTxBlockListing(1);
+      expect((<BlockList>response.result).data.length).toEqual(numTxBlocks);
+    }
+  });
+
+  it('should be able to get the total number of transactions', async () => {
+    const response = await bc.getNumTransactions();
+    expect(response.result).toBeTruthy();
+  });
+
+  it('should be able to get the transaction rate', async () => {
+    const response = await bc.getTransactionRate();
+    expect(response.result).toBeTruthy();
+  });
+
+  it('should be able to get the current tx epoch', async () => {
+    const response = await bc.getCurrentMiniEpoch();
+    expect(parseInt(<string>response.result)).toBeGreaterThan(0);
+  });
+
+  it('should be able to get the current ds epoch', async () => {
+    const response = await bc.getCurrentDSEpoch();
+    expect(parseInt(<string>response.result)).toBeGreaterThan(0);
   });
 
   it('should be able to send a transaction', async () => {
@@ -52,6 +137,21 @@ describe('[Integration]: Blockchain', () => {
       txParams: { receipt },
     } = await bc.createTransaction(transaction);
 
-    expect(receipt && receipt.success).toBeTruthy();
+    expect(receipt && receipt.success).toBe(true);
+  });
+
+  it('should be able to get a list of recent transactions', async () => {
+    const response = await bc.getRecentTransactions();
+    expect(response.result).toMatchSchema(schemas.definitions.TxList);
+  });
+
+  it('should be able to get the number of Txns for a given Tx epoch', async () => {
+    const response = await bc.getNumTxnsTxEpoch(1);
+    expect(response.result).toBeTruthy();
+  });
+
+  it('should be able to get the number of Txns for a given DS epoch', async () => {
+    const response = await bc.getNumTxnsDSEpoch(1);
+    expect(response.result).toBeTruthy();
   });
 });

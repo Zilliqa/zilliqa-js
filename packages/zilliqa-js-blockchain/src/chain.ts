@@ -11,7 +11,9 @@ import {
   DsBlockObj,
   BlockList,
   TxBlockObj,
+  TxList,
   TransactionObj,
+  TransactionReceiptObj,
   ShardingStructure,
 } from './types';
 import { isError, toTxParams } from './util';
@@ -62,7 +64,29 @@ export default class Blockchain implements ZilliqaModule {
   }
 
   /**
-   * getDsBlockListing
+   * getNumDSBlocks
+   *
+   * Gets the number of DS blocks that the network has processed.
+   *
+   * @returns {Promise<RPCResponse<string, string>>}
+   */
+  getNumDSBlocks(): Promise<RPCResponse<string, string>> {
+    return this.provider.send(RPCMethod.GetNumDSBlocks);
+  }
+
+  /**
+   * getDSBlockRate
+   *
+   * Gets the average rate of DS blocks processed per second
+   *
+   * @returns {Promise<RPCResponse<number, string>>}
+   */
+  getDSBlockRate(): Promise<RPCResponse<number, string>> {
+    return this.provider.send(RPCMethod.GetDSBlockRate);
+  }
+
+  /**
+   * getDSBlockListing
    *
    * Get a paginated list of Directory Service blocks. Pass in page number as
    * parameter. Returns a maxPages variable that specifies the max number of
@@ -71,7 +95,7 @@ export default class Blockchain implements ZilliqaModule {
    * @param {number} max
    * @returns {Promise<RPCResponse<BlockList, string>>}
    */
-  getDsBlockListing(max: number): Promise<RPCResponse<BlockList, string>> {
+  getDSBlockListing(max: number): Promise<RPCResponse<BlockList, string>> {
     return this.provider.send(RPCMethod.DSBlockListing);
   }
 
@@ -99,17 +123,83 @@ export default class Blockchain implements ZilliqaModule {
   }
 
   /**
-   * getTxBlockListing
+   * getNumTxBlocks
    *
-   * Get a paginated list of Transaction blocks. Pass in page number as
-   * parameter. Returns a maxPages variable that specifies the max number of
-   * pages. 1 - latest blocks, maxPages - oldest blocks.
+   * Gets the total number of TxBlocks.
+   *
+   * @returns {Promise<RPCResponse<string, string>>}
+   */
+  getNumTxBlocks(): Promise<RPCResponse<string, string>> {
+    return this.provider.send(RPCMethod.GetNumTxBlocks);
+  }
+
+  /**
+   * getTxBlockRate
+   *
+   * Gets the average number of Tx blocks per second.
+   *
+   * @returns {Promise<RPCResponse<number, string>>}
+   */
+  getTxBlockRate(): Promise<RPCResponse<number, string>> {
+    return this.provider.send(RPCMethod.GetTxBlockRate);
+  }
+
+  /** getTxBlockListing
+   *
+   * Get a paginated list of Transaction blocks. Takes a page number as
+   * parameter, where each page contains a list of 10 blocks (max). Returns
+   * a maxPages variable that specifies the max number of pages. 1 - latest
+   * blocks, maxPages - oldest blocks.
    *
    * @param {number} max
    * @returns {Promise<RPCResponse<BlockList, string>>}
    */
   getTxBlockListing(max: number): Promise<RPCResponse<BlockList, string>> {
     return this.provider.send(RPCMethod.TxBlockListing, max);
+  }
+
+  /**
+   * getNumTransactions
+   *
+   * Gets the number of transactions processed by the network so far.
+   *
+   * @returns {Promise<RPCResponse<string, string>>}
+   */
+  getNumTransactions(): Promise<RPCResponse<string, string>> {
+    return this.provider.send(RPCMethod.GetNumTransactions);
+  }
+
+  /**
+   * getTransactionRate
+   *
+   * Gets the number of transactions processed per second
+   *
+   * @returns {Promise<RPCResponse<number, string>>}
+   */
+  getTransactionRate(): Promise<RPCResponse<number, string>> {
+    return this.provider.send(RPCMethod.GetTransactionRate);
+  }
+
+  /**
+   * getCurrentMiniEpoch
+   *
+   * Gets the current Tx Epoch.
+   *
+   * @returns {Promise<RPCResponse<string, string>>}
+   */
+  getCurrentMiniEpoch(): Promise<RPCResponse<string, string>> {
+    return this.provider.send(RPCMethod.GetCurrentMiniEpoch);
+  }
+
+  /**
+   * getCurrentDSEpoch
+   *
+   * Gets the current DS Epoch.
+   *
+   * @returns {Promise<RPCResponse<any, string>>}
+   */
+  getCurrentDSEpoch(): Promise<RPCResponse<any, string>> {
+    return this.provider.send(RPCMethod.GetCurrentDSEpoch);
   }
 
   /**
@@ -163,5 +253,40 @@ export default class Blockchain implements ZilliqaModule {
     } catch (err) {
       throw err;
     }
+  }
+
+  /**
+   * getRecentTransactions
+   *
+   * Gets a list of recent transactions
+   *
+   * @returns {Promise<RPCResponse<TxList, never>>}
+   */
+  getRecentTransactions(): Promise<RPCResponse<TxList, never>> {
+    return this.provider.send(RPCMethod.GetRecentTransactions);
+  }
+
+  /**
+   * getNumTxnsTxEpoch
+   *
+   * Gets the number of transactions procesed for a given Tx Epoch.
+   *
+   * @param {number} epoch
+   * @returns {Promise<RPCResponse<number, never>>}
+   */
+  getNumTxnsTxEpoch(epoch: number): Promise<RPCResponse<number, never>> {
+    return this.provider.send(RPCMethod.GetNumTxnsDSEpoch, epoch);
+  }
+
+  /**
+   * getNumTxnsDSEpoch
+   *
+   * Gets the number of transactions procesed for a given DS Epoch.
+   *
+   * @param {number} epoch
+   * @returns {Promise<any>}
+   */
+  getNumTxnsDSEpoch(epoch: number): Promise<any> {
+    return this.provider.send(RPCMethod.GetNumTxnsTxEpoch, epoch);
   }
 }
