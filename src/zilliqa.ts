@@ -39,7 +39,6 @@ export default class Zilliqa {
       isPrivateKey: util.isPrivateKey,
       toChecksumAddress: util.toChecksumAddress,
       isValidChecksumAddress: util.isValidChecksumAddress,
-    
     };
 
     this.version = config.version;

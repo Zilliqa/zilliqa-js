@@ -58,14 +58,7 @@
     "babel-jest": "^23.4.2",
     "babel-loader": "^8.0.0-beta.0",
     "babel-plugin-transform-remove-console": "^6.9.4",
-    "babelify": "^8.0.0",
-    "browserify": "^16.2.2",
-    "chai": "*",
     "cross-env": "^5.2.0",
-    "gulp": "^3.9.1",
-    "gulp-uglify-es": "^1.0.4",
-    "gulp-util": "^3.0.8",
-    "hoek": "^5.0.3",
     "jest": "^23.4.2",
     "jest-fetch-mock": "^1.6.5",
     "jest-watch-typeahead": "^0.2.0",
@@ -74,9 +67,6 @@
     "tslint": "^5.11.0",
     "typescript": "^3.0.1",
     "uglifyjs-webpack-plugin": "^1.2.7",
-    "vinyl-buffer": "^1.0.1",
-    "vinyl-source-stream": "^1.1.2",
-    "webpack": "^4.16.5",
-    "webpack-command": "^0.4.1"
+    "webpack": "^4.16.5"
   }
 }
