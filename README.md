@@ -5,31 +5,28 @@
 
 ## Installation
 
-To use Zilliqa's Javascript API library, run ONE of the following commands from the root of your project directory.
-### Yarn  
-`yarn add zilliqa-js`
+Install the package from your top level project directory using either yarn:
 
-### NPM
-`npm install zilliqa-js`
+    yarn add zilliqa-js
 
-### Build Project
+or classic npm:
 
-To build the project, run the following commands: 
+    npm install zilliqa-js
 
-```
-yarn install
-yarn build
-```
+### Contribute
 
-This runs the TypeScript source files through Webpack, that in turn relies on
-Babel to transpile them to a browser-friendly bundle. Type definitions are
-also automatically generated.
+To build the project, run the following commands:
+
+    yarn
+    yarn build
+
+This install all of the project dependencies and runs the TypeScript source files through
+Webpack, that in turn relies on Babel to transpile them to a browser-friendly bundle.
+Type definitions are also automatically generated.
 
 ### Run Tests
 
-```
-yarn test
-```
+    yarn test
 
 Will run all test suites in any folder `__tests__` within the `src` directory.
 
@@ -41,43 +38,39 @@ To get started, you have to specify the network and set some function definition
 
 ```js
 
-/* 
-    Setting Up 
-*/ 
+/**
+ *  Setting Up
+ */
 
-let { Zilliqa } = require('zilliqa-js');
+const { Zilliqa } = require('zilliqa-js');
 
-//For local testing, use URL = 'http://localhost:4201'
-//To connect to the external network, use URL = 'https://api-scilla.zilliqa.com'
-let URL = 'https://api-scilla.zilliqa.com'
-let zilliqa = new Zilliqa({
-    nodeUrl: URL
+// The following would connect to the external network. For testing purposes
+// it is recommended to use a local node which is usually accessible at http://localhost:4201
+const zilliqa = new Zilliqa({
+  nodeUrl: 'https://api-scilla.zilliqa.com',
 });
 
-let node = zilliqa.getNode();
+const node = zilliqa.getNode();
 
+// Generate a private key and its public address. You can change these to point to your own wallet if you have.
+const privateKey = zilliqa.util.generatePrivateKey();
+const address = zilliqa.util.getAddressFromPrivateKey(privateKey);
 
-// callback receives 2 parameters, error and result
-function callback (err, data) {
-    if (err || data.error) {
-        console.log('Error')
-    } else {
-        console.log(data.result)
-    }
-}
+/**
+ *  Get address balance example
+ */
 
-// generate a private key and its public address. You can change these to point to your own wallet if you have. 
-let privateKey = zilliqa.util.generatePrivateKey();
-let address = zilliqa.util.getAddressFromPrivateKey(privateKey);
+node.getBalance({ address: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7' }, (err, data) => {
+  if (err || data.error) {
+    return console.log('Error')
+  }
 
-/* 
-    APIs 
-*/
-
-node.getBalance({ address: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7' }, callback);
+  console.log(data.result)
+});
 
 ```
-Other than `getBalance(address)`, you can also try to create a transaction or deploy a contract. 
+
+Other than `getBalance(address)`, you can also try to create a transaction or deploy a contract.
 
 ### Example: Create a Transaction
 
@@ -87,16 +80,16 @@ import BN from 'bn.js'
 
 // transaction details
 const txnDetails = {
-    version: 0,
-    nonce: 1,
-    to: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7',
-    amount: new BN(0),
-    gasPrice: 1,
-    gasLimit: 1
+  version: 0,
+  nonce: 1,
+  to: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7',
+  amount: new BN(0),
+  gasPrice: 1,
+  gasLimit: 1
 };
 
 // sign the transaction using util methods
-let txn = zilliqa.util.createTransactionJson(privateKey, txnDetails);
+const txn = zilliqa.util.createTransactionJson(privateKey, txnDetails);
 
 // send the transaction to the node
 node.createTransaction(txn, callback);
@@ -106,40 +99,39 @@ node.createTransaction(txn, callback);
 
 ```js
 // contains the scilla code as a string
-let code = "Scilla Code";
+const code = "Scilla Code";
 
 // the immutable initialisation variables
-let initParams = [
+const initParams = [
 {
-    "vname" : "owner",
-    "type" : "Address",
-    "value" : "0x1234567890123456789012345678901234567890"
+  "vname" : "owner",
+  "type" : "Address",
+  "value" : "0x1234567890123456789012345678901234567890"
 },
-    {
-    "vname" : "total_tokens",
-    "type" : "Uint128",
-    "value" : "10000"
+{
+  "vname" : "total_tokens",
+  "type" : "Uint128",
+  "value" : "10000"
 }];
 
 // transaction details
-let txnDetails = {
-    version: 0,
-    nonce: 1,
-    to: '0000000000000000000000000000000000000000',
-    amount: 0,
-    gasPrice: 1,
-    gasLimit: 50,
-    code: code,
-    data: JSON.stringify(initParams).replace(/\\"/g, '"')
+const txnDetails = {
+  version: 0,
+  nonce: 1,
+  to: '0000000000000000000000000000000000000000',
+  amount: 0,
+  gasPrice: 1,
+  gasLimit: 50,
+  code: code,
+  data: JSON.stringify(initParams).replace(/\\"/g, '"')
 };
 
 // sign the transaction using util methods
-let txn = zilliqa.util.createTransactionJson(privateKey, txnDetails);
+const txn = zilliqa.util.createTransactionJson(privateKey, txnDetails);
 
 // send the transaction to the node
 node.createTransaction(txn, callback);
 ```
-
 
 ## API Methods
 
@@ -175,8 +167,6 @@ node.createTransaction(txn, callback);
 - **[setNode](#setnode)**
 - **[currentNode](#currentnode)**
 
-
-
 ## API Reference
 
 ### `getNetworkId`
@@ -194,15 +184,14 @@ none
 **Usage**
 
 ```js
-zilliqa.node.getNetworkId(function(err, data) {
-    if (err || !data.result) {
-        console.log(err)
-    } else {
-        console.log(data.result)
-    }
+zilliqa.node.getNetworkId((err, data) => {
+  if (err || !data.result) {
+    console.log(err)
+  } else {
+    console.log(data.result)
+  }
 })
 ```
-
 
 ### `createTransaction`
 
@@ -231,24 +220,23 @@ Each transaction is uniquely identified by a
 **Usage**
 
 ```js
-let txn = zilliqa.util.createTransactionJson(privateKey, {
-    version: 0,
-    nonce: 1,
-    to: address,
-    amount: 0,
-    gasPrice: 1, // default
-    gasLimit: 1 // 1 - send tokens, 10 - contract invocation, 50 - contract creation
+const txn = zilliqa.util.createTransactionJson(privateKey, {
+  version: 0,
+  nonce: 1,
+  to: address,
+  amount: 0,
+  gasPrice: 1, // default
+  gasLimit: 1 // 1 - send tokens, 10 - contract invocation, 50 - contract creation
 })
 
-zilliqa.node.createTransaction(txn, function(err, data) {
-    if (err || data.error) {
-        console.log(err)
-    } else {
-        console.log(data.result)
-    }
+zilliqa.node.createTransaction(txn, (err, data) => {
+  if (err || data.error) {
+    console.log(err)
+  } else {
+    console.log(data.result)
+  }
 })
 ```
-
 
 ### `getTransaction`
 
@@ -272,16 +260,15 @@ Returns the information about a transaction requested by transaction hash
 **Usage**
 
 ```js
-let txnId = 'c699d0ea1d4a447762bb0617f742a43b8de6792d06c56f9a2a109f0e06532f1c' // sample 64-char hex id
-zilliqa.node.getTransaction({ txHash: txnId }, function(err, data) {
-    if (err || data.result.error || !data.result['ID']) {
-        console.log(err)
-    } else {
-        console.log(data.result)
-    }
+const txnId = 'c699d0ea1d4a447762bb0617f742a43b8de6792d06c56f9a2a109f0e06532f1c' // sample 64-char hex id
+zilliqa.node.getTransaction({ txHash: txnId }, (err, data) => {
+  if (err || data.result.error || !data.result['ID']) {
+    console.log(err)
+  } else {
+    console.log(data.result)
+  }
 })
 ```
-
 
 ### `getDsBlock`
 
@@ -299,9 +286,7 @@ header:
 - `version` (32 bits): Current version.
 - `previous hash` (256 bits): The SHA3-256 digest of its parent's block header
 - `pubkey` (264 bits): The public key of the miner who did PoW on this block header
-- `difficulty` (64 bits): This can be calculated from the 
-previous block’s difficulty and the block number. It stores
-the difficulty of the PoW puzzle.
+- `difficulty` (64 bits): This can be calculated from the previous block’s difficulty and the block number. It stores the difficulty of the PoW puzzle.
 - `number` (256 bits): The number of ancestor blocks. The genesis block has a block number of 0
 - `timestamp` (64 bits): Unix’s time() at the time of creation of this block
 - `mixHash` (256 bits): A digest calculated from nonce which allows detecting DoS attacks
@@ -314,15 +299,14 @@ signature:
 **Usage**
 
 ```js
-zilliqa.node.getDsBlock({ blockNumber: 5 }, function(err, data) {
-    if (err || !data.result) {
-        console.log(err)
-    } else {
-        console.log(data.result)
-    }
+zilliqa.node.getDsBlock({ blockNumber: 5 }, (err, data) => {
+  if (err || !data.result) {
+    console.log(err)
+  } else {
+    console.log(data.result)
+  }
 })
 ```
-
 
 ### `getTxBlock`
 
@@ -364,15 +348,14 @@ signature:
 **Usage**
 
 ```js
-zilliqa.node.getTxBlock({ blockNumber: 5 }, function(err, data) {
-    if (err || !data.result) {
-        console.log(err)
-    } else {
-        console.log(data.result)
-    }
+zilliqa.node.getTxBlock({ blockNumber: 5 }, (err, data) => {
+  if (err || !data.result) {
+    console.log(err)
+  } else {
+    console.log(data.result)
+  }
 })
 ```
-
 
 ### `getLatestDsBlock`
 
@@ -389,15 +372,14 @@ none
 **Usage**
 
 ```js
-zilliqa.node.getLatestDsBlock(function(err, data) {
-    if (err || !data.result) {
-        console.log(err)
-    } else {
-        console.log(data.result)
-    }
+zilliqa.node.getLatestDsBlock((err, data) => {
+  if (err || !data.result) {
+    console.log(err)
+  } else {
+    console.log(data.result)
+  }
 })
 ```
-
 
 ### `getLatestTxBlock`
 
@@ -414,15 +396,14 @@ none
 **Usage**
 
 ```js
-zilliqa.node.getLatestTxBlock(function(err, data) {
-    if (err || !data.result) {
-        console.log(err)
-    } else {
-        console.log(data.result)
-    }
+zilliqa.node.getLatestTxBlock((err, data) => {
+  if (err || !data.result) {
+    console.log(err)
+  } else {
+    console.log(data.result)
+  }
 })
 ```
-
 
 ### `getBalance`
 
@@ -440,15 +421,14 @@ Returns the balance of a given address
 **Usage**
 
 ```js
-zilliqa.node.getBalance({ address: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7' }, function(err, data) {
-    if (err || data.error) {
-        console.log(err)
-    } else {
-        console.log(data.result)
-    }
+zilliqa.node.getBalance({ address: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7' }, (err, data) => {
+  if (err || data.error) {
+    console.log(err)
+  } else {
+    console.log(data.result)
+  }
 })
 ```
-
 
 ### `getSmartContractState`
 
@@ -465,15 +445,14 @@ Returns the state variables (mutable) of a given smart contract address
 **Usage**
 
 ```js
-zilliqa.node.getSmartContractState({ address: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7' }, function(err, data) {
-    if (err || (data.result && data.result.Error)) {
-        console.log(err)
-    } else {
-        console.log(data.result)
-    }
+zilliqa.node.getSmartContractState({ address: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7' }, (err, data) => {
+  if (err || (data.result && data.result.Error)) {
+    console.log(err)
+  } else {
+    console.log(data.result)
+  }
 })
 ```
-
 
 ### `getSmartContractCode`
 
@@ -490,15 +469,14 @@ Returns the smart contract code of a given address smart contract address
 **Usage**
 
 ```js
-zilliqa.node.getSmartContractCode({ address: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7' }, function(err, data) {
-    if (err || (data.result && data.result.Error)) {
-        console.log(err)
-    } else {
-        console.log(data.result)
-    }
+zilliqa.node.getSmartContractCode({ address: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7' }, (err, data) => {
+  if (err || (data.result && data.result.Error)) {
+    console.log(err)
+  } else {
+    console.log(data.result)
+  }
 })
 ```
-
 
 ### `getSmartContractInit`
 
@@ -515,15 +493,14 @@ Returns the initialization parameters (immutable) of a given smart contract addr
 **Usage**
 
 ```js
-zilliqa.node.getSmartContractInit({ address: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7' }, function(err, data) {
-    if (err || (data.result && data.result.Error)) {
-        console.log(err)
-    } else {
-        console.log(data.result)
-    }
+zilliqa.node.getSmartContractInit({ address: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7' }, (err, data) => {
+  if (err || (data.result && data.result.Error)) {
+    console.log(err)
+  } else {
+    console.log(data.result)
+  }
 })
 ```
-
 
 ### `getSmartContracts`
 Returns the list of smart contracts created by an account
@@ -539,15 +516,14 @@ Returns the list of smart contracts created by an account
 **Usage**
 
 ```js
-zilliqa.node.getSmartContracts({ address: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7' }, function(err, data) {
-    if (err || data.error) {
-        console.log(err)
-    } else {
-        console.log(data.result)
-    }
+zilliqa.node.getSmartContracts({ address: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7' }, (err, data) => {
+  if (err || data.error) {
+    console.log(err)
+  } else {
+    console.log(data.result)
+  }
 })
 ```
-
 
 ### `getBlockchainInfo`
 
@@ -560,30 +536,29 @@ empty object
 **Returns**
 
 `Object` - json object containing various properties
-- `NumPeers` : 
-- `NumTxBlocks` : 
-- `NumDSBlocks` : 
-- `NumTransactions` : 
-- `TransactionRate` : 
-- `TxBlockRate` : 
-- `DSBlockRate` : 
+- `NumPeers` :
+- `NumTxBlocks` :
+- `NumDSBlocks` :
+- `NumTransactions` :
+- `TransactionRate` :
+- `TxBlockRate` :
+- `DSBlockRate` :
 - `CurrentMiniEpoch` :
-- `CurrentDSEpoch` : 
-- `NumTxnsDSEpoch` : 
-- `NumTxnsTxEpoch` : 
+- `CurrentDSEpoch` :
+- `NumTxnsDSEpoch` :
+- `NumTxnsTxEpoch` :
 
 **Usage**
 
 ```js
-zilliqa.node.getBlockchainInfo({}, function(err, data) {
-    if (err) {
-        console.log(err)
-    } else {
-        console.log(data.result)
-    }
+zilliqa.node.getBlockchainInfo({}, (err, data) => {
+  if (err) {
+    console.log(err)
+  } else {
+    console.log(data.result)
+  }
 })
 ```
-
 
 ### `isConnected`
 
@@ -600,15 +575,14 @@ none
 **Usage**
 
 ```js
-zilliqa.node.isConnected(function(err, data) {
-    if (err) {
-        console.log(err)
-    } else {
-        // connected
-    }
+zilliqa.node.isConnected((err, data) => {
+  if (err) {
+    console.log(err)
+  } else {
+    // connected
+  }
 })
 ```
-
 
 ## Util Methods
 
@@ -627,10 +601,9 @@ none
 **Usage**
 
 ```js
-let pk = zilliqa.util.generatePrivateKey();
+const pk = zilliqa.util.generatePrivateKey();
 console.log(pk.toString('hex'));
 ```
-
 
 ### `verifyPrivateKey`
 Verify if a private key is valid for the secp256k1 curve
@@ -646,11 +619,10 @@ Verify if a private key is valid for the secp256k1 curve
 **Usage**
 
 ```js
-let pk = zilliqa.util.generatePrivateKey();
+const pk = zilliqa.util.generatePrivateKey();
 console.log(zilliqa.util.verifyPrivateKey(pk)); // true
 console.log(zilliqa.util.verifyPrivateKey("abcxyz")); // false
 ```
-
 
 ### `getAddressFromPrivateKey`
 
@@ -667,10 +639,9 @@ Get the public address of an account using its private key
 **Usage**
 
 ```js
-let address = zilliqa.util.getAddressFromPrivateKey(privateKey);
+const address = zilliqa.util.getAddressFromPrivateKey(privateKey);
 console.log(address.toString('hex'));
 ```
-
 
 ### `getPubKeyFromPrivateKey`
 
@@ -687,10 +658,9 @@ Get the public key of an account using its private key
 **Usage**
 
 ```js
-let pubkey = zilliqa.util.getPubKeyFromPrivateKey(privateKey);
+const pubkey = zilliqa.util.getPubKeyFromPrivateKey(privateKey);
 console.log(pubkey.toString('hex'));
 ```
-
 
 ### `createTransactionJson`
 
@@ -716,20 +686,20 @@ Construct the transaction object for use in `createTransaction` API
 **Usage**
 
 ```js
-let privateKey = zilliqa.util.generatePrivateKey();
+const privateKey = zilliqa.util.generatePrivateKey();
 
 // transaction details
-let txnDetails = {
-    version: 0,
-    nonce: 1,
-    to: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7',
-    amount: 0,
-    gasPrice: 1,
-    gasLimit: 1
+const txnDetails = {
+  version: 0,
+  nonce: 1,
+  to: 'E8A67C0B1F19DF61A28E8E8FB5D830377045BCC7',
+  amount: 0,
+  gasPrice: 1,
+  gasLimit: 1
 };
 
 // sign the transaction using util methods
-let txn = zilliqa.util.createTransactionJson(privateKey, txnDetails);
+const txn = zilliqa.util.createTransactionJson(privateKey, txnDetails);
 ```
 
 ### `getAddressFromPubKey`
@@ -747,7 +717,7 @@ Get the public address of an account using its public key
 **Usage**
 
 ```js
-let address = zilliqa.util.getAddressFromPubKey(pubKey);
+const address = zilliqa.util.getAddressFromPubKey(pubKey);
 console.log(address.toString('hex'));
 ```
 
@@ -766,8 +736,8 @@ Verify if an address syntax is valid
 **Usage**
 
 ```js
-let pk = zilliqa.util.generatePrivateKey();
-let address = zilliqa.util.getAddressFromPrivateKey(pk);
+const pk = zilliqa.util.generatePrivateKey();
+const address = zilliqa.util.getAddressFromPrivateKey(pk);
 console.log(zilliqa.util.isAddress(address)); // true
 console.log(zilliqa.util.isAddress('0'.repeat(30))); // false
 ```
@@ -787,8 +757,8 @@ Verify if an public key syntax is valid
 **Usage**
 
 ```js
-let pk = zilliqa.util.generatePrivateKey();
-let pubKey = zilliqa.util.getPubKeyFromPrivateKey(pk);
+const pk = zilliqa.util.generatePrivateKey();
+const pubKey = zilliqa.util.getPubKeyFromPrivateKey(pk);
 console.log(zilliqa.util.isPubKey(pubKey)); // true
 console.log(zilliqa.util.isPubKey('0'.repeat(30))); // false
 ```
@@ -805,7 +775,7 @@ Converts number to array representing the padded hex form
 
 **Usage**
 ```
-let nonceStr = zilliqa.util.intToByteArray(nonce, 64).join("");
+const nonceStr = zilliqa.util.intToByteArray(nonce, 64).join("");
 ```
 
 ### `compressPublicKey`
@@ -830,7 +800,6 @@ none
 
 `String` - the library version
 
-
 ### `setNode`
 
 Sets the node to connect to
@@ -842,7 +811,6 @@ Sets the node to connect to
 **Returns**
 
 null
-
 
 ### `getNode`
 
@@ -856,5 +824,6 @@ none
 
 `Object` - the currently connected node object
 
-## Licence 
-You can view our [licence here](https://github.com/Zilliqa/zilliqa/blob/master/LICENSE).
+## Licence
+
+You can view our [Licence here](./LICENSE).
