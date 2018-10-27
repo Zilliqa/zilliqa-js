@@ -5,7 +5,7 @@ import { getAddressFromPublicKey } from '@zilliqa/zilliqa-js-crypto';
 import { types } from '@zilliqa/zilliqa-js-util';
 
 import { TxParams, TxReceipt, TxStatus, TxIncluded } from './types';
-import { encodeTransaction } from './util';
+import { encodeTransaction, sleep } from './util';
 
 /**
  * Transaction
@@ -191,32 +191,38 @@ export default class Transaction implements Signable {
    * of pending. Calling this function kicks off a passive loop that polls the
    * lookup node for confirmation on the txHash.
    *
+   * The polls are performed with exponential backoff, which means the delay
+   * between attemps are increased exponentially:
+   *
+   * `const delay = Math.random() * (Math.pow(2, attempt) * 60)`
+   *
    * This is a low-level method that you should generally not have to use
    * directly.
    *
    * @param {string} txHash
-   * @param {number} timeout
+   * @param {number} maxAttempts
    * @returns {Promise<Transaction>}
    */
-  confirm(txHash: string, timeout: number = 120000): Promise<Transaction> {
+  async confirm(txHash: string, maxAttempts = 5): Promise<Transaction> {
     this.status = TxStatus.Pending;
-
-    return new Promise((resolve, reject) => {
-      const token = setTimeout(() => {
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      try {
+        if (await this.trackTx(txHash)) {
+          return this;
+        }
+      } catch (err) {
         this.status = TxStatus.Rejected;
-        reject(
-          new Error(
-            'The transaction is taking unusually long to be confirmed. It may be lost.',
-          ),
-        );
-      }, timeout);
-
-      const cancelTimeout = () => {
-        clearTimeout(token);
-      };
-
-      this.trackTx(txHash, resolve, reject, cancelTimeout);
-    });
+        throw err;
+      }
+      if (attempt + 1 < maxAttempts) {
+        const delay = Math.random() * (Math.pow(2, attempt) * 60);
+        await sleep(delay);
+      }
+    }
+    this.status = TxStatus.Rejected;
+    throw new Error(
+      `The transaction is still not confirmed after ${maxAttempts} attemps.`,
+    );
   }
 
   /**
@@ -248,39 +254,21 @@ export default class Transaction implements Signable {
     this.receipt = params.receipt;
   }
 
-  private trackTx(
-    txHash: string,
-    resolve: (self: Transaction) => void,
-    reject: (err: any) => void,
-    cancelTimeout: () => void,
-  ) {
-    if (this.isRejected()) {
-      return;
-    }
-
+  private async trackTx(txHash: string): Promise<boolean> {
     // TODO: regex validation for txHash so we don't get garbage
-    const result = this.provider.send('GetTransaction', txHash);
-
-    result
-      .then((res: RPCResponse<TxIncluded, string>) => {
-        if (types.isError(res)) {
-          this.trackTx(txHash, resolve, reject, cancelTimeout);
-          return;
-        } else {
-          this.id = res.result['ID'];
-          this.receipt = res.result.receipt;
-          this.status =
-            this.receipt && this.receipt.success
-              ? TxStatus.Confirmed
-              : TxStatus.Rejected;
-          cancelTimeout();
-          resolve(this);
-        }
-      })
-      .catch((err) => {
-        cancelTimeout();
-        this.status = TxStatus.Rejected;
-        reject(err);
-      });
+    const res: RPCResponse<TxIncluded, string> = await this.provider.send(
+      'GetTransaction',
+      txHash,
+    );
+    if (types.isError(res)) {
+      return false;
+    }
+    this.id = res.result.ID;
+    this.receipt = res.result.receipt;
+    this.status =
+      this.receipt && this.receipt.success
+        ? TxStatus.Confirmed
+        : TxStatus.Rejected;
+    return true;
   }
 }
