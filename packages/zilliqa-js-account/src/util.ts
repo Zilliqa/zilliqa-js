@@ -80,3 +80,9 @@ export const formatOutgoingTx: ReqMiddlewareFn<[TxParams]> = (req) => {
 
   return req;
 };
+
+export async function sleep(ms: number) {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(), ms);
+  });
+}
