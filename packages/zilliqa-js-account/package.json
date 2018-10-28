@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@types/bip39": "^2.4.0",
-    "@types/hdkey": "^0.7.0"
+    "@types/hdkey": "^0.7.0",
+    "web3": "^1.0.0-beta.36"
   }
 }
