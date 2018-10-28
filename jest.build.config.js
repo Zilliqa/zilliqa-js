@@ -12,7 +12,11 @@ const config = {
     '^.+\\.ts$': 'ts-jest',
   },
   testMatch: ['<rootDir>/packages/**/test/?(*.)+(spec|test).ts'],
-  moduleDirectories: ['packages/*/src', '<rootDir>/node_modules', '<rootDir>/*/node_modules'],
+  moduleDirectories: [
+    'packages/*/src',
+    '<rootDir>/node_modules',
+    '<rootDir>/*/node_modules',
+  ],
   moduleFileExtensions: ['js', 'ts', 'node', 'json'],
   globals: {
     'ts-jest': {
@@ -22,9 +26,15 @@ const config = {
   },
   testURL: 'http://localhost',
   collectCoverage: true,
-  collectCoverageFrom: ['<rootDir>/packages/*/src/**/*.{ts,js}', '!**/node_modules/**'],
+  collectCoverageFrom: [
+    '<rootDir>/packages/*/src/**/*.{ts,js}',
+    '!**/node_modules/**',
+  ],
   setupFiles: ['<rootDir>/jest-setup.js'],
-  watchPlugins: ['jest-watch-typeahead/filename', 'jest-watch-typeahead/testname'],
+  watchPlugins: [
+    'jest-watch-typeahead/filename',
+    'jest-watch-typeahead/testname',
+  ],
 };
 
 module.exports = config;

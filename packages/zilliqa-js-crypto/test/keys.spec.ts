@@ -28,7 +28,9 @@ describe('keypairs', () => {
 
   it('should be able to recover an address from a private key', () => {
     const [pair] = pairs;
-    const expected = crypto.getAddressFromPublicKey(crypto.compressPublicKey(pair.public));
+    const expected = crypto.getAddressFromPublicKey(
+      crypto.compressPublicKey(pair.public),
+    );
     const actual = crypto.getAddressFromPrivateKey(pair.private);
 
     expect(actual).toHaveLength(40);
@@ -38,7 +40,9 @@ describe('keypairs', () => {
   it('should give the same address for a given public or private key', () => {
     pairs.forEach(({ private: priv, public: pub }) => {
       const fromPrivateKey = crypto.getAddressFromPrivateKey(priv);
-      const fromPublicKey = crypto.getAddressFromPublicKey(crypto.compressPublicKey(pub));
+      const fromPublicKey = crypto.getAddressFromPublicKey(
+        crypto.compressPublicKey(pub),
+      );
 
       expect(fromPrivateKey).toHaveLength(40);
       expect(fromPublicKey).toHaveLength(40);

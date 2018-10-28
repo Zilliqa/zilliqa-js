@@ -43,7 +43,10 @@ describe('Account', () => {
       data: 'some_data',
     };
 
-    const tx = new Transaction(rawTx, new HTTPProvider('https://mock-provider.com'));
+    const tx = new Transaction(
+      rawTx,
+      new HTTPProvider('https://mock-provider.com'),
+    );
     const rawSignature = account.signTransaction(tx.bytes);
 
     const lgtm = zcrypto.schnorr.verify(

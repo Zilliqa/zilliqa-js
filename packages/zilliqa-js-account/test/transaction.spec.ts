@@ -60,13 +60,16 @@ describe('Transaction', () => {
         provider,
       ),
     );
-    const response = await provider.send(RPCMethod.CreateTransaction, pending.txParams);
+    const response = await provider.send(
+      RPCMethod.CreateTransaction,
+      pending.txParams,
+    );
     const confirmed = await pending.confirm('some_hash');
 
     const state = confirmed.txParams;
 
     expect(confirmed.isConfirmed()).toBeTruthy();
-    expect(state.receipt).toEqual({success: true, cumulative_gas: '1000'});
+    expect(state.receipt).toEqual({ success: true, cumulative_gas: '1000' });
   });
 
   it('should reject the promise if there is a network error', async () => {
@@ -96,7 +99,9 @@ describe('Transaction', () => {
       ),
     );
 
-    await expect(provider.send(RPCMethod.CreateTransaction, tx.txParams)).rejects.toThrow();
+    await expect(
+      provider.send(RPCMethod.CreateTransaction, tx.txParams),
+    ).rejects.toThrow();
   });
 
   it('should not reject the promise if receipt.success === false', async () => {
@@ -145,6 +150,8 @@ describe('Transaction', () => {
     const res = await provider.send(RPCMethod.CreateTransaction, tx.txParams);
     const rejected = await tx.confirm(res.result.TranID);
 
-    await expect(rejected.txParams.receipt && rejected.txParams.receipt.success).toEqual(false);
+    await expect(
+      rejected.txParams.receipt && rejected.txParams.receipt.success,
+    ).toEqual(false);
   });
 });

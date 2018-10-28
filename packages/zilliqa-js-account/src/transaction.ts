@@ -101,7 +101,11 @@ export default class Transaction implements Signable {
     };
   }
 
-  constructor(params: TxParams, provider: Provider, status: TxStatus = TxStatus.Initialised) {
+  constructor(
+    params: TxParams,
+    provider: Provider,
+    status: TxStatus = TxStatus.Initialised,
+  ) {
     // private members
     this.version = params.version;
     this.toAddr = params.toAddr;
@@ -201,7 +205,9 @@ export default class Transaction implements Signable {
       const token = setTimeout(() => {
         this.status = TxStatus.Rejected;
         reject(
-          new Error('The transaction is taking unusually long to be confirmed. It may be lost.'),
+          new Error(
+            'The transaction is taking unusually long to be confirmed. It may be lost.',
+          ),
         );
       }, timeout);
 
@@ -264,7 +270,9 @@ export default class Transaction implements Signable {
           this.id = res.result['ID'];
           this.receipt = res.result.receipt;
           this.status =
-            this.receipt && this.receipt.success ? TxStatus.Confirmed : TxStatus.Rejected;
+            this.receipt && this.receipt.success
+              ? TxStatus.Confirmed
+              : TxStatus.Rejected;
           cancelTimeout();
           resolve(this);
         }

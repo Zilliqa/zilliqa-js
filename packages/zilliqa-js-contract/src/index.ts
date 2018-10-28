@@ -1,7 +1,12 @@
 import BN from 'bn.js';
 import hash from 'hash.js';
 
-import { Account, Wallet, Transaction, TxStatus } from '@zilliqa/zilliqa-js-account';
+import {
+  Account,
+  Wallet,
+  Transaction,
+  TxStatus,
+} from '@zilliqa/zilliqa-js-account';
 import { Provider, ZilliqaModule, sign } from '@zilliqa/zilliqa-js-core';
 import { bytes, types } from '@zilliqa/zilliqa-js-util';
 
@@ -53,7 +58,13 @@ export class Contracts implements ZilliqaModule {
     this.signer = signer;
   }
 
-  at(address: string, abi: ABI, code: string, init?: Init, state?: State): Contract {
+  at(
+    address: string,
+    abi: ABI,
+    code: string,
+    init?: Init,
+    state?: State,
+  ): Contract {
     return new Contract(this, abi, address, code, init, state);
   }
 
@@ -105,9 +116,10 @@ export class Contract {
   async prepareTx(tx: Transaction): Promise<Transaction> {
     const payload = tx.payload;
     const { code, ...rest } = payload;
-    const response = await this.provider.send<DeploySuccess, DeployError>('CreateTransaction', [
-      payload,
-    ]);
+    const response = await this.provider.send<DeploySuccess, DeployError>(
+      'CreateTransaction',
+      [payload],
+    );
 
     return types.isError(response)
       ? tx.setStatus(TxStatus.Rejected)
@@ -116,7 +128,9 @@ export class Contract {
 
   async deploy(gasPrice: BN, gasLimit: BN): Promise<Contract> {
     if (!this.code || !this.init) {
-      throw new Error('Cannot deploy without code or initialisation parameters.');
+      throw new Error(
+        'Cannot deploy without code or initialisation parameters.',
+      );
     }
 
     try {
@@ -198,7 +212,9 @@ export class Contract {
       return Promise.resolve([]);
     }
 
-    const response = await this.provider.send('GetSmartContractState', [this.address]);
+    const response = await this.provider.send('GetSmartContractState', [
+      this.address,
+    ]);
 
     return response.result;
   }

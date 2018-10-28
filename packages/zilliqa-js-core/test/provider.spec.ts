@@ -36,7 +36,10 @@ describe('HTTPProvider', () => {
     withMiddleware.middleware.request.use(mockReqMiddleware);
 
     fetch.mockResponseOnce(JSON.stringify({ data: 'something' }));
-    const res = await withMiddleware.send(RPCMethod.CreateTransaction, 'first param');
+    const res = await withMiddleware.send(
+      RPCMethod.CreateTransaction,
+      'first param',
+    );
 
     const payload = JSON.parse(fetch.mock.calls[0][1].body);
     expect(payload).toMatchObject({
@@ -52,7 +55,10 @@ describe('HTTPProvider', () => {
     withMiddleware.middleware.response.use(mockResMiddleware);
 
     fetch.mockResponseOnce(JSON.stringify('something'));
-    const res = await withMiddleware.send(RPCMethod.CreateTransaction, 'some param');
+    const res = await withMiddleware.send(
+      RPCMethod.CreateTransaction,
+      'some param',
+    );
 
     expect(res.result).toEqual('SOMETHING');
   });
@@ -64,8 +70,14 @@ describe('HTTPProvider', () => {
     const spyAllRes = jest.fn((x) => x);
 
     const withMiddleware = new HTTPProvider('https://mock-provider.com');
-    withMiddleware.middleware.request.use(spyReqMiddleware, RPCMethod.GetTransaction);
-    withMiddleware.middleware.response.use(spyResMiddleware, RPCMethod.GetBalance);
+    withMiddleware.middleware.request.use(
+      spyReqMiddleware,
+      RPCMethod.GetTransaction,
+    );
+    withMiddleware.middleware.response.use(
+      spyResMiddleware,
+      RPCMethod.GetBalance,
+    );
 
     withMiddleware.middleware.request.use(spyAllReq, '*');
     withMiddleware.middleware.response.use(spyAllRes, '*');

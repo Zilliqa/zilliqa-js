@@ -11,7 +11,11 @@ import BN from 'bn.js';
 
 declare namespace Elliptic {
   type CurveTypes = 'short' | 'edwards' | 'mont';
-  type PrivateKey = string | Buffer | { x: Buffer; y: Buffer } | { x: string; y: string };
+  type PrivateKey =
+    | string
+    | Buffer
+    | { x: Buffer; y: Buffer }
+    | { x: string; y: string };
 
   interface Curve {
     type: CurveTypes;
