@@ -7,7 +7,13 @@ import uuid from 'uuid';
 import { bytes } from '@zilliqa/zilliqa-js-util';
 
 import { randomBytes } from './random';
-import { KeystoreV3, KDF, KDFParams } from './types';
+import {
+  KeystoreV3,
+  KDF,
+  KDFParams,
+  PBKDF2Params,
+  ScryptParams,
+} from './types';
 import { getAddressFromPrivateKey } from './util';
 
 /**
@@ -21,27 +27,22 @@ import { getAddressFromPrivateKey } from './util';
  *
  * @returns {Promise<Buffer>}
  */
-const getDerivedKey = (
+async function getDerivedKey(
   key: Buffer,
   kdf: KDF,
   params: KDFParams,
-): Promise<Buffer> => {
-  return new Promise((resolve, reject) => {
-    const { n, r, p, dklen } = params;
-    const salt = Buffer.from(params.salt);
-
-    if (kdf !== 'pbkdf2' && kdf !== 'scrypt') {
-      reject('Only pbkdf2 and scrypt are supported');
-    }
-
-    const derivedKey =
-      kdf === 'scrypt'
-        ? scrypt(key, salt, n, r, p, dklen)
-        : pbkdf2.pbkdf2sync(key, salt, n, dklen, 'sha256');
-
-    resolve(derivedKey);
-  });
-};
+): Promise<Buffer> {
+  const salt = Buffer.from(params.salt, 'hex');
+  if (kdf === 'pbkdf2') {
+    const { c, dklen } = params as PBKDF2Params;
+    return pbkdf2.pbkdf2Sync(key, salt, c, dklen, 'sha256');
+  }
+  if (kdf === 'scrypt') {
+    const { n, r, p, dklen } = params as ScryptParams;
+    return scrypt(key, salt, n, r, p, dklen);
+  }
+  throw new Error('Only pbkdf2 and scrypt are supported');
+}
 
 /**
  * encryptPrivateKey
