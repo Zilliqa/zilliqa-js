@@ -9,7 +9,7 @@ declare module 'pbkdf2' {
     | 'rmd160'
     | 'ripemd160';
 
-  function pbkdf2sync(
+  function pbkdf2Sync(
     passphrase: Buffer,
     salt: Buffer,
     n: number,
@@ -28,7 +28,7 @@ declare module 'pbkdf2' {
 
   interface Exported {
     pbkdf2: typeof pbkdf2;
-    pbkdf2sync: typeof pbkdf2sync;
+    pbkdf2Sync: typeof pbkdf2Sync;
   }
 
   var exports: Exported;
