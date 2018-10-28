@@ -19,8 +19,16 @@ export const generatePrivateKey = (): string => {
  *
  * @returns {string} the signature
  */
-export const sign = (msg: Buffer, privateKey: string, pubKey: string): string => {
-  const sig = schnorr.sign(msg, Buffer.from(privateKey, 'hex'), Buffer.from(pubKey, 'hex'));
+export const sign = (
+  msg: Buffer,
+  privateKey: string,
+  pubKey: string,
+): string => {
+  const sig = schnorr.sign(
+    msg,
+    Buffer.from(privateKey, 'hex'),
+    Buffer.from(pubKey, 'hex'),
+  );
 
   let r = sig.r.toString('hex');
   let s = sig.s.toString('hex');

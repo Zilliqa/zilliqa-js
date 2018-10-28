@@ -74,9 +74,11 @@ export const matchesObject = <T extends Object>(
           continue;
         }
 
-        if (typeof test[key][i] !== 'function') throw new Error('Validator is not a function');
+        if (typeof test[key][i] !== 'function')
+          throw new Error('Validator is not a function');
 
-        if (!test[key][i](x[key])) throw new Error('Validation failed for ' + key);
+        if (!test[key][i](x[key]))
+          throw new Error('Validation failed for ' + key);
       }
     }
   }

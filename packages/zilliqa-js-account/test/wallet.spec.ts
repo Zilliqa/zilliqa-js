@@ -2,7 +2,11 @@ import axios from 'axios';
 import BN from 'bn.js';
 
 import { HTTPProvider } from '@zilliqa/zilliqa-js-core';
-import { getPubKeyFromPrivateKey, generatePrivateKey, schnorr } from '@zilliqa/zilliqa-js-crypto';
+import {
+  getPubKeyFromPrivateKey,
+  generatePrivateKey,
+  schnorr,
+} from '@zilliqa/zilliqa-js-crypto';
 
 import fetch from 'jest-fetch-mock';
 
@@ -29,7 +33,8 @@ describe('Wallet', () => {
   });
 
   it('should be able to bootstrap from a mnemonic', async () => {
-    const mnemonic = 'cart hat drip lava jelly keep device journey bean mango rocket festival';
+    const mnemonic =
+      'cart hat drip lava jelly keep device journey bean mango rocket festival';
     const wallet = new Wallet(provider);
     const addresses = [];
     for (let i = 0; i < 10; i++) {
@@ -63,7 +68,8 @@ describe('Wallet', () => {
 
   it('should sign transactions with the default account', async () => {
     const [wallet] = createWallet(1);
-    const pubKey = (wallet.defaultAccount && wallet.defaultAccount.publicKey) as string;
+    const pubKey = (wallet.defaultAccount &&
+      wallet.defaultAccount.publicKey) as string;
 
     const tx = new Transaction(
       {
@@ -91,7 +97,11 @@ describe('Wallet', () => {
 
     const signed = await wallet.sign(tx);
     const signature = schnorr.toSignature(signed.txParams.signature as string);
-    const lgtm = schnorr.verify(signed.bytes, signature, Buffer.from(pubKey, 'hex'));
+    const lgtm = schnorr.verify(
+      signed.bytes,
+      signature,
+      Buffer.from(pubKey, 'hex'),
+    );
 
     expect(lgtm).toBeTruthy();
   });

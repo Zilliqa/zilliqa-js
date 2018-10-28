@@ -1,6 +1,8 @@
 import { RPCResponse } from '@zilliqa/zilliqa-js-core';
 
-export const isError = <R, E>(response: RPCResponse<R, E>): response is RPCResponse<never, E> => {
+export const isError = <R, E>(
+  response: RPCResponse<R, E>,
+): response is RPCResponse<never, E> => {
   return (
     // we check for pascal case as well, in because rpc server returns
     // inconsistent payloads.

@@ -46,7 +46,11 @@ describe('schnorr', () => {
         );
       }
 
-      const res = schnorr.verify(Buffer.from(msg, 'hex'), sig, Buffer.from(pub, 'hex'));
+      const res = schnorr.verify(
+        Buffer.from(msg, 'hex'),
+        sig,
+        Buffer.from(pub, 'hex'),
+      );
 
       expect(sig.r.toString('hex', 64).toUpperCase()).toEqual(r);
       expect(sig.s.toString('hex', 64).toUpperCase()).toEqual(s);

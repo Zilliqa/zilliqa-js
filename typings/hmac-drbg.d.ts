@@ -19,6 +19,11 @@ declare module 'hmac-drbg' {
       add: string | Buffer,
       addEnc: 'hex',
     ): HmacDRBG;
-    generate(len: number, enc?: 'hex', add?: string | Buffer, addEnc?: 'hex'): string;
+    generate(
+      len: number,
+      enc?: 'hex',
+      add?: string | Buffer,
+      addEnc?: 'hex',
+    ): string;
   }
 }

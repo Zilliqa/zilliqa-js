@@ -69,7 +69,12 @@ export const sign = (msg: Buffer, key: Buffer, pubkey: Buffer): Signature => {
  *
  * @returns {Signature | null =>}
  */
-export const trySign = (msg: Buffer, prv: BN, k: BN, pubKey: Buffer): Signature | null => {
+export const trySign = (
+  msg: Buffer,
+  prv: BN,
+  k: BN,
+  pubKey: Buffer,
+): Signature | null => {
   if (prv.isZero()) throw new Error('Bad private key.');
 
   if (prv.gte(curve.n)) throw new Error('Bad private key.');

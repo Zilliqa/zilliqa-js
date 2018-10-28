@@ -54,7 +54,10 @@ export const isTxParams = (obj: unknown): obj is TxParams => {
 };
 
 export const formatOutgoingTx: ReqMiddlewareFn<[TxParams]> = (req) => {
-  if (req.payload.method === RPCMethod.CreateTransaction && isTxParams(req.payload.params[0])) {
+  if (
+    req.payload.method === RPCMethod.CreateTransaction &&
+    isTxParams(req.payload.params[0])
+  ) {
     const txConfig = req.payload.params[0];
 
     const ret = {

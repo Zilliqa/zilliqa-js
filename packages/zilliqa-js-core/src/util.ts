@@ -15,14 +15,21 @@ export interface Middleware {
 
 export type Transformer<I, O> = (payload: I) => O;
 
-export type ReqMiddlewareFn<I = any, O = any> = Transformer<RPCRequest<I>, RPCRequest<O>>;
+export type ReqMiddlewareFn<I = any, O = any> = Transformer<
+  RPCRequest<I>,
+  RPCRequest<O>
+>;
 export type ResMiddlewareFn<I = any, O = any, E = any> = Transformer<
   WithRequest<RPCResponse<I, E>>,
   WithRequest<RPCResponse<O, E>>
 >;
 
-export function composeMiddleware<T extends ReqMiddlewareFn[]>(...fns: T): ReqMiddlewareFn;
-export function composeMiddleware<T extends ResMiddlewareFn[]>(...fns: T): ResMiddlewareFn;
+export function composeMiddleware<T extends ReqMiddlewareFn[]>(
+  ...fns: T
+): ReqMiddlewareFn;
+export function composeMiddleware<T extends ResMiddlewareFn[]>(
+  ...fns: T
+): ResMiddlewareFn;
 export function composeMiddleware(...fns: any[]): any {
   if (fns.length === 0) {
     return (arg: any) => arg;

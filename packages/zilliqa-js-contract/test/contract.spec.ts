@@ -96,7 +96,9 @@ describe('Contracts', () => {
       },
     ].map((res) => [JSON.stringify(res)] as [string]);
 
-    fetch.mockResponses(...responses).mockRejectOnce(new Error('something bad happened'));
+    fetch
+      .mockResponses(...responses)
+      .mockRejectOnce(new Error('something bad happened'));
 
     await expect(contract.deploy(new BN(1000), new BN(1000))).rejects.toThrow();
   });

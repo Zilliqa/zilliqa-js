@@ -1,6 +1,12 @@
 import Mitt, { Emitter } from 'mitt';
 import BaseProvider from './base';
-import { RPCMethod, RPCRequest, RPCRequestPayload, RPCResponse, performRPC } from '../net';
+import {
+  RPCMethod,
+  RPCRequest,
+  RPCRequestPayload,
+  RPCResponse,
+  performRPC,
+} from '../net';
 import { composeMiddleware, ReqMiddlewareFn, ResMiddlewareFn } from '../util';
 import { Provider, Subscriber, Subscribers } from '../types';
 

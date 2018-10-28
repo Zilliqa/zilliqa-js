@@ -123,7 +123,11 @@ export default class Wallet extends Signer {
    * @param {KDF} kdf='scrypt'
    * @returns {Promise<string>}
    */
-  export(address: string, passphrase: string, kdf: zcrypto.KDF = 'scrypt'): Promise<string> {
+  export(
+    address: string,
+    passphrase: string,
+    kdf: zcrypto.KDF = 'scrypt',
+  ): Promise<string> {
     if (!this.accounts[address]) {
       throw new Error(`No account with address ${address} exists`);
     }
@@ -188,7 +192,9 @@ export default class Wallet extends Signer {
    */
   async signWith(tx: Transaction, account: string): Promise<Transaction> {
     if (!this.accounts[account]) {
-      throw new Error('The selected account does not exist on this Wallet instance.');
+      throw new Error(
+        'The selected account does not exist on this Wallet instance.',
+      );
     }
 
     try {
