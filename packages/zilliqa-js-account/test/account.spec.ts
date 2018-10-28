@@ -1,3 +1,4 @@
+import fs from 'fs';
 import BN from 'bn.js';
 import Signature from 'elliptic/lib/elliptic/ec/signature';
 import { HTTPProvider } from '@zilliqa/zilliqa-js-core';
@@ -24,6 +25,27 @@ describe('Account', () => {
       const decrypted = await Account.fromFile(keystore, 'weak_password');
     } catch (err) {
       expect(err.message).toEqual('Could not decrypt keystore file.');
+    }
+  });
+
+  it('should create accounts from keystores', async () => {
+    const content = await new Promise((resolve, reject) => {
+      fs.readFile(
+        `${__dirname}/fixtures/keystores.json`,
+        'utf8',
+        (err, data) => {
+          err ? reject(err) : resolve(data);
+        },
+      );
+    });
+    const keystoreFixtures = JSON.parse(content as string);
+    for (const keystoreFixture of keystoreFixtures) {
+      const { privateKey, passphrase, keystore } = keystoreFixture;
+      const account = await Account.fromFile(
+        JSON.stringify(keystore),
+        passphrase,
+      );
+      expect('0x' + account.privateKey).toEqual(privateKey);
     }
   });
 
