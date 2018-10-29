@@ -79,7 +79,11 @@ async function bundle() {
         input: path.join(pkg.src, 'index.ts'),
         plugins: [
           alias({
-            elliptic: 'includes/elliptic/elliptic.js',
+            elliptic: path.resolve(
+              __dirname,
+              '../',
+              'includes/elliptic/elliptic.js',
+            ),
           }),
           resolve({
             browser: true,
