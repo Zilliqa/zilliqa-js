@@ -11,6 +11,7 @@ install:
   - yarn global add codecov
 script:
   - yarn build
+  - yarn build:proto
   - yarn run test
 after_success:
   - codecov
