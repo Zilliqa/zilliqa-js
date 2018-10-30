@@ -15,7 +15,7 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "paths": {
-      "*": ["typings/*"]
+      "*": ["typings/*", "includes/*"]
     },
     "resolveJsonModule": true,
     "strict": true,

@@ -10,6 +10,7 @@
   "typings": "dist/index.d.ts",
   "scripts": {
     "build": "tsc -b tsconfig.json",
+    "build:proto": "ts-node -P scripts/tsconfig.json scripts/proto.ts",
     "bundle": "ts-node -P scripts/tsconfig.json scripts/bundle.ts umd,esm",
     "schema": "ts-node -P scripts/tsconfig.json scripts/schema.ts blockchain",
     "test": "cross-env TEST_ENV=unit jest -c jest.config.js --rootDir=.",
@@ -69,6 +70,7 @@
     "lerna": "^3.4.0",
     "prettier": "^1.14.3",
     "pretty-quick": "^1.8.0",
+    "protobufjs": "^6.8.8",
     "rollup": "^0.66.6",
     "rollup-plugin-alias": "^1.4.0",
     "rollup-plugin-commonjs": "^9.2.0",
