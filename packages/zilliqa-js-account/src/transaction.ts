@@ -5,7 +5,7 @@ import { getAddressFromPublicKey } from '@zilliqa/zilliqa-js-crypto';
 import { types } from '@zilliqa/zilliqa-js-util';
 
 import { TxParams, TxReceipt, TxStatus, TxIncluded } from './types';
-import { encodeTransaction, sleep } from './util';
+import { encodeTransactionProto, sleep } from './util';
 
 /**
  * Transaction
@@ -42,7 +42,9 @@ export default class Transaction implements Signable {
 
   // parameters
   private version: number;
+  private nonce?: number;
   private toAddr: string;
+  private pubKey?: string;
   private amount: BN;
   private gasPrice: BN;
   private gasLimit: BN;
@@ -50,15 +52,13 @@ export default class Transaction implements Signable {
   private code: string;
   private data: string;
   private receipt?: TxReceipt;
-  private nonce?: number;
-  private pubKey?: string;
   private signature?: string;
 
   // internal state
   status: TxStatus;
 
   get bytes(): Buffer {
-    return encodeTransaction(this.txParams);
+    return encodeTransactionProto(this.txParams);
   }
 
   get senderAddress(): string {

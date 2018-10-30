@@ -28,6 +28,52 @@ export const intToHexArray = (int: number, size: number): string[] => {
 };
 
 /**
+ * intToByteArray
+ *
+ * Converts a number to Uint8Array
+ *
+ * @param {number} num
+ * @param {number} size
+ *
+ * @returns {Uint8Array}
+ */
+export const intToByteArray = (num: number, size: number): Uint8Array => {
+  let x = num;
+  const res: number[] = [];
+
+  while (x > 0) {
+    res.push(x & 255);
+    x = x >> 8;
+  }
+
+  const pad = size - res.length;
+
+  for (let i = 0; i < pad; i++) {
+    res.unshift(0);
+  }
+
+  return Uint8Array.from(res);
+};
+
+/**
+ * hexToByteArray
+ *
+ * Convers a hex string to a Uint8Array
+ *
+ * @param {string} hex
+ * @returns {Uint8Array}
+ */
+export const hexToByteArray = (hex: string): Uint8Array => {
+  const res = new Uint8Array(hex.length / 2);
+
+  for (let i = 0; i < hex.length; i += 2) {
+    res[i / 2] = parseInt(hex.substring(i, i + 2), 16);
+  }
+
+  return res;
+};
+
+/**
  * hexToIntArray
  *
  * @param {string} hex

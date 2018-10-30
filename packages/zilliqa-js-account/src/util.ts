@@ -5,10 +5,13 @@ import {
   RPCMethod,
 } from '@zilliqa/zilliqa-js-core';
 import { bytes, validation } from '@zilliqa/zilliqa-js-util';
+import { ZilliqaMessage } from 'proto';
 import { TxReceipt, TxParams } from './types';
+
 /**
  * encodeTransaction
  *
+ * @deprecated
  * @param {TxParams} tx - JSON-encoded tx to convert to a byte array
  * @returns {Buffer} - Buffer of bytes
  */
@@ -30,6 +33,40 @@ export const encodeTransaction = (tx: TxParams): Buffer => {
     dataHex;
 
   return Buffer.from(encoded, 'hex');
+};
+
+export const encodeTransactionProto = (tx: TxParams): Buffer => {
+  const msg = ZilliqaMessage.ProtoTransactionCoreInfo.create({
+    version: ZilliqaMessage.ByteArray.create({
+      data: bytes.intToByteArray(tx.version, 32),
+    }),
+    nonce: ZilliqaMessage.ByteArray.create({
+      data: bytes.intToByteArray(tx.nonce || 0, 32),
+    }),
+    toaddr: bytes.hexToByteArray(tx.toAddr),
+    senderpubkey: ZilliqaMessage.ByteArray.create({
+      data: bytes.hexToByteArray(tx.pubKey || '00'),
+    }),
+    amount: ZilliqaMessage.ByteArray.create({
+      data: Uint8Array.from(tx.amount.toBuffer(undefined, 32)),
+    }),
+    gasprice: ZilliqaMessage.ByteArray.create({
+      data: Uint8Array.from(tx.gasPrice.toBuffer(undefined, 32)),
+    }),
+    gaslimit: ZilliqaMessage.ByteArray.create({
+      data: Uint8Array.from(tx.gasLimit.toBuffer(undefined, 32)),
+    }),
+    code: Uint8Array.from(
+      [...(tx.code || '')].map((c) => <number>c.charCodeAt(0)),
+    ),
+    data: Uint8Array.from(
+      [...(tx.code || '')].map((c) => <number>c.charCodeAt(0)),
+    ),
+  });
+
+  return Buffer.from(
+    ZilliqaMessage.ProtoTransactionCoreInfo.encode(msg).finish(),
+  );
 };
 
 export const isTxReceipt = (x: unknown): x is TxReceipt => {
