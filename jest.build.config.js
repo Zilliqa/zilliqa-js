@@ -8,12 +8,13 @@
 // warranties are given as to title or non-infringement, merchantability or fitness for purpose
 // and, to the extent permitted by law, all liability for your use of the code is disclaimed.
 const config = {
+  browser: true,
   transform: {
     '^.+\\.ts$': 'ts-jest',
   },
   testMatch: ['<rootDir>/packages/**/test/?(*.)+(spec|test).ts'],
   moduleDirectories: [
-    'packages/*/src',
+    '<rootDir>/includes',
     '<rootDir>/node_modules',
     '<rootDir>/*/node_modules',
   ],
@@ -25,11 +26,6 @@ const config = {
     },
   },
   testURL: 'http://localhost',
-  collectCoverage: true,
-  collectCoverageFrom: [
-    '<rootDir>/packages/*/src/**/*.{ts,js}',
-    '!**/node_modules/**',
-  ],
   setupFiles: ['<rootDir>/jest-setup.js'],
   watchPlugins: [
     'jest-watch-typeahead/filename',

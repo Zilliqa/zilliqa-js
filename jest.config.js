@@ -13,11 +13,10 @@ const config = {
   },
   testMatch: ['<rootDir>/packages/**/test/?(*.)+(spec|test).ts'],
   moduleDirectories: [
-    'node_modules',
     'packages/*/src',
+    '<rootDir>/includes',
     '<rootDir>/node_modules',
     '<rootDir>/*/node_modules',
-    '<rootDir>/includes',
   ],
   moduleFileExtensions: ['js', 'ts', 'node', 'json'],
   moduleNameMapper: {

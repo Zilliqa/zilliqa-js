@@ -14,8 +14,8 @@
     "bundle": "ts-node -P scripts/tsconfig.json scripts/bundle.ts umd,esm",
     "schema": "ts-node -P scripts/tsconfig.json scripts/schema.ts blockchain",
     "test": "cross-env TEST_ENV=unit jest -c jest.config.js --rootDir=.",
+    "test:build": "cross-env TEST_ENV=unit jest -c jest.build.config.js",
     "test:integration": "cross-env TEST_ENV=integration jest -c jest.iconfig.js",
-    "test:build": "yarn bundle && jest -c jest.build.config.js",
     "publish": "yarn build && yarn publish",
     "format": "prettier --write '**/*.{ts,tsx,js}' --config .prettierrc"
   },
