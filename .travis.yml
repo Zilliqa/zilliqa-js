@@ -10,11 +10,13 @@ install:
   - yarn install --pure-lockfile
   - yarn global add codecov
 script:
-  - yarn build:proto
-  - yarn build
+  - yarn bootstrap
   - yarn run test
 after_success:
   - codecov
+deploy:
+  - yarn publish
+  if: branch = master
 cache:
   directories:
   - "$HOME/.yarn-cache"

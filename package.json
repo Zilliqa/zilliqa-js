@@ -13,7 +13,7 @@
     "test": "cross-env TEST_ENV=unit jest -c jest.config.js --rootDir=.",
     "test:build": "cross-env TEST_ENV=unit jest -c jest.build.config.js",
     "test:integration": "cross-env TEST_ENV=integration jest -c jest.iconfig.js",
-    "publish": "yarn build && yarn publish",
+    "publish": "ts-node -P scripts/tsconfig.json scripts/publish.ts",
     "format": "prettier --write '**/*.{ts,tsx,js}' --config .prettierrc"
   },
   "workspaces": [
