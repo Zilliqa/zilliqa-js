@@ -1,5 +1,5 @@
 {
-  "name": "@zilliqa/zilliqa-js",
+  "name": "@zilliqa-js/zilliqa",
   "version": "0.2.0",
   "description": "Main entry point to the Zilliqa JS client.",
   "main": "dist/index.js",
@@ -9,12 +9,18 @@
   "repository": "https://www.github.com/Zilliqa/Zilliqa-Javascript-Library",
   "author": "ian@zilliqa.com",
   "license": "GPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "clean": "rimraf ./dist"
+  },
   "dependencies": {
-    "@zilliqa/zilliqa-js-account": "^0.2.0",
-    "@zilliqa/zilliqa-js-blockchain": "^0.2.0",
-    "@zilliqa/zilliqa-js-contract": "^0.2.0",
-    "@zilliqa/zilliqa-js-core": "^0.2.0",
-    "@zilliqa/zilliqa-js-crypto": "^0.2.0",
-    "@zilliqa/zilliqa-js-util": "^0.2.0"
+    "@zilliqa-js/account": "^0.2.0",
+    "@zilliqa-js/blockchain": "^0.2.0",
+    "@zilliqa-js/contract": "^0.2.0",
+    "@zilliqa-js/core": "^0.2.0",
+    "@zilliqa-js/crypto": "^0.2.0",
+    "@zilliqa-js/util": "^0.2.0"
   }
 }
