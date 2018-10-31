@@ -10,8 +10,8 @@ install:
   - yarn install --pure-lockfile
   - yarn global add codecov
 script:
-  - yarn build
   - yarn build:proto
+  - yarn build
   - yarn run test
 after_success:
   - codecov
