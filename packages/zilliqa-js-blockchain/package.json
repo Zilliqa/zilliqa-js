@@ -13,8 +13,8 @@
   "author": "ian@zilliqa.com",
   "license": "GPL-3.0",
   "dependencies": {
-    "@zilliqa/zilliqa-js-account": "0.2.0",
-    "@zilliqa/zilliqa-js-core": "0.2.0",
+    "@zilliqa/zilliqa-js-account": "^0.2.0",
+    "@zilliqa/zilliqa-js-core": "^0.2.0",
     "bn.js": "^4.11.8"
   }
 }

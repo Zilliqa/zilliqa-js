@@ -12,6 +12,7 @@
   "repository": "https://github.com/zilliqa/zilliqa-javascript-library/",
   "license": "GPL-3.0",
   "dependencies": {
+    "@zilliqa/zilliqa-js-util": "^0.2.0",
     "aes-js": "^3.1.1",
     "bn.js": "^4.11.8",
     "bsert": "^0.0.4",
@@ -21,7 +22,6 @@
     "pbkdf2": "^3.0.16",
     "randombytes": "^2.0.6",
     "scrypt.js": "^0.2.0",
-    "uuid": "^3.3.2",
-    "@zilliqa/zilliqa-js-util": "^0.2.0"
+    "uuid": "^3.3.2"
   }
 }

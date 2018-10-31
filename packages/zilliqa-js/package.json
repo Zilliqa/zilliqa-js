@@ -10,11 +10,11 @@
   "author": "ian@zilliqa.com",
   "license": "GPL-3.0",
   "dependencies": {
-    "@zilliqa/zilliqa-js-core": "0.2.0",
-    "@zilliqa/zilliqa-js-crypto": "0.2.0",
-    "@zilliqa/zilliqa-js-contract": "0.2.0",
-    "@zilliqa/zilliqa-js-account": "0.2.0",
-    "@zilliqa/zilliqa-js-blockchain": "0.2.0",
-    "@zilliqa/zilliqa-js-util": "0.2.0"
+    "@zilliqa/zilliqa-js-account": "^0.2.0",
+    "@zilliqa/zilliqa-js-blockchain": "^0.2.0",
+    "@zilliqa/zilliqa-js-contract": "^0.2.0",
+    "@zilliqa/zilliqa-js-core": "^0.2.0",
+    "@zilliqa/zilliqa-js-crypto": "^0.2.0",
+    "@zilliqa/zilliqa-js-util": "^0.2.0"
   }
 }
