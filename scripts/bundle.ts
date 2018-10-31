@@ -4,6 +4,7 @@ import project from './project';
 import alias from 'rollup-plugin-alias';
 import commonjs from 'rollup-plugin-commonjs';
 import json from 'rollup-plugin-json';
+import globals from 'rollup-plugin-node-globals';
 import resolve from 'rollup-plugin-node-resolve';
 import typescript2 from 'rollup-plugin-typescript2';
 import webpack from 'webpack';
@@ -84,13 +85,27 @@ async function bundle() {
               '../',
               'includes/elliptic/elliptic.js',
             ),
+            proto: path.resolve(__dirname, '../', 'includes/proto/index.js'),
           }),
           resolve({
             browser: true,
             jsnext: true,
-            preferBuiltins: false,
+            preferBuiltins: true,
           }),
-          commonjs(),
+          commonjs({
+            namedExports: {
+              [path.resolve(__dirname, '../', 'includes/proto/index.js')]: [
+                'ZilliqaMessage',
+              ],
+            },
+          }),
+          globals({
+            baseDir: false,
+            buffer: true,
+            dirname: false,
+            filename: false,
+            global: false,
+          }),
           json(),
           typescript2({
             tsconfig: path.join(pkg.path, 'tsconfig.json'),
