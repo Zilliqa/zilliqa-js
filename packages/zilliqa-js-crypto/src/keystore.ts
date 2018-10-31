@@ -33,14 +33,17 @@ async function getDerivedKey(
   params: KDFParams,
 ): Promise<Buffer> {
   const salt = Buffer.from(params.salt, 'hex');
+
   if (kdf === 'pbkdf2') {
     const { c, dklen } = params as PBKDF2Params;
     return pbkdf2.pbkdf2Sync(key, salt, c, dklen, 'sha256');
   }
+
   if (kdf === 'scrypt') {
     const { n, r, p, dklen } = params as ScryptParams;
     return scrypt(key, salt, n, r, p, dklen);
   }
+
   throw new Error('Only pbkdf2 and scrypt are supported');
 }
 
@@ -69,8 +72,9 @@ export const encryptPrivateKey = async (
   const salt = randomBytes(32);
   const iv = Buffer.from(randomBytes(16), 'hex');
   const kdfparams = {
-    salt: salt,
-    n: kdf === 'pbkdf2' ? 262144 : 8192,
+    salt,
+    n: 8192,
+    c: 262144,
     r: 8,
     p: 1,
     dklen: 32,
