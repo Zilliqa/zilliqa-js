@@ -20,8 +20,8 @@ const config = {
   ],
   moduleFileExtensions: ['js', 'ts', 'node', 'json'],
   moduleNameMapper: {
-    '^@zilliqa/zilliqa-js-(.*)$':
-      '<rootDir>/packages/zilliqa-js-$1/src/index.ts',
+    '^@zilliqa-js/zilliqa': '<rootDir>/packages/zilliqa/src/index.ts',
+    '^@zilliqa-js/(.*)$': '<rootDir>/packages/zilliqa-js-$1/src/index.ts',
   },
   globals: {
     'ts-jest': {
