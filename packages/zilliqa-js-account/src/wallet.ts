@@ -1,7 +1,7 @@
 import bip39 from 'bip39';
 import hdkey from 'hdkey';
-import { Signer, Provider, RPCResponse } from '@zilliqa/zilliqa-js-core';
-import * as zcrypto from '@zilliqa/zilliqa-js-crypto';
+import { Signer, Provider, RPCResponse } from '@zilliqa-js/core';
+import * as zcrypto from '@zilliqa-js/crypto';
 
 import Account from './account';
 import Transaction from './transaction';

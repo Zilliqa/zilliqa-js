@@ -1,8 +1,8 @@
 import axios from 'axios';
 import BN from 'bn.js';
 
-import { Wallet } from '@zilliqa/zilliqa-js-account';
-import { HTTPProvider } from '@zilliqa/zilliqa-js-core';
+import { Wallet } from '@zilliqa-js/account';
+import { HTTPProvider } from '@zilliqa-js/core';
 
 import fetch from 'jest-fetch-mock';
 

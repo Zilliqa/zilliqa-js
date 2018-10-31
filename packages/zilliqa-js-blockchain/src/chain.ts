@@ -1,11 +1,11 @@
-import { Transaction, Wallet, util } from '@zilliqa/zilliqa-js-account';
+import { Transaction, Wallet, util } from '@zilliqa-js/account';
 import {
   Provider,
   ZilliqaModule,
   RPCResponse,
   RPCMethod,
   sign,
-} from '@zilliqa/zilliqa-js-core';
+} from '@zilliqa-js/core';
 
 import {
   DsBlockObj,

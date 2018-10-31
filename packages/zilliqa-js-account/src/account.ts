@@ -1,4 +1,4 @@
-import * as zcrypto from '@zilliqa/zilliqa-js-crypto';
+import * as zcrypto from '@zilliqa-js/crypto';
 import Transaction from './transaction';
 
 export default class Account {

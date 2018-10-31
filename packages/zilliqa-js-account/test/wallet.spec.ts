@@ -1,12 +1,12 @@
 import axios from 'axios';
 import BN from 'bn.js';
 
-import { HTTPProvider } from '@zilliqa/zilliqa-js-core';
+import { HTTPProvider } from '@zilliqa-js/core';
 import {
   getPubKeyFromPrivateKey,
   generatePrivateKey,
   schnorr,
-} from '@zilliqa/zilliqa-js-crypto';
+} from '@zilliqa-js/crypto';
 
 import fetch from 'jest-fetch-mock';
 

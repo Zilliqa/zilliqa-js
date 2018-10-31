@@ -1,8 +1,8 @@
 import BN from 'bn.js';
 
-import { Provider, RPCResponse, Signable } from '@zilliqa/zilliqa-js-core';
-import { getAddressFromPublicKey } from '@zilliqa/zilliqa-js-crypto';
-import { types } from '@zilliqa/zilliqa-js-util';
+import { Provider, RPCResponse, Signable } from '@zilliqa-js/core';
+import { getAddressFromPublicKey } from '@zilliqa-js/crypto';
+import { types } from '@zilliqa-js/util';
 
 import { TxParams, TxReceipt, TxStatus, TxIncluded } from './types';
 import { encodeTransactionProto, sleep } from './util';

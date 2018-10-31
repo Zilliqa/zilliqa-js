@@ -1,7 +1,7 @@
 import BN from 'bn.js';
 
-import { TxParams } from '@zilliqa/zilliqa-js-account';
-import { RPCResponse } from '@zilliqa/zilliqa-js-core';
+import { TxParams } from '@zilliqa-js/account';
+import { RPCResponse } from '@zilliqa-js/core';
 
 import { TransactionObj } from './types';
 

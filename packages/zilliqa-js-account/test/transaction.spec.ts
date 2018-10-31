@@ -1,5 +1,5 @@
 import BN from 'bn.js';
-import { RPCMethod, HTTPProvider } from '@zilliqa/zilliqa-js-core';
+import { RPCMethod, HTTPProvider } from '@zilliqa-js/core';
 
 import Transaction from '../src/transaction';
 import Wallet from '../src/wallet';

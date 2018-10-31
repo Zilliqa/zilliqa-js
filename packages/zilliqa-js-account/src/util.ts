@@ -3,8 +3,8 @@ import {
   RPCRequest,
   RPCRequestPayload,
   RPCMethod,
-} from '@zilliqa/zilliqa-js-core';
-import { bytes, validation } from '@zilliqa/zilliqa-js-util';
+} from '@zilliqa-js/core';
+import { bytes, validation } from '@zilliqa-js/util';
 import { ZilliqaMessage } from 'proto';
 import { TxReceipt, TxParams } from './types';
 

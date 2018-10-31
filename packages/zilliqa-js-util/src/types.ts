@@ -1,4 +1,4 @@
-import { RPCResponse } from '@zilliqa/zilliqa-js-core';
+import { RPCResponse } from '@zilliqa-js/core';
 
 export const isError = <R, E>(
   response: RPCResponse<R, E>,

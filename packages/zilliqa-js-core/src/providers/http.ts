@@ -1,4 +1,3 @@
-import Mitt, { Emitter } from 'mitt';
 import BaseProvider from './base';
 import {
   RPCMethod,

@@ -1,4 +1,3 @@
-import { Emitter } from 'mitt';
 import { RPCRequest, RPCResponse } from './net';
 import { Middleware } from './util';
 

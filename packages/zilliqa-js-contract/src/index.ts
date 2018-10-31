@@ -1,14 +1,9 @@
 import BN from 'bn.js';
 import hash from 'hash.js';
 
-import {
-  Account,
-  Wallet,
-  Transaction,
-  TxStatus,
-} from '@zilliqa/zilliqa-js-account';
-import { Provider, ZilliqaModule, sign } from '@zilliqa/zilliqa-js-core';
-import { bytes, types } from '@zilliqa/zilliqa-js-util';
+import { Account, Wallet, Transaction, TxStatus } from '@zilliqa-js/account';
+import { Provider, ZilliqaModule, sign } from '@zilliqa-js/core';
+import { bytes, types } from '@zilliqa-js/util';
 
 import { ABI, Init, State, Value, DeployError, DeploySuccess } from './types';
 

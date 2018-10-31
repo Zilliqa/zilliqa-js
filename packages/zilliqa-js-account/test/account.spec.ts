@@ -1,8 +1,8 @@
 import fs from 'fs';
 import BN from 'bn.js';
 import Signature from 'elliptic/lib/elliptic/ec/signature';
-import { HTTPProvider } from '@zilliqa/zilliqa-js-core';
-import * as zcrypto from '@zilliqa/zilliqa-js-crypto';
+import { HTTPProvider } from '@zilliqa-js/core';
+import * as zcrypto from '@zilliqa-js/crypto';
 import Account from '../src/account';
 import Transaction from '../src/transaction';
 

@@ -1,7 +1,7 @@
 import BN from 'bn.js';
 
-import { Transaction, Wallet, TxCreated } from '@zilliqa/zilliqa-js-account';
-import { HTTPProvider, RPCResponseSuccess } from '@zilliqa/zilliqa-js-core';
+import { Transaction, Wallet, TxCreated } from '@zilliqa-js/account';
+import { HTTPProvider, RPCResponseSuccess } from '@zilliqa-js/core';
 
 import Blockchain from '../src/chain';
 

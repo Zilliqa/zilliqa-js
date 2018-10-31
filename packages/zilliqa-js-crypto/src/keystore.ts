@@ -4,7 +4,7 @@ import pbkdf2 from 'pbkdf2';
 import scrypt from 'scrypt.js';
 import uuid from 'uuid';
 
-import { bytes } from '@zilliqa/zilliqa-js-util';
+import { bytes } from '@zilliqa-js/util';
 
 import { randomBytes } from './random';
 import {

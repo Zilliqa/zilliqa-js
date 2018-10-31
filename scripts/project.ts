@@ -25,7 +25,7 @@ export default {
       const pkgGlobalName = camelcase(pkgName.replace('zilliqa-js', 'zjs'));
       const pkgPath = path.join(packagesPath, p);
       const pkgSrc = path.join(pkgPath, 'src');
-      const pkgScopedName = `@zilliqa/${p}`;
+      const pkgScopedName = `@zilliqa-js/${p.replace('zilliqa-js-', '')}`;
       const pkgDist = path.join(pkgPath, 'dist');
 
       const pkgUmd = path.join(pkgDist, 'index.umd.js');

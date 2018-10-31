@@ -1,7 +1,7 @@
-import { HTTPProvider, Provider } from '@zilliqa/zilliqa-js-core';
-import { Wallet } from '@zilliqa/zilliqa-js-account';
-import { Contracts } from '@zilliqa/zilliqa-js-contract';
-import { Blockchain, Network } from '@zilliqa/zilliqa-js-blockchain';
+import { HTTPProvider, Provider } from '@zilliqa-js/core';
+import { Wallet } from '@zilliqa-js/account';
+import { Contracts } from '@zilliqa-js/contract';
+import { Blockchain, Network } from '@zilliqa-js/blockchain';
 
 export default class Zilliqa {
   provider: Provider;

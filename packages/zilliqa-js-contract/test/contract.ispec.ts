@@ -1,6 +1,6 @@
 import BN from 'bn.js';
-import { HTTPProvider } from '@zilliqa/zilliqa-js-core';
-import { Account, Wallet } from '@zilliqa/zilliqa-js-account';
+import { HTTPProvider } from '@zilliqa-js/core';
+import { Account, Wallet } from '@zilliqa-js/account';
 import { Contracts, Contract, ContractStatus } from '../src/index';
 import { abi } from './test.abi';
 import { testContract } from './fixtures';
