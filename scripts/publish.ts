@@ -16,7 +16,7 @@ const getVersion = async () => {
     throw new Error('Lerna version is malformed.');
   }
 
-  const [major, minor, patch] = match;
+  const [, major, minor, patch] = match;
 
   return { major, minor, patch };
 };
@@ -41,7 +41,7 @@ const publish = async () => {
   try {
     const { major, minor, patch } = await getVersion();
     const sha = await getCommitSHA();
-    const version = `${major}.${minor}.${patch}-${sha}`;
+    const version = `${major}.${minor}.${patch}-${DIST_TAG}.${sha}`;
 
     lerna([
       'publish',
@@ -50,8 +50,8 @@ const publish = async () => {
       DIST_TAG,
       '--no-git-tag-version',
       '--no-push',
-      '--no-verify-registry',
       '--no-verify-access',
+      '--no-verify-registry',
       '-y',
     ]);
 
