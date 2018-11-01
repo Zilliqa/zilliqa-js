@@ -95,7 +95,7 @@ export class Blockchain implements ZilliqaModule {
    * @returns {Promise<RPCResponse<BlockList, string>>}
    */
   getDSBlockListing(max: number): Promise<RPCResponse<BlockList, string>> {
-    return this.provider.send(RPCMethod.DSBlockListing);
+    return this.provider.send(RPCMethod.DSBlockListing, max);
   }
 
   /**
