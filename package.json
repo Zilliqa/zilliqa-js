@@ -4,7 +4,7 @@
   "private": true,
   "license": "GPL-3.0",
   "scripts": {
-    "bootstrap": "lerna bootstrap && yarn build:proto && yarn build",
+    "bootstrap": "lerna bootstrap -- --pure-lockfile && yarn build:proto && yarn build",
     "build": "tsc -b tsconfig.json",
     "build:proto": "ts-node -P scripts/tsconfig.json scripts/proto.ts",
     "bundle": "ts-node -P scripts/tsconfig.json scripts/bundle.ts umd,esm",

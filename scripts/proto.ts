@@ -4,8 +4,10 @@ import * as path from 'path';
 import pbjs from 'protobufjs/cli/pbjs';
 import pbts from 'protobufjs/cli/pbts';
 
+import { createLogger, c } from './logger';
 import project from './project';
 
+const log = createLogger('protobuf');
 const includes = path.resolve(__dirname, '../', 'includes');
 const proto = path.join(includes, 'proto');
 const compiled = path.join(proto, 'index.js');
@@ -44,8 +46,9 @@ const compilation = new Promise((resolve, reject) => {
   .then(() => {
     pbts.main(['--out', declaration, '--name', 'zproto', compiled], (err) => {
       if (err) {
+        log(`Could not generate protobuf files: ${err}`);
         throw err;
       }
     });
   })
-  .catch((err) => process.exit(127));
+  .catch((err) => process.exit(1));

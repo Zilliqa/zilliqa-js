@@ -16,7 +16,6 @@ after_success:
   - codecov
 deploy:
   - yarn publish
-  if: branch = master
 cache:
   directories:
   - "$HOME/.yarn-cache"

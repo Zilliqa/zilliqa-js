@@ -34,6 +34,10 @@ const getCommitSHA = async () => {
 };
 
 const publish = async () => {
+  if (process.env.CI && process.env.TRAVIS_BRANCH !== 'master') {
+    return;
+  }
+
   try {
     const { major, minor, patch } = await getVersion();
     const sha = await getCommitSHA();
@@ -53,6 +57,7 @@ const publish = async () => {
 
     return version;
   } catch (err) {
+    log(`Could not publish: ${err}`);
     throw err;
   }
 };
