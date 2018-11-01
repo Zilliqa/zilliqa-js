@@ -192,16 +192,21 @@ export class Transaction implements Signable {
    * The polls are performed with exponential backoff, which means the delay
    * between attemps are increased exponentially:
    *
-   * `const delay = Math.random() * (Math.pow(2, attempt) * 60)`
+   * `const delay = interval * (Math.pow(2, attempt) * 60)`
    *
    * This is a low-level method that you should generally not have to use
    * directly.
    *
    * @param {string} txHash
    * @param {number} maxAttempts
+   * @param {number} initial interval in milliseconds
    * @returns {Promise<Transaction>}
    */
-  async confirm(txHash: string, maxAttempts = 5): Promise<Transaction> {
+  async confirm(
+    txHash: string,
+    maxAttempts = 5,
+    interval = 1000,
+  ): Promise<Transaction> {
     this.status = TxStatus.Pending;
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       try {
@@ -213,7 +218,7 @@ export class Transaction implements Signable {
         throw err;
       }
       if (attempt + 1 < maxAttempts) {
-        const delay = Math.random() * (Math.pow(2, attempt) * 60);
+        const delay = interval * (Math.pow(2, attempt) * 60);
         await sleep(delay);
       }
     }
