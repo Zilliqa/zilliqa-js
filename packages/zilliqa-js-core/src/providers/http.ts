@@ -1,15 +1,9 @@
-import BaseProvider from './base';
-import {
-  RPCMethod,
-  RPCRequest,
-  RPCRequestPayload,
-  RPCResponse,
-  performRPC,
-} from '../net';
-import { composeMiddleware, ReqMiddlewareFn, ResMiddlewareFn } from '../util';
-import { Provider, Subscriber, Subscribers } from '../types';
+import { BaseProvider } from './base';
+import { RPCMethod, RPCRequest, RPCResponse, performRPC } from '../net';
+import { composeMiddleware } from '../util';
+import { Provider, Subscriber } from '../types';
 
-export default class HTTPProvider extends BaseProvider implements Provider {
+export class HTTPProvider extends BaseProvider implements Provider {
   buildPayload<T extends any[]>(method: RPCMethod, params: T): RPCRequest<T> {
     return {
       url: this.nodeURL,
@@ -30,7 +24,7 @@ export default class HTTPProvider extends BaseProvider implements Provider {
     return performRPC(req, resMiddleware);
   }
 
-  subscribe(event: string, subscriber: Subscriber): Symbol {
+  subscribe(event: string, subscriber: Subscriber): symbol {
     throw new Error('HTTPProvider does not support subscriptions.');
   }
 

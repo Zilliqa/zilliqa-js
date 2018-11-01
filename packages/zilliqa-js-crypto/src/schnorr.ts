@@ -3,7 +3,7 @@ import elliptic from 'elliptic';
 import BN from 'bn.js';
 import hashjs from 'hash.js';
 import DRBG from 'hmac-drbg';
-import Signature from './signature';
+import { Signature } from './signature';
 
 const curve = elliptic.ec('secp256k1').curve;
 // Public key is a point (x, y) on the curve.
@@ -75,14 +75,22 @@ export const trySign = (
   k: BN,
   pubKey: Buffer,
 ): Signature | null => {
-  if (prv.isZero()) throw new Error('Bad private key.');
+  if (prv.isZero()) {
+    throw new Error('Bad private key.');
+  }
 
-  if (prv.gte(curve.n)) throw new Error('Bad private key.');
+  if (prv.gte(curve.n)) {
+    throw new Error('Bad private key.');
+  }
 
   // 1a. check that k is not 0
-  if (k.isZero()) return null;
+  if (k.isZero()) {
+    return null;
+  }
   // 1b. check that k is < the order of the group
-  if (k.gte(curve.n)) return null;
+  if (k.gte(curve.n)) {
+    return null;
+  }
 
   // 2. Compute commitment Q = kG, where g is the base point
   const Q = curve.g.mul(k);
@@ -93,9 +101,13 @@ export const trySign = (
   const r = hash(compressedQ, pubKey, msg);
   const h = r.clone();
 
-  if (h.isZero()) return null;
+  if (h.isZero()) {
+    return null;
+  }
 
-  if (h.eq(curve.n)) return null;
+  if (h.eq(curve.n)) {
+    return null;
+  }
 
   // 4. Compute s = k - r * prv
   // 4a. Compute r * prv
@@ -104,7 +116,9 @@ export const trySign = (
   s = k.isub(s);
   s = s.umod(curve.n);
 
-  if (s.isZero()) return null;
+  if (s.isZero()) {
+    return null;
+  }
 
   return new Signature({ r, s });
 };
@@ -127,9 +141,13 @@ export const trySign = (
 export const verify = (msg: Buffer, signature: Signature, key: Buffer) => {
   const sig = new Signature(signature);
 
-  if (sig.s.gte(curve.n)) throw new Error('Invalid S value.');
+  if (sig.s.gte(curve.n)) {
+    throw new Error('Invalid S value.');
+  }
 
-  if (sig.r.gt(curve.n)) throw new Error('Invalid R value.');
+  if (sig.r.gt(curve.n)) {
+    throw new Error('Invalid R value.');
+  }
 
   const kpub = curve.decodePoint(key);
   const l = kpub.mul(sig.r);
@@ -140,9 +158,13 @@ export const verify = (msg: Buffer, signature: Signature, key: Buffer) => {
 
   const r1 = hash(compressedQ, key, msg);
 
-  if (r1.gte(curve.n)) throw new Error('Invalid hash.');
+  if (r1.gte(curve.n)) {
+    throw new Error('Invalid hash.');
+  }
 
-  if (r1.isZero()) throw new Error('Invalid hash.');
+  if (r1.isZero()) {
+    throw new Error('Invalid hash.');
+  }
 
   return r1.eq(sig.r);
 };

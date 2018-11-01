@@ -1,4 +1,4 @@
-import { RPCRequest, RPCResponse } from './net';
+import { RPCResponse } from './net';
 import { Middleware } from './util';
 
 export type Subscriber = (event: any) => void;
@@ -13,8 +13,8 @@ export interface Provider {
     method: string,
     ...params: any[]
   ): Promise<RPCResponse<R, E>>;
-  subscribe?(event: string, subscriber: Subscriber): Symbol;
-  unsubscribe?(token: Symbol): void;
+  subscribe?(event: string, subscriber: Subscriber): symbol;
+  unsubscribe?(token: symbol): void;
 }
 
 export abstract class Signer {

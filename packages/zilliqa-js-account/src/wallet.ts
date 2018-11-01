@@ -1,12 +1,12 @@
 import bip39 from 'bip39';
 import hdkey from 'hdkey';
-import { Signer, Provider, RPCResponse } from '@zilliqa-js/core';
+import { Signer, Provider } from '@zilliqa-js/core';
 import * as zcrypto from '@zilliqa-js/crypto';
 
-import Account from './account';
-import Transaction from './transaction';
+import { Account } from './account';
+import { Transaction } from './transaction';
 
-export default class Wallet extends Signer {
+export class Wallet extends Signer {
   accounts: { [address: string]: Account } = {};
   defaultAccount?: Account;
   provider: Provider;
@@ -93,13 +93,6 @@ export default class Wallet extends Signer {
     }
 
     return newAccount.address;
-  }
-
-  private isValidMnemonic(phrase: string): boolean {
-    if (phrase.trim().split(/\s+/g).length < 12) {
-      return false;
-    }
-    return bip39.validateMnemonic(phrase);
   }
 
   async addByMnemonic(phrase: string, index: number = 0): Promise<string> {
@@ -223,5 +216,12 @@ export default class Wallet extends Signer {
     } catch (err) {
       throw err;
     }
+  }
+
+  private isValidMnemonic(phrase: string): boolean {
+    if (phrase.trim().split(/\s+/g).length < 12) {
+      return false;
+    }
+    return bip39.validateMnemonic(phrase);
   }
 }

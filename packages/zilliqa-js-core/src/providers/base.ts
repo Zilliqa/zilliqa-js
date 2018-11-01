@@ -1,5 +1,4 @@
 import { RPCMethod } from '../net';
-import { Provider } from '../types';
 import { Matcher, ReqMiddlewareFn, ResMiddlewareFn } from '../util';
 
 const enum MiddlewareType {
@@ -7,11 +6,7 @@ const enum MiddlewareType {
   RES,
 }
 
-export default class BaseProvider {
-  protected nodeURL: string;
-  protected reqMiddleware: Map<Matcher, ReqMiddlewareFn[]>;
-  protected resMiddleware: Map<Matcher, ResMiddlewareFn[]>;
-
+export class BaseProvider {
   middleware = {
     request: {
       use: <I, O>(fn: ReqMiddlewareFn<I, O>, match: Matcher = '*') => {
@@ -24,6 +19,10 @@ export default class BaseProvider {
       },
     },
   };
+
+  protected nodeURL: string;
+  protected reqMiddleware: Map<Matcher, ReqMiddlewareFn[]>;
+  protected resMiddleware: Map<Matcher, ResMiddlewareFn[]>;
 
   constructor(
     nodeURL: string,

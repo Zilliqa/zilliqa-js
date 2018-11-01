@@ -1,9 +1,9 @@
 import BN from 'bn.js';
 
-import { Transaction, Wallet, TxCreated } from '@zilliqa-js/account';
-import { HTTPProvider, RPCResponseSuccess } from '@zilliqa-js/core';
+import { Transaction, Wallet } from '@zilliqa-js/account';
+import { HTTPProvider } from '@zilliqa-js/core';
 
-import Blockchain from '../src/chain';
+import { Blockchain } from '../src/chain';
 
 import fetch from 'jest-fetch-mock';
 

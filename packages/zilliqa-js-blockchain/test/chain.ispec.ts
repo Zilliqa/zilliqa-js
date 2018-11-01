@@ -2,7 +2,7 @@ import BN from 'bn.js';
 import { HTTPProvider, RPCResponse } from '@zilliqa-js/core';
 import { Account, Transaction, Wallet } from '@zilliqa-js/account';
 
-import Blockchain from '../src/chain';
+import { Blockchain } from '../src/chain';
 import { DsBlockObj, TxBlockObj, BlockList } from '../src/types';
 import schemas from './schema.json';
 

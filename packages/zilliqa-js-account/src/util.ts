@@ -1,9 +1,4 @@
-import {
-  ReqMiddlewareFn,
-  RPCRequest,
-  RPCRequestPayload,
-  RPCMethod,
-} from '@zilliqa-js/core';
+import { ReqMiddlewareFn, RPCMethod } from '@zilliqa-js/core';
 import { bytes, validation } from '@zilliqa-js/util';
 import { ZilliqaMessage } from 'proto';
 import { TxReceipt, TxParams } from './types';
@@ -16,10 +11,10 @@ import { TxReceipt, TxParams } from './types';
  * @returns {Buffer} - Buffer of bytes
  */
 export const encodeTransaction = (tx: TxParams): Buffer => {
-  let codeHex = Buffer.from(tx.code || '').toString('hex');
-  let dataHex = Buffer.from(tx.data || '').toString('hex');
+  const codeHex = Buffer.from(tx.code || '').toString('hex');
+  const dataHex = Buffer.from(tx.data || '').toString('hex');
 
-  let encoded =
+  const encoded =
     bytes.intToHexArray(tx.version, 64).join('') +
     bytes.intToHexArray(tx.nonce || 0, 64).join('') +
     tx.toAddr +

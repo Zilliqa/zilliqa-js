@@ -1,3 +1,9 @@
+export const enum ContractStatus {
+  Deployed,
+  Rejected,
+  Initialised,
+}
+
 export interface ContractObj {
   address: string;
   abi: ABI;
@@ -43,7 +49,7 @@ export interface TransitionPayload {
   params: Value[];
 }
 
-/** RPC Responses **/
+// RPC Error Responses
 export type DeployError =
   | 'Code is empty and To addr is null'
   | 'To Addr is null'

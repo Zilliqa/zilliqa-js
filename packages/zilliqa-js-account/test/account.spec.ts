@@ -3,8 +3,8 @@ import BN from 'bn.js';
 import Signature from 'elliptic/lib/elliptic/ec/signature';
 import { HTTPProvider } from '@zilliqa-js/core';
 import * as zcrypto from '@zilliqa-js/crypto';
-import Account from '../src/account';
-import Transaction from '../src/transaction';
+import { Account } from '../src/account';
+import { Transaction } from '../src/transaction';
 
 describe('Account', () => {
   it('should be able to encode itself as a keystore file', async () => {
@@ -22,7 +22,7 @@ describe('Account', () => {
     const keystore = await account.toFile('stronk_password');
 
     try {
-      const decrypted = await Account.fromFile(keystore, 'weak_password');
+      await Account.fromFile(keystore, 'weak_password');
     } catch (err) {
       expect(err.message).toEqual('Could not decrypt keystore file.');
     }

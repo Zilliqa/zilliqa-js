@@ -1,18 +1,18 @@
 export type KDF = 'pbkdf2' | 'scrypt';
 
-export type PBKDF2Params = {
+export interface PBKDF2Params {
   salt: string;
   dklen: number;
   c: number;
-};
+}
 
-export type ScryptParams = {
+export interface ScryptParams {
   salt: string;
   dklen: number;
   n: number;
   r: number;
   p: number;
-};
+}
 
 export type KDFParams = PBKDF2Params | ScryptParams;
 

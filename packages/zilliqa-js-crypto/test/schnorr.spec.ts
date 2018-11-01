@@ -5,9 +5,8 @@ import elliptic from 'elliptic';
 import { pairs } from './keypairs.fixtures';
 import schnorrVectors from './schnorr.fixtures';
 
-import * as crypto from '../src/index';
 import * as schnorr from '../src/schnorr';
-import Signature from '../src/signature';
+import { Signature } from '../src/signature';
 
 const secp256k1 = elliptic.ec('secp256k1');
 

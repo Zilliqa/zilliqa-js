@@ -1,11 +1,6 @@
 import elliptic from 'elliptic';
 import hashjs from 'hash.js';
 
-import { randomBytes } from './random';
-import * as schnorr from './schnorr';
-
-const NUM_BYTES = 32;
-
 const secp256k1 = elliptic.ec('secp256k1');
 /**
  * getAddressFromPrivateKey

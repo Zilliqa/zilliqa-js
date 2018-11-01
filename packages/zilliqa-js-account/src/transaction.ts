@@ -13,7 +13,7 @@ import { encodeTransactionProto, sleep } from './util';
  * Transaction is a functor. Its purpose is to encode the possible states a
  * Transaction can be in:  Confirmed, Rejected, Pending, or Initialised (i.e., not broadcasted).
  */
-export default class Transaction implements Signable {
+export class Transaction implements Signable {
   /**
    * confirm
    *
@@ -39,23 +39,21 @@ export default class Transaction implements Signable {
   }
 
   provider: Provider;
+  id?: string;
+  status: TxStatus;
 
   // parameters
-  private version: number;
+  private version: number = 0;
   private nonce?: number;
   private toAddr: string;
   private pubKey?: string;
   private amount: BN;
   private gasPrice: BN;
   private gasLimit: BN;
-  private id?: string;
   private code: string;
   private data: string;
   private receipt?: TxReceipt;
   private signature?: string;
-
-  // internal state
-  status: TxStatus;
 
   get bytes(): Buffer {
     return encodeTransactionProto(this.txParams);
@@ -71,7 +69,7 @@ export default class Transaction implements Signable {
 
   get txParams(): TxParams {
     return {
-      version: 0,
+      version: this.version,
       toAddr: this.toAddr,
       nonce: this.nonce,
       pubKey: this.pubKey,
@@ -260,9 +258,11 @@ export default class Transaction implements Signable {
       'GetTransaction',
       txHash,
     );
+
     if (types.isError(res)) {
       return false;
     }
+
     this.id = res.result.ID;
     this.receipt = res.result.receipt;
     this.status =

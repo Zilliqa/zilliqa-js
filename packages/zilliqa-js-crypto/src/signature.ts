@@ -14,7 +14,7 @@ interface SignatureOpt {
   s: string | BN;
 }
 
-export default class Signature {
+export class Signature {
   r: BN;
   s: BN;
 

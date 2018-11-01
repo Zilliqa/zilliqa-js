@@ -1,6 +1,5 @@
 import 'cross-fetch/polyfill';
 import { WithRequest } from './util';
-import { createError, Errors, ZjsError } from './errors';
 
 /**
  * TODO: Enable commented-out methods when they are implemented
@@ -84,7 +83,6 @@ export type RPCResponseHandler<R, E, T> = (
   response: WithRequest<RPCResponse<R, E>>,
 ) => T;
 
-const DEFAULT_TIMEOUT = 120000;
 const DEFAULT_HEADERS = { 'Content-Type': 'application/json' };
 
 export const performRPC = async <R, E, D extends any[], T = RPCResponse<R, E>>(

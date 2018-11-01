@@ -7,7 +7,7 @@ const enum NetworkMethods {
   GetProtocolVersion = 'GetProtocolVersion',
 }
 
-export default class Network implements ZilliqaModule {
+export class Network implements ZilliqaModule {
   provider: Provider;
   signer: Wallet;
 

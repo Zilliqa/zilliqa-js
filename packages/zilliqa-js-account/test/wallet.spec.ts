@@ -1,4 +1,3 @@
-import axios from 'axios';
 import BN from 'bn.js';
 
 import { HTTPProvider } from '@zilliqa-js/core';
@@ -11,9 +10,9 @@ import {
 import fetch from 'jest-fetch-mock';
 
 import { createWallet } from './util';
-import Account from '../src/account';
-import Wallet from '../src/wallet';
-import Transaction from '../src/transaction';
+import { Account } from '../src/account';
+import { Wallet } from '../src/wallet';
+import { Transaction } from '../src/transaction';
 
 const provider = new HTTPProvider('https://mock.com');
 

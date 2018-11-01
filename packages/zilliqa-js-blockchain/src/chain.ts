@@ -13,12 +13,11 @@ import {
   TxBlockObj,
   TxList,
   TransactionObj,
-  TransactionReceiptObj,
   ShardingStructure,
 } from './types';
 import { isError, toTxParams } from './util';
 
-export default class Blockchain implements ZilliqaModule {
+export class Blockchain implements ZilliqaModule {
   signer: Wallet;
   provider: Provider;
 
@@ -144,7 +143,8 @@ export default class Blockchain implements ZilliqaModule {
     return this.provider.send(RPCMethod.GetTxBlockRate);
   }
 
-  /** getTxBlockListing
+  /**
+   * getTxBlockListing
    *
    * Get a paginated list of Transaction blocks. Takes a page number as
    * parameter, where each page contains a list of 10 blocks (max). Returns

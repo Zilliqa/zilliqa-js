@@ -1,4 +1,3 @@
-import axios from 'axios';
 import BN from 'bn.js';
 
 import { Wallet } from '@zilliqa-js/account';

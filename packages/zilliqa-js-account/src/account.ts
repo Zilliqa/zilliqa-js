@@ -1,12 +1,6 @@
 import * as zcrypto from '@zilliqa-js/crypto';
-import Transaction from './transaction';
 
-export default class Account {
-  privateKey: string;
-  publicKey: string;
-  address: string;
-  nonce: number;
-
+export class Account {
   /**
    * fromFile
    *
@@ -27,6 +21,11 @@ export default class Account {
       throw new Error(`Could not decrypt keystore file.`);
     }
   }
+
+  privateKey: string;
+  publicKey: string;
+  address: string;
+  nonce: number;
 
   constructor(privateKey: string, nonce?: number) {
     this.privateKey = privateKey;

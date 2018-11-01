@@ -1,11 +1,5 @@
 import BN from 'bn.js';
 
-export interface Account {
-  address: string;
-  privateKey: string;
-  publicKey: string;
-}
-
 export const enum TxStatus {
   Initialised,
   Pending,

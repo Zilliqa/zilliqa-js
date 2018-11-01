@@ -1,2 +1,2 @@
-export { default as Blockchain } from './chain';
-export { default as Network } from './network';
+export { Blockchain } from './chain';
+export { Network } from './network';

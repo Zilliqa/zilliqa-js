@@ -84,12 +84,12 @@ export const hexToIntArray = (hex: string): number[] => {
     return [];
   }
 
-  let res = [];
+  const res = [];
 
   for (let i = 0; i < hex.length; i++) {
-    let c = hex.charCodeAt(i);
-    let hi = c >> 8;
-    let lo = c & 0xff;
+    const c = hex.charCodeAt(i);
+    const hi = c >> 8;
+    const lo = c & 0xff;
 
     hi ? res.push(hi, lo) : res.push(lo);
   }

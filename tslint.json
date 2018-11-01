@@ -1,39 +1,22 @@
 {
-  "extends": [
-    "tslint:latest",
-    "tslint-config-prettier"
-  ],
+  "extends": ["tslint:latest", "tslint-config-prettier"],
   "rules": {
-    "interface-name": [
-      true,
-      "never-prefix"
-    ],
-    "ordered-imports": [false],
+    "interface-name": [true, "never-prefix"],
     "member-access": false,
+    "no-bitwise": false,
     "no-console": false,
+    "no-default-export": true,
     "no-empty-interface": false,
     "no-implicit-dependencies": true,
     "no-submodule-imports": false,
+    "ordered-imports": [false],
     "object-literal-sort-keys": false,
-    "object-literal-key-quotes": [
-      true,
-      "as-needed"
-    ],
-    "quotemark": [
-      true,
-      "single"
-    ],
-    "semicolon": [
-      true,
-      "always",
-      "ignore-bound-class-methods"
-    ],
+    "object-literal-key-quotes": [true, "as-needed"],
+    "quotemark": [true, "single"],
+    "semicolon": [true, "always", "ignore-bound-class-methods"],
     "jsx-boolean-value": false
   },
   "linterOptions": {
-    "exclude": [
-      "config/**/*.js",
-      "node_modules/**/*.ts"
-    ]
+    "exclude": ["config/**/*.js", "node_modules/**/*.ts"]
   }
 }

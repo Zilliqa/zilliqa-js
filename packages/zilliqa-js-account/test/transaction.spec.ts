@@ -1,8 +1,8 @@
 import BN from 'bn.js';
 import { RPCMethod, HTTPProvider } from '@zilliqa-js/core';
 
-import Transaction from '../src/transaction';
-import Wallet from '../src/wallet';
+import { Transaction } from '../src/transaction';
+import { Wallet } from '../src/wallet';
 
 import fetch from 'jest-fetch-mock';
 
@@ -60,12 +60,9 @@ describe('Transaction', () => {
         provider,
       ),
     );
-    const response = await provider.send(
-      RPCMethod.CreateTransaction,
-      pending.txParams,
-    );
-    const confirmed = await pending.confirm('some_hash');
 
+    await provider.send(RPCMethod.CreateTransaction, pending.txParams);
+    const confirmed = await pending.confirm('some_hash');
     const state = confirmed.txParams;
 
     expect(confirmed.isConfirmed()).toBeTruthy();

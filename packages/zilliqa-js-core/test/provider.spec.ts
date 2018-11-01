@@ -1,6 +1,6 @@
 import fetch from 'jest-fetch-mock';
 import { RPCMethod } from '../src/net';
-import HTTPProvider from '../src/providers/http';
+import { HTTPProvider } from '../src/providers/http';
 
 import { mockReqMiddleware, mockResMiddleware } from './mockMiddleware';
 
@@ -12,7 +12,7 @@ describe('HTTPProvider', () => {
   it('should send payload in the right jsonrpc format', async () => {
     fetch.once(JSON.stringify({ data: 'something' }));
 
-    const res = await http.send(RPCMethod.CreateTransaction, 'MyParam');
+    await http.send(RPCMethod.CreateTransaction, 'MyParam');
     const payload = JSON.parse(fetch.mock.calls[0][1].body);
 
     expect(fetch).toHaveBeenCalled();
@@ -36,10 +36,7 @@ describe('HTTPProvider', () => {
     withMiddleware.middleware.request.use(mockReqMiddleware);
 
     fetch.mockResponseOnce(JSON.stringify({ data: 'something' }));
-    const res = await withMiddleware.send(
-      RPCMethod.CreateTransaction,
-      'first param',
-    );
+    await withMiddleware.send(RPCMethod.CreateTransaction, 'first param');
 
     const payload = JSON.parse(fetch.mock.calls[0][1].body);
     expect(payload).toMatchObject({
