@@ -3,7 +3,7 @@ import { HTTPProvider, RPCResponse } from '@zilliqa-js/core';
 import { Account, Transaction, Wallet } from '@zilliqa-js/account';
 
 import { Blockchain } from '../src/chain';
-import { DsBlockObj, TxBlockObj, BlockList } from '../src/types';
+import { TxBlockObj, BlockList } from '../src/types';
 import schemas from './schema.json';
 
 jest.setTimeout(90000);
@@ -34,11 +34,31 @@ describe('[Integration]: Blockchain', () => {
   });
 
   it('should be able to get a list of DS blocks', async () => {
-    const response = await bc.getLatestDSBlock();
-    const latestBlock = (<DsBlockObj>response.result).header.blockNum;
-    const responseDsList = await bc.getDSBlockListing(1);
+    const { result } = await bc.getNumDSBlocks();
+    const numDSBlocks = parseInt(<string>result, 10);
 
-    expect(responseDsList.result).toMatchSchema(schemas.definitions.BlockList);
+    if (numDSBlocks > 10) {
+      const numPages =
+        numDSBlocks % 10 === 0
+          ? numDSBlocks / 10
+          : (numDSBlocks - (numDSBlocks % 10)) / 10 + 1;
+      const pages: Array<Promise<RPCResponse<BlockList, string>>> = [];
+
+      for (let i = 1; i <= numPages; i++) {
+        pages.push(bc.getDSBlockListing(i));
+      }
+
+      const resolved = await Promise.all(pages);
+      const receivedNumTxBlocks = resolved.reduce((n, list) => {
+        return n + (<BlockList>list.result).data.length;
+      }, 0);
+
+      expect(resolved.length).toEqual(numPages);
+      expect(receivedNumTxBlocks).toEqual(numDSBlocks);
+    } else {
+      const response = await bc.getDSBlockListing(1);
+      expect((<BlockList>response.result).data.length).toEqual(numDSBlocks);
+    }
   });
 
   it('should be able to get a Tx block', async () => {
