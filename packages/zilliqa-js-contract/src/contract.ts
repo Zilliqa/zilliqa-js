@@ -1,7 +1,7 @@
 import BN from 'bn.js';
 
 import { Wallet, Transaction, TxStatus } from '@zilliqa-js/account';
-import { Provider, sign } from '@zilliqa-js/core';
+import { RPCMethod, Provider, sign } from '@zilliqa-js/core';
 import { types } from '@zilliqa-js/util';
 
 import { Contracts } from './factory';
@@ -58,10 +58,9 @@ export class Contract {
 
   @sign
   async prepareTx(tx: Transaction): Promise<Transaction> {
-    const payload = tx.payload;
     const response = await this.provider.send<DeploySuccess, DeployError>(
-      'CreateTransaction',
-      [payload],
+      RPCMethod.CreateTransaction,
+      tx.txParams,
     );
 
     return types.isError(response)

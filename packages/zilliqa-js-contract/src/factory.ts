@@ -1,7 +1,7 @@
 import hash from 'hash.js';
 
-import { Wallet, Transaction } from '@zilliqa-js/account';
-import { Provider, ZilliqaModule } from '@zilliqa-js/core';
+import { Wallet, Transaction, util } from '@zilliqa-js/account';
+import { Provider, RPCMethod, ZilliqaModule } from '@zilliqa-js/core';
 import { bytes } from '@zilliqa-js/util';
 
 import { Contract } from './contract';
@@ -42,6 +42,10 @@ export class Contracts implements ZilliqaModule {
 
   constructor(provider: Provider, signer: Wallet) {
     this.provider = provider;
+    this.provider.middleware.request.use(
+      util.formatOutgoingTx,
+      RPCMethod.CreateTransaction,
+    );
     this.signer = signer;
   }
 

@@ -55,7 +55,7 @@ export const encodeTransactionProto = (tx: TxParams): Buffer => {
       [...(tx.code || '')].map((c) => <number>c.charCodeAt(0)),
     ),
     data: Uint8Array.from(
-      [...(tx.code || '')].map((c) => <number>c.charCodeAt(0)),
+      [...(tx.data || '')].map((c) => <number>c.charCodeAt(0)),
     ),
   });
 
