@@ -15,7 +15,10 @@ script:
 after_success:
   - codecov
 deploy:
-  - yarn publish
+  provider: script
+  script: yarn publish
+  on:
+    branch: master
 cache:
   directories:
   - "$HOME/.yarn-cache"
