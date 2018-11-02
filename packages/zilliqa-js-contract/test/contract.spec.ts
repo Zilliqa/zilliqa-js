@@ -19,6 +19,21 @@ describe('Contracts', () => {
     fetch.resetMocks();
   });
 
+  it('new contracts should have a stauts of initialised', () => {
+    const contract = contractFactory.new(testContract, [
+      {
+        vname: 'contractOwner',
+        type: 'ByStr20',
+        value: '0x124567890124567890124567890124567890',
+      },
+      { vname: 'name', type: 'String', value: 'NonFungibleToken' },
+      { vname: 'symbol', type: 'String', value: 'NFT' },
+    ]);
+
+    expect(contract.isInitialised()).toBeTruthy();
+    expect(contract.status).toEqual(ContractStatus.Initialised);
+  });
+
   it('should be able to deploy a contract', async () => {
     const contract = contractFactory.new(
       testContract,
@@ -63,9 +78,10 @@ describe('Contracts', () => {
 
     fetch.mockResponses(...responses);
 
-    const deployTx = await contract.deploy(new BN(1000), new BN(1000));
+    const deployed = await contract.deploy(new BN(1000), new BN(1000));
 
-    expect(deployTx.status).toEqual(ContractStatus.Deployed);
+    expect(deployed.isDeployed()).toBeTruthy();
+    expect(deployed.status).toEqual(ContractStatus.Deployed);
     expect(contract.address).toMatch(/[A-F0-9]+/);
   });
 
@@ -147,6 +163,7 @@ describe('Contracts', () => {
       )
       .deploy(new BN(1000), new BN(1000));
 
+    expect(contract.isRejected()).toBeTruthy();
     expect(contract.status).toEqual(ContractStatus.Rejected);
   });
 
@@ -198,7 +215,7 @@ describe('Contracts', () => {
       )
       .deploy(new BN(1000), new BN(1000));
 
-    expect(contract.status).toEqual(ContractStatus.Rejected);
+    expect(contract.isRejected).toBeTruthy();
   });
 
   it('should be able to call a transition', async () => {
@@ -282,7 +299,7 @@ describe('Contracts', () => {
 
     const { receipt } = callTx.txParams;
 
-    expect(receipt).toBeDefined;
+    expect(receipt).toBeDefined();
     expect(receipt && receipt.success).toEqual(true);
   });
 });

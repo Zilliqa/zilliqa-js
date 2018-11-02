@@ -56,6 +56,40 @@ export class Contract {
     }
   }
 
+  /**
+   * isInitialised
+   *
+   * Returns true if the contract has not been deployed
+   *
+   * @returns {boolean}
+   */
+  isInitialised(): boolean {
+    return this.status === ContractStatus.Initialised;
+  }
+
+  /**
+   * isDeployed
+   *
+   * Returns true if the contract is deployed
+   *
+   * @returns {boolean}
+   */
+  isDeployed(): boolean {
+    return this.status === ContractStatus.Deployed;
+  }
+
+  /**
+   * isRejected
+   *
+   * Returns true if an attempt to deploy the contract was made, but the
+   * underlying transaction was unsuccessful.
+   *
+   * @returns {boolean}
+   */
+  isRejected(): boolean {
+    return this.status === ContractStatus.Rejected;
+  }
+
   @sign
   async prepareTx(tx: Transaction): Promise<Transaction> {
     const response = await this.provider.send<DeploySuccess, DeployError>(
