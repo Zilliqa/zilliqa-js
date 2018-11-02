@@ -56,10 +56,10 @@ export class Contracts implements ZilliqaModule {
     init?: Init,
     state?: State,
   ): Contract {
-    return new Contract(this, abi, address, code, init, state);
+    return new Contract(this, code, abi, address, init, state);
   }
 
-  new(abi: ABI, code: string, init: Init): Contract {
-    return new Contract(this, abi, code, undefined, init);
+  new(code: string, init: Init, abi?: ABI): Contract {
+    return new Contract(this, code, abi, undefined, init);
   }
 }

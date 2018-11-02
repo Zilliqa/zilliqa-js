@@ -20,15 +20,19 @@ describe('Contracts', () => {
   });
 
   it('should be able to deploy a contract', async () => {
-    const contract = contractFactory.new(abi, testContract, [
-      {
-        vname: 'contractOwner',
-        type: 'ByStr20',
-        value: '0x124567890124567890124567890124567890',
-      },
-      { vname: 'name', type: 'String', value: 'NonFungibleToken' },
-      { vname: 'symbol', type: 'String', value: 'NFT' },
-    ]);
+    const contract = contractFactory.new(
+      testContract,
+      [
+        {
+          vname: 'contractOwner',
+          type: 'ByStr20',
+          value: '0x124567890124567890124567890124567890',
+        },
+        { vname: 'name', type: 'String', value: 'NonFungibleToken' },
+        { vname: 'symbol', type: 'String', value: 'NFT' },
+      ],
+      abi,
+    );
 
     const responses = [
       {
@@ -66,15 +70,19 @@ describe('Contracts', () => {
   });
 
   it('should not swallow network errors', async () => {
-    const contract = contractFactory.new(abi, testContract, [
-      {
-        vname: 'contractOwner',
-        type: 'ByStr20',
-        value: '0x124567890124567890124567890124567890',
-      },
-      { vname: 'name', type: 'String', value: 'NonFungibleToken' },
-      { vname: 'symbol', type: 'String', value: 'NFT' },
-    ]);
+    const contract = contractFactory.new(
+      testContract,
+      [
+        {
+          vname: 'contractOwner',
+          type: 'ByStr20',
+          value: '0x124567890124567890124567890124567890',
+        },
+        { vname: 'name', type: 'String', value: 'NonFungibleToken' },
+        { vname: 'symbol', type: 'String', value: 'NFT' },
+      ],
+      abi,
+    );
 
     const responses = [
       {
@@ -124,15 +132,19 @@ describe('Contracts', () => {
     fetch.mockResponses(...responses);
 
     const contract = await contractFactory
-      .new(abi, testContract, [
-        {
-          vname: 'contractOwner',
-          type: 'ByStr20',
-          value: '0x124567890124567890124567890124567890',
-        },
-        { vname: 'name', type: 'String', value: 'NonFungibleToken' },
-        { vname: 'symbol', type: 'String', value: 'NFT' },
-      ])
+      .new(
+        testContract,
+        [
+          {
+            vname: 'contractOwner',
+            type: 'ByStr20',
+            value: '0x124567890124567890124567890124567890',
+          },
+          { vname: 'name', type: 'String', value: 'NonFungibleToken' },
+          { vname: 'symbol', type: 'String', value: 'NFT' },
+        ],
+        abi,
+      )
       .deploy(new BN(1000), new BN(1000));
 
     expect(contract.status).toEqual(ContractStatus.Rejected);
@@ -171,15 +183,19 @@ describe('Contracts', () => {
     fetch.mockResponses(...responses);
 
     const contract = await contractFactory
-      .new(abi, testContract, [
-        {
-          vname: 'contractOwner',
-          type: 'ByStr20',
-          value: '0x124567890124567890124567890124567890',
-        },
-        { vname: 'name', type: 'String', value: 'NonFungibleToken' },
-        { vname: 'symbol', type: 'String', value: 'NFT' },
-      ])
+      .new(
+        testContract,
+        [
+          {
+            vname: 'contractOwner',
+            type: 'ByStr20',
+            value: '0x124567890124567890124567890124567890',
+          },
+          { vname: 'name', type: 'String', value: 'NonFungibleToken' },
+          { vname: 'symbol', type: 'String', value: 'NFT' },
+        ],
+        abi,
+      )
       .deploy(new BN(1000), new BN(1000));
 
     expect(contract.status).toEqual(ContractStatus.Rejected);
@@ -244,15 +260,19 @@ describe('Contracts', () => {
     fetch.mockResponses(...responses);
 
     const contract = await contractFactory
-      .new(abi, testContract, [
-        {
-          vname: 'contractOwner',
-          type: 'ByStr20',
-          value: '0x124567890124567890124567890124567890',
-        },
-        { vname: 'name', type: 'String', value: 'NonFungibleToken' },
-        { vname: 'symbol', type: 'String', value: 'NFT' },
-      ])
+      .new(
+        testContract,
+        [
+          {
+            vname: 'contractOwner',
+            type: 'ByStr20',
+            value: '0x124567890124567890124567890124567890',
+          },
+          { vname: 'name', type: 'String', value: 'NonFungibleToken' },
+          { vname: 'symbol', type: 'String', value: 'NFT' },
+        ],
+        abi,
+      )
       .deploy(new BN(1000), new BN(1000));
 
     const callTx = await contract.call('myTransition', [

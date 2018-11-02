@@ -22,8 +22,8 @@ export class Contract {
   provider: Provider;
   signer: Wallet;
 
-  abi: ABI;
   init: Init;
+  abi?: ABI;
   state?: State;
   address?: string;
   code?: string;
@@ -31,8 +31,8 @@ export class Contract {
 
   constructor(
     factory: Contracts,
-    abi: ABI,
     code: string,
+    abi?: ABI,
     address?: string,
     init?: any,
     state?: any,
