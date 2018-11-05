@@ -172,7 +172,7 @@ these are links to the respective `README` documents.
 - [`blockchain`]()
 - [`contract`]()
 - [`core`]()
-- [`crypto`]()
+- [`crypto`](./packages/zilliqa-js-crypto/README.md)
 - [`util`]()
 
 ## Development
