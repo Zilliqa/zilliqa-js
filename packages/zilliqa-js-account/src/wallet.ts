@@ -59,8 +59,9 @@ export class Wallet extends Signer {
    *
    * Adds an account to the wallet by private key.
    *
-   * @param {string} privateKey
-   * @returns {string}
+   * @param {string} privateKey - hex-encoded private key
+   * @returns {string} - the corresponing address, computer from the private
+   * key.
    */
   addByPrivateKey(privateKey: string): string {
     const newAccount = new Account(privateKey);
@@ -95,7 +96,16 @@ export class Wallet extends Signer {
     return newAccount.address;
   }
 
-  async addByMnemonic(phrase: string, index: number = 0): Promise<string> {
+  /**
+   * addByMnemonic
+   *
+   * Adds an `Account` by use of a mnemonic as specified in BIP-32 and BIP-39
+   *
+   * @param {string} phrase - 12-word mnemonic phrase
+   * @param {number} index=0 - the number of the child key to add
+   * @returns {string} - the corresponding address
+   */
+  addByMnemonic(phrase: string, index: number = 0): string {
     if (!this.isValidMnemonic(phrase)) {
       throw new Error(`Invalid mnemonic phrase: ${phrase}`);
     }
@@ -103,6 +113,7 @@ export class Wallet extends Signer {
     const hdKey = hdkey.fromMasterSeed(seed);
     const childKey = hdKey.derive(`m/44'/8888'/0'/0/${index}`);
     const privateKey = childKey.privateKey.toString('hex');
+
     return this.addByPrivateKey(privateKey);
   }
 
