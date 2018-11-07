@@ -2,6 +2,30 @@
 # @zilliqa-js/account
 > Classes for managing accounts and account-related actions.
 
+# Interfaces
+
+```typescript
+export interface TxReceipt {
+  success: boolean;
+  cumulative_gas: number;
+}
+
+interface TxParams {
+  version: number;
+  toAddr: string;
+  amount: BN;
+  gasPrice: BN;
+  gasLimit: BN;
+
+  code?: string;
+  data?: string;
+  receipt?: TxReceipt;
+  nonce?: number;
+  pubKey?: string;
+  signature?: string;
+}
+```
+
 # Classes
 
 ## `Account`
@@ -277,11 +301,22 @@ import { Transaction } from '@zilliqa-js/account';
 
 // hash can be obtained from CreateTransaction
 const my_hash = 'some_known_tx_hash';
-conts tx = new Transaction(params, new HTTPProvider('http://my-api.com'));
+let tx = new Transaction(params, new HTTPProvider('http://my-api.com'));
 
-tx.confirm(some_hash)
-  .map((tx) => // do something)
-  .catch((err) => // handle the error);
+async () => {
+  try {
+    tx = await tx.confirm(some_hash);
+    if (tx.isConfirmed()) {
+      .map((tx) => {
+        // do something, but must always return `TxParams`.
+        // generally, you should avoid performing side effects in `map`.
+        return tx
+      });
+    }
+  } catch (err) {
+    // handle this error somehow
+  }
+}();
 ```
 
 # Functions
