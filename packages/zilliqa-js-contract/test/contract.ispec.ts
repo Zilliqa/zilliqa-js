@@ -16,14 +16,18 @@ describe('Contract - hello world', () => {
 
   it('should be able to deploy the contract', async () => {
     contract = await contractFactory
-      .new(abi, testContract, [
-        {
-          vname: 'owner',
-          type: 'ByStr20',
-          value: `0x${process.env.GENESIS_ADDRESS}`,
-        },
-      ])
-      .deploy(new BN(1000), new BN(1000));
+      .new(
+        testContract,
+        [
+          {
+            vname: 'owner',
+            type: 'ByStr20',
+            value: `0x${process.env.GENESIS_ADDRESS}`,
+          },
+        ],
+        abi,
+      )
+      .deploy(new BN(1), new BN(5000));
 
     expect(contract.status).toEqual(ContractStatus.Deployed);
   });
@@ -38,7 +42,7 @@ describe('Contract - hello world', () => {
       },
     ]);
 
-    expect(call.txParams.receipt && call.txParams.receipt.success).toBeTruthy;
+    expect(call.txParams.receipt && call.txParams.receipt.success).toBeTruthy();
 
     const state = await contract.getState();
 
