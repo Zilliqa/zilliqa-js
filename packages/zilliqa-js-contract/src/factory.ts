@@ -20,7 +20,6 @@ export class Contracts implements ZilliqaModule {
    * getAddressForContract
    *
    * @static
-   * @param {string} deployer - address of the contract deployer
    * @param {Transaction} tx - transaction used to create the contract
    * @returns {string} - the contract address
    */
