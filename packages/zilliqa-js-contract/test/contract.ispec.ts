@@ -36,7 +36,7 @@ describe('Contract - hello world', () => {
     // now let's transfer some tokens
     const call = await contract.call('setHello', [
       {
-        vname: 'welcome_msg',
+        vname: 'msg',
         type: 'String',
         value: 'Hello World',
       },
@@ -59,7 +59,7 @@ describe('Contract - hello world', () => {
     contract.address = '0123456789'.repeat(4);
     const call = await contract.call('setHello', [
       {
-        vname: 'welcome_msg',
+        vname: 'msg',
         type: 'String',
         value: 'Hello World',
       },
