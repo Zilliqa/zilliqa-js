@@ -1,4 +1,3 @@
-
 # @zilliqa-js/account
 > Classes for managing accounts and account-related actions.
 
@@ -43,6 +42,18 @@ Class for managing an account (i.e., a private/public keypair).
 
 - `Account` - an `Account` instance.
 
+## Members
+
+### `privateKey: string`
+
+### `publicKey: string`
+
+### `address: string`
+
+### `nonce: number`
+
+## Static Methods
+
 ### `static fromFile(file: string, passphrase: string): Promise<Account>`
 
 Generates an account from any JSON-encoded string that complies with the [Web3 Secret Storage definition](https://github.com/ethereum/wiki/wiki/Web3-Secret-Storage-Definition).
@@ -56,6 +67,8 @@ Generates an account from any JSON-encoded string that complies with the [Web3 S
 
 - `Promise<Account>` - an `Account` instance, initialised with the details
   provided by the keystore file.
+
+## Instance Methods
 
 ### `toFile(passphrase: string, kdf: 'pbkdf2' |'scrypt' = 'scrypt'): Promise<Account>`
 
@@ -101,6 +114,20 @@ Class for managing multiple accounts.
 **Returns**
 
 - `Wallet`
+
+## Members
+
+### `accounts: { [address: string]: Account }`
+
+An object consisting of `address: Account` KV pairs. By default, an empty
+object.
+
+### `defaultAccount: Account`
+
+The default account used for signing transactions. By default, `undefined`. It
+is set to the `0`-indexed account when a `Wallet` instance is constructed.
+
+## Instance methods
 
 ### `create(): void`
 
@@ -221,6 +248,24 @@ as it will attempt to obtain the `nonce` from the `Provider`.
 
 A class that represents a single `Transaction` on the Zilliqa network. It is a functor. Its purpose is to encode the possible states a Transaction can be in:  Confirmed, Rejected, Pending, or Initialised (i.e., not broadcasted).
 
+## Members
+
+### `bytes: Buffer`
+
+A getter `protobuf` that returns a `Buffer` of `protobuf`-encoded bytes. This
+is a convenience member that allows a `Transaction` to be signed easily.
+
+### `senderAddress: string`
+
+A getter than computes the address of the `Transaction` sender. If there is no
+sender public key set, returns `0x00000000000000000000000000000000000000000000`.
+
+### `txParams: TxParams`
+
+A getter that returns the current `TxParams`.
+
+## Static Methods
+
 ### `static confirm(params: TxParams, provider: Provider): Transaction`
 
 Instantiates a `Transaction` in `Confirmed` state.
@@ -228,7 +273,7 @@ Instantiates a `Transaction` in `Confirmed` state.
 **Parameters**
 
 - `params`: `TxParams` - core fields to initialise the `Transaction` with.
-- `address`: `string` - the address of the Transaction.
+- `provider`: `Provider` - a `Provider` instance.
 
 **Returns**
 
@@ -240,9 +285,49 @@ Instantiates a `Transaction` in `Confirmed` state.
 import { HTTPProvider } from '@zilliqa-js/core';
 import { Transaction } from '@zilliqa-js/account';
 
-conts tx = Transaction.confirm('my_address', new HTTPProvider('http://my-api.com'));
+const txParams = {
+  version: 0,
+  toAddr: '20_byte_hex_string',
+  amount: new BN(8),
+  gasPrice: new BN(8),
+  gasLimit: new BN(888)
+};
+const tx = Transaction.confirm(txParams, new HTTPProvider('http://my-api.com'));
+
 expect(tx.isConfirmed()).toBeTruthy();
 ```
+
+### `static reject(params: TxParams, provider: Provider): Transaction`
+
+Instantiates a `Transaction` in `Rejected` state.
+
+**Parameters**
+
+- `params`: `TxParams` - core fields to initialise the `Transaction` with.
+- `provider`: `Provider` - a `Provider` instance.
+
+**Returns**
+
+- `Transaction` - the newly-Instantiated `Transaction`.
+
+**Example**
+
+```typescript
+import { HTTPProvider } from '@zilliqa-js/core';
+import { Transaction } from '@zilliqa-js/account';
+
+const txParams = {
+  version: 0,
+  toAddr: '20_byte_hex_string',
+  amount: new BN(8),
+  gasPrice: new BN(8),
+  gasLimit: new BN(888)
+};
+const tx = Transaction.reject(txParams, new HTTPProvider('http://my-api.com'));
+expect(tx.isRejected()).toBeTruthy();
+```
+
+## Instance Methods
 
 ### `confirm(txHash: string, maxAttemps: number = 5, interval: number = 1000): Promise<Transaction>`
 
