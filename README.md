@@ -168,12 +168,12 @@ contract.deploy(new BN(1), new BN(2500))
 Each package contains its own examples and API documentation. For convenience,
 these are links to the respective `README` documents.
 
-- [`accounts`]()
-- [`blockchain`]()
-- [`contract`]()
-- [`core`]()
+- [`account`](./packages/zilliqa-js-account/README.md)
+- [`blockchain`](./packages/zilliqa-js-blockchain/README.md)
+- [`contract`](./packages/zilliqa-js-contract/README.md)
+- [`core`](./packages/zilliqa-js-core/README.md)
 - [`crypto`](./packages/zilliqa-js-crypto/README.md)
-- [`util`]()
+- [`util`](./packages/zilliqa-js-util/README.md)
 
 ## Development
 
