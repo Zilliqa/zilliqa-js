@@ -188,7 +188,10 @@ export class Contract {
       return Promise.resolve([]);
     }
 
-    const response = await this.provider.send('GetSmartContractState');
+    const response = await this.provider.send(
+      'GetSmartContractState',
+      this.address,
+    );
 
     return response.result;
   }
