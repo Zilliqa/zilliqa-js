@@ -33,6 +33,18 @@ const getCommitSHA = async () => {
   });
 };
 
+const getDate = (sep?: string): string => {
+  const s = sep === undefined ? '' : sep;
+  const raw = new Date()
+    .toISOString()
+    .replace(/:|T|\.|-/g, '')
+    .slice(0, 8);
+  const y = raw.slice(0, 4);
+  const m = raw.slice(4, 6);
+  const d = raw.slice(6, 8);
+  return `${y}${s}${m}${s}${d}`;
+};
+
 const publish = async () => {
   if (process.env.CI && process.env.TRAVIS_BRANCH !== 'master') {
     return;
@@ -41,7 +53,7 @@ const publish = async () => {
   try {
     const { major, minor, patch } = await getVersion();
     const sha = await getCommitSHA();
-    const version = `${major}.${minor}.${patch}-${DIST_TAG}.${sha}`;
+    const version = `${major}.${minor}.${patch}-${DIST_TAG}.${getDate()}`;
 
     lerna([
       'publish',
