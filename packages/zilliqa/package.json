@@ -1,6 +1,6 @@
 {
   "name": "@zilliqa-js/zilliqa",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Main entry point to the Zilliqa JS client.",
   "main": "dist/index.umd.js",
   "node": "dist/index.umd.js",
@@ -16,11 +16,11 @@
     "clean": "rimraf ./dist"
   },
   "dependencies": {
-    "@zilliqa-js/account": "0.2.0",
-    "@zilliqa-js/blockchain": "0.2.0",
-    "@zilliqa-js/contract": "0.2.0",
-    "@zilliqa-js/core": "0.2.0",
-    "@zilliqa-js/crypto": "0.2.0",
-    "@zilliqa-js/util": "0.2.0"
+    "@zilliqa-js/account": "^0.2.1",
+    "@zilliqa-js/blockchain": "^0.2.1",
+    "@zilliqa-js/contract": "^0.2.1",
+    "@zilliqa-js/core": "^0.2.1",
+    "@zilliqa-js/crypto": "^0.2.1",
+    "@zilliqa-js/util": "^0.2.1"
   }
 }

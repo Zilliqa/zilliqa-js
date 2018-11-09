@@ -1,6 +1,6 @@
 {
   "name": "@zilliqa-js/account",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Used for signing transactions.",
   "main": "dist/index.umd.js",
   "node": "dist/index.umd.js",
@@ -18,9 +18,9 @@
     "clean": "rimraf ./dist"
   },
   "dependencies": {
-    "@zilliqa-js/core": "0.2.0",
-    "@zilliqa-js/crypto": "0.2.0",
-    "@zilliqa-js/util": "0.2.0",
+    "@zilliqa-js/core": "^0.2.1",
+    "@zilliqa-js/crypto": "^0.2.1",
+    "@zilliqa-js/util": "^0.2.1",
     "bip39": "^2.5.0",
     "bn.js": "^4.11.8",
     "hdkey": "^1.1.0"
