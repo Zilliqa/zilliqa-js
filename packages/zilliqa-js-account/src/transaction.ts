@@ -189,10 +189,9 @@ export class Transaction implements Signable {
    * of pending. Calling this function kicks off a passive loop that polls the
    * lookup node for confirmation on the txHash.
    *
-   * The polls are performed with exponential backoff, which means the delay
-   * between attemps are increased exponentially:
+   * The polls are performed with a linear backoff:
    *
-   * `const delay = interval * (Math.pow(2, attempt) * 60)`
+   * `const delay = interval * attempt`
    *
    * This is a low-level method that you should generally not have to use
    * directly.
@@ -218,8 +217,7 @@ export class Transaction implements Signable {
         throw err;
       }
       if (attempt + 1 < maxAttempts) {
-        const delay = interval * (Math.pow(2, attempt) * 60);
-        await sleep(delay);
+        await sleep(interval * attempt);
       }
     }
     this.status = TxStatus.Rejected;
