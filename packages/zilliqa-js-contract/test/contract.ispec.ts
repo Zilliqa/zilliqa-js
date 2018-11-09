@@ -66,6 +66,6 @@ describe('Contract - hello world', () => {
     ]);
 
     contract.address = original;
-    expect(call.isRejected()).toBeTruthy;
+    expect(call.isRejected()).toBeTruthy();
   });
 });
