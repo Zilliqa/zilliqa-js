@@ -1,4 +1,4 @@
-import 'cross-fetch/polyfill';
+import fetch from 'cross-fetch';
 import { WithRequest } from './util';
 
 /**

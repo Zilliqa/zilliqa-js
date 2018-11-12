@@ -22,6 +22,7 @@ const config = {
   moduleNameMapper: {
     '^@zilliqa-js/zilliqa': '<rootDir>/packages/zilliqa/src/index.ts',
     '^@zilliqa-js/(.*)$': '<rootDir>/packages/zilliqa-js-$1/src/index.ts',
+    'cross-fetch': 'jest-fetch-mock',
   },
   globals: {
     'ts-jest': {
