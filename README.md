@@ -46,11 +46,9 @@ a `semver` bump before being able to take advantage of new features/bug fixes.
 ```ts
 import BN from 'bn.js';
 import { Transaction } from '@zilliqa-js/account';
-import { HTTPProvider } from '@zilliqa-js/core';
 import { Zilliqa } from '@zilliqa-js/zilliqa';
 
-const provider = new Provider('https://my-zil-testnet.com');
-const zilliqa = new Zilliqa(provider);
+const zilliqa = new Zilliqa('https://my-zil-testnet.com');
 
 // Populate the wallet with an account
 zilliqa.wallet.addByPrivateKey('my_secret_private_key');
