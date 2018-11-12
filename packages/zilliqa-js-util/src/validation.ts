@@ -57,28 +57,30 @@ export const required = <T extends Function>(fn: T): Validator => {
   throw new Error('fn is not a function');
 };
 
-export const matchesObject = <T extends Object>(
+export const matchesObject = <T extends object>(
   x: unknown,
   test: { [key: string]: Validator[] },
 ): x is T => {
   if (isPlainObject(x)) {
-    for (var key in test) {
-      for (var i = 0; i < test[key].length; i++) {
-        const value = x[key];
+    for (const key in test) {
+      if (test.hasOwnProperty(key)) {
+        for (const tester of test[key]) {
+          const value = x[key];
 
-        if (typeof value === 'undefined') {
-          if (test[key][i].required) {
+          if (typeof value === 'undefined' && tester.required) {
             throw new Error('Key not found: ' + key);
+          } else {
+            continue;
           }
 
-          continue;
+          if (typeof tester !== 'function') {
+            throw new Error('Validator is not a function');
+          }
+
+          if (!tester(value)) {
+            throw new Error('Validation failed for ' + key);
+          }
         }
-
-        if (typeof test[key][i] !== 'function')
-          throw new Error('Validator is not a function');
-
-        if (!test[key][i](x[key]))
-          throw new Error('Validation failed for ' + key);
       }
     }
   }
