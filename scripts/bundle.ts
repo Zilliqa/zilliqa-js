@@ -76,6 +76,7 @@ async function bundle() {
         .map((p) => p.scopedName);
 
       logBundle(`externals: ${externals}`);
+
       const bundle = await rollup.rollup({
         input: path.join(pkg.src, 'index.ts'),
         plugins: [
@@ -125,10 +126,11 @@ async function bundle() {
         // include tslib in the bundles since only __decorate is really used by multiple packages (we can figure out a way to deduplicate that later on if need be)
         external: project.packages
           .filter((p) => p.name !== pkg.name)
-          .map((p) => p.scopedName),
+          .map((p) => p.scopedName)
+          .concat(['cross-fetch']),
       });
 
-      //'amd' | 'cjs' | 'system' | 'es' | 'esm' | 'iife' | 'umd'
+      // 'amd' | 'cjs' | 'system' | 'es' | 'esm' | 'iife' | 'umd'
       if (outputs.indexOf('esm') === -1) {
         logBundle(`${logPrefix} skipping esm`);
       } else {
