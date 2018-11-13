@@ -34,6 +34,9 @@ of the umbrella package `@zilliqa-js/zilliqa`. This takes care of bootstrapping 
 
 ```shell
 yarn add @zilliqa-js/zilliqa@next
+# bn.js should be added with the above package. if it is not, install it
+manually.
+yarn add bn.js
 ```
 
 As this library is still in a relatively early stage of development, we
@@ -42,6 +45,12 @@ receive the latest published version, as it may not be ideal to wait for
 a `semver` bump before being able to take advantage of new features/bug fixes.
 
 ## Quick Start
+
+**NOTE: these examples assume you are either using a transpiler to convert
+`import` statements to `require` calls, or using a Node.js version that
+supports the ES Module spec with the flag `--experimental-modules`. If you are
+not, you must use `require`, e.g. `const { Zilliqa
+} = require('@zilliqa-js/zilliqa')`.**
 
 ```ts
 import BN from 'bn.js';

@@ -60,6 +60,7 @@ const publish = async () => {
       version,
       '--npm-tag',
       DIST_TAG,
+      '--exact',
       '--no-git-tag-version',
       '--no-push',
       '--no-verify-access',
