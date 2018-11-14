@@ -203,25 +203,35 @@ export class Wallet extends Signer {
 
     try {
       const signer = this.accounts[account];
-      const balance = await this.provider.send('GetBalance', signer.address);
 
-      if (typeof balance.result.nonce !== 'number') {
-        throw new Error('Could not get nonce');
+      if (!tx.txParams.nonce) {
+        const balance = await this.provider.send('GetBalance', signer.address);
+
+        if (typeof balance.result.nonce !== 'number') {
+          throw new Error('Could not get nonce');
+        }
+
+        const withNonce = tx.map((txObj) => {
+          return {
+            ...txObj,
+            nonce: txObj.nonce || balance.result.nonce + 1,
+            pubKey: signer.publicKey,
+          };
+        });
+
+        return withNonce.map((txObj) => {
+          // @ts-ignore
+          return {
+            ...txObj,
+            signature: signer.signTransaction(withNonce.bytes),
+          };
+        });
       }
 
-      const withNonce = tx.map((txObj) => {
+      return tx.map((txObj) => {
         return {
           ...txObj,
-          nonce: balance.result.nonce + 1,
-          pubKey: signer.publicKey,
-        };
-      });
-
-      return withNonce.map((txObj) => {
-        // @ts-ignore
-        return {
-          ...txObj,
-          signature: signer.signTransaction(withNonce.bytes),
+          signature: signer.signTransaction(tx.bytes),
         };
       });
     } catch (err) {

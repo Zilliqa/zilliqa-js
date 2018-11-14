@@ -73,7 +73,6 @@ describe('Wallet', () => {
     const tx = new Transaction(
       {
         version: 1,
-        nonce: 1,
         toAddr: '0x1234567890123456789012345678901234567890',
         amount: new BN(0),
         gasPrice: new BN(1000),
@@ -102,6 +101,37 @@ describe('Wallet', () => {
       Buffer.from(pubKey, 'hex'),
     );
 
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(lgtm).toBeTruthy();
+  });
+
+  it('should respect the supplied nonce, if any', async () => {
+    const [wallet] = createWallet(1);
+    const pubKey = (wallet.defaultAccount &&
+      wallet.defaultAccount.publicKey) as string;
+
+    const tx = new Transaction(
+      {
+        version: 0,
+        nonce: 888,
+        toAddr: '0x1234567890123456789012345678901234567890',
+        amount: new BN(888),
+        gasPrice: new BN(888),
+        gasLimit: new BN(888),
+        pubKey,
+      },
+      provider,
+    );
+
+    const signed = await wallet.sign(tx);
+    const signature = schnorr.toSignature(signed.txParams.signature as string);
+    const lgtm = schnorr.verify(
+      signed.bytes,
+      signature,
+      Buffer.from(pubKey, 'hex'),
+    );
+
+    expect(fetch).not.toHaveBeenCalled();
     expect(lgtm).toBeTruthy();
   });
 
