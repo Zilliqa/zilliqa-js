@@ -25,13 +25,11 @@ export class Account {
   privateKey: string;
   publicKey: string;
   address: string;
-  nonce: number;
 
-  constructor(privateKey: string, nonce?: number) {
+  constructor(privateKey: string) {
     this.privateKey = privateKey;
     this.publicKey = zcrypto.getPubKeyFromPrivateKey(this.privateKey);
     this.address = zcrypto.getAddressFromPublicKey(this.publicKey);
-    this.nonce = nonce || 0;
   }
 
   /**
