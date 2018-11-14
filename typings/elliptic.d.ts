@@ -22,6 +22,7 @@ declare namespace Elliptic {
     n: BN;
     g: Point;
     decodePoint(msg: Buffer | Array<any> | string, enc?: string): Point;
+    validate(point: Point): boolean;
   }
 
   interface Point {

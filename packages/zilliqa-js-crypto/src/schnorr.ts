@@ -150,6 +150,10 @@ export const verify = (msg: Buffer, signature: Signature, key: Buffer) => {
   }
 
   const kpub = curve.decodePoint(key);
+  if (!curve.validate(kpub)) {
+    throw new Error('Invalid public key');
+  }
+
   const l = kpub.mul(sig.r);
   const r = curve.g.mul(sig.s);
 
