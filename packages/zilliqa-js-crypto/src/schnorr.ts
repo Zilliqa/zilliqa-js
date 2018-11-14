@@ -1,8 +1,9 @@
-import assert from 'bsert';
 import elliptic from 'elliptic';
 import BN from 'bn.js';
 import hashjs from 'hash.js';
 import DRBG from 'hmac-drbg';
+
+import { randomBytes } from './random';
 import { Signature } from './signature';
 
 const curve = elliptic.ec('secp256k1').curve;
@@ -12,6 +13,12 @@ const curve = elliptic.ec('secp256k1').curve;
 // and the sign for y.
 // Hence a total of 33 bytes.
 const PUBKEY_COMPRESSED_SIZE_BYTES = 33;
+// Personalization string used for HMAC-DRBG instantiation.
+const ALG = Buffer.from('Schnorr+SHA256  ', 'ascii');
+// The length in bytes of the string above.
+const ALG_LEN = 16;
+// The length in bytes of entropy inputs to HMAC-DRBG
+const ENT_LEN = 32;
 
 /**
  * Hash (r | M).
@@ -40,19 +47,22 @@ export const hash = (q: BN, pubkey: Buffer, msg: Buffer) => {
  * @param {Buffer} msg
  * @param {Buffer} key
  * @param {Buffer} pubkey
- * @param {Buffer} pubNonce?
  *
  * @returns {Signature}
  */
-export const sign = (msg: Buffer, key: Buffer, pubkey: Buffer): Signature => {
-  const prv = new BN(key);
-  const drbg = getDRBG(msg, key);
+export const sign = (
+  msg: Buffer,
+  privKey: Buffer,
+  pubKey: Buffer,
+): Signature => {
+  const prv = new BN(privKey);
+  const drbg = getDRBG();
   const len = curve.n.byteLength();
 
   let sig;
   while (!sig) {
     const k = new BN(drbg.generate(len));
-    sig = trySign(msg, prv, k, pubkey);
+    sig = trySign(msg, k, prv, pubKey);
   }
 
   return sig;
@@ -61,25 +71,24 @@ export const sign = (msg: Buffer, key: Buffer, pubkey: Buffer): Signature => {
 /**
  * trySign
  *
- * @param {Buffer} msg
- * @param {BN} prv - private key
- * @param {BN} k - DRBG-generated random number
- * @param {Buffer} pn - optional
- * @param {Buffer)} pubKey - public key
+ * @param {Buffer} msg - the message to sign over
+ * @param {BN} k - output of the HMAC-DRBG
+ * @param {BN} privateKey - the private key
+ * @param {Buffer} pubKey - the public key
  *
  * @returns {Signature | null =>}
  */
 export const trySign = (
   msg: Buffer,
-  prv: BN,
   k: BN,
+  privKey: BN,
   pubKey: Buffer,
 ): Signature | null => {
-  if (prv.isZero()) {
+  if (privKey.isZero()) {
     throw new Error('Bad private key.');
   }
 
-  if (prv.gte(curve.n)) {
+  if (privKey.gte(curve.n)) {
     throw new Error('Bad private key.');
   }
 
@@ -111,7 +120,7 @@ export const trySign = (
 
   // 4. Compute s = k - r * prv
   // 4a. Compute r * prv
-  let s = h.imul(prv);
+  let s = h.imul(privKey);
   // 4b. Compute s = k - r * prv mod n
   s = k.isub(s);
   s = s.umod(curve.n);
@@ -181,36 +190,24 @@ export const toSignature = (serialised: string): Signature => {
 };
 
 /**
- * Schnorr personalization string.
- * @const {Buffer}
- */
-export const alg = Buffer.from('Schnorr+SHA256  ', 'ascii');
-
-/**
  * Instantiate an HMAC-DRBG.
  *
- * @param {Buffer} msg
- * @param {Buffer} priv - used as entropy input
- * @param {Buffer} data - used as nonce
+ * @param {Buffer} entropy
  *
  * @returns {DRBG}
  */
-export const getDRBG = (msg: Buffer, priv: Buffer, data?: Buffer) => {
-  const pers = Buffer.allocUnsafe(48);
+export const getDRBG = () => {
+  const entropy = randomBytes(ENT_LEN);
+  const nonce = randomBytes(ENT_LEN);
+  const pers = Buffer.allocUnsafe(ALG_LEN + ENT_LEN);
 
-  pers.fill(0);
-
-  if (data) {
-    assert(data.length === 32);
-    data.copy(pers, 0);
-  }
-
-  alg.copy(pers, 32);
+  Buffer.from(randomBytes(ENT_LEN)).copy(pers, 0);
+  ALG.copy(pers, ENT_LEN);
 
   return new DRBG({
     hash: hashjs.sha256,
-    entropy: priv,
-    nonce: msg,
+    entropy,
+    nonce,
     pers,
   });
 };
@@ -224,8 +221,8 @@ export const getDRBG = (msg: Buffer, priv: Buffer, data?: Buffer) => {
  *
  * @returns {Buffer}
  */
-export const generateNoncePair = (msg: Buffer, priv: Buffer, data: Buffer) => {
-  const drbg = getDRBG(msg, priv, data);
+export const generateNoncePair = () => {
+  const drbg = getDRBG();
   const len = curve.n.byteLength();
 
   let k = new BN(drbg.generate(len));

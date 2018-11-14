@@ -22,8 +22,8 @@ describe('schnorr', () => {
       while (!sig) {
         sig = schnorr.trySign(
           msg,
-          new BN(Buffer.from(badPrivateKey, 'hex')),
           new BN(k),
+          new BN(Buffer.from(badPrivateKey, 'hex')),
           Buffer.from(pub, 'hex'),
         );
       }
@@ -64,8 +64,8 @@ describe('schnorr', () => {
       while (!sig) {
         sig = schnorr.trySign(
           Buffer.from(msg, 'hex'),
-          new BN(Buffer.from(priv, 'hex')),
           new BN(k, 16),
+          new BN(Buffer.from(priv, 'hex')),
           Buffer.from(pub, 'hex'),
         );
       }
