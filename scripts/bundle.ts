@@ -1,5 +1,9 @@
+import * as fs from 'fs';
+import * as glob from 'glob';
+import globParent from 'glob-parent';
 import * as path from 'path';
 import * as rollup from 'rollup';
+import { promisify } from 'util';
 import project from './project';
 import alias from 'rollup-plugin-alias';
 import commonjs from 'rollup-plugin-commonjs';
@@ -13,6 +17,10 @@ import { createLogger, c } from './logger';
 
 const logPreProcess = createLogger('preprocess');
 const logBundle = createLogger('bundle');
+const readFileAsync = promisify(fs.readFile);
+const writeFileAsync = promisify(fs.writeFile);
+
+const TYPINGS_PATH = path.resolve(__dirname, '../', 'typings');
 
 /**
  * preProcess
@@ -56,6 +64,24 @@ function preProcess() {
   });
 
   return Promise.all(modules);
+}
+
+async function copy() {
+  for (const pkg of project.packages) {
+    const files = glob.sync(`${TYPINGS_PATH}/*.d.ts`);
+
+    files.forEach(async (file) => {
+      try {
+        const prefix = c.yellow('[COPY]');
+        const to = path.join(pkg.dist, path.relative(TYPINGS_PATH, file));
+        await writeFileAsync(to, await readFileAsync(file));
+
+        logBundle(`${prefix} copying typings for: ${pkg.scopedName}`);
+      } catch (err) {
+        logBundle(err);
+      }
+    });
+  }
 }
 
 async function bundle() {
@@ -171,4 +197,4 @@ async function bundle() {
   }
 }
 
-bundle();
+bundle().then(() => copy());
