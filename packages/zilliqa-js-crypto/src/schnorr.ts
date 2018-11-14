@@ -107,7 +107,8 @@ export const trySign = (
   const compressedQ = new BN(Q.encodeCompressed());
 
   // 3. Compute the challenge r = H(Q || pubKey || msg)
-  const r = hash(compressedQ, pubKey, msg);
+  // mod reduce the r value by the order of secp256k1, n
+  const r = hash(compressedQ, pubKey, msg).umod(curve.n);
   const h = r.clone();
 
   if (h.isZero()) {
