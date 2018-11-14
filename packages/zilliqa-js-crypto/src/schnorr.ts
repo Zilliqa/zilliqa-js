@@ -170,7 +170,7 @@ export const verify = (msg: Buffer, signature: Signature, key: Buffer) => {
   const Q = l.add(r);
   const compressedQ = new BN(Q.encodeCompressed());
 
-  const r1 = hash(compressedQ, key, msg);
+  const r1 = hash(compressedQ, key, msg).umod(curve.n);
 
   if (r1.gte(curve.n)) {
     throw new Error('Invalid hash.');
