@@ -289,4 +289,16 @@ export class Blockchain implements ZilliqaModule {
   getNumTxnsDSEpoch(epoch: number): Promise<any> {
     return this.provider.send(RPCMethod.GetNumTxnsTxEpoch, epoch);
   }
+
+  /**
+   * getBalance
+   *
+   * Gets the balance of an account by address
+   *
+   * @param {string} address
+   * @returns {Promise<RPCResponse<any, string>>}
+   */
+  getBalance(address: string): Promise<RPCResponse<any, string>> {
+    return this.provider.send(RPCMethod.GetBalance, address);
+  }
 }
