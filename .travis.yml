@@ -16,7 +16,7 @@ after_success:
   - codecov
 deploy:
   provider: script
-  script: yarn publish
+  script: yarn run publish
   on:
     branch: master
 cache:
