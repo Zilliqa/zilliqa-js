@@ -1,6 +1,8 @@
 import elliptic from 'elliptic';
 import hashjs from 'hash.js';
 
+import { validation } from '@zilliqa-js/util';
+
 const secp256k1 = elliptic.ec('secp256k1');
 /**
  * getAddressFromPrivateKey
@@ -61,6 +63,46 @@ export const getAddressFromPublicKey = (publicKey: string) => {
     .update(publicKey, 'hex')
     .digest('hex')
     .slice(24);
+};
+
+/**
+ * toChecksumAddress
+ *
+ * takes hex-encoded string and returns the corresponding address
+ *
+ * @param {string} address
+ * @returns {string}
+ */
+export const toChecksumAddress = (address: string): string => {
+  address = address.toLowerCase().replace('0x', '');
+  const hash = hashjs
+    .sha256()
+    .update(address, 'hex')
+    .digest('hex');
+  let ret = '0x';
+  for (let i = 0; i < address.length; i++) {
+    if (parseInt(hash[i], 16) >= 8) {
+      ret += address[i].toUpperCase();
+    } else {
+      ret += address[i];
+    }
+  }
+  return ret;
+};
+
+/**
+ * isValidChecksumAddress
+ *
+ * takes hex-encoded string and returns boolean if address is checksumed
+ *
+ * @param {string} address
+ * @returns {boolean}
+ */
+export const isValidChecksumAddress = (address: string): boolean => {
+  return (
+    validation.isAddress(address.replace('0x', '')) &&
+    toChecksumAddress(address) === address
+  );
 };
 
 /**
