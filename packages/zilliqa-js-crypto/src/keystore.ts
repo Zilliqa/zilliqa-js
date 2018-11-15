@@ -1,6 +1,6 @@
 import aes from 'aes-js';
 import hashjs from 'hash.js';
-import pbkdf2 from 'pbkdf2';
+import { pbkdf2Sync } from 'pbkdf2';
 import scrypt from 'scrypt.js';
 import uuid from 'uuid';
 
@@ -36,7 +36,7 @@ async function getDerivedKey(
 
   if (kdf === 'pbkdf2') {
     const { c, dklen } = params as PBKDF2Params;
-    return pbkdf2.pbkdf2Sync(key, salt, c, dklen, 'sha256');
+    return pbkdf2Sync(key, salt, c, dklen, 'sha256');
   }
 
   if (kdf === 'scrypt') {
