@@ -18,6 +18,9 @@
     "clean": "rimraf ./dist"
   },
   "dependencies": {
+    "@types/bip39": "^2.4.0",
+    "@types/bn.js": "^4.11.3",
+    "@types/hdkey": "^0.7.0",
     "@zilliqa-js/core": "^0.2.1",
     "@zilliqa-js/crypto": "^0.2.1",
     "@zilliqa-js/util": "^0.2.1",
@@ -26,8 +29,6 @@
     "hdkey": "^1.1.0"
   },
   "devDependencies": {
-    "@types/bip39": "^2.4.0",
-    "@types/hdkey": "^0.7.0",
     "web3": "^1.0.0-beta.36"
   }
 }

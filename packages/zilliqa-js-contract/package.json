@@ -19,6 +19,7 @@
     "clean": "rimraf ./dist"
   },
   "dependencies": {
+    "@types/bn.js": "^4.11.3",
     "@zilliqa-js/account": "^0.2.1",
     "@zilliqa-js/blockchain": "^0.2.1",
     "@zilliqa-js/core": "^0.2.1",
