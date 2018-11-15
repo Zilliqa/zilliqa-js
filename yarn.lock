@@ -1539,6 +1539,13 @@
   dependencies:
     "@types/node" "*"
 
+"@types/bn.js@^4.11.3":
+  version "4.11.3"
+  resolved "https://registry.npmjs.org/@types/bn.js/-/bn.js-4.11.3.tgz#0f09e53e98659b007d7019261ddab9178135df38"
+  integrity sha512-auZ3vEo3UW8tZc9NhF0MTnutKlf+YhsfC3+dwskFcil/EoqqZF60pGuJ2v2Ae1OJTUp3DJnjOJMqrpkmKB904w==
+  dependencies:
+    "@types/node" "*"
+
 "@types/camelcase@^4.1.0":
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/@types/camelcase/-/camelcase-4.1.0.tgz#e054f7986f31658d49936261b5cd4588ef29d1ee"
