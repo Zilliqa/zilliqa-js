@@ -197,7 +197,7 @@ export const toSignature = (serialised: string): Signature => {
  *
  * @returns {DRBG}
  */
-export const getDRBG = () => {
+const getDRBG = () => {
   const entropy = randomBytes(ENT_LEN);
   const nonce = randomBytes(ENT_LEN);
   const pers = Buffer.allocUnsafe(ALG_LEN + ENT_LEN);
@@ -211,26 +211,4 @@ export const getDRBG = () => {
     nonce,
     pers,
   });
-};
-
-/**
- * Generate pub+priv nonce pair.
- *
- * @param {Buffer} msg
- * @param {Buffer} priv
- * @param {Buffer} data
- *
- * @returns {Buffer}
- */
-export const generateNoncePair = () => {
-  const drbg = getDRBG();
-  const len = curve.n.byteLength();
-
-  let k = new BN(drbg.generate(len));
-
-  while (k.isZero() && k.gte(curve.n)) {
-    k = new BN(drbg.generate(len));
-  }
-
-  return Buffer.from(curve.g.mul(k).encode('array', true));
 };
