@@ -121,7 +121,7 @@ export const trySign = (
 
   // 4. Compute s = k - r * prv
   // 4a. Compute r * prv
-  let s = h.imul(privKey);
+  let s = h.umod(curve.n).imul(privKey.umod(curve.n));
   // 4b. Compute s = k - r * prv mod n
   s = k.isub(s);
   s = s.umod(curve.n);
@@ -164,8 +164,8 @@ export const verify = (msg: Buffer, signature: Signature, key: Buffer) => {
     throw new Error('Invalid public key');
   }
 
-  const l = kpub.mul(sig.r);
-  const r = curve.g.mul(sig.s);
+  const l = kpub.mul(sig.r.umod(curve.n));
+  const r = curve.g.mul(sig.s.umod(curve.n));
 
   const Q = l.add(r);
   const compressedQ = new BN(Q.encodeCompressed());
