@@ -1,0 +1,8 @@
+
+# Development folders and files #
+#################################
+.tmp/
+node_modules/
+package.json
+.travis.yml
+*.md

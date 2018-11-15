@@ -7,9 +7,18 @@ branches:
   except:
   - /^v[0-9]/
 install:
-  - yarn install --pure-lockfile
+  - yarn install
+  - yarn global add codecov
 script:
+  - yarn bootstrap
   - yarn run test
+after_success:
+  - codecov
+deploy:
+  provider: script
+  script: yarn publish
+  on:
+    branch: master
 cache:
   directories:
   - "$HOME/.yarn-cache"

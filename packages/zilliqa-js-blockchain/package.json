@@ -1,0 +1,27 @@
+{
+  "name": "@zilliqa-js/blockchain",
+  "version": "0.2.1",
+  "description": "Class(es) for interacting with the Zilliqa blockchain.",
+  "main": "dist/index.umd.js",
+  "node": "dist/index.umd.js",
+  "browser": "dist/index.umd.js",
+  "module": "dist/index.esm.js",
+  "jsnext:main": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "typings": "dist/index.d.ts",
+  "repository": "https://github.com/Zilliqa/Zilliqa-Javascript-Library",
+  "author": "ian@zilliqa.com",
+  "license": "GPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "clean": "rimraf ./dist"
+  },
+  "dependencies": {
+    "@types/bn.js": "^4.11.3",
+    "@zilliqa-js/account": "^0.2.1",
+    "@zilliqa-js/core": "^0.2.1",
+    "bn.js": "^4.11.8"
+  }
+}

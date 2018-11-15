@@ -7,5 +7,9 @@
 // another public or private blockchain network. This source code is provided ‘as is’ and no
 // warranties are given as to title or non-infringement, merchantability or fitness for purpose
 // and, to the extent permitted by law, all liability for your use of the code is disclaimed.
-window.crypto = require('@trust/webcrypto');
-window.fetch = require('jest-fetch-mock');
+if (process.env.TEST_ENV === 'unit') {
+  window.fetch = global.fetch = require('jest-fetch-mock');
+}
+
+window.crypto = global.crypto = require('@trust/webcrypto');
+require('dotenv').config('.env');

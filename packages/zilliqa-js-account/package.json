@@ -1,0 +1,34 @@
+{
+  "name": "@zilliqa-js/account",
+  "version": "0.2.1",
+  "description": "Used for signing transactions.",
+  "main": "dist/index.umd.js",
+  "node": "dist/index.umd.js",
+  "browser": "dist/index.umd.js",
+  "module": "dist/index.esm.js",
+  "jsnext:main": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "typings": "dist/index.d.ts",
+  "repository": "https://github.com/Zilliqa/Zilliqa-Javascript-Library",
+  "license": "GPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "clean": "rimraf ./dist"
+  },
+  "dependencies": {
+    "@types/bip39": "^2.4.0",
+    "@types/bn.js": "^4.11.3",
+    "@types/hdkey": "^0.7.0",
+    "@zilliqa-js/core": "^0.2.1",
+    "@zilliqa-js/crypto": "^0.2.1",
+    "@zilliqa-js/util": "^0.2.1",
+    "bip39": "^2.5.0",
+    "bn.js": "^4.11.8",
+    "hdkey": "^1.1.0"
+  },
+  "devDependencies": {
+    "web3": "^1.0.0-beta.36"
+  }
+}

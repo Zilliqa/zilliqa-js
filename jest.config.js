@@ -9,31 +9,38 @@
 // and, to the extent permitted by law, all liability for your use of the code is disclaimed.
 const config = {
   transform: {
-    '^.+\\.(t|j)s$': 'ts-jest',
+    '^.+\\.ts$': 'ts-jest',
   },
-  testMatch: [
-    // '<rootDir>/src/**/__tests__/**/*.ts',
-    '<rootDir>/src/**/?(*.)+(spec|test).ts',
+  testMatch: ['<rootDir>/packages/**/test/?(*.)+(spec|test).ts'],
+  moduleDirectories: [
+    'packages/*/src',
+    '<rootDir>/includes',
+    '<rootDir>/node_modules',
+    '<rootDir>/*/node_modules',
   ],
-  moduleDirectories: ['src', 'node_modules'],
-  moduleFileExtensions: ['js', 'ts'],
-  globals: {
-    'ts-jest': { useBabelrc: true },
+  moduleFileExtensions: ['js', 'ts', 'node', 'json'],
+  moduleNameMapper: {
+    '^@zilliqa-js/zilliqa': '<rootDir>/packages/zilliqa/src/index.ts',
+    '^@zilliqa-js/(.*)$': '<rootDir>/packages/zilliqa-js-$1/src/index.ts',
+    'cross-fetch': 'jest-fetch-mock',
   },
-  testURL: 'http://localhost',
-  coverageThreshold: {
-    global: {
-      branches: 80,
-      functions: 80,
-      lines: 80,
-      statements: 80,
+  globals: {
+    'ts-jest': {
+      babelConfig: true,
+      tsConfig: './tsconfig.test.json',
     },
   },
+  testURL: 'http://localhost',
+  collectCoverage: true,
+  collectCoverageFrom: [
+    '<rootDir>/packages/*/src/**/*.{ts,js}',
+    '!**/node_modules/**',
+  ],
   setupFiles: ['<rootDir>/jest-setup.js'],
   watchPlugins: [
     'jest-watch-typeahead/filename',
     'jest-watch-typeahead/testname',
   ],
-}
+};
 
 module.exports = config;
