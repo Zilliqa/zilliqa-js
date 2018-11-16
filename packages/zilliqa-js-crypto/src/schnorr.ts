@@ -115,10 +115,6 @@ export const trySign = (
     return null;
   }
 
-  if (h.eq(curve.n)) {
-    return null;
-  }
-
   // 4. Compute s = k - r * prv
   // 4a. Compute r * prv
   let s = h.imul(privKey).umod(curve.n);
