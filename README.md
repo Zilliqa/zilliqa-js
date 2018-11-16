@@ -24,6 +24,7 @@ want to use it for.
 | `@zilliqa-js/blockchain` | Main interface to the Zilliqa `JSON-RPC`.                                                                                                                                 | none                                                                                    |
 | `@zilliqa-js/contract`   | Exposes a `Contracts` module that takes care of smart contract deployment and interaction.                                                                                | `@zilliqa-js/account`, `@zilliqa-js/blockchain`, `@zilliqa-js/core`, `@zilliqa-js/util` |
 | `@zilliqa-js/crypto`     | Exposes several loosely-coupled cryptographic convenience functions for working with the Zilliqa blockchain and its cryptographic primitives, such as Schnorr signatures. | `@zilliqa-js/util`                                                                      |
+| `@zilliqa-js/proto`      | Protobuf source files and corresponding generated JS modules.
 | `@zilliqa-js/util`       | Miscellaneous functions that take care of serialisation/deserialisation and validation.                                                                                   | none                                                                                    |
 
 ## Installation
