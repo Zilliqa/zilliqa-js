@@ -150,12 +150,12 @@ export const trySign = (
 export const verify = (msg: Buffer, signature: Signature, key: Buffer) => {
   const sig = new Signature(signature);
 
-  if (sig.s.gte(curve.n)) {
-    throw new Error('Invalid S value.');
+  if (sig.s.isZero() || sig.r.isZero()) {
+    throw new Error('Invalid signature');
   }
 
-  if (sig.r.gt(curve.n)) {
-    throw new Error('Invalid R value.');
+  if (sig.s.gte(curve.n) || sig.r.gte(curve.n)) {
+    throw new Error('Invalid signature');
   }
 
   const kpub = curve.decodePoint(key);
@@ -163,8 +163,8 @@ export const verify = (msg: Buffer, signature: Signature, key: Buffer) => {
     throw new Error('Invalid public key');
   }
 
-  const l = kpub.mul(sig.r.umod(curve.n));
-  const r = curve.g.mul(sig.s.umod(curve.n));
+  const l = kpub.mul(sig.r);
+  const r = curve.g.mul(sig.s);
 
   const Q = l.add(r);
   const compressedQ = new BN(Q.encodeCompressed());
