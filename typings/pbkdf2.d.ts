@@ -33,5 +33,5 @@ declare module 'pbkdf2' {
 
   var exports: Exported;
 
-  export default exports;
+  export = exports;
 }

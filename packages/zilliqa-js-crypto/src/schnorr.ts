@@ -115,16 +115,11 @@ export const trySign = (
     return null;
   }
 
-  if (h.eq(curve.n)) {
-    return null;
-  }
-
   // 4. Compute s = k - r * prv
   // 4a. Compute r * prv
-  let s = h.imul(privKey);
+  let s = h.imul(privKey).umod(curve.n);
   // 4b. Compute s = k - r * prv mod n
-  s = k.isub(s);
-  s = s.umod(curve.n);
+  s = k.isub(s).umod(curve.n);
 
   if (s.isZero()) {
     return null;
@@ -151,12 +146,12 @@ export const trySign = (
 export const verify = (msg: Buffer, signature: Signature, key: Buffer) => {
   const sig = new Signature(signature);
 
-  if (sig.s.gte(curve.n)) {
-    throw new Error('Invalid S value.');
+  if (sig.s.isZero() || sig.r.isZero()) {
+    throw new Error('Invalid signature');
   }
 
-  if (sig.r.gt(curve.n)) {
-    throw new Error('Invalid R value.');
+  if (sig.s.gte(curve.n) || sig.r.gte(curve.n)) {
+    throw new Error('Invalid signature');
   }
 
   const kpub = curve.decodePoint(key);
@@ -171,10 +166,6 @@ export const verify = (msg: Buffer, signature: Signature, key: Buffer) => {
   const compressedQ = new BN(Q.encodeCompressed());
 
   const r1 = hash(compressedQ, key, msg).umod(curve.n);
-
-  if (r1.gte(curve.n)) {
-    throw new Error('Invalid hash.');
-  }
 
   if (r1.isZero()) {
     throw new Error('Invalid hash.');
