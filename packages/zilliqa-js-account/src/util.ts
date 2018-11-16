@@ -43,13 +43,13 @@ export const encodeTransactionProto = (tx: TxParams): Buffer => {
       data: bytes.hexToByteArray(tx.pubKey || '00'),
     }),
     amount: ZilliqaMessage.ByteArray.create({
-      data: Uint8Array.from(tx.amount.toBuffer(undefined, 32)),
+      data: Uint8Array.from(tx.amount.toArrayLike(Buffer, undefined, 32)),
     }),
     gasprice: ZilliqaMessage.ByteArray.create({
-      data: Uint8Array.from(tx.gasPrice.toBuffer(undefined, 32)),
+      data: Uint8Array.from(tx.gasPrice.toArrayLike(Buffer, undefined, 32)),
     }),
     gaslimit: ZilliqaMessage.ByteArray.create({
-      data: Uint8Array.from(tx.gasLimit.toBuffer(undefined, 32)),
+      data: Uint8Array.from(tx.gasLimit.toArrayLike(Buffer, undefined, 32)),
     }),
     code: Uint8Array.from(
       [...(tx.code || '')].map((c) => <number>c.charCodeAt(0)),
