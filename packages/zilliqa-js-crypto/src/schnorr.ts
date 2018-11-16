@@ -121,10 +121,9 @@ export const trySign = (
 
   // 4. Compute s = k - r * prv
   // 4a. Compute r * prv
-  let s = h.umod(curve.n).imul(privKey.umod(curve.n));
+  let s = h.imul(privKey).umod(curve.n);
   // 4b. Compute s = k - r * prv mod n
-  s = k.isub(s);
-  s = s.umod(curve.n);
+  s = k.isub(s).umod(curve.n);
 
   if (s.isZero()) {
     return null;
