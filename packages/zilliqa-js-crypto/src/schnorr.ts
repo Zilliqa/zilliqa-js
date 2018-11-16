@@ -1,7 +1,8 @@
 import elliptic from 'elliptic';
-import BN from 'bn.js';
 import hashjs from 'hash.js';
 import DRBG from 'hmac-drbg';
+
+import { BN } from '@zilliqa-js/util';
 
 import { randomBytes } from './random';
 import { Signature } from './signature';

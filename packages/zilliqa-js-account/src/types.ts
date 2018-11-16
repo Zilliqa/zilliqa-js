@@ -1,4 +1,4 @@
-import BN from 'bn.js';
+import { BN } from '@zilliqa-js/util';
 
 export const enum TxStatus {
   Initialised,
