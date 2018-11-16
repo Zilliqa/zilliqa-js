@@ -13,6 +13,8 @@ install:
 script:
   - yarn bootstrap
   - yarn run test
+  - yarn bundle
+
 after_success:
   - codecov
 deploy:

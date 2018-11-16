@@ -1,0 +1,26 @@
+{
+  "name": "@zilliqa-js/proto",
+  "version": "0.2.2",
+  "description": "Protobuf dependencies for message serialization",
+  "main": "dist/index.js",
+  "node": "dist/index.js",
+  "browser": "dist/index.js",
+  "module": "dist/index.js",
+  "jsnext:main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "typings": "dist/index.d.ts",
+  "repository": "https://github.com/Zilliqa/Zilliqa-Javascript-Library",
+  "license": "GPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "yarn clean && mkdir dist && yarn gen:js && yarn gen:ts",
+    "gen:js": "pbjs --target static-module --wrap commonjs --out ./dist/index.js ./src/messages.proto",
+    "gen:ts": "pbts --out ./dist/index.d.ts --name zproto ./dist/index.js",
+    "clean": "rimraf ./dist"
+  },
+  "devDependencies": {
+    "protobufjs": "^6.8.8"
+  }
+}

@@ -4,9 +4,10 @@
   "private": true,
   "license": "GPL-3.0",
   "scripts": {
-    "bootstrap": "lerna bootstrap && yarn build:proto && yarn build",
-    "build": "tsc -b tsconfig.json",
-    "build:proto": "ts-node -P scripts/tsconfig.json scripts/proto.ts",
+    "bootstrap": "lerna bootstrap && yarn build",
+    "build": "yarn build:proto && yarn build:ts",
+    "build:proto": "lerna run --scope @zilliqa-js/proto build",
+    "build:ts": "tsc -b tsconfig.json",
     "bundle": "ts-node -P scripts/tsconfig.json scripts/bundle.ts umd,esm",
     "clean": "lerna clean --yes && lerna run clean && rimraf includes",
     "schema": "ts-node -P scripts/tsconfig.json scripts/schema.ts blockchain",

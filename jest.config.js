@@ -21,6 +21,7 @@ const config = {
   moduleFileExtensions: ['js', 'ts', 'node', 'json'],
   moduleNameMapper: {
     '^@zilliqa-js/zilliqa': '<rootDir>/packages/zilliqa/src/index.ts',
+    '^@zilliqa-js/proto$': '<rootDir>/packages/zilliqa-js-proto/dist/index.js',
     '^@zilliqa-js/(.*)$': '<rootDir>/packages/zilliqa-js-$1/src/index.ts',
     'cross-fetch': 'jest-fetch-mock',
   },
