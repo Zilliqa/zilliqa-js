@@ -9,6 +9,7 @@ branches:
 install:
   - yarn install
   - yarn global add codecov
+  - yarn global add ts-node
 script:
   - yarn bootstrap
   - yarn run test
