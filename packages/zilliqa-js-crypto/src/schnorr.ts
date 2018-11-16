@@ -167,10 +167,6 @@ export const verify = (msg: Buffer, signature: Signature, key: Buffer) => {
 
   const r1 = hash(compressedQ, key, msg).umod(curve.n);
 
-  if (r1.gte(curve.n)) {
-    throw new Error('Invalid hash.');
-  }
-
   if (r1.isZero()) {
     throw new Error('Invalid hash.');
   }
