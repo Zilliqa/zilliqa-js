@@ -65,7 +65,9 @@ function preProcess() {
 async function bundle() {
   try {
     const outputs = process.argv.slice(2)[0].split(',');
-    const packages = project.packages;
+    const packages = project.packages.filter(
+      ({ name }) => name !== 'zilliqa-js-proto',
+    );
 
     await preProcess();
 
@@ -104,13 +106,7 @@ async function bundle() {
               ],
             },
           }),
-          globals({
-            baseDir: false,
-            buffer: true,
-            dirname: false,
-            filename: false,
-            global: false,
-          }),
+          globals(),
           json(),
           typescript2({
             tsconfig: path.join(pkg.path, 'tsconfig.json'),
@@ -170,7 +166,8 @@ async function bundle() {
       }
     }
   } catch (err) {
-    logBundle(`Failed to bundle: ${err}`);
+    logBundle('Failed to bundle:');
+    logBundle(err);
     process.exit(1);
   }
 }

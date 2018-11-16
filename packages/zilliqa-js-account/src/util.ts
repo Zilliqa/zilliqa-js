@@ -1,7 +1,6 @@
 import { ReqMiddlewareFn, RPCMethod } from '@zilliqa-js/core';
 import { bytes, validation } from '@zilliqa-js/util';
-// tslint:disable-next-line
-import { ZilliqaMessage } from 'proto';
+import { ZilliqaMessage } from '@zilliqa-js/proto';
 import { TxReceipt, TxParams } from './types';
 
 /**
