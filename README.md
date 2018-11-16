@@ -20,11 +20,11 @@ want to use it for.
 | package                  | description                                                                                                                                                               | dependencies                                                                            |
 | ---                      | ---                                                                                                                                                                       | ---                                                                                     |
 | `@zilliqa-js/core`       | Core abstractions and base classes, such as `HTTPProvider` and network logic for interfacing with the Zilliqa JSON-RPC.                                                   | none                                                                                    |
-| `@zilliqa-js/account`    | `Wallet`, `Account` and `Transaction` abstractions live in this package.                                                                                                  | `@zilliqa-js/core`, `@zilliqa-js/crypto`, `@zilliqa-js/util`                            |
+| `@zilliqa-js/account`    | `Wallet`, `Account` and `Transaction` abstractions live in this package.                                                                                                  | `@zilliqa-js/core`, `@zilliqa-js/crypto`, `@zilliqa-js/util`, `@zilliqa-js/proto`       |
 | `@zilliqa-js/blockchain` | Main interface to the Zilliqa `JSON-RPC`.                                                                                                                                 | none                                                                                    |
 | `@zilliqa-js/contract`   | Exposes a `Contracts` module that takes care of smart contract deployment and interaction.                                                                                | `@zilliqa-js/account`, `@zilliqa-js/blockchain`, `@zilliqa-js/core`, `@zilliqa-js/util` |
 | `@zilliqa-js/crypto`     | Exposes several loosely-coupled cryptographic convenience functions for working with the Zilliqa blockchain and its cryptographic primitives, such as Schnorr signatures. | `@zilliqa-js/util`                                                                      |
-| `@zilliqa-js/proto`      | Protobuf source files and corresponding generated JS modules.
+| `@zilliqa-js/proto`      | Protobuf source files and corresponding generated JS modules.                                                                                                             | none                                                                                    |
 | `@zilliqa-js/util`       | Miscellaneous functions that take care of serialisation/deserialisation and validation.                                                                                   | none                                                                                    |
 
 ## Installation
@@ -53,7 +53,7 @@ supports the ES Module spec with the flag `--experimental-modules`. If you are
 not, you must use `require`, e.g. `const { Zilliqa
 } = require('@zilliqa-js/zilliqa')`.**
 
-```
+```typescript
 const {Transaction} = require('@zilliqa-js/account');
 const {BN} = require('@zilliqa-js/util');
 const {Zilliqa} = require('@zilliqa-js/zilliqa');
@@ -188,8 +188,8 @@ yarn install
 # symlink packages, compile TS source files, and generate protobuf files.
 yarn bootstrap
 
-# watch and recompile on change
-yarn build -w
+# watch TS source files and recompile on change
+yarn build:ts -w
 ```
 ### Tests
 
