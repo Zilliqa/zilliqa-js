@@ -1,8 +1,6 @@
-import BN from 'bn.js';
-
 import { Wallet, Transaction, TxStatus } from '@zilliqa-js/account';
 import { RPCMethod, Provider, sign } from '@zilliqa-js/core';
-import { types } from '@zilliqa-js/util';
+import { BN, types } from '@zilliqa-js/util';
 
 import { Contracts } from './factory';
 import {

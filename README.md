@@ -52,37 +52,34 @@ supports the ES Module spec with the flag `--experimental-modules`. If you are
 not, you must use `require`, e.g. `const { Zilliqa
 } = require('@zilliqa-js/zilliqa')`.**
 
-```ts
-import BN from 'bn.js';
-import { Transaction } from '@zilliqa-js/account';
-import { Zilliqa } from '@zilliqa-js/zilliqa';
+```
+const {Transaction} = require('@zilliqa-js/account');
+const {BN} = require('@zilliqa-js/util');
+const {Zilliqa} = require('@zilliqa-js/zilliqa');
 
-const zilliqa = new Zilliqa('https://my-zil-testnet.com');
+const zilliqa = new Zilliqa('https://api-scilla.zilliqa.com/');
 
 // Populate the wallet with an account
-zilliqa.wallet.addByPrivateKey('my_secret_private_key');
+zilliqa.wallet.addByPrivateKey(
+  '3375F915F3F9AE35E6B301B7670F53AD1A5BE15D8221EC7FD5E503F21D3450C8',
+);
 
-// Create a transaction
-const tx = zilliqa.transactions.new({
-  version: 1,
-  toAddr: 'my_address',
-  amount: new BN(888),
-  gasPrice: new BN(1),
-  gasLimit: new BN(10),
-});
+async function testBlockchain() {
+  try {
+    // Send a transaction to the network
+    const tx = await zilliqa.blockchain.createTransaction(
+      zilliqa.transactions.new({
+        version: 1,
+        toAddr: 'affc3236b726660ed9b99dff11451e4e8c107dea',
+        amount: new BN(888),
+        gasPrice: new BN(1),
+        gasLimit: new BN(10),
+      }),
+    );
+    console.log(tx);
 
-// Send the transaction to the network
-zilliqa.blockchain
-  .createTransaction(tx)
-  .then((tx) => {
-    // do something with then confirmed tx
-  })
-  .catch((err) => {
-    // handle the error
-  });
-
-// Deploy a contract
-const hello = `(* HelloWorld contract *)
+    // Deploy a contract
+    const code = `(* HelloWorld contract *)
 
 import ListUtils
 
@@ -131,43 +128,33 @@ transition getHello ()
     send msgs
 end`;
 
-const init = [
-    {
-      vname: 'welcome_msg',
-      type: 'String',
-      value: 'Hello World',
-    },
-];
+    const init = [
+      {
+        vname: 'owner',
+        type: 'ByStr20',
+        value: '0x8254b2c9acdf181d5d6796d63320fbb20d4edd12',
+      },
+    ];
 
-const contract = zilliqa.contracts.new(code, init);
+    // instance of class Contract
+    const contract = zilliqa.contracts.new(code, init);
 
-// if you are in a function, you can also use async/await
-contract.deploy(new BN(1), new BN(2500))
-  .then((contract) => {
-    if (contract.isDeployed()) {
-      // do something with your contract
-      return contract.call('setHello', [
-          {
-            vname: 'owner',
-            type: 'ByStr20',
-            value: `my_address`
-          }
-      ]);
-    }
+    const hello = await contract.deploy(new BN(1), new BN(2500));
+    const callTx = await hello.call('setHello', [
+      {
+        vname: 'msg',
+        type: 'String',
+        value: 'Hello World',
+      },
+    ]);
+    const state = await hello.getState();
+    console.log(state);
+  } catch (err) {
+    console.log(err);
+  }
+}
 
-    if (contract.isRejected()) {
-      // throw an error, or somehow handle the failed deployment
-    }
-  })
-  .then((contract) => {
-    return contract.getState();
-  })
-  .then((state) => {
-    // do something
-  })
-  .catch((err) => {
-    // handle the error
-  });
+testBlockchain();
 ```
 
 ## API Documentation and examples

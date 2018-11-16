@@ -3,7 +3,7 @@
   "rules": {
     "interface-name": [true, "never-prefix"],
     "member-access": false,
-    "no-angle-brack-type-assertion": false,
+    "no-angle-bracket-type-assertion": false,
     "no-bitwise": false,
     "no-console": false,
     "no-default-export": true,

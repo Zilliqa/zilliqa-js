@@ -19,13 +19,11 @@
   },
   "dependencies": {
     "@types/bip39": "^2.4.0",
-    "@types/bn.js": "^4.11.3",
     "@types/hdkey": "^0.7.0",
     "@zilliqa-js/core": "^0.2.2",
     "@zilliqa-js/crypto": "^0.2.2",
     "@zilliqa-js/util": "^0.2.2",
     "bip39": "^2.5.0",
-    "bn.js": "^4.11.8",
     "hdkey": "^1.1.0"
   },
   "devDependencies": {

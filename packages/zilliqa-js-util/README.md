@@ -1,6 +1,14 @@
 # @zilliqa-js/util
 > Utility functions useful in Zilliqa-related programs.
 
+## Classes
+
+### `BN`
+
+See documentation at [bn.js](https://github.com/indutny/bn.js/). This is
+simply a re-export of that library to prevent bloating other `@zilliqa-js`
+packages, most of which depend on `bn.js` in small ways.
+
 ## Functions
 
 ### `intToHexArray(int: number, size: number): string[]`
