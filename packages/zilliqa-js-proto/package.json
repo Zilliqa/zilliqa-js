@@ -20,7 +20,7 @@
     "gen:ts": "pbts --out ./dist/index.d.ts --name zproto ./dist/index.js",
     "clean": "rimraf ./dist"
   },
-  "devDependencies": {
+  "dependencies": {
     "protobufjs": "^6.8.8"
   }
 }
