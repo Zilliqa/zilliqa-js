@@ -17,12 +17,6 @@ script:
 
 after_success:
   - codecov
-deploy:
-  skip_cleanup: true
-  provider: script
-  script: yarn run publish
-  on:
-    branch: master
 cache:
   directories:
   - "$HOME/.yarn-cache"
