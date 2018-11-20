@@ -180,6 +180,20 @@ export class Wallet extends Signer {
    * @returns {Transaction}
    */
   sign(tx: Transaction): Promise<Transaction> {
+    if (tx.txParams && tx.txParams.pubKey) {
+      // attempt to find the address
+      const senderAddress = zcrypto.getAddressFromPublicKey(tx.txParams.pubKey);
+
+      if (!this.accounts[senderAddress]) {
+        console.log(this.accounts);
+        throw new Error(
+          `Could not sign the transaction with ${senderAddress} as it does not exist`,
+        );
+      }
+
+      return this.signWith(tx, senderAddress);
+    }
+
     if (!this.defaultAccount) {
       throw new Error('This wallet has no default account.');
     }
