@@ -152,7 +152,7 @@ export class Contract {
     params: Value[],
     amount: BN = new BN(0),
     gasLimit: Long = Long.fromNumber(1000),
-    gasPrice: BN = new BN(1000),
+    gasPrice: BN = new BN(100),
   ): Promise<Transaction> {
     const msg = {
       _tag: transition,
