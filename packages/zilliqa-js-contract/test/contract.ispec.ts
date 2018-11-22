@@ -1,6 +1,7 @@
-import BN from 'bn.js';
-import { HTTPProvider } from '@zilliqa-js/core';
 import { Account, Wallet } from '@zilliqa-js/account';
+import { HTTPProvider } from '@zilliqa-js/core';
+import { BN, Long } from '@zilliqa-js/util';
+
 import { Contracts, Contract, ContractStatus } from '../src/index';
 import { abi } from './test.abi';
 import { testContract } from './fixtures';
@@ -27,7 +28,7 @@ describe('Contract - hello world', () => {
         ],
         abi,
       )
-      .deploy(new BN(1), new BN(5000));
+      .deploy(new BN(1000), Long.fromNumber(5000));
 
     expect(contract.status).toEqual(ContractStatus.Deployed);
   });

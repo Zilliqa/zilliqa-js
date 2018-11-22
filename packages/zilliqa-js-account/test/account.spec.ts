@@ -1,8 +1,9 @@
 import fs from 'fs';
-import BN from 'bn.js';
 import Signature from 'elliptic/lib/elliptic/ec/signature';
 import { HTTPProvider } from '@zilliqa-js/core';
 import * as zcrypto from '@zilliqa-js/crypto';
+import { BN, Long } from '@zilliqa-js/util';
+
 import { Account } from '../src/account';
 import { Transaction } from '../src/transaction';
 
@@ -60,7 +61,7 @@ describe('Account', () => {
       amount: new BN(888),
       pubKey: account.publicKey,
       gasPrice: new BN(888),
-      gasLimit: new BN(888888),
+      gasLimit: new Long(888888),
       code: '',
       data: 'some_data',
     };

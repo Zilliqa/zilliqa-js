@@ -185,7 +185,6 @@ export class Wallet extends Signer {
       const senderAddress = zcrypto.getAddressFromPublicKey(tx.txParams.pubKey);
 
       if (!this.accounts[senderAddress]) {
-        console.log(this.accounts);
         throw new Error(
           `Could not sign the transaction with ${senderAddress} as it does not exist`,
         );

@@ -1,11 +1,10 @@
-import BN from 'bn.js';
-
 import { HTTPProvider } from '@zilliqa-js/core';
 import {
   getPubKeyFromPrivateKey,
   generatePrivateKey,
   schnorr,
 } from '@zilliqa-js/crypto';
+import { BN, Long } from '@zilliqa-js/util';
 
 import fetch from 'jest-fetch-mock';
 
@@ -76,7 +75,7 @@ describe('Wallet', () => {
         toAddr: '0x1234567890123456789012345678901234567890',
         amount: new BN(0),
         gasPrice: new BN(1000),
-        gasLimit: new BN(1000),
+        gasLimit: Long.fromNumber(1000),
         pubKey,
       },
       provider,
@@ -117,7 +116,7 @@ describe('Wallet', () => {
         toAddr: '0x1234567890123456789012345678901234567890',
         amount: new BN(888),
         gasPrice: new BN(888),
-        gasLimit: new BN(888),
+        gasLimit: Long.fromNumber(888),
         pubKey,
       },
       provider,
@@ -146,16 +145,12 @@ describe('Wallet', () => {
         toAddr: '0x1234567890123456789012345678901234567890',
         amount: new BN(0),
         gasPrice: new BN(1000),
-        gasLimit: new BN(1000),
+        gasLimit: Long.fromNumber(1000),
         pubKey,
       },
       provider,
     );
 
-    try {
-      wallet.sign(tx);
-    } catch (err) {
-      expect(err.message).toEqual('This wallet has no default account.');
-    }
+    expect(() => wallet.sign(tx)).toThrow();
   });
 });
