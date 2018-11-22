@@ -14,7 +14,7 @@ interface TxParams {
   toAddr: string;
   amount: BN;
   gasPrice: BN;
-  gasLimit: BN;
+  gasLimit: Long;
 
   code?: string;
   data?: string;
@@ -289,8 +289,8 @@ const txParams = {
   version: 0,
   toAddr: '20_byte_hex_string',
   amount: new BN(8),
-  gasPrice: new BN(8),
-  gasLimit: new BN(888)
+  gasPrice: new BN(100),
+  gasLimit: Long.fromNumber(888)
 };
 const tx = Transaction.confirm(txParams, new HTTPProvider('http://my-api.com'));
 
@@ -320,8 +320,8 @@ const txParams = {
   version: 0,
   toAddr: '20_byte_hex_string',
   amount: new BN(8),
-  gasPrice: new BN(8),
-  gasLimit: new BN(888)
+  gasPrice: new BN(100),
+  gasLimit: Long.fromNumber(888),
 };
 const tx = Transaction.reject(txParams, new HTTPProvider('http://my-api.com'));
 expect(tx.isRejected()).toBeTruthy();
