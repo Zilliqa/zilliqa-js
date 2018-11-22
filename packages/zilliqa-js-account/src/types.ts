@@ -1,4 +1,4 @@
-import { BN } from '@zilliqa-js/util';
+import { BN, Long } from '@zilliqa-js/util';
 
 export const enum TxStatus {
   Initialised,
@@ -32,7 +32,7 @@ export interface TxParams {
   toAddr: string;
   amount: BN;
   gasPrice: BN;
-  gasLimit: BN;
+  gasLimit: Long;
 
   code?: string;
   data?: string;

@@ -13,13 +13,13 @@ message ByteArray
 
 message ProtoTransactionCoreInfo
 {
-    required ByteArray version      = 1;
-    required ByteArray nonce        = 2;
+    required uint32 version      = 1;
+    required uint64 nonce        = 2;
     required bytes toaddr           = 3;
     required ByteArray senderpubkey = 4;
     required ByteArray amount       = 5;
     required ByteArray gasprice     = 6;
-    required ByteArray gaslimit     = 7;
+    required uint64 gaslimit     = 7;
     required bytes code             = 8;
     required bytes data             = 9;
 }
@@ -34,7 +34,7 @@ message ProtoTransaction
 message ProtoTransactionReceipt
 {
     required bytes receipt    = 1;
-    required ByteArray cumgas = 2;
+    required uint64 cumgas = 2;
 }
 
 message ProtoTransactionWithReceipt
