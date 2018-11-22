@@ -1,6 +1,6 @@
 import { TxParams } from '@zilliqa-js/account';
 import { RPCResponse } from '@zilliqa-js/core';
-import { BN } from '@zilliqa-js/util';
+import { BN, Long } from '@zilliqa-js/util';
 
 import { TransactionObj } from './types';
 
@@ -29,7 +29,7 @@ export function toTxParams(
     version: parseInt(version, 10),
     toAddr,
     gasPrice: new BN(gasPrice),
-    gasLimit: new BN(gasLimit),
+    gasLimit: Long.fromString(gasLimit, 10),
     amount: new BN(amount),
     receipt: {
       ...receipt,

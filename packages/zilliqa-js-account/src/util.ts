@@ -3,54 +3,21 @@ import { bytes, validation } from '@zilliqa-js/util';
 import { ZilliqaMessage } from '@zilliqa-js/proto';
 import { TxReceipt, TxParams } from './types';
 
-/**
- * encodeTransaction
- *
- * @deprecated
- * @param {TxParams} tx - JSON-encoded tx to convert to a byte array
- * @returns {Buffer} - Buffer of bytes
- */
-export const encodeTransaction = (tx: TxParams): Buffer => {
-  const codeHex = Buffer.from(tx.code || '').toString('hex');
-  const dataHex = Buffer.from(tx.data || '').toString('hex');
-
-  const encoded =
-    bytes.intToHexArray(tx.version, 64).join('') +
-    bytes.intToHexArray(tx.nonce || 0, 64).join('') +
-    tx.toAddr +
-    tx.pubKey +
-    tx.amount.toString('hex', 64) +
-    tx.gasPrice.toString('hex', 64) +
-    tx.gasLimit.toString('hex', 64) +
-    bytes.intToHexArray((tx.code && tx.code.length) || 0, 8).join('') + // size of code
-    codeHex +
-    bytes.intToHexArray((tx.data && tx.data.length) || 0, 8).join('') + // size of data
-    dataHex;
-
-  return Buffer.from(encoded, 'hex');
-};
-
 export const encodeTransactionProto = (tx: TxParams): Buffer => {
   const msg = ZilliqaMessage.ProtoTransactionCoreInfo.create({
-    version: ZilliqaMessage.ByteArray.create({
-      data: bytes.intToByteArray(tx.version, 32),
-    }),
-    nonce: ZilliqaMessage.ByteArray.create({
-      data: bytes.intToByteArray(tx.nonce || 0, 32),
-    }),
+    version: tx.version,
+    nonce: tx.nonce || 0,
     toaddr: bytes.hexToByteArray(tx.toAddr),
     senderpubkey: ZilliqaMessage.ByteArray.create({
       data: bytes.hexToByteArray(tx.pubKey || '00'),
     }),
     amount: ZilliqaMessage.ByteArray.create({
-      data: Uint8Array.from(tx.amount.toArrayLike(Buffer, undefined, 32)),
+      data: Uint8Array.from(tx.amount.toArrayLike(Buffer, undefined, 16)),
     }),
     gasprice: ZilliqaMessage.ByteArray.create({
-      data: Uint8Array.from(tx.gasPrice.toArrayLike(Buffer, undefined, 32)),
+      data: Uint8Array.from(tx.gasPrice.toArrayLike(Buffer, undefined, 16)),
     }),
-    gaslimit: ZilliqaMessage.ByteArray.create({
-      data: Uint8Array.from(tx.gasLimit.toArrayLike(Buffer, undefined, 32)),
-    }),
+    gaslimit: tx.gasLimit,
     code: Uint8Array.from(
       [...(tx.code || '')].map((c) => <number>c.charCodeAt(0)),
     ),

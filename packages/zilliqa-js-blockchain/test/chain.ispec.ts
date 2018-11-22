@@ -1,6 +1,6 @@
-import BN from 'bn.js';
-import { HTTPProvider, RPCResponse } from '@zilliqa-js/core';
 import { Account, Transaction, Wallet } from '@zilliqa-js/account';
+import { HTTPProvider, RPCResponse } from '@zilliqa-js/core';
+import { BN, Long } from '@zilliqa-js/util';
 
 import { Blockchain } from '../src/chain';
 import { TxBlockObj, BlockList } from '../src/types';
@@ -148,7 +148,7 @@ describe('[Integration]: Blockchain', () => {
         toAddr: 'd11238e5fcd70c817c22922c500830d00bc1e778',
         amount: new BN(1000),
         gasPrice: new BN(1000),
-        gasLimit: new BN(1000),
+        gasLimit: Long.fromNumber(1000),
       },
       provider,
     );

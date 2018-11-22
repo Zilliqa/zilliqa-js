@@ -19,6 +19,8 @@
   },
   "dependencies": {
     "@types/bn.js": "^4.11.3",
-    "bn.js": "^4.11.8"
+    "@types/long": "^4.0.0",
+    "bn.js": "^4.11.8",
+    "long": "^4.0.0"
   }
 }
