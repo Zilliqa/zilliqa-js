@@ -1,5 +1,5 @@
-import BN from 'bn.js';
 import { RPCMethod, HTTPProvider } from '@zilliqa-js/core';
+import { BN, Long } from '@zilliqa-js/util';
 
 import { Transaction } from '../src/transaction';
 import { Wallet } from '../src/wallet';
@@ -55,7 +55,7 @@ describe('Transaction', () => {
           toAddr: '0x1234567890123456789012345678901234567890',
           amount: new BN(0),
           gasPrice: new BN(1000),
-          gasLimit: new BN(1000),
+          gasLimit: Long.fromNumber(1000),
         },
         provider,
       ),
@@ -90,7 +90,7 @@ describe('Transaction', () => {
           toAddr: '0x1234567890123456789012345678901234567890',
           amount: new BN(0),
           gasPrice: new BN(1000),
-          gasLimit: new BN(1000),
+          gasLimit: Long.fromNumber(1000),
         },
         provider,
       ),
@@ -138,7 +138,7 @@ describe('Transaction', () => {
           toAddr: '0x1234567890123456789012345678901234567890',
           amount: new BN(0),
           gasPrice: new BN(1000),
-          gasLimit: new BN(1000),
+          gasLimit: Long.fromNumber(1000),
         },
         provider,
       ),

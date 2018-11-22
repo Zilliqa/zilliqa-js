@@ -1,6 +1,6 @@
 import { Wallet, Transaction, TxStatus } from '@zilliqa-js/account';
 import { RPCMethod, Provider, sign } from '@zilliqa-js/core';
-import { BN, types } from '@zilliqa-js/util';
+import { BN, Long, types } from '@zilliqa-js/util';
 
 import { Contracts } from './factory';
 import {
@@ -95,12 +95,14 @@ export class Contract {
       tx.txParams,
     );
 
+    console.log(response);
+
     return types.isError(response)
       ? tx.setStatus(TxStatus.Rejected)
       : tx.confirm(response.result.TranID);
   }
 
-  async deploy(gasPrice: BN, gasLimit: BN): Promise<Contract> {
+  async deploy(gasPrice: BN, gasLimit: Long): Promise<Contract> {
     if (!this.code || !this.init) {
       throw new Error(
         'Cannot deploy without code or initialisation parameters.',
@@ -149,8 +151,8 @@ export class Contract {
     transition: string,
     params: Value[],
     amount: BN = new BN(0),
-    gasLimit: BN = new BN(1000),
-    gasPrice: BN = new BN(10),
+    gasLimit: Long = Long.fromNumber(1000),
+    gasPrice: BN = new BN(1000),
   ): Promise<Transaction> {
     const msg = {
       _tag: transition,

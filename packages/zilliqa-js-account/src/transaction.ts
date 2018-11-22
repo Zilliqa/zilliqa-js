@@ -1,6 +1,6 @@
 import { Provider, RPCResponse, Signable } from '@zilliqa-js/core';
 import { getAddressFromPublicKey } from '@zilliqa-js/crypto';
-import { BN, types } from '@zilliqa-js/util';
+import { BN, Long, types } from '@zilliqa-js/util';
 
 import { TxParams, TxReceipt, TxStatus, TxIncluded } from './types';
 import { encodeTransactionProto, sleep } from './util';
@@ -47,7 +47,7 @@ export class Transaction implements Signable {
   private pubKey?: string;
   private amount: BN;
   private gasPrice: BN;
-  private gasLimit: BN;
+  private gasLimit: Long;
   private code: string;
   private data: string;
   private receipt?: TxReceipt;

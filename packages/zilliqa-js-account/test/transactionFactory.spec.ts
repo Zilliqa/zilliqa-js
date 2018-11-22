@@ -1,5 +1,6 @@
-import BN from 'bn.js';
 import { HTTPProvider } from '@zilliqa-js/core';
+import { BN, Long } from '@zilliqa-js/util';
+
 import { Transaction } from '../src/transaction';
 import { TransactionFactory } from '../src/transactionFactory';
 import { Wallet } from '../src/wallet';
@@ -14,7 +15,7 @@ describe('TransactionFactory', () => {
       version: 0,
       amount: new BN(0),
       gasPrice: new BN(1),
-      gasLimit: new BN(100),
+      gasLimit: Long.fromNumber(100),
       toAddr: '0x88888888888888888888',
     });
 

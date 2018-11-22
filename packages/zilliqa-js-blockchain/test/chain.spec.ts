@@ -1,7 +1,6 @@
-import BN from 'bn.js';
-
 import { Transaction, Wallet } from '@zilliqa-js/account';
 import { HTTPProvider } from '@zilliqa-js/core';
+import { BN, Long } from '@zilliqa-js/util';
 
 import { Blockchain } from '../src/chain';
 
@@ -27,7 +26,7 @@ describe('Module: Blockchain', () => {
         toAddr: '0x1234567890123456789012345678901234567890',
         amount: new BN(0),
         gasPrice: new BN(1000),
-        gasLimit: new BN(1000),
+        gasLimit: Long.fromNumber(1000),
       },
       provider,
     );

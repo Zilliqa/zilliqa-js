@@ -1,7 +1,6 @@
-import BN from 'bn.js';
-
 import { Wallet } from '@zilliqa-js/account';
 import { HTTPProvider } from '@zilliqa-js/core';
+import { BN, Long } from '@zilliqa-js/util';
 
 import fetch from 'jest-fetch-mock';
 
@@ -78,7 +77,7 @@ describe('Contracts', () => {
 
     fetch.mockResponses(...responses);
 
-    const deployed = await contract.deploy(new BN(1000), new BN(1000));
+    const deployed = await contract.deploy(new BN(1000), Long.fromNumber(1000));
 
     expect(deployed.isDeployed()).toBeTruthy();
     expect(deployed.status).toEqual(ContractStatus.Deployed);
@@ -123,7 +122,9 @@ describe('Contracts', () => {
       .mockResponses(...responses)
       .mockRejectOnce(new Error('something bad happened'));
 
-    await expect(contract.deploy(new BN(1000), new BN(1000))).rejects.toThrow();
+    await expect(
+      contract.deploy(new BN(1000), Long.fromNumber(1000)),
+    ).rejects.toThrow();
   });
 
   it('if the underlying transaction is rejected, status should be rejected', async () => {
@@ -161,7 +162,7 @@ describe('Contracts', () => {
         ],
         abi,
       )
-      .deploy(new BN(1000), new BN(1000));
+      .deploy(new BN(1000), Long.fromNumber(1000));
 
     expect(contract.isRejected()).toBeTruthy();
     expect(contract.status).toEqual(ContractStatus.Rejected);
@@ -213,7 +214,7 @@ describe('Contracts', () => {
         ],
         abi,
       )
-      .deploy(new BN(1000), new BN(1000));
+      .deploy(new BN(1000), Long.fromNumber(1000));
 
     expect(contract.isRejected).toBeTruthy();
   });
@@ -290,7 +291,7 @@ describe('Contracts', () => {
         ],
         abi,
       )
-      .deploy(new BN(1000), new BN(1000));
+      .deploy(new BN(1000), Long.fromNumber(1000));
 
     const callTx = await contract.call('myTransition', [
       { vname: 'param_1', type: 'String', value: 'hello' },
