@@ -54,9 +54,9 @@ not, you must use `require`, e.g. `const { Zilliqa
 } = require('@zilliqa-js/zilliqa')`.**
 
 ```typescript
-const {Transaction} = require('@zilliqa-js/account');
-const {BN} = require('@zilliqa-js/util');
-const {Zilliqa} = require('@zilliqa-js/zilliqa');
+const { Transaction } = require('@zilliqa-js/account');
+const { BN, Long } = require('@zilliqa-js/util');
+const { Zilliqa } = require('@zilliqa-js/zilliqa');
 
 const zilliqa = new Zilliqa('https://api-scilla.zilliqa.com/');
 
@@ -74,7 +74,8 @@ async function testBlockchain() {
         toAddr: 'affc3236b726660ed9b99dff11451e4e8c107dea',
         amount: new BN(888),
         gasPrice: new BN(1),
-        gasLimit: new BN(10),
+        // can be `number` if size is <= 2^53 (i.e., window.MAX_SAFE_INTEGER)
+        gasLimit: Long.fromNumber(10),
       }),
     );
     console.log(tx);
@@ -120,7 +121,6 @@ transition setHello (msg : String)
     send msgs
   end
 end
-
 
 transition getHello ()
     r <- welcome_msg;
