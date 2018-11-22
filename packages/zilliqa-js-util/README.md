@@ -9,6 +9,12 @@ See documentation at [bn.js](https://github.com/indutny/bn.js/). This is
 simply a re-export of that library to prevent bloating other `@zilliqa-js`
 packages, most of which depend on `bn.js` in small ways.
 
+### `Long`
+
+See documentation at [long.js](https://github.com/dcodeIO/long.js). This is
+simply a re-export for similar reasons. Note that `long` is only required if
+you need to serialise integers with size greater than or equal to `2^53`.
+
 ## Functions
 
 ### `intToHexArray(int: number, size: number): string[]`
