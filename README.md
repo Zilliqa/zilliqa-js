@@ -133,6 +133,9 @@ end`;
       {
         vname: 'owner',
         type: 'ByStr20',
+        // NOTE: all byte strings passed to Scilla contracts _must_ be
+        // prefixed with 0x. Failure to do so will result in the network
+        // rejecting the transaction while consuming gas!
         value: '0x8254b2c9acdf181d5d6796d63320fbb20d4edd12',
       },
     ];
@@ -168,6 +171,7 @@ these are links to the respective `README` documents.
 - [`contract`](./packages/zilliqa-js-contract/README.md)
 - [`core`](./packages/zilliqa-js-core/README.md)
 - [`crypto`](./packages/zilliqa-js-crypto/README.md)
+- [`proto`](./packages/zilliqa-js-proto/README.md)
 - [`util`](./packages/zilliqa-js-util/README.md)
 
 ## Development
