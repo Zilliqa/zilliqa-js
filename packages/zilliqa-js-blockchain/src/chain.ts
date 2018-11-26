@@ -220,6 +220,10 @@ export class Blockchain implements ZilliqaModule {
         tx.txParams,
       );
 
+      if (isError(response)) {
+        throw new Error(response.result.Error);
+      }
+
       return tx.confirm(response.result.TranID);
     } catch (err) {
       throw err;
