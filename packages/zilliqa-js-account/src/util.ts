@@ -41,7 +41,7 @@ export const isTxParams = (obj: unknown): obj is TxParams => {
     toAddr: [validation.required(validation.isAddress)],
     amount: [validation.required(validation.isBN)],
     gasPrice: [validation.required(validation.isBN)],
-    gasLimit: [validation.required(validation.isBN)],
+    gasLimit: [validation.required(validation.isLong)],
     code: [validation.isString],
     data: [validation.isString],
     receipt: [isTxReceipt],
