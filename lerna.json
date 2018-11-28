@@ -5,7 +5,8 @@
   "useWorkspaces": true,
   "command": {
     "publish": {
-      "allowBranch": ["master", "feature/monorepo"]
+      "allowBranch": ["master", "dev"],
+      "message": "chore(release): publish %v"
     }
   }
 }
