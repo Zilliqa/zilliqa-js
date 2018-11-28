@@ -1,6 +1,6 @@
 {
   "name": "@zilliqa-js/proto",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Protobuf dependencies for message serialization",
   "main": "dist/index.js",
   "node": "dist/index.js",
