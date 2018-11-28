@@ -31,7 +31,7 @@ export class Contracts implements ZilliqaModule {
     return hash
       .sha256()
       .update(tx.senderAddress, 'hex')
-      .update(bytes.intToHexArray(nonce, 64).join(''), 'hex')
+      .update(bytes.intToHexArray(nonce, 16).join(''), 'hex')
       .digest('hex')
       .slice(24);
   }
