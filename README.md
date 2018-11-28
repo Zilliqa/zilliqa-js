@@ -143,7 +143,7 @@ end`;
     // instance of class Contract
     const contract = zilliqa.contracts.new(code, init);
 
-    const hello = await contract.deploy(new BN(1), new BN(2500));
+    const hello = await contract.deploy(new BN(1), Long.fromNumber(5000));
     const callTx = await hello.call('setHello', [
       {
         vname: 'msg',
