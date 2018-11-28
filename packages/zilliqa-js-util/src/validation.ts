@@ -1,4 +1,5 @@
 import BN from 'bn.js';
+import Long from 'long';
 
 export const isAddress = (address: string) => {
   return isByteString(address, 40);
@@ -26,6 +27,10 @@ export const isNumber = (x: unknown): x is number => {
 
 export const isBN = (x: unknown): x is BN => {
   return BN.isBN(x);
+};
+
+export const isLong = (x: unknown): x is Long => {
+  return Long.isLong(x);
 };
 
 export const isString = (x: unknown): x is string => {

@@ -95,8 +95,6 @@ export class Contract {
       tx.txParams,
     );
 
-    console.log(response);
-
     return types.isError(response)
       ? tx.setStatus(TxStatus.Rejected)
       : tx.confirm(response.result.TranID);
