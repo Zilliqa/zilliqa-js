@@ -28,6 +28,8 @@ export const enum RPCMethod {
   GetTransactionRate = 'GetTransactionRate',
   GetCurrentMiniEpoch = 'GetCurrentMiniEpoch',
   GetCurrentDSEpoch = 'GetCurrentDSEpoch',
+  GetPrevDifficulty = 'GetPrevDifficulty',
+  GetPrevDSDifficulty = 'GetPrevDSDifficulty',
   // GetBlockTransactionCount = 'GetBlockTransactionCount',
 
   // Transaction-related methods
@@ -37,7 +39,7 @@ export const enum RPCMethod {
   GetRecentTransactions = 'GetRecentTransactions',
   GetNumTxnsTxEpoch = 'GetNumTxnsTxEpoch',
   GetNumTxnsDSEpoch = 'GetNumTxnsDSEpoch',
-  // GetGasPrice = 'GetGasPrice',
+  GetMinimumGasPrice = 'GetMinimumGasPrice',
   // GetGasEstimate = 'GetGasEstimate',
 
   // Contract-related methods
