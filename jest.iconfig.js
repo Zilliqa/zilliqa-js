@@ -6,6 +6,6 @@ module.exports = {
     '^@zilliqa-js/proto$': '<rootDir>/packages/zilliqa-js-proto/dist/index.js',
     '^@zilliqa-js/(.*)$': '<rootDir>/packages/zilliqa-js-$1/src/index.ts',
   },
-  setupTestFrameworkScriptFile: './jest-framework-setup.js',
+  setupTestFrameworkScriptFile: '<rootDir>/jest-framework-setup.js',
   testMatch: ['<rootDir>/packages/**/test/*.ispec.ts'],
 };

@@ -48,7 +48,7 @@ export class Blockchain implements ZilliqaModule {
    * @returns {Promise<RPCResponse<DsBlockObj, string>>}
    */
   getDSBlock(blockNum: number): Promise<RPCResponse<DsBlockObj, string>> {
-    return this.provider.send(RPCMethod.GetDSBlock, blockNum);
+    return this.provider.send(RPCMethod.GetDSBlock, blockNum.toString());
   }
 
   /**
@@ -107,7 +107,7 @@ export class Blockchain implements ZilliqaModule {
    * @returns {Promise<RPCResponse<TxBlockObj, string>>}
    */
   getTxBlock(blockNum: number): Promise<RPCResponse<TxBlockObj, string>> {
-    return this.provider.send(RPCMethod.GetTxBlock, blockNum);
+    return this.provider.send(RPCMethod.GetTxBlock, blockNum.toString());
   }
 
   /**
@@ -203,17 +203,43 @@ export class Blockchain implements ZilliqaModule {
   }
 
   /**
+   * getPrevDifficulty
+   *
+   * Gets shard difficulty for previous PoW round
+   *
+   * @returns {Promise<RPCResponse<number, string>>}
+   */
+  getPrevDifficulty(): Promise<RPCResponse<number, string>> {
+    return this.provider.send(RPCMethod.GetPrevDifficulty);
+  }
+
+  /**
+   * getPrevDSDifficulty
+   *
+   * Gets DS difficulty for previous PoW round
+   *
+   * @returns {Promise<RPCResponse<number, string>>}
+   */
+  getPrevDSDifficulty(): Promise<RPCResponse<number, string>> {
+    return this.provider.send(RPCMethod.GetPrevDSDifficulty);
+  }
+
+  /**
    * createTransaction
    *
    * Creates a transaction and polls the lookup node for a transaction
    * receipt. If, within the timeout, no transaction is found, the transaction
    * is considered as lost.
    *
-   * @param {Transaction} payload
+   * @param {Transaction} tx
+   * @param {number} maxAttempts - number of times to poll before timing out
    * @returns {Promise<RPCResponse>}
    */
   @sign
-  async createTransaction(tx: Transaction): Promise<Transaction> {
+  async createTransaction(
+    tx: Transaction,
+    maxAttempts: number = 20,
+  ): Promise<Transaction> {
     try {
       const response = await this.provider.send(
         RPCMethod.CreateTransaction,
@@ -224,7 +250,7 @@ export class Blockchain implements ZilliqaModule {
         throw new Error(response.result.Error);
       }
 
-      return tx.confirm(response.result.TranID);
+      return tx.confirm(response.result.TranID, maxAttempts);
     } catch (err) {
       throw err;
     }
@@ -292,6 +318,17 @@ export class Blockchain implements ZilliqaModule {
    */
   getNumTxnsDSEpoch(epoch: number): Promise<any> {
     return this.provider.send(RPCMethod.GetNumTxnsTxEpoch, epoch);
+  }
+
+  /**
+   * getMinimumGasPrice
+   *
+   * Gets the numeric minimum gas price
+   *
+   * @returns {Promise<RPCResponse<string, string>>}
+   */
+  getMinimumGasPrice() {
+    return this.provider.send<string, string>(RPCMethod.GetMinimumGasPrice);
   }
 
   /**
