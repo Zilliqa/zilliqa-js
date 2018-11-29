@@ -1,6 +1,7 @@
 node_modules
 .DS_STORE
 .rpt2_cache
+lerna-debug.log
 yarn-error.log
 dist
 includes

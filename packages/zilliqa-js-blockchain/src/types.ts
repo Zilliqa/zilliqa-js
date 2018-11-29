@@ -30,14 +30,15 @@ export interface TransactionObj {
 }
 
 export interface DsBlockHeader {
-  blockNum: string;
-  difficulty: number;
-  leaderPubKey: string;
-  minerPubKey: string;
-  nonce: string;
-  prevhash: string;
+  BlockNum: string;
+  Difficulty: number;
+  DifficultyDS: number;
+  GasPrice: number;
+  LeaderPubKey: string;
+  PoWWinners: string[];
+  PrevHash: string;
   // unix epoch
-  timestamp: string;
+  Timestamp: string;
 }
 
 export interface DsBlockObj {
