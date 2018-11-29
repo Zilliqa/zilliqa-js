@@ -174,4 +174,9 @@ describe('[Integration]: Blockchain', () => {
     const response = await bc.getNumTxnsDSEpoch(1);
     expect(response.result).toBeTruthy();
   });
+
+  it('should be able to get the minimum gas price', async () => {
+    const response = await bc.getMinimumGasPrice();
+    expect(typeof response.result).toBe('string');
+  });
 });
