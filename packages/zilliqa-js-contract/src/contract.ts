@@ -29,7 +29,7 @@ export class Contract {
 
   constructor(
     factory: Contracts,
-    code: string,
+    code?: string,
     abi?: ABI,
     address?: string,
     init?: any,
