@@ -50,8 +50,8 @@ export class Contracts implements ZilliqaModule {
 
   at(
     address: string,
-    abi: ABI,
-    code: string,
+    abi?: ABI,
+    code?: string,
     init?: Init,
     state?: State,
   ): Contract {
