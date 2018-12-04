@@ -168,6 +168,11 @@ export const verify = (msg: Buffer, signature: Signature, key: Buffer) => {
   const r = curve.g.mul(sig.s);
 
   const Q = l.add(r);
+
+  if (Q.isInfinity()) {
+    throw new Error('Invalid intermediate point.');
+  }
+
   const compressedQ = new BN(Q.encodeCompressed());
 
   const r1 = hash(compressedQ, key, msg).umod(curve.n);
