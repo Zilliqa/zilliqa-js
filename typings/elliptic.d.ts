@@ -31,6 +31,7 @@ declare namespace Elliptic {
     inf: boolean;
     encode(enc: string, compressed?: boolean): Array<number>;
     encodeCompressed(enc?: string): Array<number>;
+    isInfinity(): boolean;
     add(k: BN | Number | Point): Point;
     mul(k: BN | Number | Point): Point;
   }
