@@ -57,7 +57,7 @@ export const sign = (
   pubKey: Buffer,
 ): Signature => {
   const prv = new BN(privKey);
-  const drbg = getDRBG();
+  const drbg = getDRBG(msg);
   const len = curve.n.byteLength();
 
   let sig;
@@ -185,13 +185,12 @@ export const toSignature = (serialised: string): Signature => {
 /**
  * Instantiate an HMAC-DRBG.
  *
- * @param {Buffer} entropy
+ * @param {Buffer} msg - used as nonce
  *
  * @returns {DRBG}
  */
-const getDRBG = () => {
+const getDRBG = (msg: Buffer) => {
   const entropy = randomBytes(ENT_LEN);
-  const nonce = randomBytes(ENT_LEN);
   const pers = Buffer.allocUnsafe(ALG_LEN + ENT_LEN);
 
   Buffer.from(randomBytes(ENT_LEN)).copy(pers, 0);
@@ -200,7 +199,7 @@ const getDRBG = () => {
   return new DRBG({
     hash: hashjs.sha256,
     entropy,
-    nonce,
+    nonce: msg,
     pers,
   });
 };
