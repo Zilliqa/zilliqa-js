@@ -151,6 +151,10 @@ export const verify = (msg: Buffer, signature: Signature, key: Buffer) => {
     throw new Error('Invalid signature');
   }
 
+  if (sig.s.isNeg() || sig.r.isNeg()) {
+    throw new Error('Invalid signature');
+  }
+
   if (sig.s.gte(curve.n) || sig.r.gte(curve.n)) {
     throw new Error('Invalid signature');
   }
