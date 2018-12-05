@@ -1,10 +1,8 @@
 import elliptic from 'elliptic';
-import { BN } from '@zilliqa-js/util';
 
-import { randomBytes } from './random';
 import * as schnorr from './schnorr';
 
-const NUM_BYTES = 32;
+const HEX_ENC: 'hex' = 'hex';
 
 /**
  * generatePrivateKey
@@ -12,18 +10,10 @@ const NUM_BYTES = 32;
  * @returns {string} - the hex-encoded private key
  */
 export const generatePrivateKey = (): string => {
-  let privateKey: string = randomBytes(NUM_BYTES);
-  let privateKeyBN: BN = new BN(privateKey, 'hex');
-
-  while (
-    privateKeyBN.isZero() ||
-    privateKeyBN.gte(elliptic.ec('secp256k1').curve.n)
-  ) {
-    privateKey = randomBytes(NUM_BYTES);
-    privateKeyBN = new BN(privateKey, 'hex');
-  }
-
-  return privateKey;
+  return elliptic
+    .ec('secp256k1')
+    .genKeyPair()
+    .getPrivate(HEX_ENC);
 };
 
 /**

@@ -10,6 +10,7 @@
 import BN from 'bn.js';
 
 declare namespace Elliptic {
+  type HexEnc = 'hex';
   type CurveTypes = 'short' | 'edwards' | 'mont';
   type PrivateKey =
     | string
@@ -38,6 +39,7 @@ declare namespace Elliptic {
 
   interface EC {
     curve: Curve;
+    genKeyPair(): KeyPair;
     keyFromPrivate(priv: string, enc: string): KeyPair;
     keyFromPublic(pub: string, enc: string): KeyPair;
   }
@@ -49,7 +51,7 @@ declare namespace Elliptic {
     // library; compact is optional, but optional parameters should always
     // _follow_ mandatory ones.
     getPublic(compact: boolean, enc: string): string;
-    getPrivate(enc: string): Array<number>;
+    getPrivate<T = undefined>(enc?: T): T extends HexEnc ? string : BN;
     validate(): { result: boolean; reason: string | null };
   }
 
