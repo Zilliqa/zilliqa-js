@@ -12,16 +12,18 @@ const NUM_BYTES = 32;
  * @returns {string} - the hex-encoded private key
  */
 export const generatePrivateKey = (): string => {
-  let privateKey: BN = new BN(randomBytes(NUM_BYTES), 'hex');
+  let privateKey: string = randomBytes(NUM_BYTES);
+  let privateKeyBN: BN = new BN(privateKey, 'hex');
 
   while (
-    privateKey.isZero() ||
-    privateKey.gte(elliptic.ec('secp256k1').curve.n)
+    privateKeyBN.isZero() ||
+    privateKeyBN.gte(elliptic.ec('secp256k1').curve.n)
   ) {
-    privateKey = new BN(randomBytes(NUM_BYTES), 'hex');
+    privateKey = randomBytes(NUM_BYTES);
+    privateKeyBN = new BN(privateKey, 'hex');
   }
 
-  return privateKey.toString('hex');
+  return privateKey;
 };
 
 /**
