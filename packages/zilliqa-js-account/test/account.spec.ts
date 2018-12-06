@@ -9,7 +9,7 @@ import { Transaction } from '../src/transaction';
 
 describe('Account', () => {
   it('should be able to encode itself as a keystore file', async () => {
-    const privateKey = zcrypto.generatePrivateKey();
+    const privateKey = zcrypto.schnorr.generatePrivateKey();
     const account = new Account(privateKey);
     const keystore = await account.toFile('stronk_password');
 
@@ -18,7 +18,7 @@ describe('Account', () => {
   });
 
   it('should fail if given the wrong passphrase', async () => {
-    const privateKey = zcrypto.generatePrivateKey();
+    const privateKey = zcrypto.schnorr.generatePrivateKey();
     const account = new Account(privateKey);
     const keystore = await account.toFile('stronk_password');
 
@@ -51,7 +51,7 @@ describe('Account', () => {
   });
 
   it('should be able to sign a transaction', () => {
-    const privateKey = zcrypto.generatePrivateKey();
+    const privateKey = zcrypto.schnorr.generatePrivateKey();
     const account = new Account(privateKey);
 
     const rawTx = {

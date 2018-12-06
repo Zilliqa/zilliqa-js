@@ -42,7 +42,7 @@ export class Wallet extends Signer {
    * @returns {string} - address of the new account
    */
   create(): string {
-    const privateKey = zcrypto.generatePrivateKey();
+    const privateKey = zcrypto.schnorr.generatePrivateKey();
     const newAccount = new Account(privateKey);
 
     this.accounts = { ...this.accounts, [newAccount.address]: newAccount };

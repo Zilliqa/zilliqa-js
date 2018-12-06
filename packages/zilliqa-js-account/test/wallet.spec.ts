@@ -1,9 +1,5 @@
 import { HTTPProvider } from '@zilliqa-js/core';
-import {
-  getPubKeyFromPrivateKey,
-  generatePrivateKey,
-  schnorr,
-} from '@zilliqa-js/crypto';
+import { getPubKeyFromPrivateKey, schnorr } from '@zilliqa-js/crypto';
 import { BN, Long } from '@zilliqa-js/util';
 
 import fetch from 'jest-fetch-mock';
@@ -23,7 +19,7 @@ describe('Wallet', () => {
   it('should be able to bootstrap with an array of Accounts ', () => {
     const accounts: Account[] = [];
     for (let i = 0; i < 10; i++) {
-      accounts.push(new Account(generatePrivateKey()));
+      accounts.push(new Account(schnorr.generatePrivateKey()));
     }
 
     const wallet = new Wallet(provider, accounts);
@@ -135,7 +131,7 @@ describe('Wallet', () => {
   });
 
   it('should throw an error if asked to sign with no accounts available', () => {
-    const pubKey = getPubKeyFromPrivateKey(generatePrivateKey());
+    const pubKey = getPubKeyFromPrivateKey(schnorr.generatePrivateKey());
     const [wallet] = createWallet(0);
 
     const tx = new Transaction(

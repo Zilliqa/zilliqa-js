@@ -1,25 +1,4 @@
-import elliptic from 'elliptic';
-
-import { randomBytes } from './random';
 import * as schnorr from './schnorr';
-
-const HEX_ENC: 'hex' = 'hex';
-const secp256k1 = elliptic.ec('secp256k1');
-
-/**
- * generatePrivateKey
- *
- * @returns {string} - the hex-encoded private key
- */
-export const generatePrivateKey = (): string => {
-  return secp256k1
-    .genKeyPair({
-      entropy: randomBytes(secp256k1.curve.n.byteLength()),
-      entropyEnc: HEX_ENC,
-      pers: 'zilliqajs+secp256k1+SHA256',
-    })
-    .getPrivate(HEX_ENC);
-};
 
 /**
  * sign

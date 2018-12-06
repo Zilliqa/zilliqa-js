@@ -3,7 +3,7 @@ import * as crypto from '../src/index';
 
 describe('keypairs', () => {
   it('should be able to generate a valid 32-byte private key', () => {
-    const pk = crypto.generatePrivateKey();
+    const pk = crypto.schnorr.generatePrivateKey();
 
     expect(pk).toHaveLength(64);
     expect(crypto.verifyPrivateKey(pk)).toBeTruthy();
