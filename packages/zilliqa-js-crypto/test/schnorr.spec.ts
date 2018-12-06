@@ -3,7 +3,7 @@ import { randomBytes } from 'crypto';
 import elliptic from 'elliptic';
 
 import { pairs } from './keypairs.fixtures';
-import schnorrVectors from './schnorr.fixtures';
+import schnorrVectors from './schnorr.fixtures.json';
 
 import * as schnorr from '../src/schnorr';
 import { Signature } from '../src/signature';
@@ -76,9 +76,9 @@ describe('schnorr', () => {
         Buffer.from(pub, 'hex'),
       );
 
-      expect(sig.r.toString('hex', 64).toUpperCase()).toEqual(r);
-      expect(sig.s.toString('hex', 64).toUpperCase()).toEqual(s);
-      expect(res).toBeTruthy();
+      expect(sig.r.eq(new BN(r, 16))).toBe(true);
+      expect(sig.s.eq(new BN(s, 16))).toBe(true);
+      expect(res).toBe(true);
     });
   });
 });
