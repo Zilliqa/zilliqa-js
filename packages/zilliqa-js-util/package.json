@@ -1,6 +1,6 @@
 {
   "name": "@zilliqa-js/util",
-  "version": "0.2.6",
+  "version": "0.2.9",
   "description": "Utilities for working with Zillia.",
   "main": "dist/index.js",
   "node": "dist/index.js",
