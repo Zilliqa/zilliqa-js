@@ -220,7 +220,7 @@ export class Transaction implements Signable {
     }
     this.status = TxStatus.Rejected;
     throw new Error(
-      `The transaction is still not confirmed after ${maxAttempts} attemps.`,
+      `The transaction is still not confirmed after ${maxAttempts} attempts.`,
     );
   }
 

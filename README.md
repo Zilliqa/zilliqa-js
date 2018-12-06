@@ -34,7 +34,7 @@ of the umbrella package `@zilliqa-js/zilliqa`. This takes care of bootstrapping 
 `Zilliqa` class.
 
 ```shell
-yarn add @zilliqa-js/zilliqa@next
+yarn add @zilliqa-js/zilliqa
 # bn.js should be added with the above package. if it is not, install it
 manually.
 yarn add bn.js
@@ -47,13 +47,7 @@ a `semver` bump before being able to take advantage of new features/bug fixes.
 
 ## Quick Start
 
-**NOTE: these examples assume you are either using a transpiler to convert
-`import` statements to `require` calls, or using a Node.js version that
-supports the ES Module spec with the flag `--experimental-modules`. If you are
-not, you must use `require`, e.g. `const { Zilliqa
-} = require('@zilliqa-js/zilliqa')`.**
-
-```typescript
+```javascript
 const { Transaction } = require('@zilliqa-js/account');
 const { BN, Long } = require('@zilliqa-js/util');
 const { Zilliqa } = require('@zilliqa-js/zilliqa');
@@ -73,7 +67,8 @@ async function testBlockchain() {
         version: 1,
         toAddr: 'affc3236b726660ed9b99dff11451e4e8c107dea',
         amount: new BN(888),
-        gasPrice: new BN(1),
+        // Minimum gas price is 100
+        gasPrice: new BN(100),
         // can be `number` if size is <= 2^53 (i.e., window.MAX_SAFE_INTEGER)
         gasLimit: Long.fromNumber(10),
       }),
