@@ -9,6 +9,7 @@ import { Signature } from './signature';
 
 const secp256k1 = elliptic.ec('secp256k1');
 const curve = secp256k1.curve;
+const PRIVKEY_SIZE_BYTES = 32;
 // Public key is a point (x, y) on the curve.
 // Each coordinate requires 32 bytes.
 // In its compressed form it suffices to store the x co-ordinate
@@ -36,8 +37,10 @@ export const generatePrivateKey = (): string => {
       entropyEnc: HEX_ENC,
       pers: 'zilliqajs+secp256k1+SHA256',
     })
-    .getPrivate(HEX_ENC);
+    .getPrivate()
+    .toString(16, PRIVKEY_SIZE_BYTES * 2);
 };
+
 /**
  * Hash (r | M).
  * @param {Buffer} msg
