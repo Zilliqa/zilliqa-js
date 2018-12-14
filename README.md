@@ -146,7 +146,10 @@ async function testBlockchain() {
       {
         vname: 'owner',
         type: 'ByStr20',
-        value: '0x'+add,
+        // NOTE: all byte strings passed to Scilla contracts _must_ be
+        // prefixed with 0x. Failure to do so will result in the network
+        // rejecting the transaction while consuming gas!
+        value: '0x8254b2c9acdf181d5d6796d63320fbb20d4edd12',
       },
     ];
 
