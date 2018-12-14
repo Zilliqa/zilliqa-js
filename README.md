@@ -51,94 +51,113 @@ a `semver` bump before being able to take advantage of new features/bug fixes.
 const { Transaction } = require('@zilliqa-js/account');
 const { BN, Long } = require('@zilliqa-js/util');
 const { Zilliqa } = require('@zilliqa-js/zilliqa');
+const CP = require ('@zilliqa-js/crypto');
 
-const zilliqa = new Zilliqa('https://api-scilla.zilliqa.com/');
+const zilliqa = new Zilliqa('https://api-scilla.zilliqa.com');
 
 // Populate the wallet with an account
+privkey = '3375F915F3F9AE35E6B301B7670F53AD1A5BE15D8221EC7FD5E503F21D3450C8';
+
 zilliqa.wallet.addByPrivateKey(
-  '3375F915F3F9AE35E6B301B7670F53AD1A5BE15D8221EC7FD5E503F21D3450C8',
+  privkey
 );
+
+add = CP.getAddressFromPrivateKey(privkey);
+console.log(add);
 
 async function testBlockchain() {
   try {
+    // GetBalance
+    const balance = await zilliqa.blockchain.getBalance(add);
+    console.log(balance);
+
     // Send a transaction to the network
     const tx = await zilliqa.blockchain.createTransaction(
       zilliqa.transactions.new({
         version: 1,
-        toAddr: 'affc3236b726660ed9b99dff11451e4e8c107dea',
-        amount: new BN(888),
-        // Minimum gas price is 100
+        toAddr: '573EC96638C8BB1C386394602E1460634F02ADDD',
+        amount: new BN(888888),
         gasPrice: new BN(100),
-        // can be `number` if size is <= 2^53 (i.e., window.MAX_SAFE_INTEGER)
-        gasLimit: Long.fromNumber(10),
+        gasLimit: Long.fromNumber(1),
       }),
     );
-    console.log(tx);
+    // Get transaction status receipt
+    console.log(tx.receipt);
 
     // Deploy a contract
-    const code = `(* HelloWorld contract *)
+    const code = `scilla_version 0
 
-import ListUtils
+    (* HelloWorld contract *)
 
-(***************************************************)
-(*               Associated library                *)
-(***************************************************)
-library HelloWorld
-
-let one_msg = 
-  fun (msg : Message) => 
-  let nil_msg = Nil {Message} in
-  Cons {Message} msg nil_msg
-
-let not_owner_code = Int32 1
-let set_hello_code = Int32 2
-
-(***************************************************)
-(*             The contract definition             *)
-(***************************************************)
-
-contract HelloWorld
-(owner: ByStr20)
-
-field welcome_msg : String = ""
-
-transition setHello (msg : String)
-  is_owner = builtin eq owner _sender;
-  match is_owner with
-  | False =>
-    msg = {_tag : "Main"; _recipient : _sender; _amount : Uint128 0; code : not_owner_code};
-    msgs = one_msg msg;
-    send msgs
-  | True =>
-    welcome_msg := msg;
-    msg = {_tag : "Main"; _recipient : _sender; _amount : Uint128 0; code : set_hello_code};
-    msgs = one_msg msg;
-    send msgs
-  end
-end
-
-transition getHello ()
-    r <- welcome_msg;
-    msg = {_tag : "Main"; _recipient : _sender; _amount : Uint128 0; msg : r};
-    msgs = one_msg msg;
-    send msgs
-end`;
-
+    import ListUtils
+    
+    (***************************************************)
+    (*               Associated library                *)
+    (***************************************************)
+    library HelloWorld
+    
+    let one_msg = 
+      fun (msg : Message) => 
+      let nil_msg = Nil {Message} in
+      Cons {Message} msg nil_msg
+    
+    let not_owner_code = Int32 1
+    let set_hello_code = Int32 2
+    
+    (***************************************************)
+    (*             The contract definition             *)
+    (***************************************************)
+    
+    contract HelloWorld
+    (owner: ByStr20)
+    
+    field welcome_msg : String = ""
+    
+    transition setHello (msg : String)
+      is_owner = builtin eq owner _sender;
+      match is_owner with
+      | False =>
+        msg = {_tag : "Main"; _recipient : _sender; _amount : Uint128 0; code : not_owner_code};
+        msgs = one_msg msg;
+        send msgs
+      | True =>
+        welcome_msg := msg;
+        msg = {_tag : "Main"; _recipient : _sender; _amount : Uint128 0; code : set_hello_code};
+        msgs = one_msg msg;
+        send msgs
+      end
+    end
+    
+    transition getHello ()
+        r <- welcome_msg;
+        msg = {_tag : "Main"; _recipient : _sender; _amount : Uint128 0; msg : r};
+        msgs = one_msg msg;
+        send msgs
+    end`;
+     
     const init = [
+      { 
+        vname : '_scilla_version',
+        type : 'Uint32',
+        value : '0'
+      },
       {
         vname: 'owner',
         type: 'ByStr20',
-        // NOTE: all byte strings passed to Scilla contracts _must_ be
-        // prefixed with 0x. Failure to do so will result in the network
-        // rejecting the transaction while consuming gas!
-        value: '0x8254b2c9acdf181d5d6796d63320fbb20d4edd12',
-      },
+        value: '0x' + add,
+      }
     ];
 
-    // instance of class Contract
+    // Instance of class Contract
     const contract = zilliqa.contracts.new(code, init);
 
+    // Deploy the Contract
     const hello = await contract.deploy(new BN(100), Long.fromNumber(5000));
+
+    // Get the deployed contract address
+    console.log(hello.address);
+
+    // Call the setHello transition
     const callTx = await hello.call('setHello', [
       {
         vname: 'msg',
