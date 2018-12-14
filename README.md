@@ -55,7 +55,7 @@ const CP = require ('@zilliqa-js/crypto');
 
 const zilliqa = new Zilliqa('https://api-scilla.zilliqa.com');
 
-// Populate the wallet with an account
+//Populate the wallet with an account
 privkey = '3375F915F3F9AE35E6B301B7670F53AD1A5BE15D8221EC7FD5E503F21D3450C8';
 
 zilliqa.wallet.addByPrivateKey(
@@ -63,32 +63,34 @@ zilliqa.wallet.addByPrivateKey(
 );
 
 add = CP.getAddressFromPrivateKey(privkey);
+console.log('Your account address is:');
 console.log(add);
 
 async function testBlockchain() {
   try {
-    // GetBalance
+    //GetBalance
     const balance = await zilliqa.blockchain.getBalance(add);
-    console.log(balance);
+    console.log('Your account balance is:');
+    console.log(balance.result);
 
-    // Send a transaction to the network
+    //Send a transaction to the network
     const tx = await zilliqa.blockchain.createTransaction(
       zilliqa.transactions.new({
         version: 1,
-        toAddr: '573EC96638C8BB1C386394602E1460634F02ADDD',
+        toAddr: '573EC96638C8BB1C386394602E1460634F02ADDA',
         amount: new BN(888888),
         gasPrice: new BN(100),
         gasLimit: Long.fromNumber(1),
       }),
     );
-    // Get transaction status receipt
+    console.log("The transaction status is:");
     console.log(tx.receipt);
 
-    // Deploy a contract
+    //Deploy a contract
     const code = `scilla_version 0
 
     (* HelloWorld contract *)
-
+    
     import ListUtils
     
     (***************************************************)
@@ -128,44 +130,42 @@ async function testBlockchain() {
       end
     end
     
+    
     transition getHello ()
         r <- welcome_msg;
-        msg = {_tag : "Main"; _recipient : _sender; _amount : Uint128 0; msg : r};
-        msgs = one_msg msg;
-        send msgs
+        e = {_eventname: "getHello()"; msg: r};
+        event e
     end`;
      
     const init = [
       { 
         vname : '_scilla_version',
         type : 'Uint32',
-        value : '0'
+        value : '0',
       },
       {
         vname: 'owner',
         type: 'ByStr20',
-        value: '0x' + add,
-      }
+        value: '0x'+add,
+      },
     ];
 
-    // Instance of class Contract
+    //Instance of class Contract
     const contract = zilliqa.contracts.new(code, init);
-
-    // Deploy the Contract
     const hello = await contract.deploy(new BN(100), Long.fromNumber(5000));
-
-    // Get the deployed contract address
+    //Get the deployed contract address
+    console.log('The contract address is:');
     console.log(hello.address);
-
-    // Call the setHello transition
     const callTx = await hello.call('setHello', [
       {
         vname: 'msg',
         type: 'String',
-        value: 'Hello World',
+        value: 'Hello World'
       },
     ]);
     const state = await hello.getState();
+    //Get the contract state
+    console.log('The state of the contract is:');
     console.log(state);
   } catch (err) {
     console.log(err);
