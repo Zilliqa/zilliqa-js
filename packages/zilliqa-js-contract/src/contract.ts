@@ -91,7 +91,11 @@ export class Contract {
   }
 
   @sign
-  async prepareTx(tx: Transaction): Promise<Transaction> {
+  async prepareTx(
+    tx: Transaction,
+    attempts: number = 20,
+    interval: number = 1000,
+  ): Promise<Transaction> {
     const response = await this.provider.send<DeploySuccess, DeployError>(
       RPCMethod.CreateTransaction,
       tx.txParams,
@@ -108,7 +112,11 @@ export class Contract {
    * @param {DeployParams} params
    * @returns {Promise<Contract>}
    */
-  async deploy(params: DeployParams): Promise<Contract> {
+  async deploy(
+    params: DeployParams,
+    attempts: number = 20,
+    interval: number = 1000,
+  ): Promise<Contract> {
     if (!this.code || !this.init) {
       throw new Error(
         'Cannot deploy without code or initialisation parameters.',
@@ -128,6 +136,8 @@ export class Contract {
           },
           this.provider,
         ),
+        attempts,
+        interval,
       );
 
       if (tx.isRejected()) {
@@ -155,6 +165,8 @@ export class Contract {
     transition: string,
     args: Value[],
     params: CallParams,
+    attempts: number = 20,
+    interval: number = 1000,
   ): Promise<Transaction> {
     const data = {
       _tag: transition,
@@ -176,6 +188,8 @@ export class Contract {
           },
           this.provider,
         ),
+        attempts,
+        interval,
       );
     } catch (err) {
       throw err;
