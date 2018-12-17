@@ -77,11 +77,12 @@ describe('Contracts', () => {
 
     fetch.mockResponses(...responses);
 
-    const deployed = await contract.deploy({
+    const [tx, deployed] = await contract.deploy({
       gasPrice: new BN(1000),
       gasLimit: Long.fromNumber(1000),
     });
 
+    expect(tx.isConfirmed()).toBeTruthy();
     expect(deployed.isDeployed()).toBeTruthy();
     expect(deployed.status).toEqual(ContractStatus.Deployed);
     expect(contract.address).toMatch(/[A-F0-9]+/);
@@ -154,7 +155,7 @@ describe('Contracts', () => {
 
     fetch.mockResponses(...responses);
 
-    const contract = await contractFactory
+    const [tx, contract] = await contractFactory
       .new(
         testContract,
         [
@@ -173,6 +174,7 @@ describe('Contracts', () => {
         gasLimit: Long.fromNumber(1000),
       });
 
+    expect(tx.isRejected()).toBeTruthy();
     expect(contract.isRejected()).toBeTruthy();
     expect(contract.status).toEqual(ContractStatus.Rejected);
   });
@@ -209,7 +211,7 @@ describe('Contracts', () => {
 
     fetch.mockResponses(...responses);
 
-    const contract = await contractFactory
+    const [tx, contract] = await contractFactory
       .new(
         testContract,
         [
@@ -228,7 +230,8 @@ describe('Contracts', () => {
         gasLimit: Long.fromNumber(1000),
       });
 
-    expect(contract.isRejected).toBeTruthy();
+    expect(tx.isRejected()).toBeTruthy();
+    expect(contract.isRejected()).toBeTruthy();
   });
 
   it('should be able to call a transition', async () => {
@@ -289,7 +292,7 @@ describe('Contracts', () => {
 
     fetch.mockResponses(...responses);
 
-    const contract = await contractFactory
+    const [, contract] = await contractFactory
       .new(
         testContract,
         [

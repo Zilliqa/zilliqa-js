@@ -103,7 +103,7 @@ export class Contract {
 
     return types.isError(response)
       ? tx.setStatus(TxStatus.Rejected)
-      : tx.confirm(response.result.TranID);
+      : tx.confirm(response.result.TranID, attempts, interval);
   }
 
   /**
@@ -116,7 +116,7 @@ export class Contract {
     params: DeployParams,
     attempts: number = 20,
     interval: number = 1000,
-  ): Promise<Contract> {
+  ): Promise<[Transaction, Contract]> {
     if (!this.code || !this.init) {
       throw new Error(
         'Cannot deploy without code or initialisation parameters.',
@@ -142,13 +142,13 @@ export class Contract {
 
       if (tx.isRejected()) {
         this.status = ContractStatus.Rejected;
-        return this;
+        return [tx, this];
       }
 
       this.status = ContractStatus.Deployed;
       this.address = Contracts.getAddressForContract(tx);
 
-      return this;
+      return [tx, this];
     } catch (err) {
       throw err;
     }

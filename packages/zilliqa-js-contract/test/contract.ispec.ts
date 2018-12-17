@@ -2,7 +2,7 @@ import { Account, Wallet } from '@zilliqa-js/account';
 import { HTTPProvider } from '@zilliqa-js/core';
 import { BN, Long } from '@zilliqa-js/util';
 
-import { Contracts, Contract, ContractStatus } from '../src/index';
+import { Contracts, ContractStatus } from '../src/index';
 import { abi } from './test.abi';
 import { testContract } from './fixtures';
 
@@ -13,10 +13,10 @@ const contractFactory = new Contracts(provider, new Wallet(provider, accounts));
 jest.setTimeout(180000);
 
 describe('Contract - hello world', () => {
-  let contract: Contract;
+  let address: string;
 
   it('should be able to deploy the contract', async () => {
-    contract = await contractFactory
+    let [tx, contract] = await contractFactory
       .new(
         testContract,
         [
@@ -38,10 +38,14 @@ describe('Contract - hello world', () => {
         gasLimit: Long.fromNumber(2500),
       });
 
+    address = <string>contract.address;
+
+    expect(tx.isConfirmed()).toBeTruthy();
     expect(contract.status).toEqual(ContractStatus.Deployed);
   });
 
   it('should be able to call setHello', async () => {
+    const contract = contractFactory.at(address);
     // now let's transfer some tokens
     const call = await contract.call(
       'setHello',
@@ -72,8 +76,7 @@ describe('Contract - hello world', () => {
 
   it('should be rejected by the server if a non-existent contract is called', async () => {
     // setup a non-existent address
-    const original = contract.address;
-    contract.address = '0123456789'.repeat(4);
+    const contract = contractFactory.at('0123456789'.repeat(4));
     const call = await contract.call(
       'setHello',
       [
@@ -90,7 +93,6 @@ describe('Contract - hello world', () => {
       },
     );
 
-    contract.address = original;
     expect(call.isRejected()).toBeTruthy();
   });
 });
