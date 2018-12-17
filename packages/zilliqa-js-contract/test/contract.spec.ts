@@ -77,7 +77,10 @@ describe('Contracts', () => {
 
     fetch.mockResponses(...responses);
 
-    const deployed = await contract.deploy(new BN(1000), Long.fromNumber(1000));
+    const deployed = await contract.deploy({
+      gasPrice: new BN(1000),
+      gasLimit: Long.fromNumber(1000),
+    });
 
     expect(deployed.isDeployed()).toBeTruthy();
     expect(deployed.status).toEqual(ContractStatus.Deployed);
@@ -123,7 +126,10 @@ describe('Contracts', () => {
       .mockRejectOnce(new Error('something bad happened'));
 
     await expect(
-      contract.deploy(new BN(1000), Long.fromNumber(1000)),
+      contract.deploy({
+        gasPrice: new BN(1000),
+        gasLimit: Long.fromNumber(1000),
+      }),
     ).rejects.toThrow();
   });
 
@@ -162,7 +168,10 @@ describe('Contracts', () => {
         ],
         abi,
       )
-      .deploy(new BN(1000), Long.fromNumber(1000));
+      .deploy({
+        gasPrice: new BN(1000),
+        gasLimit: Long.fromNumber(1000),
+      });
 
     expect(contract.isRejected()).toBeTruthy();
     expect(contract.status).toEqual(ContractStatus.Rejected);
@@ -214,7 +223,10 @@ describe('Contracts', () => {
         ],
         abi,
       )
-      .deploy(new BN(1000), Long.fromNumber(1000));
+      .deploy({
+        gasPrice: new BN(1000),
+        gasLimit: Long.fromNumber(1000),
+      });
 
     expect(contract.isRejected).toBeTruthy();
   });
@@ -291,12 +303,23 @@ describe('Contracts', () => {
         ],
         abi,
       )
-      .deploy(new BN(1000), Long.fromNumber(1000));
+      .deploy({
+        gasPrice: new BN(1000),
+        gasLimit: Long.fromNumber(1000),
+      });
 
-    const callTx = await contract.call('myTransition', [
-      { vname: 'param_1', type: 'String', value: 'hello' },
-      { vname: 'param_2', type: 'String', value: 'world' },
-    ]);
+    const callTx = await contract.call(
+      'myTransition',
+      [
+        { vname: 'param_1', type: 'String', value: 'hello' },
+        { vname: 'param_2', type: 'String', value: 'world' },
+      ],
+      {
+        amount: new BN(0),
+        gasPrice: new BN(1000),
+        gasLimit: Long.fromNumber(1000),
+      },
+    );
 
     const { receipt } = callTx.txParams;
 

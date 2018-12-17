@@ -138,6 +138,7 @@ async function testBlockchain() {
     end`;
      
     const init = [
+      // this parameter is mandatory for all init arrays
       { 
         vname : '_scilla_version',
         type : 'Uint32',
@@ -153,10 +154,16 @@ async function testBlockchain() {
       },
     ];
 
-    //Instance of class Contract
+    // Instance of class Contract
     const contract = zilliqa.contracts.new(code, init);
-    const hello = await contract.deploy(new BN(100), Long.fromNumber(5000));
-    //Get the deployed contract address
+
+    // Deploy the contract
+    const hello = await contract.deploy({
+      gasPrice: new BN(100),
+      gasLimit: Long.fromNumber(2500),
+    });
+
+    // Get the deployed contract address
     console.log('The contract address is:');
     console.log(hello.address);
     const callTx = await hello.call('setHello', [
@@ -165,9 +172,16 @@ async function testBlockchain() {
         type: 'String',
         value: 'Hello World'
       },
+      {
+        // amount, gasPrice and gasLimit must be explicitly provided
+        amount: new BN(0),
+        gasPrice: new BN(100),
+        gasLimit: Long.fromNumber(2500),
+      }
     ]);
-    const state = await hello.getState();
+
     //Get the contract state
+    const state = await hello.getState();
     console.log('The state of the contract is:');
     console.log(state);
   } catch (err) {
@@ -254,4 +268,5 @@ are pointed to the `umd` bundle, and bundlers are pointed to `esm`.
 *NOTE: these bundles are _not_ minified.*
 
 ## Licence 
+
 You can view our [licence here](https://github.com/Zilliqa/zilliqa/blob/master/LICENSE).

@@ -1,4 +1,6 @@
-export const testContract = `(* Test contract *)
+export const testContract = `scilla_version 0
+
+(* HelloWorld contract *)
 
 import ListUtils
 
@@ -12,6 +14,7 @@ let one_msg =
   let nil_msg = Nil {Message} in
   Cons {Message} msg nil_msg
 
+let not_owner_code = Int32 1
 let set_hello_code = Int32 2
 
 (***************************************************)
@@ -24,15 +27,23 @@ contract HelloWorld
 field welcome_msg : String = ""
 
 transition setHello (msg : String)
-  welcome_msg := msg;
-  msg = {_tag : "Main"; _recipient : _sender; _amount : Uint128 0; code : set_hello_code};
-  msgs = one_msg msg;
-  send msgs
+  is_owner = builtin eq owner _sender;
+  match is_owner with
+  | False =>
+    msg = {_tag : "Main"; _recipient : _sender; _amount : Uint128 0; code : not_owner_code};
+    msgs = one_msg msg;
+    send msgs
+  | True =>
+    welcome_msg := msg;
+    msg = {_tag : "Main"; _recipient : _sender; _amount : Uint128 0; code : set_hello_code};
+    msgs = one_msg msg;
+    send msgs
+  end
 end
+
 
 transition getHello ()
     r <- welcome_msg;
-    msg = {_tag : "Main"; _recipient : _sender; _amount : Uint128 0; msg : r};
-    msgs = one_msg msg;
-    send msgs
+    e = {_eventname: "getHello()"; msg: r};
+    event e
 end`;

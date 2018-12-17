@@ -1,6 +1,6 @@
 import { Wallet, Transaction, TxStatus } from '@zilliqa-js/account';
 import { RPCMethod, Provider, sign } from '@zilliqa-js/core';
-import { BN, Long, types } from '@zilliqa-js/util';
+import { BN, types } from '@zilliqa-js/util';
 
 import { Contracts } from './factory';
 import {
@@ -11,6 +11,8 @@ import {
   Value,
   DeployError,
   DeploySuccess,
+  CallParams,
+  DeployParams,
 } from './types';
 
 const NIL_ADDRESS = '0000000000000000000000000000000000000000';
@@ -100,7 +102,13 @@ export class Contract {
       : tx.confirm(response.result.TranID);
   }
 
-  async deploy(gasPrice: BN, gasLimit: Long): Promise<Contract> {
+  /**
+   * deploy
+   *
+   * @param {DeployParams} params
+   * @returns {Promise<Contract>}
+   */
+  async deploy(params: DeployParams): Promise<Contract> {
     if (!this.code || !this.init) {
       throw new Error(
         'Cannot deploy without code or initialisation parameters.',
@@ -111,12 +119,10 @@ export class Contract {
       const tx = await this.prepareTx(
         new Transaction(
           {
+            ...params,
             version: 0,
             toAddr: NIL_ADDRESS,
-            // amount should be 0.  we don't accept implicitly anymore.
             amount: new BN(0),
-            gasPrice,
-            gasLimit,
             code: this.code,
             data: JSON.stringify(this.init).replace(/\\"/g, '"'),
           },
@@ -147,15 +153,12 @@ export class Contract {
    */
   async call(
     transition: string,
-    params: Value[],
-    amount: BN = new BN(0),
-    gasLimit: Long = Long.fromNumber(1000),
-    gasPrice: BN = new BN(100),
+    args: Value[],
+    params: CallParams,
   ): Promise<Transaction> {
-    const msg = {
+    const data = {
       _tag: transition,
-      // TODO: this should be string, but is not yet supported by lookup.
-      params,
+      params: args,
     };
 
     if (!this.address) {
@@ -166,12 +169,10 @@ export class Contract {
       return await this.prepareTx(
         new Transaction(
           {
+            ...params,
             version: 0,
             toAddr: this.address,
-            amount: new BN(0),
-            gasPrice,
-            gasLimit,
-            data: JSON.stringify(msg),
+            data: JSON.stringify(data),
           },
           this.provider,
         ),
