@@ -158,10 +158,14 @@ async function testBlockchain() {
     const contract = zilliqa.contracts.new(code, init);
 
     // Deploy the contract
-    const hello = await contract.deploy({
+    const [deployTx, hello] = await contract.deploy({
       gasPrice: new BN(100),
       gasLimit: Long.fromNumber(2500),
     });
+
+    // Introspect the state of the underlying transaction
+    console.log('Deployment Transaction ID: ', deployTx.id);
+    console.log('Deployment Transaction Receipt: ', deployTx.txParams.receipt);
 
     // Get the deployed contract address
     console.log('The contract address is:');
