@@ -205,3 +205,22 @@ Determines if a value has the shape specified by `test`.
 
 - `boolean` - `true` if the value matches `test`.
 
+### `fromQa(qa: BN, unit: Units, options: Options)`
+
+Converts from `qa` (smallest unit) to `zil` or `li`.
+
+**Parameters**
+
+- `qa`: `BN` - the value to convert from.
+- `unit`: `Units` - the unit to be converted to (`'zil' | 'qa'`).
+- `options`: `Options` - an object specifying options.
+
+### `toQa(input: string | number | BN, unit: Units)`
+
+Converts `zil` or `li` to `qa` (smallest unit).
+
+**Parameters**
+
+- `input`: `string | number | BN` - the value to convert from.
+- `unit`: `Units` - the unit to be converted _from_ (`'zil' | 'li'`).
+
