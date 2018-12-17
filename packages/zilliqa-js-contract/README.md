@@ -182,7 +182,7 @@ Returns `true` if the contract deployment attempt was rejected by the network.
 
 - `boolean`
 
-### `deploy(params: DeployParams): Promise<Contract>`
+### `deploy(params: DeployParams, attempts: number = 20, interval: number = 1000): Promise<Contract>`
 
 Deploys a contract to the blockchain. This method will automatically generate
 and sign the underlying `Transaction` and broadcast it. The status of the
@@ -197,6 +197,10 @@ _This API is unstable and subject to breaking changes pre-main net_
   `Transaction`. This can be used to manually provide `nonce` and `pubKey`,
   if it is desirable to sign the underlying transaction with a non-default
   account in the `Wallet`.
+- `attempts` (Optional - default 20): `number` - the number of times to poll the lookup node for
+  transaction receipt.
+- `interval` (Optional - default 1000): `number` - the amount of time to wait
+  between attempts. increases linearly (`numAttempts * interval`).
 
 **Returns**
 
@@ -219,6 +223,10 @@ _This API is unstable and subject to breaking changes pre-main net_
 - `args`: `Value[]` - JSON-encoded array of transition arguments.
 - `params`: `CallParams` - a subset of `TxParams`. Passed to the underlying
   `Transaction`.
+- `attempts` (Optional - default 20): `number` - the number of times to poll the lookup node for
+  transaction receipt.
+- `interval` (Optional - default 1000): `number` - the amount of time to wait
+  between attempts. increases linearly (`numAttempts * interval`).
 
 **Returns**
 
