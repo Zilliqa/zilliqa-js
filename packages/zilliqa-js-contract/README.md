@@ -4,6 +4,21 @@
 # Interfaces
 
 ```typescript
+interface DeployParams {
+  gasPrice: BN;
+  gasLimit: Long;
+  nonce?: number;
+  pubKey?: string;
+}
+
+interface CallParams {
+  amount: BN;
+  gasPrice: BN;
+  gasLimit: Long;
+  nonce?: number;
+  pubKey?: string;
+}
+
 interface Field {
   name: string;
   type: string;
@@ -167,7 +182,7 @@ Returns `true` if the contract deployment attempt was rejected by the network.
 
 - `boolean`
 
-### `deploy(gasPrice: BN, gasLimit: Long): Promise<Contract>`
+### `deploy(params: DeployParams): Promise<Contract>`
 
 Deploys a contract to the blockchain. This method will automatically generate
 and sign the underlying `Transaction` and broadcast it. The status of the
@@ -178,8 +193,10 @@ _This API is unstable and subject to breaking changes pre-main net_
 
 **Parameters**
 
-- `gasPrice`: `BN` - an instance of `BN.js`.
-- `gasLimit`: `Long` - an instance of `Long.js`.
+- `params`: `DeployParams` - a subset of TxParams. Passed to the underlying
+  `Transaction`. This can be used to manually provide `nonce` and `pubKey`,
+  if it is desirable to sign the underlying transaction with a non-default
+  account in the `Wallet`.
 
 **Returns**
 
@@ -188,7 +205,7 @@ _This API is unstable and subject to breaking changes pre-main net_
   underlying `Transaction` may be confirmed by the blockchain but
   unsuccessful, due to lack of `gas`, and so on.
 
-### `call(transition: string, params: Value[], amount: BN = new BN(0), gasLimit: Long = Long.fromNumber(1000), gasPrice: BN = new BN(10)): Promise<Transaction>`
+### `call(transition: string, args: Value[], params: CallParams): Promise<Transaction>`
 
 Calls a transition of the current contract. At the moment, this is a low-level
 interface for interacting with simple smart contracts.
@@ -199,10 +216,9 @@ _This API is unstable and subject to breaking changes pre-main net_
 
 - `transition`: `string` - the exact name of the contract transition to be
   invoked. _case matters_
-- `params`: `Value[]` - JSON-encoded array of transition parameters.
-- `amount`: `BN` (Optional) - an instance of `BN.js`. Default: 0.
-- `gasLimit`: `Long` (Optional) - an instance of `Long.js`. Default: 1000.
-- `gasPrice`: `BN` (Optional) - an instance of `BN.js`. Default: 10.
+- `args`: `Value[]` - JSON-encoded array of transition arguments.
+- `params`: `CallParams` - a subset of `TxParams`. Passed to the underlying
+  `Transaction`.
 
 **Returns**
 

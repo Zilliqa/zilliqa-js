@@ -1,8 +1,21 @@
+import { Omit } from 'utility-types';
+import { TxParams } from '@zilliqa-js/account';
+
 export const enum ContractStatus {
   Deployed,
   Rejected,
   Initialised,
 }
+
+export type DeployParams = Omit<
+  TxParams,
+  'version' | 'toAddr' | 'amount' | 'code' | 'data' | 'receipt' | 'signature'
+>;
+
+export type CallParams = Omit<
+  TxParams,
+  'version' | 'toAddr' | 'data' | 'code' | 'receipt' | 'signature'
+>;
 
 export interface ContractObj {
   address: string;

@@ -23,6 +23,7 @@
     "@zilliqa-js/blockchain": "0.2.10",
     "@zilliqa-js/core": "0.2.10",
     "@zilliqa-js/util": "0.2.10",
-    "hash.js": "^1.1.5"
+    "hash.js": "^1.1.5",
+    "utility-types": "^2.1.0"
   }
 }
