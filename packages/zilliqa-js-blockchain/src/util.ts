@@ -4,12 +4,6 @@ import { BN, Long } from '@zilliqa-js/util';
 
 import { TransactionObj } from './types';
 
-export function isError(
-  response: RPCResponse<TransactionObj, string>,
-): response is RPCResponse<never, string> {
-  return typeof (<{ Error: string }>response.result).Error === 'string';
-}
-
 export function toTxParams(
   response: RPCResponse<TransactionObj, never>,
 ): TxParams {

@@ -4,6 +4,5 @@
     "rootDir": "src",
     "outDir": "dist"
   },
-  "include": ["src", "../../typings/**/*.d.ts"],
-  "references": []
+  "include": ["src", "../../typings/**/*.d.ts"]
 }

@@ -1,6 +1,6 @@
 import { Wallet, Transaction, TxStatus } from '@zilliqa-js/account';
 import { RPCMethod, Provider, sign } from '@zilliqa-js/core';
-import { BN, types } from '@zilliqa-js/util';
+import { BN } from '@zilliqa-js/util';
 
 import { Contracts } from './factory';
 import {
@@ -101,7 +101,7 @@ export class Contract {
       tx.txParams,
     );
 
-    return types.isError(response)
+    return response.error
       ? tx.setStatus(TxStatus.Rejected)
       : tx.confirm(response.result.TranID, attempts, interval);
   }

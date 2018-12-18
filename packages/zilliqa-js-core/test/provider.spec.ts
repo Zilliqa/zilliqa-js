@@ -51,7 +51,13 @@ describe('HTTPProvider', () => {
     const withMiddleware = new HTTPProvider('https://mock-provider.com');
     withMiddleware.middleware.response.use(mockResMiddleware);
 
-    fetch.mockResponseOnce(JSON.stringify('something'));
+    fetch.mockResponseOnce(
+      JSON.stringify({
+        jsonrpc: '2.0',
+        id: '1',
+        result: 'something',
+      }),
+    );
     const res = await withMiddleware.send(
       RPCMethod.CreateTransaction,
       'some param',

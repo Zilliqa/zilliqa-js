@@ -7,8 +7,10 @@ export const mockReqMiddleware: ReqMiddlewareFn = (req) => {
   };
 };
 
-export const mockResMiddleware: ResMiddlewareFn = (res) => {
-  if (typeof res.result === 'string') {
+export const mockResMiddleware: ResMiddlewareFn<string, string, never> = (
+  res,
+) => {
+  if (res.result && typeof res.result === 'string') {
     return { ...res, result: res.result.toUpperCase() };
   }
 
