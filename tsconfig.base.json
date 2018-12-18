@@ -9,6 +9,7 @@
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
+    "preserveConstEnums": true,
     "importHelpers": true,
     "lib": ["esnext", "dom"],
     "module": "commonjs",
