@@ -1,6 +1,6 @@
 import { Provider, RPCResponse, Signable } from '@zilliqa-js/core';
 import { getAddressFromPublicKey } from '@zilliqa-js/crypto';
-import { BN, Long, types } from '@zilliqa-js/util';
+import { BN, Long } from '@zilliqa-js/util';
 
 import { TxParams, TxReceipt, TxStatus, TxIncluded } from './types';
 import { encodeTransactionProto, sleep } from './util';
@@ -260,7 +260,7 @@ export class Transaction implements Signable {
       txHash,
     );
 
-    if (types.isError(res)) {
+    if (res.error) {
       return false;
     }
 

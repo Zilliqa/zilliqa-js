@@ -147,8 +147,9 @@ describe('Contracts', () => {
       {
         id: 1,
         jsonrpc: '2.0',
-        result: {
-          Error: 'Mega fail',
+        error: {
+          code: 444,
+          message: 'Mega fail',
         },
       },
     ].map((res) => [JSON.stringify(res)] as [string]);

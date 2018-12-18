@@ -83,8 +83,9 @@ describe('[Integration]: Blockchain', () => {
     const { result: txBlock } = await bc.getLatestTxBlock();
     const { result: numTxBlocks } = await bc.getNumTxBlocks();
 
-    expect(parseInt(<string>numTxBlocks) - 1).toEqual(
+    expect(parseInt(<string>numTxBlocks) - 1).toBeCloseTo(
       parseInt((<TxBlockObj>txBlock).header.BlockNum),
+      2,
     );
   });
 
@@ -128,7 +129,7 @@ describe('[Integration]: Blockchain', () => {
 
   it('should be able to get the transaction rate', async () => {
     const response = await bc.getTransactionRate();
-    expect(response.result).toBeTruthy();
+    expect(response.result).toBeGreaterThanOrEqual(0);
   });
 
   it('should be able to get the current tx epoch', async () => {
@@ -167,12 +168,12 @@ describe('[Integration]: Blockchain', () => {
 
   it('should be able to get the number of Txns for a given Tx epoch', async () => {
     const response = await bc.getNumTxnsTxEpoch(1);
-    expect(response.result).toBeTruthy();
+    expect(response.result).toBeGreaterThanOrEqual(0);
   });
 
   it('should be able to get the number of Txns for a given DS epoch', async () => {
     const response = await bc.getNumTxnsDSEpoch(1);
-    expect(response.result).toBeTruthy();
+    expect(parseInt(<string>response.result)).toBeGreaterThanOrEqual(0);
   });
 
   it('should be able to get the minimum gas price', async () => {

@@ -24,6 +24,20 @@ export type ResMiddlewareFn<I = any, O = any, E = any> = Transformer<
   WithRequest<RPCResponse<O, E>>
 >;
 
+export function isValidResponse<T, E>(
+  response: any,
+): response is RPCResponse<T, E> {
+  if (
+    response.jsonrpc === '2.0' &&
+    (response.id === '1' || response.id === 1) &&
+    (response.error || response.result)
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
 export function composeMiddleware<T extends ReqMiddlewareFn[]>(
   ...fns: T
 ): ReqMiddlewareFn;

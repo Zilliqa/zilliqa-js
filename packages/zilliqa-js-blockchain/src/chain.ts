@@ -15,7 +15,7 @@ import {
   TransactionObj,
   ShardingStructure,
 } from './types';
-import { isError, toTxParams } from './util';
+import { toTxParams } from './util';
 
 export class Blockchain implements ZilliqaModule {
   signer: Wallet;
@@ -246,8 +246,8 @@ export class Blockchain implements ZilliqaModule {
         tx.txParams,
       );
 
-      if (isError(response)) {
-        throw new Error(response.result.Error);
+      if (response.error) {
+        throw response.error;
       }
 
       return tx.confirm(response.result.TranID, maxAttempts);
@@ -273,13 +273,13 @@ export class Blockchain implements ZilliqaModule {
         RPCMethod.GetTransaction,
       );
 
-      if (isError(response)) {
-        return Promise.reject(response.result.Error);
-      } else {
-        return response.result.receipt.success
-          ? Transaction.confirm(toTxParams(response), this.provider)
-          : Transaction.reject(toTxParams(response), this.provider);
+      if (response.error) {
+        return Promise.reject(response.error);
       }
+
+      return response.result.receipt.success
+        ? Transaction.confirm(toTxParams(response), this.provider)
+        : Transaction.reject(toTxParams(response), this.provider);
     } catch (err) {
       throw err;
     }
@@ -304,8 +304,8 @@ export class Blockchain implements ZilliqaModule {
    * @param {number} epoch
    * @returns {Promise<RPCResponse<number, never>>}
    */
-  getNumTxnsTxEpoch(epoch: number): Promise<RPCResponse<number, never>> {
-    return this.provider.send(RPCMethod.GetNumTxnsDSEpoch, epoch);
+  getNumTxnsTxEpoch(epoch: number): Promise<RPCResponse<number, string>> {
+    return this.provider.send(RPCMethod.GetNumTxnsTxEpoch, epoch);
   }
 
   /**
@@ -316,8 +316,8 @@ export class Blockchain implements ZilliqaModule {
    * @param {number} epoch
    * @returns {Promise<any>}
    */
-  getNumTxnsDSEpoch(epoch: number): Promise<any> {
-    return this.provider.send(RPCMethod.GetNumTxnsTxEpoch, epoch);
+  getNumTxnsDSEpoch(epoch: number): Promise<RPCResponse<string, string>> {
+    return this.provider.send(RPCMethod.GetNumTxnsDSEpoch, epoch);
   }
 
   /**
