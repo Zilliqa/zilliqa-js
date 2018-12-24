@@ -239,6 +239,7 @@ export class Blockchain implements ZilliqaModule {
   async createTransaction(
     tx: Transaction,
     maxAttempts: number = 20,
+    interval: number = 1000,
   ): Promise<Transaction> {
     try {
       const response = await this.provider.send(
@@ -250,7 +251,7 @@ export class Blockchain implements ZilliqaModule {
         throw response.error;
       }
 
-      return tx.confirm(response.result.TranID, maxAttempts);
+      return tx.confirm(response.result.TranID, maxAttempts, interval);
     } catch (err) {
       throw err;
     }
