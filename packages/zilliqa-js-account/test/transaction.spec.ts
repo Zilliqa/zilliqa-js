@@ -151,4 +151,70 @@ describe('Transaction', () => {
       rejected.txParams.receipt && rejected.txParams.receipt.success,
     ).toEqual(false);
   });
+
+  it('should try for n attempts before timing out', async () => {
+    const responses = [
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: 888,
+          nonce: 1,
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          TranID: 'some_hash',
+          Info: 'Non-contract txn, sent to shard',
+        },
+      },
+      ...(() => {
+        const mocks = [];
+
+        for (let i = 0; i < 40; i++) {
+          mocks.push({
+            id: 1,
+            jsonrpc: '2.0',
+            error: {
+              code: -888,
+              message: 'Not found',
+            },
+          });
+        }
+
+        return mocks;
+      })(),
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          ID: 'some_hash',
+          receipt: { cumulative_gas: '1000', success: true },
+        },
+      },
+    ].map((res) => [JSON.stringify(res)] as [string]);
+
+    fetch.mockResponses(...responses);
+
+    const pending = await wallet.sign(
+      new Transaction(
+        {
+          version: 0,
+          toAddr: '0x1234567890123456789012345678901234567890',
+          amount: new BN(0),
+          gasPrice: new BN(1000),
+          gasLimit: Long.fromNumber(1000),
+        },
+        provider,
+      ),
+    );
+
+    await provider.send(RPCMethod.CreateTransaction, pending.txParams);
+
+    await expect(pending.confirm('some_hash', 40, 0)).rejects.toThrow(
+      'The transaction is still not confirmed after 40 attempts.',
+    );
+  });
 });
