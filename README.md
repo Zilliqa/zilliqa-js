@@ -35,8 +35,7 @@ of the umbrella package `@zilliqa-js/zilliqa`. This takes care of bootstrapping 
 
 ```shell
 yarn add @zilliqa-js/zilliqa
-# bn.js should be added with the above package. if it is not, install it
-manually.
+# bn.js should be added with the above package. if it is not, install it manually.
 yarn add bn.js
 ```
 
@@ -53,9 +52,9 @@ const { BN, Long } = require('@zilliqa-js/util');
 const { Zilliqa } = require('@zilliqa-js/zilliqa');
 const CP = require ('@zilliqa-js/crypto');
 
-const zilliqa = new Zilliqa('https://api-scilla.zilliqa.com');
+const zilliqa = new Zilliqa('https://api.zilliqa.com');
 
-//Populate the wallet with an account
+// Populate the wallet with an account
 privkey = '3375F915F3F9AE35E6B301B7670F53AD1A5BE15D8221EC7FD5E503F21D3450C8';
 
 zilliqa.wallet.addByPrivateKey(
@@ -68,12 +67,12 @@ console.log(`0x${add}`);
 
 async function testBlockchain() {
   try {
-    //GetBalance
+    // GetBalance
     const balance = await zilliqa.blockchain.getBalance(add);
     console.log('Your account balance is:');
     console.log(balance.result);
 
-    //Send a transaction to the network
+    // Send a transaction to the network
     const tx = await zilliqa.blockchain.createTransaction(
       zilliqa.transactions.new({
         version: 1,
@@ -86,7 +85,7 @@ async function testBlockchain() {
     console.log("The transaction status is:");
     console.log(tx.receipt);
 
-    //Deploy a contract
+    // Deploy a contract
     const code = `scilla_version 0
 
     (* HelloWorld contract *)
