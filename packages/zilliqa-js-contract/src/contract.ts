@@ -1,5 +1,5 @@
 import { Wallet, Transaction, TxStatus } from '@zilliqa-js/account';
-import { RPCMethod, Provider, sign } from '@zilliqa-js/core';
+import { GET_TX_ATTEMPTS, RPCMethod, Provider, sign } from '@zilliqa-js/core';
 import { BN } from '@zilliqa-js/util';
 
 import { Contracts } from './factory';
@@ -93,7 +93,7 @@ export class Contract {
   @sign
   async prepareTx(
     tx: Transaction,
-    attempts: number = 20,
+    attempts: number = GET_TX_ATTEMPTS,
     interval: number = 1000,
   ): Promise<Transaction> {
     const response = await this.provider.send<DeploySuccess, DeployError>(
@@ -114,7 +114,7 @@ export class Contract {
    */
   async deploy(
     params: DeployParams,
-    attempts: number = 20,
+    attempts: number = 33,
     interval: number = 1000,
   ): Promise<[Transaction, Contract]> {
     if (!this.code || !this.init) {
@@ -165,7 +165,7 @@ export class Contract {
     transition: string,
     args: Value[],
     params: CallParams,
-    attempts: number = 20,
+    attempts: number = 33,
     interval: number = 1000,
   ): Promise<Transaction> {
     const data = {
