@@ -238,7 +238,7 @@ export class Blockchain implements ZilliqaModule {
   @sign
   async createTransaction(
     tx: Transaction,
-    maxAttempts: number = 20,
+    maxAttempts: number = 33,
     interval: number = 1000,
   ): Promise<Transaction> {
     try {

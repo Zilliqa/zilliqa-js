@@ -329,17 +329,17 @@ expect(tx.isRejected()).toBeTruthy();
 
 ## Instance Methods
 
-### `confirm(txHash: string, maxAttemps: number = 5, interval: number = 1000): Promise<Transaction>`
+### `confirm(txHash: string, maxAttempts: number = 33, interval: number = 1000): Promise<Transaction>`
 
 Checks whether the `Transaction` is confirmed on the blockchain, by verifying
 the its `receipt` status (`boolean`). This method uses an exponential backoff
-to poll the lookup node. By default, the number of attempts made is 5, with
+to poll the lookup node. By default, the number of attempts made is 33, with
 a starting interval of 1000ms.
 
 **Parameters**
 
 - `txHash`: `string` - the transaction hash to use for polling.
-- `maxAttemps`: `number = 5` (Optional) - the maximum number of attempts
+- `maxAttempts`: `number = 33` (Optional) - the maximum number of attempts
   before setting status as `Rejected`.
 - `interval`: `number = 1000` (Optional) - the initial interval. This grows
   exponentially between attempts.

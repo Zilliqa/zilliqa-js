@@ -201,7 +201,7 @@ export class Transaction implements Signable {
    */
   async confirm(
     txHash: string,
-    maxAttempts = 20,
+    maxAttempts = 33,
     interval = 1000,
   ): Promise<Transaction> {
     this.status = TxStatus.Pending;
