@@ -1,5 +1,6 @@
 import { Transaction, Wallet, util } from '@zilliqa-js/account';
 import {
+  GET_TX_ATTEMPTS,
   Provider,
   ZilliqaModule,
   RPCResponse,
@@ -238,7 +239,7 @@ export class Blockchain implements ZilliqaModule {
   @sign
   async createTransaction(
     tx: Transaction,
-    maxAttempts: number = 20,
+    maxAttempts: number = GET_TX_ATTEMPTS,
     interval: number = 1000,
   ): Promise<Transaction> {
     try {

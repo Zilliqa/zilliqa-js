@@ -1,4 +1,9 @@
-import { Provider, RPCResponse, Signable } from '@zilliqa-js/core';
+import {
+  GET_TX_ATTEMPTS,
+  Provider,
+  RPCResponse,
+  Signable,
+} from '@zilliqa-js/core';
 import { getAddressFromPublicKey } from '@zilliqa-js/crypto';
 import { BN, Long } from '@zilliqa-js/util';
 
@@ -201,7 +206,7 @@ export class Transaction implements Signable {
    */
   async confirm(
     txHash: string,
-    maxAttempts = 20,
+    maxAttempts = GET_TX_ATTEMPTS,
     interval = 1000,
   ): Promise<Transaction> {
     this.status = TxStatus.Pending;
