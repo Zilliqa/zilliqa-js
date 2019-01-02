@@ -46,7 +46,7 @@ describe('Account', () => {
         JSON.stringify(keystore),
         passphrase,
       );
-      expect('0x' + account.privateKey).toEqual(privateKey);
+      expect(account.privateKey).toEqual(privateKey);
     }
   });
 

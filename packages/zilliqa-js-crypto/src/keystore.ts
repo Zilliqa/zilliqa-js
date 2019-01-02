@@ -104,7 +104,8 @@ export const encryptPrivateKey = async (
       kdf,
       kdfparams,
       mac: hashjs
-        .sha256()
+        // @ts-ignore
+        .hmac(hashjs.sha256, derivedKey, 'hex')
         .update(Buffer.concat([derivedKey.slice(16, 32), ciphertext]), 'hex')
         .digest('hex'),
     },
@@ -137,7 +138,8 @@ export const decryptPrivateKey = async (
   );
 
   const mac = hashjs
-    .sha256()
+    // @ts-ignore
+    .hmac(hashjs.sha256, derivedKey, 'hex')
     .update(Buffer.concat([derivedKey.slice(16, 32), ciphertext]), 'hex')
     .digest('hex');
 
