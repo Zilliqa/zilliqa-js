@@ -16,6 +16,8 @@ import {
 } from './types';
 import { getAddressFromPrivateKey } from './util';
 
+const ALGO_IDENTIFIER = 'aes-128-ctr';
+
 /**
  * getDerivedKey
  *
@@ -96,7 +98,7 @@ export const encryptPrivateKey = async (
   return JSON.stringify({
     address,
     crypto: {
-      cipher: 'aes-128-ctr',
+      cipher: ALGO_IDENTIFIER,
       cipherparams: {
         iv: iv.toString('hex'),
       },
@@ -106,7 +108,15 @@ export const encryptPrivateKey = async (
       mac: hashjs
         // @ts-ignore
         .hmac(hashjs.sha256, derivedKey, 'hex')
-        .update(Buffer.concat([derivedKey.slice(16, 32), ciphertext]), 'hex')
+        .update(
+          Buffer.concat([
+            derivedKey.slice(16, 32),
+            ciphertext,
+            iv,
+            Buffer.from(ALGO_IDENTIFIER),
+          ]),
+          'hex',
+        )
         .digest('hex'),
     },
     id: uuid.v4({ random: bytes.hexToIntArray(randomBytes(16)) }),
@@ -140,7 +150,15 @@ export const decryptPrivateKey = async (
   const mac = hashjs
     // @ts-ignore
     .hmac(hashjs.sha256, derivedKey, 'hex')
-    .update(Buffer.concat([derivedKey.slice(16, 32), ciphertext]), 'hex')
+    .update(
+      Buffer.concat([
+        derivedKey.slice(16, 32),
+        ciphertext,
+        iv,
+        Buffer.from(ALGO_IDENTIFIER),
+      ]),
+      'hex',
+    )
     .digest('hex');
 
   // we need to do a byte-by-byte comparison to avoid non-constant time side

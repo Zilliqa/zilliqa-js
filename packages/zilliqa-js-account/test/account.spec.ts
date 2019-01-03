@@ -39,6 +39,7 @@ describe('Account', () => {
         },
       );
     });
+
     const keystoreFixtures = JSON.parse(content as string);
     for (const keystoreFixture of keystoreFixtures) {
       const { privateKey, passphrase, keystore } = keystoreFixture;
