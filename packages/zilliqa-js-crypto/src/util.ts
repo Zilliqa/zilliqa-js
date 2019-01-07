@@ -1,7 +1,7 @@
 import elliptic from 'elliptic';
 import hashjs from 'hash.js';
 
-import { validation } from '@zilliqa-js/util';
+import { BN, validation } from '@zilliqa-js/util';
 
 const secp256k1 = elliptic.ec('secp256k1');
 /**
@@ -79,14 +79,19 @@ export const toChecksumAddress = (address: string): string => {
     .sha256()
     .update(address, 'hex')
     .digest('hex');
+  const v = new BN(hash, 'hex', 'be');
   let ret = '0x';
+
   for (let i = 0; i < address.length; i++) {
-    if (parseInt(hash[i], 16) >= 8) {
-      ret += address[i].toUpperCase();
-    } else {
+    if ('0123456789'.indexOf(address[i]) !== -1) {
       ret += address[i];
+    } else {
+      ret += v.and(new BN(2).pow(new BN(255 - 6 * i))).gte(new BN(1))
+        ? address[i].toUpperCase()
+        : address[i].toLowerCase();
     }
   }
+
   return ret;
 };
 
