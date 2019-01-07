@@ -16,7 +16,7 @@ describe('addresses', () => {
   });
 
   it('should return a valid 0x prefixed checksummed address', () => {
-    checksummedStore.forEach(({ original: address, good: expected }) => {
+    checksummedStore.forEach(({ original: address, zil: expected }) => {
       const actual = crypto.toChecksumAddress(address);
       expect(actual).toEqual(expected);
       expect(actual.substr(0, 2)).toEqual('0x');
@@ -24,14 +24,14 @@ describe('addresses', () => {
   });
 
   it('should return true when a valid checksummed address is tested', () => {
-    checksummedStore.forEach(({ good: checksummed }) => {
+    checksummedStore.forEach(({ zil: checksummed }) => {
       const actual = crypto.isValidChecksumAddress(checksummed);
       expect(actual).toBeTruthy();
     });
   });
 
   it('should return false when an invalid checksummed address is tested', () => {
-    checksummedStore.forEach(({ bad: badlychecksummed }) => {
+    checksummedStore.forEach(({ eth: badlychecksummed }) => {
       const actual = crypto.isValidChecksumAddress(badlychecksummed);
       expect(actual).toBeFalsy();
     });
