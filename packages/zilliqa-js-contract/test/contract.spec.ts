@@ -1,6 +1,6 @@
 import { Wallet } from '@zilliqa-js/account';
 import { HTTPProvider } from '@zilliqa-js/core';
-import { BN, Long } from '@zilliqa-js/util';
+import { BN, Long, bytes } from '@zilliqa-js/util';
 
 import fetch from 'jest-fetch-mock';
 
@@ -8,6 +8,7 @@ import { ContractStatus, Contracts } from '../src/index';
 import { abi } from './test.abi';
 import { testContract } from './fixtures';
 
+const VERSION = bytes.pack(8, 8);
 const provider = new HTTPProvider('https://mock.com');
 const wallet = new Wallet(provider);
 const contractFactory = new Contracts(provider, wallet);
@@ -78,6 +79,7 @@ describe('Contracts', () => {
     fetch.mockResponses(...responses);
 
     const [tx, deployed] = await contract.deploy({
+      version: VERSION,
       gasPrice: new BN(1000),
       gasLimit: Long.fromNumber(1000),
     });
@@ -128,6 +130,7 @@ describe('Contracts', () => {
 
     await expect(
       contract.deploy({
+        version: VERSION,
         gasPrice: new BN(1000),
         gasLimit: Long.fromNumber(1000),
       }),
@@ -171,6 +174,7 @@ describe('Contracts', () => {
         abi,
       )
       .deploy({
+        version: VERSION,
         gasPrice: new BN(1000),
         gasLimit: Long.fromNumber(1000),
       });
@@ -227,6 +231,7 @@ describe('Contracts', () => {
         abi,
       )
       .deploy({
+        version: VERSION,
         gasPrice: new BN(1000),
         gasLimit: Long.fromNumber(1000),
       });
@@ -308,6 +313,7 @@ describe('Contracts', () => {
         abi,
       )
       .deploy({
+        version: VERSION,
         gasPrice: new BN(1000),
         gasLimit: Long.fromNumber(1000),
       });
@@ -319,6 +325,7 @@ describe('Contracts', () => {
         { vname: 'param_2', type: 'String', value: 'world' },
       ],
       {
+        version: VERSION,
         amount: new BN(0),
         gasPrice: new BN(1000),
         gasLimit: Long.fromNumber(1000),

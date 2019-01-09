@@ -46,7 +46,7 @@ export class Transaction implements Signable {
   status: TxStatus;
 
   // parameters
-  private version: number = 0;
+  private version: number;
   private nonce?: number;
   private toAddr: string;
   private pubKey?: string;

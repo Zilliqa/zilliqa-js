@@ -68,6 +68,20 @@ Converts a hex-encoded string to an array of integers.
 
 - `number[]`
 
+### `pack(a: number, b: number): number`
+
+Performs bitwise addition of two 16-bit numbers, returning a 32-bit number.
+Throws if either number exceeds 16 bits.
+
+**Parameters**
+
+- `a`: `number` - a 16-bit number.
+- `b`: `number` - a 16-bit number.
+
+**Returns**
+
+- `number` - the combined 32-bit number.
+
 ### `compareBytes(a: string, b: string): boolean`
 
 Performs a constant time comparison of two hexadecimal values. This avoids
