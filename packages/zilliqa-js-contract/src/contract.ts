@@ -128,7 +128,6 @@ export class Contract {
         new Transaction(
           {
             ...params,
-            version: 0,
             toAddr: NIL_ADDRESS,
             amount: new BN(0),
             code: this.code,
@@ -182,7 +181,6 @@ export class Contract {
         new Transaction(
           {
             ...params,
-            version: 0,
             toAddr: this.address,
             data: JSON.stringify(data),
           },
