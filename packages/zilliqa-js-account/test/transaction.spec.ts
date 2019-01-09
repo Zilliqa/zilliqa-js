@@ -1,4 +1,5 @@
 import { RPCMethod, HTTPProvider } from '@zilliqa-js/core';
+import { isValidChecksumAddress, randomBytes } from '@zilliqa-js/crypto';
 import { BN, Long } from '@zilliqa-js/util';
 
 import { Transaction } from '../src/transaction';
@@ -16,6 +17,21 @@ describe('Transaction', () => {
 
   afterEach(() => {
     fetch.resetMocks();
+  });
+
+  it('should return a checksummed address from txParams', () => {
+    const tx = new Transaction(
+      {
+        version: 0,
+        toAddr: `0x${randomBytes(20)}`,
+        amount: new BN(0),
+        gasPrice: new BN(1000),
+        gasLimit: Long.fromNumber(1000),
+      },
+      provider,
+    );
+
+    expect(isValidChecksumAddress(tx.txParams.toAddr)).toBe(true);
   });
 
   it('should poll and call queued handlers on confirmation', async () => {
