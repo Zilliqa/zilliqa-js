@@ -48,11 +48,19 @@ a `semver` bump before being able to take advantage of new features/bug fixes.
 
 ```javascript
 const { Transaction } = require('@zilliqa-js/account');
-const { BN, Long } = require('@zilliqa-js/util');
+const { BN, Long, bytes } = require('@zilliqa-js/util');
 const { Zilliqa } = require('@zilliqa-js/zilliqa');
 const CP = require ('@zilliqa-js/crypto');
 
 const zilliqa = new Zilliqa('https://api.zilliqa.com');
+
+// These are set by the core protocol, and may vary per-chain.
+// These numbers are JUST AN EXAMPLE. They will NOT WORK on the public testnet
+// or mainnet. Please check what they are before proceeding, or your
+// transactions will simply be rejected.
+const CHAIN_ID = 88;
+const MSG_VERSION = 8;
+const VERSION = bytes.pack(88, 8);
 
 // Populate the wallet with an account
 privkey = '3375F915F3F9AE35E6B301B7670F53AD1A5BE15D8221EC7FD5E503F21D3450C8';
@@ -75,7 +83,7 @@ async function testBlockchain() {
     // Send a transaction to the network
     const tx = await zilliqa.blockchain.createTransaction(
       zilliqa.transactions.new({
-        version: 1,
+        version: VERSION,
         toAddr: '573EC96638C8BB1C386394602E1460634F02ADDA',
         amount: new BN(888888),
         gasPrice: new BN(100),
@@ -158,6 +166,7 @@ async function testBlockchain() {
 
     // Deploy the contract
     const [deployTx, hello] = await contract.deploy({
+      version: VERSION,
       gasPrice: new BN(100),
       gasLimit: Long.fromNumber(2500),
     });
@@ -177,6 +186,7 @@ async function testBlockchain() {
       },
       {
         // amount, gasPrice and gasLimit must be explicitly provided
+        version: VERSION,
         amount: new BN(0),
         gasPrice: new BN(100),
         gasLimit: Long.fromNumber(2500),

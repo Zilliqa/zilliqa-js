@@ -9,12 +9,12 @@ export const enum ContractStatus {
 
 export type DeployParams = Omit<
   TxParams,
-  'version' | 'toAddr' | 'amount' | 'code' | 'data' | 'receipt' | 'signature'
+  'toAddr' | 'amount' | 'code' | 'data' | 'receipt' | 'signature'
 >;
 
 export type CallParams = Omit<
   TxParams,
-  'version' | 'toAddr' | 'data' | 'code' | 'receipt' | 'signature'
+  'toAddr' | 'data' | 'code' | 'receipt' | 'signature'
 >;
 
 export interface ContractObj {
@@ -72,5 +72,5 @@ export type DeployError =
 
 export interface DeploySuccess {
   TranID: string;
-  Info: String;
+  Info: string;
 }
