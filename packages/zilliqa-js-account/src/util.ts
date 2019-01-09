@@ -7,7 +7,7 @@ export const encodeTransactionProto = (tx: TxParams): Buffer => {
   const msg = ZilliqaMessage.ProtoTransactionCoreInfo.create({
     version: tx.version,
     nonce: tx.nonce || 0,
-    toaddr: bytes.hexToByteArray(tx.toAddr),
+    toaddr: bytes.hexToByteArray(tx.toAddr.toLowerCase()),
     senderpubkey: ZilliqaMessage.ByteArray.create({
       data: bytes.hexToByteArray(tx.pubKey || '00'),
     }),
