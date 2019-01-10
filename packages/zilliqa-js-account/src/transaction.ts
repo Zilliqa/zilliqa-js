@@ -73,7 +73,8 @@ export class Transaction implements Signable {
   get txParams(): TxParams {
     return {
       version: this.version,
-      toAddr: toChecksumAddress(this.toAddr),
+      // TODO: do not strip 0x after implementation on core side
+      toAddr: toChecksumAddress(this.toAddr).slice(2),
       nonce: this.nonce,
       pubKey: this.pubKey,
       amount: this.amount,
