@@ -31,7 +31,8 @@ describe('Transaction', () => {
       provider,
     );
 
-    expect(isValidChecksumAddress(tx.txParams.toAddr)).toBe(true);
+    // FIXME: remove 0x when this is fixed on the core side
+    expect(isValidChecksumAddress(`0x${tx.txParams.toAddr}`)).toBe(true);
   });
 
   it('should poll and call queued handlers on confirmation', async () => {
