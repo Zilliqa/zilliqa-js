@@ -299,6 +299,20 @@ export class Blockchain implements ZilliqaModule {
   }
 
   /**
+   * getTransactionsForTxBlock
+   *
+   * Gets all transactions for a given TxBlock, grouped by shard id
+   *
+   * @param {number} txBlock
+   * @returns {Promise<RPCResponse<string[][], string>>}
+   */
+  getTransactionsForTxBlock(
+    txBlock: number,
+  ): Promise<RPCResponse<string[][], string>> {
+    return this.provider.send(RPCMethod.GetTransactionsForTxBlock, txBlock);
+  }
+
+  /**
    * getNumTxnsTxEpoch
    *
    * Gets the number of transactions procesed for a given Tx Epoch.
