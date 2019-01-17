@@ -9,8 +9,6 @@ import { WithRequest } from './util';
 export const enum RPCMethod {
   // Network-related methods
   GetNetworkId = 'GetNetworkId',
-  // GetClientVersion = 'GetClientVersion',
-  // GetProtocolVersion = 'GetProtocolVersion',
 
   // Blockchain-related methods
   GetBlockchainInfo = 'GetBlockchainInfo',
@@ -31,25 +29,21 @@ export const enum RPCMethod {
   GetCurrentDSEpoch = 'GetCurrentDSEpoch',
   GetPrevDifficulty = 'GetPrevDifficulty',
   GetPrevDSDifficulty = 'GetPrevDSDifficulty',
-  // GetBlockTransactionCount = 'GetBlockTransactionCount',
 
   // Transaction-related methods
   CreateTransaction = 'CreateTransaction',
   GetTransaction = 'GetTransaction',
-  // GetTransactionReceipt = 'GetTransactionReceipt',
   GetRecentTransactions = 'GetRecentTransactions',
   GetTransactionsForTxBlock = 'GetTransactionsForTxBlock',
   GetNumTxnsTxEpoch = 'GetNumTxnsTxEpoch',
   GetNumTxnsDSEpoch = 'GetNumTxnsDSEpoch',
   GetMinimumGasPrice = 'GetMinimumGasPrice',
-  // GetGasEstimate = 'GetGasEstimate',
 
   // Contract-related methods
   GetSmartContractCode = 'GetSmartContractCode',
   GetSmartContractInit = 'GetSmartContractInit',
   GetSmartContractState = 'GetSmartContractState',
   GetContractAddressFromTransactionID = 'GetContractAddressFromTransactionID',
-  // GetStorageAt = 'GetStorageAt',
 
   // Account-related methods
   GetBalance = 'GetBalance',
