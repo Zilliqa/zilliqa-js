@@ -3,7 +3,6 @@ import fetch from 'cross-fetch';
 import { WithRequest } from './util';
 
 /**
- * TODO: Enable commented-out methods when they are implemented
  * blockchain-side.
  */
 export const enum RPCMethod {

@@ -1,10 +1,14 @@
 import { Account, Wallet } from '@zilliqa-js/account';
 import { HTTPProvider } from '@zilliqa-js/core';
-import { BN, Long } from '@zilliqa-js/util';
+import { BN, Long, bytes } from '@zilliqa-js/util';
 
 import { Contracts, ContractStatus } from '../src/index';
-import { abi } from './test.abi';
 import { testContract } from './fixtures';
+
+// testnet chain_id is always 2
+const CHAIN_ID = 2;
+const MSG_VERSION = 1;
+const VERSION = bytes.pack(CHAIN_ID, MSG_VERSION);
 
 const accounts = [new Account(process.env.GENESIS_PRIV_KEY as string)];
 const provider = new HTTPProvider(process.env.HTTP_PROVIDER as string);
@@ -17,25 +21,22 @@ describe('Contract - hello world', () => {
 
   it('should be able to deploy the contract', async () => {
     let [tx, contract] = await contractFactory
-      .new(
-        testContract,
-        [
-          {
-            vname: 'owner',
-            type: 'ByStr20',
-            value: `0x${process.env.GENESIS_ADDRESS}`,
-          },
-          {
-            vname: '_scilla_version',
-            type: 'Uint32',
-            value: '0',
-          },
-        ],
-        abi,
-      )
+      .new(testContract, [
+        {
+          vname: 'owner',
+          type: 'ByStr20',
+          value: `0x${process.env.GENESIS_ADDRESS}`,
+        },
+        {
+          vname: '_scilla_version',
+          type: 'Uint32',
+          value: '0',
+        },
+      ])
       .deploy({
-        gasPrice: new BN(100),
-        gasLimit: Long.fromNumber(2500),
+        version: VERSION,
+        gasPrice: new BN(1000000000),
+        gasLimit: Long.fromNumber(5000),
       });
 
     address = <string>contract.address;
@@ -57,15 +58,18 @@ describe('Contract - hello world', () => {
         },
       ],
       {
+        version: VERSION,
         amount: new BN(0),
-        gasPrice: new BN(100),
-        gasLimit: Long.fromNumber(2500),
+        gasPrice: new BN(1000000000),
+        gasLimit: Long.fromNumber(5000),
       },
     );
 
     expect(call.txParams.receipt && call.txParams.receipt.success).toBeTruthy();
 
     const state = await contract.getState();
+
+    console.log(state);
 
     expect(
       state.filter((v) => {
@@ -87,6 +91,7 @@ describe('Contract - hello world', () => {
         },
       ],
       {
+        version: VERSION,
         amount: new BN(0),
         gasPrice: new BN(1000),
         gasLimit: Long.fromNumber(1000),

@@ -46,4 +46,17 @@ transition getHello ()
     r <- welcome_msg;
     e = {_eventname: "getHello()"; msg: r};
     event e
+end
+
+transition multipleMsgs()
+  msg1 = {_tag : "Main"; _recipient : _sender; _amount : Uint128 0};
+  msg2 = {_tag : "Main"; _recipient : _sender; _amount : Uint128 0};
+  msgs1 = one_msg msg1;
+  msgs2 = Cons {Message} msg2 msgs1;
+  send msgs2
+end
+
+transition contrAddr()
+  msg1 = {_eventname : "ContractAddress"; addr : _this_address };
+  event msg1
 end`;
