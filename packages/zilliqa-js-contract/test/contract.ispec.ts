@@ -93,7 +93,7 @@ describe('Contract - hello world', () => {
       {
         version: VERSION,
         amount: new BN(0),
-        gasPrice: new BN(1000),
+        gasPrice: new BN(1000000000),
         gasLimit: Long.fromNumber(1000),
       },
     );
