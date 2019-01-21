@@ -1,6 +1,6 @@
 import { Account, Transaction, Wallet } from '@zilliqa-js/account';
 import { HTTPProvider, RPCResponse } from '@zilliqa-js/core';
-import { BN, Long } from '@zilliqa-js/util';
+import { BN, Long, bytes } from '@zilliqa-js/util';
 
 import { Blockchain } from '../src/chain';
 import { TxBlockObj, BlockList } from '../src/types';
@@ -145,11 +145,11 @@ describe('[Integration]: Blockchain', () => {
   it('should be able to send a transaction', async () => {
     const transaction = new Transaction(
       {
-        version: 0,
+        version: bytes.pack(2, 1),
         toAddr: 'd11238e5fcd70c817c22922c500830d00bc1e778',
         amount: new BN(1000),
-        gasPrice: new BN(1000),
-        gasLimit: Long.fromNumber(1000),
+        gasPrice: new BN(1000000000),
+        gasLimit: Long.fromNumber(1),
       },
       provider,
     );

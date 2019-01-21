@@ -53,8 +53,8 @@ export class Transaction implements Signable {
   private amount: BN;
   private gasPrice: BN;
   private gasLimit: Long;
-  private code: string;
-  private data: string;
+  private code: string = '';
+  private data: string = '';
   private receipt?: TxReceipt;
   private signature?: string;
 

@@ -18,12 +18,14 @@ export const encodeTransactionProto = (tx: TxParams): Buffer => {
       data: Uint8Array.from(tx.gasPrice.toArrayLike(Buffer, undefined, 16)),
     }),
     gaslimit: tx.gasLimit,
-    code: tx.code
-      ? Uint8Array.from([...tx.code].map((c) => <number>c.charCodeAt(0)))
-      : null,
-    data: tx.data
-      ? Uint8Array.from([...tx.data].map((c) => <number>c.charCodeAt(0)))
-      : null,
+    code:
+      tx.code && tx.code.length
+        ? Uint8Array.from([...tx.code].map((c) => <number>c.charCodeAt(0)))
+        : null,
+    data:
+      tx.data && tx.data.length
+        ? Uint8Array.from([...tx.data].map((c) => <number>c.charCodeAt(0)))
+        : null,
   };
 
   const serialised = ZilliqaMessage.ProtoTransactionCoreInfo.create(msg);
