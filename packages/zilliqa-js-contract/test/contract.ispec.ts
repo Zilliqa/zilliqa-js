@@ -19,7 +19,7 @@ const wallet = new Wallet(provider, accounts);
 const blockchain = new Blockchain(provider, wallet);
 const contractFactory = new Contracts(provider, wallet);
 
-jest.setTimeout(360000);
+jest.setTimeout(720000);
 
 describe('Contract: hello world', () => {
   let address: string;
@@ -357,16 +357,16 @@ describe('Contract: Simple DEX', () => {
     ]);
 
     if (approveA.txParams.receipt) {
-      // @ts-ignore
       cumulativeGasTotal += parseInt(
+        // @ts-ignore
         approveA.txParams.receipt.cumulative_gas,
         10,
       );
     }
 
     if (approveB.txParams.receipt) {
-      // @ts-ignore
       cumulativeGasTotal += parseInt(
+        // @ts-ignore
         approveB.txParams.receipt.cumulative_gas,
         10,
       );
@@ -417,8 +417,8 @@ describe('Contract: Simple DEX', () => {
     );
 
     if (createOrder.txParams.receipt) {
-      // @ts-ignore
       cumulativeGasTotal += parseInt(
+        // @ts-ignore
         createOrder.txParams.receipt.cumulative_gas,
         10,
       );
