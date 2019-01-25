@@ -1,9 +1,13 @@
 import { Account, Transaction, Wallet } from '@zilliqa-js/account';
-import { HTTPProvider, RPCResponse } from '@zilliqa-js/core';
+import {
+  HTTPProvider,
+  RPCResponse,
+  TxBlockObj,
+  BlockList,
+} from '@zilliqa-js/core';
 import { BN, Long, bytes } from '@zilliqa-js/util';
 
 import { Blockchain } from '../src/chain';
-import { TxBlockObj, BlockList } from '../src/types';
 import schemas from './schema.json';
 
 jest.setTimeout(90000);
