@@ -3,7 +3,7 @@ import { Blockchain } from '@zilliqa-js/blockchain';
 import { HTTPProvider } from '@zilliqa-js/core';
 import { BN, Long, bytes, units } from '@zilliqa-js/util';
 
-import { Contracts, Contract, ContractStatus } from '../src/index';
+import { Contracts, Contract, ContractStatus, Value } from '../src/index';
 import { testContract, zrc20, simpleDEX as dex } from './fixtures';
 
 // testnet chain_id is always 2
@@ -435,6 +435,14 @@ describe('Contract: Simple DEX', () => {
 });
 
 describe('Contract: ChainCall', async () => {
+  const getContractBalance = (state: Value[]): number => {
+    const [balance] = state
+      .filter(({ vname, ...rest }) => vname === '_balance')
+      .map(({ value }) => parseInt(value, 10));
+
+    return balance;
+  };
+
   try {
     // Deploy contract 1
     const code1 = `scilla_version 0
@@ -758,18 +766,24 @@ describe('Contract: ChainCall', async () => {
     // Get the final contract state
     // _balance should be 100
     const state4 = await chainchain1.getState();
+    const state4Balance = getContractBalance(state4);
     console.log('The end state of the contract A is:');
     console.log(state4);
+    expect(state4Balance).toEqual(100);
 
     // _balance should be 150
     const state5 = await chainchain2.getState();
+    const state5Balance = getContractBalance(state5);
     console.log('The end state of the contract B is:');
     console.log(state5);
+    expect(state5Balance).toEqual(150);
 
     // _balance should be 100
     const state6 = await chainchain3.getState();
+    const state6Balance = getContractBalance(state6);
     console.log('The end state of the contract C is:');
     console.log(state6);
+    expect(state6Balance).toEqual(100);
   } catch (err) {
     console.log(err);
   }
