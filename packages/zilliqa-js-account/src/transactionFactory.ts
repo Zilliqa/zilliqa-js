@@ -1,6 +1,6 @@
 import { Provider, RPCMethod, ZilliqaModule } from '@zilliqa-js/core';
 import { Transaction } from './transaction';
-import { TxParams } from './types';
+import { TxParams, TxStatus } from './types';
 import { formatOutgoingTx } from './util';
 import { Wallet } from './wallet';
 
@@ -17,7 +17,7 @@ export class TransactionFactory implements ZilliqaModule {
     this.signer = signer;
   }
 
-  new(txParams: TxParams) {
-    return new Transaction(txParams, this.provider);
+  new(txParams: TxParams, toDs: boolean = false) {
+    return new Transaction(txParams, this.provider, TxStatus.Initialised, toDs);
   }
 }

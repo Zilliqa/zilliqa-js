@@ -99,6 +99,7 @@ export class Contract {
     const response = await this.provider.send<DeploySuccess, DeployError>(
       RPCMethod.CreateTransaction,
       tx.txParams,
+      tx.toDS,
     );
 
     return response.error
@@ -116,6 +117,7 @@ export class Contract {
     params: DeployParams,
     attempts: number = 33,
     interval: number = 1000,
+    toDs: boolean = false,
   ): Promise<[Transaction, Contract]> {
     if (!this.code || !this.init) {
       throw new Error(
@@ -134,6 +136,8 @@ export class Contract {
             data: JSON.stringify(this.init).replace(/\\"/g, '"'),
           },
           this.provider,
+          TxStatus.Initialised,
+          toDs,
         ),
         attempts,
         interval,
@@ -166,6 +170,7 @@ export class Contract {
     params: CallParams,
     attempts: number = 33,
     interval: number = 1000,
+    toDs: boolean = false,
   ): Promise<Transaction> {
     const data = {
       _tag: transition,
@@ -185,6 +190,8 @@ export class Contract {
             data: JSON.stringify(data),
           },
           this.provider,
+          TxStatus.Initialised,
+          toDs,
         ),
         attempts,
         interval,
