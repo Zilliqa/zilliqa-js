@@ -1,8 +1,6 @@
 import { TxParams } from '@zilliqa-js/account';
-import { RPCResponse } from '@zilliqa-js/core';
+import { RPCResponse, TransactionObj } from '@zilliqa-js/core';
 import { BN, Long } from '@zilliqa-js/util';
-
-import { TransactionObj } from './types';
 
 export function toTxParams(
   response: RPCResponse<TransactionObj, never>,

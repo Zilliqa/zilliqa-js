@@ -1,21 +1,19 @@
 import { Transaction, Wallet, util } from '@zilliqa-js/account';
 import {
   GET_TX_ATTEMPTS,
+  sign,
   Provider,
   ZilliqaModule,
   RPCResponse,
   RPCMethod,
-  sign,
-} from '@zilliqa-js/core';
-
-import {
   DsBlockObj,
   BlockList,
   TxBlockObj,
   TxList,
   TransactionObj,
   ShardingStructure,
-} from './types';
+} from '@zilliqa-js/core';
+
 import { toTxParams } from './util';
 
 export class Blockchain implements ZilliqaModule {
@@ -246,6 +244,7 @@ export class Blockchain implements ZilliqaModule {
       const response = await this.provider.send(
         RPCMethod.CreateTransaction,
         tx.txParams,
+        tx.toDS,
       );
 
       if (response.error) {

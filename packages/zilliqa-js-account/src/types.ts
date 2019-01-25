@@ -1,4 +1,5 @@
 import { BN, Long } from '@zilliqa-js/util';
+import { TransactionReceiptObj } from '@zilliqa-js/core';
 
 export const enum TxStatus {
   Initialised,
@@ -17,14 +18,11 @@ export interface TxRejected {
   Error: string;
 }
 
+export type TxReceipt = TransactionReceiptObj<number>;
+
 export interface TxIncluded {
   ID: string;
-  receipt: TxReceipt;
-}
-
-export interface TxReceipt {
-  success: boolean;
-  cumulative_gas: number;
+  receipt: TransactionReceiptObj;
 }
 
 export interface TxParams {

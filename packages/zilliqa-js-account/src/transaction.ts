@@ -44,6 +44,7 @@ export class Transaction implements Signable {
   provider: Provider;
   id?: string;
   status: TxStatus;
+  toDS: boolean;
 
   // parameters
   private version: number;
@@ -107,6 +108,7 @@ export class Transaction implements Signable {
     params: TxParams,
     provider: Provider,
     status: TxStatus = TxStatus.Initialised,
+    toDS: boolean = false,
   ) {
     // private members
     this.version = params.version;
@@ -124,6 +126,7 @@ export class Transaction implements Signable {
     // public members
     this.provider = provider;
     this.status = status;
+    this.toDS = toDS;
   }
 
   /**
@@ -260,7 +263,6 @@ export class Transaction implements Signable {
   }
 
   private async trackTx(txHash: string): Promise<boolean> {
-    // TODO: regex validation for txHash so we don't get garbage
     const res: RPCResponse<TxIncluded, string> = await this.provider.send(
       'GetTransaction',
       txHash,
@@ -271,7 +273,10 @@ export class Transaction implements Signable {
     }
 
     this.id = res.result.ID;
-    this.receipt = res.result.receipt;
+    this.receipt = {
+      ...res.result.receipt,
+      cumulative_gas: parseInt(res.result.receipt.cumulative_gas, 10),
+    };
     this.status =
       this.receipt && this.receipt.success
         ? TxStatus.Confirmed
