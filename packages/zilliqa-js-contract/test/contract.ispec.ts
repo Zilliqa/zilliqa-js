@@ -2,7 +2,6 @@ import { Account, Transaction, Wallet } from '@zilliqa-js/account';
 import { Blockchain } from '@zilliqa-js/blockchain';
 import { HTTPProvider } from '@zilliqa-js/core';
 import { BN, Long, bytes, units } from '@zilliqa-js/util';
-
 import { Contracts, Contract, ContractStatus, Value } from '../src/index';
 import { testContract, zrc20, simpleDEX as dex } from './fixtures';
 
@@ -162,6 +161,8 @@ describe('Contract: Simple DEX', () => {
             gasLimit: MIN_GAS_LIMIT,
           },
           provider,
+          undefined,
+          true,
         );
 
         return blockchain.createTransaction(tx, 33, 1500);

@@ -241,11 +241,10 @@ export class Blockchain implements ZilliqaModule {
     interval: number = 1000,
   ): Promise<Transaction> {
     try {
-      const response = await this.provider.send(
-        RPCMethod.CreateTransaction,
-        tx.txParams,
-        tx.toDS,
-      );
+      const response = await this.provider.send(RPCMethod.CreateTransaction, {
+        ...tx.txParams,
+        priority: tx.toDS,
+      });
 
       if (response.error) {
         throw response.error;

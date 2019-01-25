@@ -98,8 +98,7 @@ export class Contract {
   ): Promise<Transaction> {
     const response = await this.provider.send<DeploySuccess, DeployError>(
       RPCMethod.CreateTransaction,
-      tx.txParams,
-      tx.toDS,
+      { ...tx.txParams, priority: tx.toDS },
     );
 
     return response.error
