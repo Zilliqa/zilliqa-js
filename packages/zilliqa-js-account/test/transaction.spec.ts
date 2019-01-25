@@ -58,7 +58,7 @@ describe('Transaction', () => {
         jsonrpc: '2.0',
         result: {
           ID: 'some_hash',
-          receipt: { cumulative_gas: '1000', success: true },
+          receipt: { cumulative_gas: 1000, success: true },
         },
       },
     ].map((res) => [JSON.stringify(res)] as [string]);
@@ -83,7 +83,7 @@ describe('Transaction', () => {
     const state = confirmed.txParams;
 
     expect(confirmed.isConfirmed()).toBeTruthy();
-    expect(state.receipt).toEqual({ success: true, cumulative_gas: '1000' });
+    expect(state.receipt).toEqual({ success: true, cumulative_gas: 1000 });
   });
 
   it('should reject the promise if there is a network error', async () => {
@@ -141,7 +141,7 @@ describe('Transaction', () => {
         jsonrpc: '2.0',
         result: {
           ID: 'some_hash',
-          receipt: { cumulative_gas: '1000', success: false },
+          receipt: { cumulative_gas: 1000, success: false },
         },
       },
     ].map((res) => [JSON.stringify(res)] as [string]);
@@ -208,7 +208,7 @@ describe('Transaction', () => {
         jsonrpc: '2.0',
         result: {
           ID: 'some_hash',
-          receipt: { cumulative_gas: '1000', success: true },
+          receipt: { cumulative_gas: 1000, success: true },
         },
       },
     ].map((res) => [JSON.stringify(res)] as [string]);
