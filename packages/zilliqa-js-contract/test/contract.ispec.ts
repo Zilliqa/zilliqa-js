@@ -68,6 +68,9 @@ describe('Contract: hello world', () => {
         gasPrice: new BN(1000000000),
         gasLimit: Long.fromNumber(5000),
       },
+      33,
+      1000,
+      false,
     );
 
     expect(call.txParams.receipt && call.txParams.receipt.success).toBeTruthy();
@@ -412,6 +415,9 @@ describe('Contract: Simple DEX', () => {
         gasPrice: new BN(1000000000),
         gasLimit: Long.fromNumber(100000),
       },
+      33,
+      1000,
+      true,
     );
 
     if (createOrder.txParams.receipt) {
@@ -437,7 +443,7 @@ describe('Contract: Simple DEX', () => {
 describe('Contract: ChainCall', async () => {
   const getContractBalance = (state: Value[]): number => {
     const [balance] = state
-      .filter(({ vname, ...rest }) => vname === '_balance')
+      .filter(({ vname }) => vname === '_balance')
       .map(({ value }) => parseInt(value, 10));
 
     return balance;
@@ -727,6 +733,7 @@ describe('Contract: ChainCall', async () => {
       },
       38,
       1000,
+      true,
     );
 
     // Get the call txn info
@@ -754,6 +761,7 @@ describe('Contract: ChainCall', async () => {
       },
       38,
       1000,
+      true,
     );
 
     // Get the call txn info
