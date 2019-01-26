@@ -801,7 +801,7 @@ describe('Contract: HWGC', async () => {
       console.log(state6);
       expect(state6Balance).toEqual(0);
     } catch (err) {
-      console.log(err);
+      expect(err).toBe(null);
     }
   });
 });
