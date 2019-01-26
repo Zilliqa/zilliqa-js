@@ -37,11 +37,15 @@ describe('Contract: hello world', () => {
           value: '0',
         },
       ])
-      .deploy({
-        version: VERSION,
-        gasPrice: new BN(1000000000),
-        gasLimit: Long.fromNumber(5000),
-      });
+      .deploy(
+        {
+          version: VERSION,
+          gasPrice: new BN(1000000000),
+          gasLimit: Long.fromNumber(5000),
+        },
+        38,
+        1000,
+      );
 
     address = <string>contract.address;
 
@@ -67,7 +71,7 @@ describe('Contract: hello world', () => {
         gasPrice: new BN(1000000000),
         gasLimit: Long.fromNumber(5000),
       },
-      33,
+      38,
       1000,
       false,
     );
