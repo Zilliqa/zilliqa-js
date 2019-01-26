@@ -10,7 +10,7 @@ import { BN, Long, bytes } from '@zilliqa-js/util';
 import { Blockchain } from '../src/chain';
 import schemas from './schema.json';
 
-jest.setTimeout(90000);
+jest.setTimeout(360000);
 
 const accounts = [new Account(process.env.GENESIS_PRIV_KEY as string)];
 const provider = new HTTPProvider(process.env.HTTP_PROVIDER as string);
@@ -78,9 +78,9 @@ describe('[Integration]: Blockchain', () => {
     const response = await bc.getLatestTxBlock();
 
     expect(response.result).toMatchSchema(schemas.definitions.TxBlockObj);
-    expect(parseInt((<TxBlockObj>response.result).header.BlockNum, 10)).toEqual(
-      parseInt(<string>result, 10) - 1,
-    );
+    expect(
+      parseInt((<TxBlockObj>response.result).header.BlockNum, 10),
+    ).toBeGreaterThanOrEqual(parseInt(<string>result, 10) - 1);
   });
 
   it('should be able to get the number of Tx blocks', async () => {
@@ -151,7 +151,7 @@ describe('[Integration]: Blockchain', () => {
       {
         version: bytes.pack(2, 1),
         toAddr: 'd11238e5fcd70c817c22922c500830d00bc1e778',
-        amount: new BN(1000),
+        amount: new BN(888),
         gasPrice: new BN(1000000000),
         gasLimit: Long.fromNumber(1),
       },
@@ -172,7 +172,7 @@ describe('[Integration]: Blockchain', () => {
 
   it('should be able to get the number of Txns for a given Tx epoch', async () => {
     const response = await bc.getNumTxnsTxEpoch(1);
-    expect(response.result).toBeGreaterThanOrEqual(0);
+    expect(parseInt(<string>response.result, 10)).toBeGreaterThanOrEqual(0);
   });
 
   it('should be able to get the number of Txns for a given DS epoch', async () => {

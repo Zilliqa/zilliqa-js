@@ -318,7 +318,7 @@ export class Blockchain implements ZilliqaModule {
    * @param {number} epoch
    * @returns {Promise<RPCResponse<number, never>>}
    */
-  getNumTxnsTxEpoch(epoch: number): Promise<RPCResponse<number, string>> {
+  getNumTxnsTxEpoch(epoch: number): Promise<RPCResponse<string, string>> {
     return this.provider.send(RPCMethod.GetNumTxnsTxEpoch, epoch);
   }
 

@@ -46,7 +46,7 @@ export interface BlockchainInfo {
   CurrentMiniEpoch: string;
   CurrentDSEpoch: string;
   NumTxnsDSEpoch: string;
-  NumTxnsTxEpoch: number;
+  NumTxnsTxEpoch: string;
   ShardingStructure: ShardingStructure;
 }
 

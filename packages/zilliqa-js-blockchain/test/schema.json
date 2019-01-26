@@ -35,7 +35,7 @@
           "type": "string"
         },
         "NumTxnsTxEpoch": {
-          "type": "number"
+          "type": "string"
         },
         "ShardingStructure": {
           "type": "object",
