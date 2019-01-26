@@ -441,18 +441,19 @@ describe('Contract: Simple DEX', () => {
   });
 });
 
-describe('Contract: ChainCall', async () => {
-  const getContractBalance = (state: Value[]): number => {
-    const [balance] = state
-      .filter(({ vname }) => vname === '_balance')
-      .map(({ value }) => parseInt(value, 10));
+describe('Contract: HWGC', async () => {
+  it('should not change the balance of contracts when the callee does not accept', async () => {
+    const getContractBalance = (state: Value[]): number => {
+      const [balance] = state
+        .filter(({ vname }) => vname === '_balance')
+        .map(({ value }) => parseInt(value, 10));
 
-    return balance;
-  };
+      return balance;
+    };
 
-  try {
-    // Deploy contract 1
-    const code1 = `scilla_version 0
+    try {
+      // Deploy contract 1
+      const code1 = `scilla_version 0
 
     library ChainChain1
     
@@ -501,7 +502,7 @@ describe('Contract: ChainCall', async () => {
         end
     end`;
 
-    const code2 = `scilla_version 0
+      const code2 = `scilla_version 0
 
     library ChainChain2
     
@@ -545,7 +546,7 @@ describe('Contract: ChainCall', async () => {
         end
     end`;
 
-    const code3 = `scilla_version 0
+      const code3 = `scilla_version 0
 
     library ChainChain3
     
@@ -562,240 +563,241 @@ describe('Contract: ChainCall', async () => {
         event e
     end`;
 
-    const init = [
-      // this parameter is mandatory for all init arrays
-      {
-        vname: '_scilla_version',
-        type: 'Uint32',
-        value: '0',
-      },
-      {
-        vname: 'owner',
-        type: 'ByStr20',
-        // NOTE: all byte strings passed to Scilla contracts _must_ be
-        // prefixed with 0x. Failure to do so will result in the network
-        // rejecting the transaction while consuming gas!
-        value: `0x${process.env.GENESIS_ADDRESS}`,
-      },
-    ];
-
-    // Instance of class Contract 1
-    const contract1 = contractFactory.new(code1, init);
-
-    // Deploy contract 1
-    const [deployTx1, chainchain1] = await contract1.deploy(
-      {
-        version: VERSION,
-        gasPrice: units.toQa('1000', units.Units.Li), // Minimum gasPrice measured in Li, converting to Qa.
-        gasLimit: Long.fromNumber(10000),
-      },
-      38,
-      1000,
-    );
-
-    // Introspect the state of the underlying transaction
-    console.log('Deployment 1 Transaction ID: ', deployTx1.id);
-    console.log(
-      'Deployment 1 Transaction Receipt: ',
-      deployTx1.txParams.receipt,
-    );
-
-    // Get the deployed contract address
-    console.log('1st contract address is:');
-    console.log(chainchain1.address);
-    // const cadd1 = `0x${chainchain1.address}`;
-
-    // Instance of class Contract 2
-    const contract2 = contractFactory.new(code2, init);
-    // Deploy contract 2
-    const [deployTx2, chainchain2] = await contract2.deploy(
-      {
-        version: VERSION,
-        gasPrice: units.toQa('1000', units.Units.Li), // Minimum gasPrice measured in Li, converting to Qa.
-        gasLimit: Long.fromNumber(10000),
-      },
-      38,
-      1000,
-    );
-
-    // Introspect the state of the underlying transaction
-    console.log('Deployment 2 Transaction ID: ', deployTx2.id);
-    console.log(
-      'Deployment 2 Transaction Receipt: ',
-      deployTx2.txParams.receipt,
-    );
-
-    // Get the deployed contract address
-    console.log('2nd contract address is:');
-    console.log(chainchain2.address);
-    const cadd2 = `0x${chainchain2.address}`;
-
-    // Instance of class Contract 3
-    const contract3 = contractFactory.new(code3, init);
-    // Deploy contract 3
-    const [deployTx3, chainchain3] = await contract3.deploy(
-      {
-        version: VERSION,
-        gasPrice: units.toQa('1000', units.Units.Li), // Minimum gasPrice measured in Li, converting to Qa.
-        gasLimit: Long.fromNumber(10000),
-      },
-      38,
-      1000,
-    );
-
-    // Introspect the state of the underlying transaction
-    console.log('Deployment 3 Transaction ID: ', deployTx3.id);
-    console.log(
-      'Deployment 3 Transaction Receipt: ',
-      deployTx3.txParams.receipt,
-    );
-
-    // Get the deployed contract address
-    console.log('3rd contract address is:');
-    console.log(chainchain3.address);
-    const cadd3 = `0x${chainchain3.address}`;
-
-    // setAdd in contract 1 for contract 2
-    const callTx1 = await chainchain1.call(
-      'setAdd',
-      [
+      const init = [
+        // this parameter is mandatory for all init arrays
         {
-          vname: 'currentContractAdd',
-          type: 'ByStr20',
-          value: cadd2,
+          vname: '_scilla_version',
+          type: 'Uint32',
+          value: '0',
         },
-      ],
-      {
-        // version, amount, gasPrice and gasLimit must be explicitly provided
-        version: VERSION,
-        amount: new BN(0),
-        gasPrice: units.toQa('1000', units.Units.Li), // Minimum gasPrice measured in Li, converting to Qa.
-        gasLimit: Long.fromNumber(8000),
-      },
-      38,
-      1000,
-      true,
-    );
-
-    // Get the call txn info
-    console.log('SetAdd_A Call Transaction ID: ', callTx1.id);
-    console.log(
-      'SetAdd_A Call Transaction Receipt: ',
-      callTx1.txParams.receipt,
-    );
-
-    // Get the final contract state
-    const state1 = await chainchain1.getState();
-    console.log('The state of the contract 1 is:');
-    console.log(state1);
-
-    // setAdd in contract 2 for contract 3
-    const callTx2 = await chainchain2.call(
-      'setAdd',
-      [
         {
-          vname: 'currentContractAdd',
+          vname: 'owner',
           type: 'ByStr20',
-          value: cadd3,
+          // NOTE: all byte strings passed to Scilla contracts _must_ be
+          // prefixed with 0x. Failure to do so will result in the network
+          // rejecting the transaction while consuming gas!
+          value: `0x${process.env.GENESIS_ADDRESS}`,
         },
-      ],
-      {
-        // version, amount, gasPrice and gasLimit must be explicitly provided
-        version: VERSION,
-        amount: new BN(0),
-        gasPrice: units.toQa('1000', units.Units.Li), // Minimum gasPrice measured in Li, converting to Qa.
-        gasLimit: Long.fromNumber(8000),
-      },
-      38,
-      1000,
-      true,
-    );
+      ];
 
-    // Get the call txn info
-    console.log('SetAdd_B Call Transaction ID: ', callTx2.id);
-    console.log(
-      'SetAdd_B Call Transaction Receipt: ',
-      callTx2.txParams.receipt,
-    );
+      // Instance of class Contract 1
+      const contract1 = contractFactory.new(code1, init);
 
-    // Get the final contract state
-    const state2 = await chainchain2.getState();
-    console.log('The state of the contract 2 is:');
-    console.log(state2);
+      // Deploy contract 1
+      const [deployTx1, chainchain1] = await contract1.deploy(
+        {
+          version: VERSION,
+          gasPrice: units.toQa('1000', units.Units.Li), // Minimum gasPrice measured in Li, converting to Qa.
+          gasLimit: Long.fromNumber(10000),
+        },
+        38,
+        1000,
+      );
 
-    // Initial deposit in contract 1
-    const callTx3 = await chainchain1.call(
-      'deposit',
-      [],
-      {
-        // version, amount, gasPrice and gasLimit must be explicitly provided
-        version: VERSION,
-        amount: units.toQa('10000', units.Units.Zil),
-        gasPrice: units.toQa('1000', units.Units.Li), // Minimum gasPrice measured in Li, converting to Qa.
-        gasLimit: Long.fromNumber(8000),
-      },
-      38,
-      1000,
-      true,
-    );
+      // Introspect the state of the underlying transaction
+      console.log('Deployment 1 Transaction ID: ', deployTx1.id);
+      console.log(
+        'Deployment 1 Transaction Receipt: ',
+        deployTx1.txParams.receipt,
+      );
 
-    // Get the call txn info
-    console.log('Deposit_A Call Transaction ID: ', callTx3.id);
-    console.log(
-      'Deposit_A Call Transaction Receipt: ',
-      callTx3.txParams.receipt,
-    );
+      // Get the deployed contract address
+      console.log('1st contract address is:');
+      console.log(chainchain1.address);
+      // const cadd1 = `0x${chainchain1.address}`;
 
-    // Get the final contract state
-    const state3 = await chainchain1.getState();
-    console.log('The state of the contract is:');
-    console.log(state3);
+      // Instance of class Contract 2
+      const contract2 = contractFactory.new(code2, init);
+      // Deploy contract 2
+      const [deployTx2, chainchain2] = await contract2.deploy(
+        {
+          version: VERSION,
+          gasPrice: units.toQa('1000', units.Units.Li), // Minimum gasPrice measured in Li, converting to Qa.
+          gasLimit: Long.fromNumber(10000),
+        },
+        38,
+        1000,
+      );
 
-    // Chain calls (Transfer1 in C1 -> Transfer2 in C2 -> Transfer3 in C3)
-    const callTx4 = await chainchain1.call(
-      'Transfer1',
-      [],
-      {
-        // version, amount, gasPrice and gasLimit must be explicitly provided
-        version: VERSION,
-        amount: new BN(0),
-        gasPrice: units.toQa('1000', units.Units.Li), // Minimum gasPrice measured in Li, converting to Qa.
-        gasLimit: Long.fromNumber(8000),
-      },
-      38,
-      1000,
-      true,
-    );
+      // Introspect the state of the underlying transaction
+      console.log('Deployment 2 Transaction ID: ', deployTx2.id);
+      console.log(
+        'Deployment 2 Transaction Receipt: ',
+        deployTx2.txParams.receipt,
+      );
 
-    // Get the call txn info
-    console.log('Transfer Chain-Call Transaction ID: ', callTx4.id);
-    console.log(
-      'Transfer Chain-Call Transaction Receipt: ',
-      callTx4.txParams.receipt,
-    );
+      // Get the deployed contract address
+      console.log('2nd contract address is:');
+      console.log(chainchain2.address);
+      const cadd2 = `0x${chainchain2.address}`;
 
-    // Get the final contract state
-    // _balance should be 100
-    const state4 = await chainchain1.getState();
-    const state4Balance = getContractBalance(state4);
-    console.log('The end state of the contract A is:');
-    console.log(state4);
-    expect(state4Balance).toEqual(100);
+      // Instance of class Contract 3
+      const contract3 = contractFactory.new(code3, init);
+      // Deploy contract 3
+      const [deployTx3, chainchain3] = await contract3.deploy(
+        {
+          version: VERSION,
+          gasPrice: units.toQa('1000', units.Units.Li), // Minimum gasPrice measured in Li, converting to Qa.
+          gasLimit: Long.fromNumber(10000),
+        },
+        38,
+        1000,
+      );
 
-    // _balance should be 150
-    const state5 = await chainchain2.getState();
-    const state5Balance = getContractBalance(state5);
-    console.log('The end state of the contract B is:');
-    console.log(state5);
-    expect(state5Balance).toEqual(150);
+      // Introspect the state of the underlying transaction
+      console.log('Deployment 3 Transaction ID: ', deployTx3.id);
+      console.log(
+        'Deployment 3 Transaction Receipt: ',
+        deployTx3.txParams.receipt,
+      );
 
-    // _balance should be 100
-    const state6 = await chainchain3.getState();
-    const state6Balance = getContractBalance(state6);
-    console.log('The end state of the contract C is:');
-    console.log(state6);
-    expect(state6Balance).toEqual(100);
-  } catch (err) {
-    console.log(err);
-  }
+      // Get the deployed contract address
+      console.log('3rd contract address is:');
+      console.log(chainchain3.address);
+      const cadd3 = `0x${chainchain3.address}`;
+
+      // setAdd in contract 1 for contract 2
+      const callTx1 = await chainchain1.call(
+        'setAdd',
+        [
+          {
+            vname: 'currentContractAdd',
+            type: 'ByStr20',
+            value: cadd2,
+          },
+        ],
+        {
+          // version, amount, gasPrice and gasLimit must be explicitly provided
+          version: VERSION,
+          amount: new BN(0),
+          gasPrice: units.toQa('1000', units.Units.Li), // Minimum gasPrice measured in Li, converting to Qa.
+          gasLimit: Long.fromNumber(8000),
+        },
+        38,
+        1000,
+        true,
+      );
+
+      // Get the call txn info
+      console.log('SetAdd_A Call Transaction ID: ', callTx1.id);
+      console.log(
+        'SetAdd_A Call Transaction Receipt: ',
+        callTx1.txParams.receipt,
+      );
+
+      // Get the final contract state
+      const state1 = await chainchain1.getState();
+      console.log('The state of the contract 1 is:');
+      console.log(state1);
+
+      // setAdd in contract 2 for contract 3
+      const callTx2 = await chainchain2.call(
+        'setAdd',
+        [
+          {
+            vname: 'currentContractAdd',
+            type: 'ByStr20',
+            value: cadd3,
+          },
+        ],
+        {
+          // version, amount, gasPrice and gasLimit must be explicitly provided
+          version: VERSION,
+          amount: new BN(0),
+          gasPrice: units.toQa('1000', units.Units.Li), // Minimum gasPrice measured in Li, converting to Qa.
+          gasLimit: Long.fromNumber(8000),
+        },
+        38,
+        1000,
+        true,
+      );
+
+      // Get the call txn info
+      console.log('SetAdd_B Call Transaction ID: ', callTx2.id);
+      console.log(
+        'SetAdd_B Call Transaction Receipt: ',
+        callTx2.txParams.receipt,
+      );
+
+      // Get the final contract state
+      const state2 = await chainchain2.getState();
+      console.log('The state of the contract 2 is:');
+      console.log(state2);
+
+      // Initial deposit in contract 1
+      const callTx3 = await chainchain1.call(
+        'deposit',
+        [],
+        {
+          // version, amount, gasPrice and gasLimit must be explicitly provided
+          version: VERSION,
+          amount: units.toQa('10000', units.Units.Zil),
+          gasPrice: units.toQa('1000', units.Units.Li), // Minimum gasPrice measured in Li, converting to Qa.
+          gasLimit: Long.fromNumber(8000),
+        },
+        38,
+        1000,
+        true,
+      );
+
+      // Get the call txn info
+      console.log('Deposit_A Call Transaction ID: ', callTx3.id);
+      console.log(
+        'Deposit_A Call Transaction Receipt: ',
+        callTx3.txParams.receipt,
+      );
+
+      // Get the final contract state
+      const state3 = await chainchain1.getState();
+      console.log('The state of the contract is:');
+      console.log(state3);
+
+      // Chain calls (Transfer1 in C1 -> Transfer2 in C2 -> Transfer3 in C3)
+      const callTx4 = await chainchain1.call(
+        'Transfer1',
+        [],
+        {
+          // version, amount, gasPrice and gasLimit must be explicitly provided
+          version: VERSION,
+          amount: new BN(0),
+          gasPrice: units.toQa('1000', units.Units.Li), // Minimum gasPrice measured in Li, converting to Qa.
+          gasLimit: Long.fromNumber(8000),
+        },
+        38,
+        1000,
+        true,
+      );
+
+      // Get the call txn info
+      console.log('Transfer Chain-Call Transaction ID: ', callTx4.id);
+      console.log(
+        'Transfer Chain-Call Transaction Receipt: ',
+        callTx4.txParams.receipt,
+      );
+
+      // Get the final contract state
+      // _balance should be 100
+      const state4 = await chainchain1.getState();
+      const state4Balance = getContractBalance(state4);
+      console.log('The end state of the contract A is:');
+      console.log(state4);
+      expect(state4Balance).toEqual(100);
+
+      // _balance should be 150
+      const state5 = await chainchain2.getState();
+      const state5Balance = getContractBalance(state5);
+      console.log('The end state of the contract B is:');
+      console.log(state5);
+      expect(state5Balance).toEqual(150);
+
+      // _balance should be 100
+      const state6 = await chainchain3.getState();
+      const state6Balance = getContractBalance(state6);
+      console.log('The end state of the contract C is:');
+      console.log(state6);
+      expect(state6Balance).toEqual(100);
+    } catch (err) {
+      console.log(err);
+    }
+  });
 });
