@@ -416,7 +416,7 @@ describe('Contract: Simple DEX', () => {
         gasPrice: new BN(1000000000),
         gasLimit: Long.fromNumber(100000),
       },
-      33,
+      38,
       1000,
       true,
     );
@@ -674,6 +674,7 @@ describe('Contract: ChainCall', async () => {
       },
       38,
       1000,
+      true,
     );
 
     // Get the call txn info
@@ -707,6 +708,7 @@ describe('Contract: ChainCall', async () => {
       },
       38,
       1000,
+      true,
     );
 
     // Get the call txn info
