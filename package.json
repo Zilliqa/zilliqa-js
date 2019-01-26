@@ -13,7 +13,7 @@
     "schema": "ts-node -P scripts/tsconfig.json scripts/schema.ts core",
     "test": "cross-env TEST_ENV=unit jest -c jest.config.js --rootDir=.",
     "test:build": "cross-env TEST_ENV=unit jest -c jest.build.config.js",
-    "test:integration": "cross-env TEST_ENV=integration jest -c jest.iconfig.js --runInBand --verbose",
+    "test:integration": "cross-env TEST_ENV=integration jest -c jest.iconfig.js --runInBand --verbose --collectCoverage=false",
     "release": "yarn bootstrap && yarn bundle && lerna publish --exact",
     "format": "prettier --write '**/*.{ts,tsx,js}' --config .prettierrc"
   },
