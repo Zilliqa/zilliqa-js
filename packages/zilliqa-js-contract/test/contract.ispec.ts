@@ -685,7 +685,7 @@ describe('Contract: HWGC', async () => {
         callTx1.txParams.receipt,
       );
 
-      // Get the final contract state
+      // Get the contract A setAdd state
       const state1 = await chainchain1.getState();
       console.log('The state of the contract 1 is:');
       console.log(state1);
@@ -719,7 +719,7 @@ describe('Contract: HWGC', async () => {
         callTx2.txParams.receipt,
       );
 
-      // Get the final contract state
+      // Get the contract B setAdd state
       const state2 = await chainchain2.getState();
       console.log('The state of the contract 2 is:');
       console.log(state2);
@@ -731,7 +731,7 @@ describe('Contract: HWGC', async () => {
         {
           // version, amount, gasPrice and gasLimit must be explicitly provided
           version: VERSION,
-          amount: units.toQa('10000', units.Units.Zil),
+          amount: new BN(10000),
           gasPrice: units.toQa('1000', units.Units.Li), // Minimum gasPrice measured in Li, converting to Qa.
           gasLimit: Long.fromNumber(8000),
         },
@@ -747,7 +747,7 @@ describe('Contract: HWGC', async () => {
         callTx3.txParams.receipt,
       );
 
-      // Get the final contract state
+      // Get the contract A deposit state
       const state3 = await chainchain1.getState();
       console.log('The state of the contract is:');
       console.log(state3);
@@ -775,27 +775,27 @@ describe('Contract: HWGC', async () => {
         callTx4.txParams.receipt,
       );
 
-      // Get the final contract state
-      // _balance should be 100
+      // Get the final contracts' states
+      // _balance should be 9000
       const state4 = await chainchain1.getState();
       const state4Balance = getContractBalance(state4);
       console.log('The end state of the contract A is:');
       console.log(state4);
-      expect(state4Balance).toEqual(100);
+      expect(state4Balance).toEqual(9000);
 
-      // _balance should be 150
+      // _balance should be 1000
       const state5 = await chainchain2.getState();
       const state5Balance = getContractBalance(state5);
       console.log('The end state of the contract B is:');
       console.log(state5);
-      expect(state5Balance).toEqual(150);
+      expect(state5Balance).toEqual(1000);
 
-      // _balance should be 100
+      // _balance should be 0
       const state6 = await chainchain3.getState();
       const state6Balance = getContractBalance(state6);
       console.log('The end state of the contract C is:');
       console.log(state6);
-      expect(state6Balance).toEqual(100);
+      expect(state6Balance).toEqual(0);
     } catch (err) {
       console.log(err);
     }
