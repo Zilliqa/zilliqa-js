@@ -221,7 +221,8 @@ transition Allowance (tokenOwner : ByStr20, spender : ByStr20)
   end
 end`;
 
-export const simpleDEX = `scilla_version 0
+export const simpleDEX = `
+scilla_version 0
 
 import PairUtils
 
@@ -232,49 +233,23 @@ import PairUtils
 library SimpleDex
 
 (* Pair helpers *)
-let fst_pair = @fst (Pair (ByStr20) (Uint128)) (Pair(ByStr20) (Uint128))
-let snd_pair = @snd (Pair (ByStr20) (Uint128)) (Pair(ByStr20) (Uint128))
 let getAddressFromPair = @fst (ByStr20) (Uint128)
 let getValueFromPair = @snd (ByStr20) (Uint128)
 
 (* Event for errors *)
-let make_event =
-  fun (label: String) =>
+let make_error_event =
   fun (location: String) =>
   fun (msg: String) =>
-    { _eventname : label ; raisedAt: location; message: msg}
+    { _eventname : "Error" ; raisedAt: location; message: msg}
+
+(* Order = { tokenA, valueA, tokenB, valueB } *)
+type Order =
+| Order of ByStr20 Uint128 ByStr20 Uint128
 
 (* Create an orderID based on the hash of the parameters *)
 let createOrderId = 
-  fun (tokenA : ByStr20) =>
-  fun (tokenB : ByStr20) =>
-  fun (valueA: Uint128) =>
-  fun (valueB: Uint128) =>
-  fun (expirationBlock: BNum) =>
-    let hashTokenA = builtin sha256hash tokenA in
-    let hashTokenB = builtin sha256hash tokenB in
-    let hashValueA = builtin sha256hash valueA in
-    let hashValueB = builtin sha256hash valueB in
-    let hashBlock = builtin sha256hash expirationBlock in
-    let nil_list = Nil {ByStr32} in
-    let l1 = Cons {ByStr32} hashTokenA nil_list in
-    let l2 = Cons {ByStr32} hashValueA l1 in
-    let l3 = Cons {ByStr32} hashTokenB l2 in
-    let l4 = Cons {ByStr32} hashValueB l3 in
-    let l5 = Cons {ByStr32} hashBlock l4 in
-    builtin sha256hash l5
-
-(* Creates order "struct" *)
-let createOrder =
-  fun (tokenA : ByStr20) =>
-  fun (tokenB : ByStr20) =>
-  fun (valueA: Uint128) =>
-  fun (valueB: Uint128) =>
-    let p1 = Pair{ByStr20 Uint128} tokenA valueA in
-    let p2 = Pair{ByStr20 Uint128} tokenB valueB in
-    let finalPair = Pair { (Pair(ByStr20)(Uint128)) (Pair(ByStr20)(Uint128))} p1 p2 in
-    finalPair
-
+  fun (order: Order) =>
+    builtin sha256hash order
 
 (* Create one transaction message *)
 let transaction_msg =
@@ -304,25 +279,16 @@ let transaction_msg_as_list =
 (* If no existing records are found, return incomingTokensAmt *)
 (* else, return incomingTokenAmt + existing value *)
 let computePendingReturnsVal =
-  fun ( pendingReturns : Map (ByStr20) (Map ByStr20 Uint128) ) =>
+  fun ( prevVal : Option Uint128 ) =>
   fun ( incomingTokensAmt : Uint128 ) =>
-  fun ( incomingTokenAddr: ByStr20 ) =>
-  fun ( recipientAddr: ByStr20 ) =>
-    let zero = Uint128 0 in
-    let map1  = builtin get pendingReturns recipientAddr in
-    match map1 with
+    match prevVal with
     | Some v =>
-      let prevVal = builtin get v incomingTokenAddr in
-      match prevVal with
-      | None => incomingTokensAmt
-      | Some value =>
-        builtin add value incomingTokensAmt
-      end
-    | None => incomingTokensAmt
+      builtin add v incomingTokensAmt
+    | None =>
+      incomingTokensAmt
     end
 
 let success = "Success"
-let error = "Error"
 
 (***************************************************)
 (*             The contract definition             *)
@@ -331,16 +297,13 @@ let error = "Error"
 contract SimpleDex
 (contractOwner: ByStr20)
 
-field contractAddress: Option ByStr20 = None {ByStr20}
-
 (* Orderbook: mapping (orderIds => ( (tokenA, valueA) (tokenB, valueB) )) *)
 (* @param: tokenA: Contract address of token A *)
 (* @param: valueA: total units of token A offered by maker *)
 (* @param: tokenB: Contract address of token B *)
 (* @param: valueB: total units of token B requsted by maker *)
-field orderbook : Map ByStr32 ( Pair ( Pair (ByStr20) (Uint128)) ( Pair (ByStr20) (Uint128)))
-                  = Emp ByStr32 ( Pair( Pair (ByStr20) (Uint128)) ( Pair (ByStr20) (Uint128)))
-
+field orderbook : Map ByStr32 Order
+                  = Emp ByStr32 Order
 (* Order info stores the mapping ( orderId => (tokenOwnerAddress, expirationBlock)) *)
 field orderInfo : Map ByStr32 (Pair (ByStr20)(BNum)) = Emp ByStr32 (Pair (ByStr20) (BNum))
 
@@ -356,38 +319,27 @@ transition makeOrder(tokenA: ByStr20, valueA: Uint128, tokenB: ByStr20, valueB: 
                           builtin blt minExpiration expirationBlock;
   match validExpirationBlock with
   | True =>
-    getContractAddress <- contractAddress;
-    match getContractAddress with
-    | Some cAddress =>
-      (* Creates a new order *)
-      newOrder = createOrder tokenA tokenB valueA valueB;
-      orderId = createOrderId tokenA tokenB valueA valueB expirationBlock;
-      orderbook[orderId] := newOrder;
+    (* Creates a new order *)
+    newOrder = Order tokenA valueA tokenB valueB;
+    orderId = createOrderId newOrder;
+    orderbook[orderId] := newOrder;
 
-      (* Updates orderInfo with maker's address and expiration blocknumber *)
-      p = Pair {(ByStr20) (BNum)} _sender expirationBlock; 
-      orderInfo[orderId] := p;
+    (* Updates orderInfo with maker's address and expiration blocknumber *)
+    p = Pair {(ByStr20) (BNum)} _sender expirationBlock; 
+    orderInfo[orderId] := p;
 
-      e = {_eventname: "Order Created"; hash: orderId };
-      event e;
+    e = {_eventname: "Order Created"; hash: orderId };
+    event e;
 
-      (* Transfer tokens from _sender to the contract address  *)
-      msgs = let tag = "TransferFrom" in 
-             let zero = Uint128 0 in
-             transaction_msg_as_list tokenA tag _sender cAddress valueA;
-      send msgs
-    | None =>
-      (* contract address not found *)
-      e = let func = "makeOrder" in
-          let error_msg = "Contract address not initialized" in 
-          make_event error func error_msg;
-      event e
-    end
-
+    (* Transfer tokens from _sender to the contract address  *)
+    msgs = let tag = "TransferFrom" in 
+           let zero = Uint128 0 in
+           transaction_msg_as_list tokenA tag _sender _this_address valueA;
+    send msgs
   | False =>
     e = let func = "makeOrder" in
         let error_msg = "Expiration block must be at least 50 blocks more than current block" in 
-        make_event error func error_msg;
+        make_error_event func error_msg;
     event e
   end
 end
@@ -395,100 +347,78 @@ end
 
 (* Taker fills an order *)
 transition fillOrder(orderId: ByStr32)
-  getContractAddress <- contractAddress;
-  match getContractAddress with
-  | Some cAddress =>
-    getOrder <- orderbook[orderId];
-    match getOrder with
-    | Some order =>
-      (* Check the expiration block *)
-      optionOrderInfo <- orderInfo[orderId];
-      match optionOrderInfo with
-      | Some info =>
-        currentBlock <- & BLOCKNUMBER;
-        blockBeforeExpiration = let getBNum = @snd (ByStr20) (BNum) in
-                                let expirationBlock = getBNum info in
-                                builtin blt currentBlock expirationBlock;
-        match blockBeforeExpiration with
-        | True =>
-          bids = fst_pair order;
-          asks = snd_pair order;
-          tokenA = getAddressFromPair bids;
-          valueA = getValueFromPair bids;
-          tokenB = getAddressFromPair asks;
-          valueB = getValueFromPair asks;
-          makerAddr = let getMakerAddr = @fst (ByStr20)(BNum) in
-                      getMakerAddr info; 
-          (* Updates taker with the tokens that he is entitled to claim *)
-          pr <- pendingReturns;
-          takerAmt = computePendingReturnsVal pr valueA tokenA _sender;
-          pendingReturns[_sender][tokenA] := takerAmt;
+  getOrder <- orderbook[orderId];
+  match getOrder with
+  | Some (Order tokenA valueA tokenB valueB)=>
+    (* Check the expiration block *)
+    optionOrderInfo <- orderInfo[orderId];
+    match optionOrderInfo with
+    | Some info =>
+      currentBlock <- & BLOCKNUMBER;
+      blockBeforeExpiration = let getBNum = @snd (ByStr20) (BNum) in
+                              let expirationBlock = getBNum info in
+                              builtin blt currentBlock expirationBlock;
+      match blockBeforeExpiration with
+      | True =>
+        makerAddr = let getMakerAddr = @fst (ByStr20)(BNum) in
+                    getMakerAddr info; 
+        (* Updates taker with the tokens that he is entitled to claim *)
+        prevVal <- pendingReturns[_sender][tokenA];
+        takerAmt = computePendingReturnsVal prevVal valueA;
+        pendingReturns[_sender][tokenA] := takerAmt;
 
-          pr2 <- pendingReturns;
-          makerAmt = computePendingReturnsVal pr2 valueB tokenB makerAddr ;
-          pendingReturns[makerAddr][tokenB] := makerAmt;
-          
-          (* Delete orders from the orderbook and orderinfo *)
-          delete orderInfo[orderId];
-          delete orderbook[orderId];
+        prevVal <- pendingReturns[makerAddr][tokenB];
+        makerAmt = computePendingReturnsVal prevVal valueB;
+        pendingReturns[makerAddr][tokenB] := makerAmt;
+        
+        (* Delete orders from the orderbook and orderinfo *)
+        delete orderInfo[orderId];
+        delete orderbook[orderId];
 
-          e = {_eventname: "Order Filled"; hash: orderId };
-          event e;
-          (* Transfer tokens from _sender to the contract address  *)
-          msgs = let tag = "TransferFrom" in 
-                 transaction_msg_as_list tokenB tag _sender cAddress valueB;
-          send msgs
-        | False =>
-          e = let func = "fillOrder" in
-              let error_msg = "Current block number exceeds the expiration block set" in 
-              make_event error func error_msg;
-          event e
-        end
-      | None => 
+        e = {_eventname: "Order Filled"; hash: orderId };
+        event e;
+        (* Transfer tokens from _sender to the contract address  *)
+        msgs = let tag = "TransferFrom" in 
+               transaction_msg_as_list tokenB tag _sender _this_address valueB;
+        send msgs
+      | False =>
         e = let func = "fillOrder" in
-            let error_msg = "OrderId not found" in 
-            make_event error func error_msg;
+            let error_msg = "Current block number exceeds the expiration block set" in 
+            make_error_event func error_msg;
         event e
       end
-    | None =>
+    | None => 
       e = let func = "fillOrder" in
           let error_msg = "OrderId not found" in 
-          make_event error func error_msg;
+          make_error_event func error_msg;
       event e
     end
   | None =>
-      (* contract address not found *)
-      e = let func = "makeOrder" in
-          let error_msg = "Contract address not initialized" in 
-          make_event error func error_msg;
-      event e
+    e = let func = "fillOrder" in
+        let error_msg = "OrderId not found" in 
+        make_error_event func error_msg;
+    event e
   end
 end
 
 
 (* Allows users to claim back their tokens from the smart contract *)
 transition ClaimBack(token: ByStr20)
-  getCurrentAddress <- contractAddress;
-  match getCurrentAddress with
-  | Some cAddress =>
-    getAmtOutstanding <- pendingReturns[_sender][token];
-    match getAmtOutstanding with
-    | Some amtOutstanding =>
-        delete pendingReturns[_sender][token];
-        e = {_eventname: "Claimback Successful"; caller: _sender; tokenAddr: token; amt: amtOutstanding };
-        event e;
-        (* Transfer tokens from _sender to the contract address  *)
-        msgs = let tag = "TransferFrom" in 
-               transaction_msg_as_list token tag cAddress _sender amtOutstanding;
-        send msgs
-    | None =>
-        e = let func = "claimBack" in
-            let error_msg = "No Pending Returns for Sender and Contract Address found" in 
-            make_event error func error_msg;
-        event e
-    end
+  getAmtOutstanding <- pendingReturns[_sender][token];
+  match getAmtOutstanding with
+  | Some amtOutstanding =>
+      delete pendingReturns[_sender][token];
+      e = {_eventname: "Claimback Successful"; caller: _sender; tokenAddr: token; amt: amtOutstanding };
+      event e;
+      (* Transfer tokens from _sender to the contract address  *)
+      msgs = let tag = "TransferFrom" in 
+             transaction_msg_as_list token tag _this_address _sender amtOutstanding;
+      send msgs
   | None =>
-    
+      e = let func = "claimBack" in
+          let error_msg = "No Pending Returns for Sender and Contract Address found" in 
+          make_error_event func error_msg;
+      event e
   end
 end
 
@@ -506,14 +436,11 @@ transition cancelOrder(orderId: ByStr32)
         (* Sender is the maker, proceed with cancellation *)
         fetchOrder <- orderbook[orderId];
         match fetchOrder with
-        | Some order =>
-          bids = fst_pair order;
-          tokenA = getAddressFromPair bids;
-          valueA = getValueFromPair bids;
+        | Some (Order tokenA valueA _ _)=>
 
           (* Updates taker with the tokens that he is entitled to claim *)
-          pr <- pendingReturns;
-          takerAmt = computePendingReturnsVal pr valueA tokenA _sender;
+          prevVal <- pendingReturns[_sender][tokenA];
+          takerAmt = computePendingReturnsVal prevVal valueA;
           pendingReturns[_sender][tokenA] := takerAmt;
           
           (* Delete orders from the orderbook and orderinfo *)
@@ -527,7 +454,7 @@ transition cancelOrder(orderId: ByStr32)
         | None =>
           e = let func = "cancelOrder" in
               let error_msg = "OrderID not found" in 
-              make_event error func error_msg;
+              make_error_event func error_msg;
           event e
         end
 
@@ -535,45 +462,14 @@ transition cancelOrder(orderId: ByStr32)
         (* Unauthorized transaction *)
         e = let func = "cancelOrder" in
             let error_msg = "Sender is not maker of the order" in 
-            make_event error func error_msg;
+            make_error_event func error_msg;
         event e
       end
   | None =>
       (* Order ID not found *)
       e = let func = "cancelOrder" in
           let error_msg = "OrderID not found" in 
-          make_event error func error_msg;
+          make_error_event func error_msg;
       event e
-  end
-end
-
-(* Only contract owner can update the contract address *)
-transition updateContractAddress(address: ByStr20)
-  isOwner = builtin eq contractOwner _sender;
-  match isOwner with
-  | False =>
-    (* Not contract owner *)
-    e = let func = "updateContractAddress" in
-        let error_msg = "Unauthorized" in 
-        make_event error func error_msg;
-    event e
-  | True =>
-    (* Updates the contract address *)
-    currentAddress <- contractAddress;
-    match currentAddress with
-    | None =>
-      addr = Some {ByStr20} address;
-      contractAddress := addr;
-      e = let func = "updateContractAddress" in
-          let error_msg = "Contract address updated" in 
-          make_event success func error_msg;
-      event e
-    | Some v =>
-      (* Contract address can only be updated once *)
-      e = let func = "updateContractAddress" in
-          let error_msg = "Contract address has already been initialized" in 
-          make_event error func error_msg;
-      event e
-    end
   end
 end`;
