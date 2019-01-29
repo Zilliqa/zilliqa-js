@@ -238,34 +238,6 @@ describe('Contract: Simple DEX', () => {
     });
 
     [[, token1], [, token2], [, simpleDEX]] = res;
-
-    const updateContractAddress = await simpleDEX.call(
-      'updateContractAddress',
-      [
-        {
-          vname: 'address',
-          type: 'ByStr20',
-          value: `0x${simpleDEX.address}`,
-        },
-      ],
-      {
-        version: VERSION,
-        pubKey: simpleDexOwner.publicKey,
-        amount: new BN(0),
-        gasPrice: new BN(1000000000),
-        gasLimit: Long.fromNumber(5000),
-      },
-    );
-
-    if (updateContractAddress.txParams.receipt) {
-      cumulativeGasTotal += parseInt(
-        // @ts-ignore
-        updateContractAddress.txParams.receipt.cumulative_gas,
-        10,
-      );
-    }
-
-    expect(updateContractAddress.isConfirmed()).toBe(true);
   });
 
   // transfer tokens from owners to holders
