@@ -308,7 +308,10 @@ export class Blockchain implements ZilliqaModule {
   getTransactionsForTxBlock(
     txBlock: number,
   ): Promise<RPCResponse<string[][], string>> {
-    return this.provider.send(RPCMethod.GetTransactionsForTxBlock, txBlock);
+    return this.provider.send(
+      RPCMethod.GetTransactionsForTxBlock,
+      txBlock.toString(),
+    );
   }
 
   /**
