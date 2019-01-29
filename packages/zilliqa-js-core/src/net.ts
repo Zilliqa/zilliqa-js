@@ -39,6 +39,7 @@ export const enum RPCMethod {
   GetMinimumGasPrice = 'GetMinimumGasPrice',
 
   // Contract-related methods
+  GetSmartContracts = 'GetSmartContracts',
   GetSmartContractCode = 'GetSmartContractCode',
   GetSmartContractInit = 'GetSmartContractInit',
   GetSmartContractState = 'GetSmartContractState',

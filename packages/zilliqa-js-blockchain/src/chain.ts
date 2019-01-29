@@ -1,4 +1,5 @@
 import { Transaction, Wallet, util } from '@zilliqa-js/account';
+import { ContractObj, Value } from '@zilliqa-js/contract';
 import {
   GET_TX_ATTEMPTS,
   sign,
@@ -6,6 +7,7 @@ import {
   ZilliqaModule,
   RPCResponse,
   RPCMethod,
+  BlockchainInfo,
   DsBlockObj,
   BlockList,
   TxBlockObj,
@@ -32,10 +34,19 @@ export class Blockchain implements ZilliqaModule {
   /**
    * getBlockChainInfo
    *
+   * @returns {Promise<RPCResponse<BlockchainInfo, string>>}
+   */
+  getBlockChainInfo(): Promise<RPCResponse<BlockchainInfo, string>> {
+    return this.provider.send(RPCMethod.GetBlockchainInfo);
+  }
+
+  /**
+   * getShardingStructure
+   *
    * @returns {Promise<RPCResponse<ShardingStructure, string>>}
    */
-  getBlockChainInfo(): Promise<RPCResponse<ShardingStructure, string>> {
-    return this.provider.send(RPCMethod.GetBlockchainInfo);
+  getShardingStructure(): Promise<RPCResponse<ShardingStructure, string>> {
+    return this.provider.send(RPCMethod.GetShardingStructure);
   }
 
   /**
@@ -359,5 +370,66 @@ export class Blockchain implements ZilliqaModule {
    */
   getBalance(address: string): Promise<RPCResponse<any, string>> {
     return this.provider.send(RPCMethod.GetBalance, address);
+  }
+
+  /**
+   * getSmartContractCode
+   *
+   * @param {string} address
+   * @returns {Promise<RPCResponse< code: string }, string>>}
+   */
+  getSmartContractCode(
+    address: string,
+  ): Promise<RPCResponse<{ code: string }, string>> {
+    return this.provider.send(RPCMethod.GetSmartContractCode, address);
+  }
+
+  /**
+   * getSmartContractInit
+   *
+   * @param {string} address
+   * @returns {Promise<RPCResponse<Value[], string>>}
+   */
+  getSmartContractInit(address: string): Promise<RPCResponse<Value[], string>> {
+    return this.provider.send(RPCMethod.GetSmartContractInit, address);
+  }
+
+  /**
+   * getSmartContractState
+   *
+   * @param {string} address
+   * @returns {Promise<RPCResponse<Value[], string>>}
+   */
+  getSmartContractState(
+    address: string,
+  ): Promise<RPCResponse<Value[], string>> {
+    return this.provider.send(RPCMethod.GetSmartContractState, address);
+  }
+
+  /**
+   * getSmartContracts
+   *
+   * @param {string} address
+   * @returns {Promise<RPCResponse<Omit<ContractObj, 'init' | 'abi'>, string>>}
+   */
+  getSmartContracts(
+    address: string,
+  ): Promise<RPCResponse<Omit<ContractObj, 'init' | 'abi'>, string>> {
+    return this.provider.send(RPCMethod.GetSmartContracts, address);
+  }
+
+  /**
+   * getContractAddressFromTransactionID
+   *
+   * @param {string} txHash
+   * @returns {Promise<RPCResponse<string, string>>}
+   */
+  getContractAddressFromTransactionID(
+    txHash: string,
+  ): Promise<RPCResponse<string, string>> {
+    return this.provider.send(
+      RPCMethod.GetContractAddressFromTransactionID,
+      txHash,
+    );
   }
 }
