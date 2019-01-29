@@ -24,6 +24,7 @@ interface TxParams {
   signature?: string;
 }
 ```
+When you give `nonce`, you should give `pubKey` together.
 
 # Classes
 
