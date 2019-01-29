@@ -63,7 +63,7 @@ const MSG_VERSION = 1;
 const VERSION = bytes.pack(CHAIN_ID, MSG_VERSION);
 
 // Populate the wallet with an account
-privkey = '3375F915F3F9AE35E6B301B7670F53AD1A5BE15D8221EC7FD5E503F21D3450C8';
+const privkey = '3375F915F3F9AE35E6B301B7670F53AD1A5BE15D8221EC7FD5E503F21D3450C8';
 
 zilliqa.wallet.addByPrivateKey(
   privkey
@@ -88,7 +88,7 @@ async function testBlockchain() {
     console.log('Sufficient Gas Price?');
     console.log(myGasPrice.gte(new BN(minGasPrice.result))); // Checks if your gas price is less than the minimum gas price
 
-    //Send a transaction to the network
+    // Send a transaction to the network
     const tx = await zilliqa.blockchain.createTransaction(
       zilliqa.transactions.new({
         version: VERSION,
