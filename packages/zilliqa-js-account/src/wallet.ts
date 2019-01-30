@@ -111,7 +111,7 @@ export class Wallet extends Signer {
     }
     const seed = bip39.mnemonicToSeed(phrase);
     const hdKey = hdkey.fromMasterSeed(seed);
-    const childKey = hdKey.derive(`m/44'/8888'/0'/0/${index}`);
+    const childKey = hdKey.derive(`m/44'/313'/0'/0/${index}`);
     const privateKey = childKey.privateKey.toString('hex');
 
     return this.addByPrivateKey(privateKey);
