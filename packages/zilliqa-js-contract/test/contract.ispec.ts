@@ -6,7 +6,7 @@ import { Contracts, Contract, ContractStatus, Value } from '../src/index';
 import { testContract, zrc20, simpleDEX as dex } from './fixtures';
 
 // testnet chain_id is always 2
-const CHAIN_ID = 2;
+const CHAIN_ID: number = parseInt(process.env.CHAIN_ID as string, 10);
 const MSG_VERSION = 1;
 const VERSION = bytes.pack(CHAIN_ID, MSG_VERSION);
 const MIN_GAS_PRICE = new BN(1000000000);
