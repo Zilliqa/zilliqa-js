@@ -38,16 +38,16 @@ describe('Wallet', () => {
     expect(Object.keys(wallet.accounts).length).toEqual(10);
     expect(Object.keys(wallet.accounts).sort()).toEqual(addresses.sort());
     expect(Object.keys(wallet.accounts).sort()).toEqual([
-      '01d12dc972d0c5c8c32d356944926cd43f627efc',
-      '02346211a65964e35b05adae342ff966baec7ba4',
-      '24729a40ebb8b42550276b44a3a7dc81645c972d',
-      '3093240469df6ae2c2a25883b550f0677a689da4',
-      '546c5dda129fb0d352c5de66f32d8d0e4bc89041',
-      '64f0d859455b45947c6a8c22ce73bf3ec90fdb9d',
-      '6ecdec7d36071ae28f00b4067167c3a75c87be20',
-      'cd1eb2531cc4abf0b19a5163c2fa16b1cffebe87',
-      'd836fcdaa723c7ba2daba0b1898060b8dffae592',
-      'ef6f3e6c15bd0ced75a857795a5e86bd4ff50c78',
+      "0237f40d30d3c37c9b77577acbb11c972cc58664", 
+      "0723dd96243491ee84a925edb657f24582aec899", 
+      "4878d8eb9a63493a6de066eb1458cab672dc8cfd", 
+      "68275607e8bdf7cfa248b5f5a07b576f9ef39cd1", 
+      "852f52532c3c928269bdd3b83ac88e25a04d6b3b", 
+      "9165ae9ceeb155fb75d9c1fee2041f12c6e1f5ea", 
+      "aacdf9c84bba51878c8681c72f035b62135d6d7e", 
+      "bea456fb58094be1c7f99bb6d1584dcec642b0b0", 
+      "cd6cb5bc8f3ee8ff7a91b060ce341feb6fc40e21", 
+      "ecd9d875c7366432a7ce403a7702dfa3e7f09602"
     ]);
   });
 
