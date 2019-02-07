@@ -55,9 +55,9 @@ const CP = require ('@zilliqa-js/crypto');
 const zilliqa = new Zilliqa('https://api.zilliqa.com');
 
 // These are set by the core protocol, and may vary per-chain.
-// These numbers are JUST AN EXAMPLE. They will NOT WORK on the public testnet
-// or mainnet. Please check what they are before proceeding, or your
-// transactions will simply be rejected.
+// These numbers are JUST AN EXAMPLE. They will NOT WORK on the developer testnet
+// or mainnet.
+// For more information: https://apidocs.zilliqa.com/?shell#getnetworkid
 const CHAIN_ID = 2;
 const MSG_VERSION = 1;
 const VERSION = bytes.pack(CHAIN_ID, MSG_VERSION);
@@ -114,11 +114,6 @@ async function testBlockchain() {
     (***************************************************)
     library HelloWorld
 
-    let one_msg =
-      fun (msg : Message) =>
-      let nil_msg = Nil {Message} in
-      Cons {Message} msg nil_msg
-
     let not_owner_code = Int32 1
     let set_hello_code = Int32 2
 
@@ -135,14 +130,12 @@ async function testBlockchain() {
       is_owner = builtin eq owner _sender;
       match is_owner with
       | False =>
-        msg = {_tag : "Main"; _recipient : _sender; _amount : Uint128 0; code : not_owner_code};
-        msgs = one_msg msg;
-        send msgs
+        e = {_eventname : "setHello()"; code : not_owner_code};
+        event e
       | True =>
         welcome_msg := msg;
-        msg = {_tag : "Main"; _recipient : _sender; _amount : Uint128 0; code : set_hello_code};
-        msgs = one_msg msg;
-        send msgs
+        e = {_eventname : "setHello()"; code : set_hello_code};
+        event e
       end
     end
 
@@ -277,6 +270,8 @@ yarn test
 # $GENESIS_PRIV_KEY - the private key used to run transaction-related tests
 # $GENESIS_ADDRESS - the address for the private key
 # HTTP_PROVIDER - the URL of the Zilliqa JSON-RPC server
+# MNEMONIC - the seed words of the wallet account used to run transaction-related tests
+# CHAIN_ID - the chain ID of the specified network
 vim .env
 
 # run all integration tests
