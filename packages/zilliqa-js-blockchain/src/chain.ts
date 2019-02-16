@@ -238,12 +238,14 @@ export class Blockchain implements ZilliqaModule {
    * createTransaction
    *
    * Creates a transaction and polls the lookup node for a transaction
-   * receipt. If, within the timeout, no transaction is found, the transaction
-   * is considered as lost.
+   * receipt. The transaction is considered to be lost if it is not confirmed 
+   * within the timeout period.
    *
    * @param {Transaction} tx
-   * @param {number} maxAttempts - number of times to poll before timing out
-   * @returns {Promise<RPCResponse>}
+   * @param {number} maxAttempts - (optional) number of times to poll before timing out
+   * @param {number} number - (optional) interval in ms
+   * @returns {Promise<Transaction>} - the Transaction that has been signed and 
+   * broadcasted to the network.
    */
   @sign
   async createTransaction(

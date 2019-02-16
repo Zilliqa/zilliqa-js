@@ -143,6 +143,19 @@ Class that wraps http requests for blockchain-related RPC calls.
 
 ## Instance Methods
 
+### `CreateTransaction(transaction : Transaction, maxAttempts? : number, interval? : interval) : Promise<Transaction>`
+
+Creates a transaction and polls the lookup node for a transaction receipt. The transaction is considered to be lost if it is not confirmed within the timeout period.
+
+**Parameters**
+- `transaction`: `Transaction` - the transaction object
+- `attempts` (Optional - default 20): `number` - the number of times to poll the lookup node for transaction receipt.
+- `interval` (Optional - default 1000): `number` - the amount of time to wait between attempts. increases linearly (`numAttempts * interval`)
+
+**Returns** 
+
+- `Promise<Transaction>` - the Transaction that has been signed and broadcasted to the network.
+
 ### `getBlockChainInfo(): Promise<RPCResponse<ShardingStructure, string>>`
 
 Retrieves generally blockchain information, such as the number of nodes per

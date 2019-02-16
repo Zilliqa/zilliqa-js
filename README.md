@@ -52,7 +52,7 @@ const { BN, Long, bytes, units } = require('@zilliqa-js/util');
 const { Zilliqa } = require('@zilliqa-js/zilliqa');
 const CP = require ('@zilliqa-js/crypto');
 
-const zilliqa = new Zilliqa('https://api.zilliqa.com');
+const zilliqa = new Zilliqa('https://dev-api.zilliqa.com');
 
 // These are set by the core protocol, and may vary per-chain.
 // These numbers are JUST AN EXAMPLE. They will NOT WORK on the public testnet
@@ -93,11 +93,12 @@ async function testBlockchain() {
       zilliqa.transactions.new({
         version: VERSION,
         toAddr: "573EC96638C8BB1C386394602E1460634F02ADDA",
-        amount: new BN(units.toQa("888", units.Units.Zil)), // Sending an amount in Zil (888) and converting the amount to Qa
+        amount: new BN(units.toQa("1", units.Units.Zil)), // Sending an amount in Zil (1) and converting the amount to Qa
         gasPrice: myGasPrice, // Minimum gasPrice veries. Check the `GetMinimumGasPrice` on the blockchain
         gasLimit: Long.fromNumber(1)
       })
     );
+    
 
     console.log(`The transaction status is:`);
     console.log(tx.receipt);
