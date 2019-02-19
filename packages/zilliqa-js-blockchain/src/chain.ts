@@ -16,6 +16,8 @@ import {
   ShardingStructure,
 } from '@zilliqa-js/core';
 
+import { Omit } from 'utility-types';
+
 import { toTxParams } from './util';
 
 export class Blockchain implements ZilliqaModule {

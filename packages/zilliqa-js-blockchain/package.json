@@ -22,6 +22,7 @@
     "@zilliqa-js/account": "0.5.1",
     "@zilliqa-js/contract": "0.5.1",
     "@zilliqa-js/core": "0.5.0",
-    "@zilliqa-js/util": "0.5.0"
+    "@zilliqa-js/util": "0.5.0",
+    "utility-types": "^3.4.1"
   }
 }
