@@ -473,3 +473,46 @@ transition cancelOrder(orderId: ByStr32)
       event e
   end
 end`;
+
+export const touchAndPay = `
+scilla_version 0
+(* This contract implements a fungible token interface a la ERC20.*)
+(* This contract does not fire events *)
+(***************************************************)
+(*               Associated library                *)
+(***************************************************)
+library Test
+let one_msg = 
+  fun (msg : Message) => 
+  let nil_msg = Nil {Message} in
+  Cons {Message} msg nil_msg
+let touched_code = Int32 0
+(***************************************************)
+(*             The contract definition             *)
+(***************************************************)
+contract Test
+()
+field touches : Map String Bool =
+  Emp String Bool
+transition Touch(nonce: Uint64)
+  senderStr = builtin to_string _sender;
+  nonceStr = builtin to_string nonce;
+  key = builtin concat senderStr nonceStr;
+  true = True;
+  touches[key] := true;
+  msg = {_tag: "Main"; _recipient: _sender; amount: Uint128 0; code: touched_code};
+  msgs = one_msg msg;
+  send msgs
+end
+transition TouchAndPay(nonce: Uint64)
+  senderStr = builtin to_string _sender;
+  nonceStr = builtin to_string nonce;
+  key = builtin concat senderStr nonceStr;
+  true = True;
+  touches[key] := true;
+  accept;
+  msg = {_tag: "Main"; _recipient: _sender; amount: Uint128 0; code: touched_code};
+  msgs = one_msg msg;
+  send msgs
+end
+`;
