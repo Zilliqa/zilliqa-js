@@ -3,7 +3,7 @@ import { Blockchain } from '@zilliqa-js/blockchain';
 import { HTTPProvider } from '@zilliqa-js/core';
 import { BN, Long, bytes, units } from '@zilliqa-js/util';
 import { Contracts, Contract, ContractStatus, Value } from '../src/index';
-import { testContract, zrc20, simpleDEX as dex } from './fixtures';
+import { testContract, zrc20, simpleDEX as dex, touchAndPay } from './fixtures';
 
 // testnet chain_id is always 2
 const CHAIN_ID: number = parseInt(process.env.CHAIN_ID as string, 10);
@@ -19,6 +19,54 @@ const blockchain = new Blockchain(provider, wallet);
 const contractFactory = new Contracts(provider, wallet);
 
 jest.setTimeout(720000);
+
+describe('Contract: touch and pay', () => {
+  it('should fail with a receipt if data is not provided during deployment', async () => {
+    try {
+      await contractFactory.new(touchAndPay, '' as any).deploy(
+        {
+          version: VERSION,
+          gasPrice: new BN(1000000000),
+          gasLimit: Long.fromNumber(5000),
+        },
+        38,
+        1000,
+      );
+    } catch (err) {
+      expect(err).toBeDefined();
+    }
+  });
+
+  it('should not not cause subsequent transactions to fail', async () => {
+    const numTx = 5;
+    const nonceRes = await blockchain.getBalance(process.env
+      .GENESIS_ADDRESS as string);
+    const txns: any[] = [];
+
+    for (let i = nonceRes.result.nonce + 1; i <= numTx; i++) {
+      txns.push(
+        blockchain.createTransaction(
+          new Transaction(
+            {
+              version: bytes.pack(CHAIN_ID, 1),
+              toAddr: 'd11238e5fcd70c817c22922c500830d00bc1e778',
+              amount: new BN(888),
+              gasPrice: new BN(1000000000),
+              gasLimit: Long.fromNumber(1),
+              nonce: i,
+            },
+            provider,
+          ),
+        ),
+      );
+    }
+
+    const confirmations = await Promise.all(txns);
+    confirmations.forEach((conf) => {
+      expect(conf.receipt.success).toBe(true);
+    });
+  });
+});
 
 describe('Contract: hello world', () => {
   let address: string;
