@@ -44,7 +44,13 @@ export interface Field {
 export interface Value {
   vname: string;
   type: string;
-  value: string;
+  value: string | ADTValue;
+}
+
+interface ADTValue {
+  constructor: string;
+  argtypes: string[];
+  arguments: Value[];
 }
 
 export type Param = Value;
