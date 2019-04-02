@@ -212,4 +212,17 @@ export class Contract {
 
     return response.result;
   }
+
+  async getInit(): Promise<State> {
+    if (this.status !== ContractStatus.Deployed) {
+      return Promise.resolve([]);
+    }
+
+    const response = await this.provider.send(
+      'GetSmartContractInit',
+      this.address,
+    );
+
+    return response.result;
+  }
 }
