@@ -1,6 +1,6 @@
 {
   "name": "@zilliqa-js/contract",
-  "version": "0.5.1",
+  "version": "0.5.3",
   "description": "Contract-related functionality.",
   "main": "dist/index.js",
   "node": "dist/index.js",
