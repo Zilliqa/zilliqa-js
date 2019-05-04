@@ -57,12 +57,13 @@ export interface ShardingStructure {
 export interface TransactionObj {
   ID: string;
   version: string;
-  nonce: number;
+  nonce: string;
   toAddr: string;
   amount: string;
   gasPrice: string;
   gasLimit: string;
   signature: string;
+  senderPubKey: string;
   receipt: TransactionReceiptObj;
 }
 

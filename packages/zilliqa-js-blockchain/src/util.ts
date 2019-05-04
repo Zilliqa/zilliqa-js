@@ -7,10 +7,11 @@ export function toTxParams(
 ): TxParams {
   const {
     toAddr,
+    senderPubKey,
     gasPrice,
     gasLimit,
-    amount,
     nonce,
+    amount,
     receipt,
     version,
     ...rest
@@ -20,9 +21,11 @@ export function toTxParams(
     ...rest,
     version: parseInt(version, 10),
     toAddr,
+    pubKey: senderPubKey,
     gasPrice: new BN(gasPrice),
     gasLimit: Long.fromString(gasLimit, 10),
     amount: new BN(amount),
+    nonce: parseInt(nonce, 10),
     receipt: {
       ...receipt,
       cumulative_gas: parseInt(receipt.cumulative_gas, 10),
