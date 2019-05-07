@@ -1,4 +1,5 @@
 import { decodeBase58, encodeBase58 } from '../src/util';
+import { randomBytes } from '../src/random';
 import testCases from './b58.fixtures.json';
 
 describe('crypto utils', () => {
@@ -14,5 +15,11 @@ describe('crypto utils', () => {
       const actual = decodeBase58(input);
       expect(actual).toEqual(expected);
     });
+  });
+
+  it('should encode and decode to the same strings', () => {
+    const b16 = randomBytes(20);
+    const b58 = encodeBase58(b16);
+    expect(decodeBase58(b58)).toEqual(b16);
   });
 });
