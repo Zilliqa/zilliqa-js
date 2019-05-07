@@ -179,7 +179,7 @@ export const decodeBase58 = (raw: string): string => {
     return leader;
   }
 
-  let res = leader + n.toString(16);
+  let res = leader + n.toString('hex');
   if (res.length % 2 !== 0) {
     res = '0' + res;
   }
