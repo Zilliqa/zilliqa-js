@@ -5,6 +5,12 @@ export const isAddress = (address: string) => {
   return isByteString(address, 40);
 };
 
+export const isBase58 = (raw: string) => {
+  return !!raw.match(
+    /^[1-9ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]+$/,
+  );
+};
+
 export const isPrivateKey = (privateKey: string) => {
   return isByteString(privateKey, 64);
 };
