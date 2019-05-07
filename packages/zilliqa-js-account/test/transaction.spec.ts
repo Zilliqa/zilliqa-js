@@ -1,5 +1,10 @@
 import { RPCMethod, HTTPProvider } from '@zilliqa-js/core';
-import { isValidChecksumAddress, randomBytes } from '@zilliqa-js/crypto';
+import {
+  encodeBase58,
+  toChecksumAddress,
+  isValidChecksumAddress,
+  randomBytes,
+} from '@zilliqa-js/crypto';
 import { BN, Long } from '@zilliqa-js/util';
 
 import { Transaction } from '../src/transaction';
@@ -33,6 +38,26 @@ describe('Transaction', () => {
 
     // FIXME: remove 0x when this is fixed on the core side
     expect(isValidChecksumAddress(`0x${tx.txParams.toAddr}`)).toBe(true);
+  });
+
+  it('should accept base58 toAddr', () => {
+    const b16 = toChecksumAddress(randomBytes(20));
+    const b58 = encodeBase58(b16);
+
+    const tx = new Transaction(
+      {
+        version: 0,
+        toAddr: b58,
+        amount: new BN(0),
+        gasPrice: new BN(1000),
+        gasLimit: Long.fromNumber(1000),
+      },
+      provider,
+    );
+
+    // FIXME: remove 0x when this is fixed on the core side
+    expect(isValidChecksumAddress(`0x${tx.txParams.toAddr}`)).toBe(true);
+    expect(`0x${tx.txParams.toAddr}`).toEqual(b16);
   });
 
   it('should poll and call queued handlers on confirmation', async () => {
