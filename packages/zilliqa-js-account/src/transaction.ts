@@ -4,8 +4,12 @@ import {
   RPCResponse,
   Signable,
 } from '@zilliqa-js/core';
-import { getAddressFromPublicKey, toChecksumAddress } from '@zilliqa-js/crypto';
-import { BN, Long } from '@zilliqa-js/util';
+import {
+  decodeBase58,
+  getAddressFromPublicKey,
+  toChecksumAddress,
+} from '@zilliqa-js/crypto';
+import { BN, Long, validation } from '@zilliqa-js/util';
 
 import { TxParams, TxReceipt, TxStatus, TxIncluded } from './types';
 import { encodeTransactionProto, sleep } from './util';
@@ -75,7 +79,11 @@ export class Transaction implements Signable {
     return {
       version: this.version,
       // TODO: do not strip 0x after implementation on core side
-      toAddr: toChecksumAddress(this.toAddr).slice(2),
+      toAddr: toChecksumAddress(
+        validation.isBase58(this.toAddr)
+          ? decodeBase58(this.toAddr)
+          : this.toAddr,
+      ).slice(2),
       nonce: this.nonce,
       pubKey: this.pubKey,
       amount: this.amount,
@@ -112,7 +120,7 @@ export class Transaction implements Signable {
   ) {
     // private members
     this.version = params.version;
-    this.toAddr = params.toAddr.toLowerCase();
+    this.toAddr = params.toAddr;
     this.nonce = params.nonce;
     this.pubKey = params.pubKey;
     this.amount = params.amount;
