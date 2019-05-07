@@ -79,11 +79,7 @@ export class Transaction implements Signable {
     return {
       version: this.version,
       // TODO: do not strip 0x after implementation on core side
-      toAddr: toChecksumAddress(
-        validation.isBase58(this.toAddr)
-          ? decodeBase58(this.toAddr)
-          : this.toAddr,
-      ).slice(2),
+      toAddr: toChecksumAddress(this.getToAddr(this.toAddr)).slice(2),
       nonce: this.nonce,
       pubKey: this.pubKey,
       amount: this.amount,
@@ -195,6 +191,20 @@ export class Transaction implements Signable {
   setStatus(status: TxStatus) {
     this.status = status;
     return this;
+  }
+
+  getToAddr(addr: string): string {
+    let result = '';
+    if (validation.isAddress(addr)) {
+      result = addr;
+    } else if (validation.isBase58(addr)) {
+      result = decodeBase58(addr);
+    }
+    if (validation.isAddress(result)) {
+      return result;
+    } else {
+      throw new Error('Address is not correct');
+    }
   }
 
   /**
