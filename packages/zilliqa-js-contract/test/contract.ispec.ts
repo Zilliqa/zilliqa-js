@@ -470,7 +470,7 @@ describe('Contract: HWGC', async () => {
     const getContractBalance = (state: Value[]): number => {
       const [balance] = state
         .filter(({ vname }) => vname === '_balance')
-        .map(({ value }) => parseInt(value, 10));
+        .map(({ value }) => parseInt(<string>value, 10));
 
       return balance;
     };
