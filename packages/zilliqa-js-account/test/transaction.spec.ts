@@ -1,6 +1,6 @@
 import { RPCMethod, HTTPProvider } from '@zilliqa-js/core';
 import {
-  encodeBase58,
+  toBech32Address,
   toChecksumAddress,
   isValidChecksumAddress,
   randomBytes,
@@ -40,9 +40,9 @@ describe('Transaction', () => {
     expect(isValidChecksumAddress(`0x${tx.txParams.toAddr}`)).toBe(true);
   });
 
-  it('should accept base58 toAddr', () => {
+  it('should accept bech32 toAddr', () => {
     const b16 = toChecksumAddress(randomBytes(20));
-    const b58 = encodeBase58(b16);
+    const b58 = toBech32Address(b16);
 
     const tx = new Transaction(
       {
