@@ -36,4 +36,12 @@ describe('addresses', () => {
       expect(actual).toBeFalsy();
     });
   });
+
+  it('should encode and decode to and from bech32', () => {
+    const b16 = crypto.randomBytes(20);
+    const b32 = crypto.toBech32Address(b16);
+    expect(crypto.fromBech32Address(b32)).toEqual(
+      crypto.toChecksumAddress(b16),
+    );
+  });
 });

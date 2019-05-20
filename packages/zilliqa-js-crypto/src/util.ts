@@ -4,6 +4,7 @@ import hashjs from 'hash.js';
 import { BN, validation } from '@zilliqa-js/util';
 
 const secp256k1 = elliptic.ec('secp256k1');
+
 /**
  * getAddressFromPrivateKey
  *

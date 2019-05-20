@@ -1,3 +1,7 @@
+import { validation } from '@zilliqa-js/util';
+
+import { toChecksumAddress } from './util';
+
 // Copyright (c) 2017 Pieter Wuille
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -54,7 +58,7 @@ function verifyChecksum(hrp: string, data: Buffer) {
 
 function createChecksum(hrp: string, data: Buffer) {
   const values = Buffer.concat([
-    Buffer.from(hrp),
+    Buffer.from(hrpExpand(hrp)),
     data,
     Buffer.from([0, 0, 0, 0, 0, 0]),
   ]);
@@ -113,5 +117,115 @@ export function decode(bechString: string) {
     return null;
   }
 
-  return { hrp: hrp, data: data.slice(0, data.length - 6) };
+  return { hrp: hrp, data: Buffer.from(data.slice(0, data.length - 6)) };
 }
+
+// HRP is the human-readable part of zilliqa bech32 addresses
+const HRP = 'zil';
+
+/**
+ * convertBits
+ *
+ * groups buffers of a certain width to buffers of the desired width.
+ *
+ * For example, converts byte buffers to buffers of maximum 5 bit numbers,
+ * padding those numbers as necessary. Necessary for encoding Ethereum-style
+ * addresses as bech32 ones.
+ *
+ * @param {Buffer} data
+ * @param {number} fromWidth
+ * @param {number} toWidth
+ * @param {boolean} pad
+ * @returns {Buffer|null}
+ */
+export const convertBits = (
+  data: Buffer,
+  fromWidth: number,
+  toWidth: number,
+  pad: boolean = true,
+) => {
+  var acc = 0;
+  var bits = 0;
+  var ret = [];
+  var maxv = (1 << toWidth) - 1;
+  for (var p = 0; p < data.length; ++p) {
+    var value = data[p];
+    if (value < 0 || value >> fromWidth !== 0) {
+      return null;
+    }
+    acc = (acc << fromWidth) | value;
+    bits += fromWidth;
+    while (bits >= toWidth) {
+      bits -= toWidth;
+      ret.push((acc >> bits) & maxv);
+    }
+  }
+
+  if (pad) {
+    if (bits > 0) {
+      ret.push((acc << (toWidth - bits)) & maxv);
+    }
+  } else if (bits >= fromWidth || (acc << (toWidth - bits)) & maxv) {
+    return null;
+  }
+
+  return Buffer.from(ret);
+};
+
+/**
+ * toBech32Address
+ *
+ * Encodes a canonical 20-byte Ethereum-style address as a bech32 zilliqa
+ * address.
+ *
+ * The expected format is zil1<address><checksum> where address and checksum
+ * are the result of bech32 encoding a Buffer containing the address bytes.
+ *
+ * @param {string} 20 byte canonical address
+ * @returns {string} 38 char bech32 encoded zilliqa address
+ */
+export const toBech32Address = (address: string): string => {
+  if (!validation.isAddress(address)) {
+    throw new Error('Invalid address format.');
+  }
+
+  const addrBz = convertBits(
+    Buffer.from(address.replace('0x', ''), 'hex'),
+    8,
+    5,
+  );
+
+  if (addrBz === null) {
+    throw new Error('Could not convert byte Buffer to 5-bit Buffer');
+  }
+
+  return encode(HRP, addrBz);
+};
+
+/**
+ * fromBech32Address
+ *
+ * @param {string} address - a valid Zilliqa bech32 address
+ * @returns {string} a canonical 20-byte Ethereum-style address
+ */
+export const fromBech32Address = (address: string): string => {
+  const res = decode(address);
+
+  if (res === null) {
+    throw new Error('Invalid bech32 address');
+  }
+
+  const { hrp, data } = res;
+
+  if (hrp !== HRP) {
+    throw new Error(`Expected hrp to be ${HRP} but got ${hrp}`);
+  }
+
+  const buf = convertBits(data, 5, 8, false);
+
+  if (buf === null) {
+    throw new Error('Could not convert buffer to bytes');
+  }
+
+  return toChecksumAddress(buf.toString('hex'));
+};

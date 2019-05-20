@@ -36,3 +36,4 @@ export * from './keystore';
 export * from './random';
 export * from './types';
 export * from './signature';
+export * from './bech32';
