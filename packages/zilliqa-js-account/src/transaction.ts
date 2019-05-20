@@ -5,7 +5,7 @@ import {
   Signable,
 } from '@zilliqa-js/core';
 import {
-  decodeBase58,
+  fromBech32Address,
   getAddressFromPublicKey,
   toChecksumAddress,
 } from '@zilliqa-js/crypto';
@@ -79,11 +79,7 @@ export class Transaction implements Signable {
     return {
       version: this.version,
       // TODO: do not strip 0x after implementation on core side
-      toAddr: toChecksumAddress(
-        validation.isBase58(this.toAddr)
-          ? decodeBase58(this.toAddr)
-          : this.toAddr,
-      ).slice(2),
+      toAddr: this.normaliseAddress(this.toAddr),
       nonce: this.nonce,
       pubKey: this.pubKey,
       amount: this.amount,
@@ -268,6 +264,18 @@ export class Transaction implements Signable {
     this.gasPrice = params.gasPrice;
     this.gasLimit = params.gasLimit;
     this.receipt = params.receipt;
+  }
+
+  private normaliseAddress(address: string) {
+    if (validation.isBech32(address)) {
+      return fromBech32Address(address).slice(2);
+    }
+
+    if (validation.isAddress(address)) {
+      return toChecksumAddress(address.replace('0x', '')).slice(2);
+    }
+
+    throw new Error('Address format is invalid');
   }
 
   private async trackTx(txHash: string): Promise<boolean> {

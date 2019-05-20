@@ -5,6 +5,10 @@ export const isAddress = (address: string) => {
   return isByteString(address, 40);
 };
 
+export const isBech32 = (raw: string) => {
+  return !!raw.match(/^zil1[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{38}/);
+};
+
 export const isBase58 = (raw: string) => {
   return !!raw.match(
     /^[1-9ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]+$/,
