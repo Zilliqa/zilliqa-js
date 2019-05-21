@@ -1,4 +1,5 @@
 import { addresses } from './address.fixtures';
+import bech32Tests from './bech32.fixtures.json';
 import { checksummedStore } from './checksum.fixtures';
 import * as crypto from '../src/index';
 
@@ -38,10 +39,10 @@ describe('addresses', () => {
   });
 
   it('should encode and decode to and from bech32', () => {
-    const b16 = crypto.randomBytes(20);
-    const b32 = crypto.toBech32Address(b16);
-    expect(crypto.fromBech32Address(b32)).toEqual(
-      crypto.toChecksumAddress(b16),
-    );
+    bech32Tests.forEach(({ b16, b32 }) => {
+      expect(crypto.fromBech32Address(b32)).toEqual(
+        crypto.toChecksumAddress(b16),
+      );
+    });
   });
 });
