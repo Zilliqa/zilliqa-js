@@ -126,6 +126,54 @@ Generates a version 3 keystore file that complies with the [Web3 Secret Storage 
 
 Generates a version 3 keystore file that complies with the [Web3 Secret Storage definition](https://github.com/ethereum/wiki/wiki/Web3-Secret-Storage-Definition).
 
+**Parameters**
+
+`passphrase`: `string` - the passphrase to be used to encrypt the private key.
+`keystore`: `KeystoreV3` - the object containing the deserialised JSON obtained from `encryptPrivateKey`.
+
+**Returns**
+
+`Promise<string>` - the hex-encoded private key.
+
+### `toBech32Address(address: string): string`
+
+Encodes a 20-byte hex encoded address as a bech32 address. Non-hex-encoded
+strings will cause an error to be thrown.
+
+**Parameters**
+
+`address`: `string` - the 20-byte hex-encoded address. `0x` prefix optional.
+
+**Returns**
+
+`string` - the bech32 encoded address. It is always prefixed by `zil1`, where
+`1` is a separator.
+
+**Example**
+
+```
+0x1d19918a737306218b5cbb3241fcdcbd998c3a72 (hex) -> zil1r5verznnwvrzrz6uhveyrlxuhkvccwnju4aehf (bech32)
+```
+
+### `fromBech32Address(address: string): string`
+
+Encodes a a bech32 address as a hex-encoded string. Invalid bech32 addresses
+will cause an error to be thrown.
+
+**Parameters**
+
+`address`: `string` - the 42-character bech32 address.
+
+**Returns**
+
+`string` - the checksum 20-byte hex-encoded address.
+
+**Example**
+
+```
+zil1r5verznnwvrzrz6uhveyrlxuhkvccwnju4aehf (bech32) -> 0x1d19918a737306218b5cbb3241fcdcbd998c3a72 (hex)
+```
+
 **Interfaces**
 
 ```
@@ -161,13 +209,3 @@ interface KeystoreV3 {
   version: 3;
 }
 ```
-
-**Parameters**
-
-`passphrase`: `string` - the passphrase to be used to encrypt the private key.
-`keystore`: `KeystoreV3` - the object containing the deserialised JSON obtained from `encryptPrivateKey`.
-
-**Returns**
-
-`Promise<string>` - the hex-encoded private key.
-
