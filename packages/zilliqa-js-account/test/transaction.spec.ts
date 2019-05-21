@@ -42,12 +42,12 @@ describe('Transaction', () => {
 
   it('should accept bech32 toAddr', () => {
     const b16 = toChecksumAddress(randomBytes(20));
-    const b58 = toBech32Address(b16);
+    const b32 = toBech32Address(b16);
 
     const tx = new Transaction(
       {
         version: 0,
-        toAddr: b58,
+        toAddr: b32,
         amount: new BN(0),
         gasPrice: new BN(1000),
         gasLimit: Long.fromNumber(1000),
