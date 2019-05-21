@@ -1,7 +1,7 @@
 import { validation } from '@zilliqa-js/util';
 
 import { toChecksumAddress } from './util';
-
+// This code is taken from https://github.com/sipa/bech32/tree/bdc264f84014c234e908d72026b7b780122be11f/ref/javascript
 // Copyright (c) 2017 Pieter Wuille
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,27 +21,27 @@ import { toChecksumAddress } from './util';
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
 const CHARSET = 'qpzry9x8gf2tvdw0s3jn54khce6mua7l';
 const GENERATOR = [0x3b6a57b2, 0x26508e6d, 0x1ea119fa, 0x3d4233dd, 0x2a1462b3];
 
-function polymod(values: Buffer): number {
-  var chk = 1;
-  for (var p = 0; p < values.length; ++p) {
-    var top = chk >> 25;
+const polymod = (values: Buffer): number => {
+  let chk = 1;
+  // tslint:disable-next-line
+  for (let p = 0; p < values.length; ++p) {
+    const top = chk >> 25;
     chk = ((chk & 0x1ffffff) << 5) ^ values[p];
-    for (var i = 0; i < 5; ++i) {
+    for (let i = 0; i < 5; ++i) {
       if ((top >> i) & 1) {
         chk ^= GENERATOR[i];
       }
     }
   }
   return chk;
-}
+};
 
-function hrpExpand(hrp: string): Buffer {
-  var ret = [];
-  var p;
+const hrpExpand = (hrp: string): Buffer => {
+  const ret = [];
+  let p;
   for (p = 0; p < hrp.length; ++p) {
     ret.push(hrp.charCodeAt(p) >> 5);
   }
@@ -50,7 +50,7 @@ function hrpExpand(hrp: string): Buffer {
     ret.push(hrp.charCodeAt(p) & 31);
   }
   return Buffer.from(ret);
-}
+};
 
 function verifyChecksum(hrp: string, data: Buffer) {
   return polymod(Buffer.concat([hrpExpand(hrp), data])) === 1;
@@ -63,50 +63,51 @@ function createChecksum(hrp: string, data: Buffer) {
     Buffer.from([0, 0, 0, 0, 0, 0]),
   ]);
   // var values = hrpExpand(hrp).concat(data).concat([0, 0, 0, 0, 0, 0]);
-  var mod = polymod(values) ^ 1;
-  var ret = [];
-  for (var p = 0; p < 6; ++p) {
+  const mod = polymod(values) ^ 1;
+  const ret = [];
+  for (let p = 0; p < 6; ++p) {
     ret.push((mod >> (5 * (5 - p))) & 31);
   }
   return Buffer.from(ret);
 }
 
-export function encode(hrp: string, data: Buffer) {
+export const encode = (hrp: string, data: Buffer) => {
   const combined = Buffer.concat([data, createChecksum(hrp, data)]);
-  var ret = hrp + '1';
-  for (var p = 0; p < combined.length; ++p) {
+  let ret = hrp + '1';
+  // tslint:disable-next-line
+  for (let p = 0; p < combined.length; ++p) {
     ret += CHARSET.charAt(combined[p]);
   }
   return ret;
-}
+};
 
-export function decode(bechString: string) {
-  var p;
-  var has_lower = false;
-  var has_upper = false;
+export const decode = (bechString: string) => {
+  let p;
+  let hasLower = false;
+  let hasUpper = false;
   for (p = 0; p < bechString.length; ++p) {
     if (bechString.charCodeAt(p) < 33 || bechString.charCodeAt(p) > 126) {
       return null;
     }
     if (bechString.charCodeAt(p) >= 97 && bechString.charCodeAt(p) <= 122) {
-      has_lower = true;
+      hasLower = true;
     }
     if (bechString.charCodeAt(p) >= 65 && bechString.charCodeAt(p) <= 90) {
-      has_upper = true;
+      hasUpper = true;
     }
   }
-  if (has_lower && has_upper) {
+  if (hasLower && hasUpper) {
     return null;
   }
   bechString = bechString.toLowerCase();
-  var pos = bechString.lastIndexOf('1');
+  const pos = bechString.lastIndexOf('1');
   if (pos < 1 || pos + 7 > bechString.length || bechString.length > 90) {
     return null;
   }
-  var hrp = bechString.substring(0, pos);
-  var data = [];
+  const hrp = bechString.substring(0, pos);
+  const data = [];
   for (p = pos + 1; p < bechString.length; ++p) {
-    var d = CHARSET.indexOf(bechString.charAt(p));
+    const d = CHARSET.indexOf(bechString.charAt(p));
     if (d === -1) {
       return null;
     }
@@ -117,8 +118,8 @@ export function decode(bechString: string) {
     return null;
   }
 
-  return { hrp: hrp, data: Buffer.from(data.slice(0, data.length - 6)) };
-}
+  return { hrp, data: Buffer.from(data.slice(0, data.length - 6)) };
+};
 
 // HRP is the human-readable part of zilliqa bech32 addresses
 const HRP = 'zil';
@@ -144,12 +145,13 @@ export const convertBits = (
   toWidth: number,
   pad: boolean = true,
 ) => {
-  var acc = 0;
-  var bits = 0;
-  var ret = [];
-  var maxv = (1 << toWidth) - 1;
-  for (var p = 0; p < data.length; ++p) {
-    var value = data[p];
+  let acc = 0;
+  let bits = 0;
+  const ret = [];
+  const maxv = (1 << toWidth) - 1;
+  // tslint:disable-next-line
+  for (let p = 0; p < data.length; ++p) {
+    const value = data[p];
     if (value < 0 || value >> fromWidth !== 0) {
       return null;
     }
