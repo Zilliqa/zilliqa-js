@@ -323,6 +323,8 @@ describe('Contracts', () => {
         jsonrpc: '2.0',
         result: {
           ID: 'some_hash',
+          senderPubKey:
+            '0314738163B9BB67AD11AA464FE69A1147DF263E8970D7DCFD8F993DDD39E81BD9',
           receipt: {
             success: true,
             cumulative_gas: 1000,
@@ -349,6 +351,8 @@ describe('Contracts', () => {
         jsonrpc: '2.0',
         result: {
           ID: 'some_hash',
+          senderPubKey:
+            '0314738163B9BB67AD11AA464FE69A1147DF263E8970D7DCFD8F993DDD39E81BD9',
           receipt: {
             success: true,
             cumulative_gas: 1000,

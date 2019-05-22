@@ -15,6 +15,8 @@ import fetch from 'jest-fetch-mock';
 const provider = new HTTPProvider('https://mock.com');
 const wallet = new Wallet(provider);
 
+const generateChecksumAddress = () => toChecksumAddress(randomBytes(20));
+
 describe('Transaction', () => {
   for (let i = 0; i < 10; i++) {
     wallet.create();
@@ -28,7 +30,7 @@ describe('Transaction', () => {
     const tx = new Transaction(
       {
         version: 0,
-        toAddr: `0x${randomBytes(20)}`,
+        toAddr: generateChecksumAddress(),
         amount: new BN(0),
         gasPrice: new BN(1000),
         gasLimit: Long.fromNumber(1000),
@@ -37,7 +39,7 @@ describe('Transaction', () => {
     );
 
     // FIXME: remove 0x when this is fixed on the core side
-    expect(isValidChecksumAddress(`0x${tx.txParams.toAddr}`)).toBe(true);
+    expect(isValidChecksumAddress(tx.txParams.toAddr)).toBe(true);
   });
 
   it('should accept bech32 toAddr', () => {
@@ -55,9 +57,8 @@ describe('Transaction', () => {
       provider,
     );
 
-    // FIXME: remove 0x when this is fixed on the core side
-    expect(isValidChecksumAddress(`0x${tx.txParams.toAddr}`)).toBe(true);
-    expect(`0x${tx.txParams.toAddr}`).toEqual(b16);
+    expect(isValidChecksumAddress(tx.txParams.toAddr)).toBe(true);
+    expect(tx.txParams.toAddr).toEqual(b16);
   });
 
   it('should poll and call queued handlers on confirmation', async () => {
