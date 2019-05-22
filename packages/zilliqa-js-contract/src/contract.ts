@@ -15,7 +15,7 @@ import {
   DeployParams,
 } from './types';
 
-const NIL_ADDRESS = '0000000000000000000000000000000000000000';
+const NIL_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 export class Contract {
   factory: Contracts;

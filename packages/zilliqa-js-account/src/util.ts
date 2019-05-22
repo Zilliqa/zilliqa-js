@@ -7,7 +7,8 @@ export const encodeTransactionProto = (tx: TxParams): Buffer => {
   const msg = {
     version: tx.version,
     nonce: tx.nonce || 0,
-    toaddr: bytes.hexToByteArray(tx.toAddr.toLowerCase()),
+    // core protocol Schnorr expects lowercase, non-prefixed address.
+    toaddr: bytes.hexToByteArray(tx.toAddr.replace('0x', '').toLowerCase()),
     senderpubkey: ZilliqaMessage.ByteArray.create({
       data: bytes.hexToByteArray(tx.pubKey || '00'),
     }),

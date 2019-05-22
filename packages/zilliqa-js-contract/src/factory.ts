@@ -1,6 +1,7 @@
 import hash from 'hash.js';
 
 import { Wallet, Transaction, util } from '@zilliqa-js/account';
+import { toChecksumAddress } from '@zilliqa-js/crypto';
 import { Provider, RPCMethod, ZilliqaModule } from '@zilliqa-js/core';
 import { bytes } from '@zilliqa-js/util';
 
@@ -28,12 +29,14 @@ export class Contracts implements ZilliqaModule {
     // based on the nonce in the global state.
     const nonce = tx.txParams.nonce ? tx.txParams.nonce - 1 : 0;
 
-    return hash
-      .sha256()
-      .update(tx.senderAddress, 'hex')
-      .update(bytes.intToHexArray(nonce, 16).join(''), 'hex')
-      .digest('hex')
-      .slice(24);
+    return toChecksumAddress(
+      hash
+        .sha256()
+        .update(tx.senderAddress, 'hex')
+        .update(bytes.intToHexArray(nonce, 16).join(''), 'hex')
+        .digest('hex')
+        .slice(24),
+    );
   }
 
   provider: Provider;

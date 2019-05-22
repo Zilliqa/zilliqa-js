@@ -7,7 +7,7 @@ import {
 import {
   fromBech32Address,
   getAddressFromPublicKey,
-  toChecksumAddress,
+  isValidChecksumAddress,
 } from '@zilliqa-js/crypto';
 import { BN, Long, validation } from '@zilliqa-js/util';
 
@@ -78,7 +78,6 @@ export class Transaction implements Signable {
   get txParams(): TxParams {
     return {
       version: this.version,
-      // TODO: do not strip 0x after implementation on core side
       toAddr: this.normaliseAddress(this.toAddr),
       nonce: this.nonce,
       pubKey: this.pubKey,
@@ -116,7 +115,7 @@ export class Transaction implements Signable {
   ) {
     // private members
     this.version = params.version;
-    this.toAddr = params.toAddr;
+    this.toAddr = this.normaliseAddress(params.toAddr);
     this.nonce = params.nonce;
     this.pubKey = params.pubKey;
     this.amount = params.amount;
@@ -254,7 +253,7 @@ export class Transaction implements Signable {
 
   private setParams(params: TxParams) {
     this.version = params.version;
-    this.toAddr = params.toAddr;
+    this.toAddr = this.normaliseAddress(params.toAddr);
     this.nonce = params.nonce;
     this.pubKey = params.pubKey;
     this.amount = params.amount;
@@ -268,11 +267,11 @@ export class Transaction implements Signable {
 
   private normaliseAddress(address: string) {
     if (validation.isBech32(address)) {
-      return fromBech32Address(address).slice(2);
+      return fromBech32Address(address);
     }
 
-    if (validation.isAddress(address)) {
-      return toChecksumAddress(address.replace('0x', '')).slice(2);
+    if (isValidChecksumAddress(address)) {
+      return address;
     }
 
     throw new Error('Address format is invalid');
