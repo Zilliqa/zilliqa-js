@@ -1,6 +1,7 @@
 import { Account, Transaction, Wallet } from '@zilliqa-js/account';
 import { Blockchain } from '@zilliqa-js/blockchain';
 import { HTTPProvider } from '@zilliqa-js/core';
+import { toChecksumAddress } from '@zilliqa-js/crypto';
 import { BN, Long, bytes, units } from '@zilliqa-js/util';
 import { Contracts, Contract, ContractStatus, Value } from '../src/index';
 import { testContract, zrc20, simpleDEX as dex, touchAndPay } from './fixtures';
@@ -49,7 +50,9 @@ describe('Contract: touch and pay', () => {
           new Transaction(
             {
               version: bytes.pack(CHAIN_ID, 1),
-              toAddr: 'd11238e5fcd70c817c22922c500830d00bc1e778',
+              toAddr: toChecksumAddress(
+                'd11238e5fcd70c817c22922c500830d00bc1e778',
+              ),
               amount: new BN(888),
               gasPrice: new BN(1000000000),
               gasLimit: Long.fromNumber(1),
@@ -77,7 +80,7 @@ describe('Contract: hello world', () => {
         {
           vname: 'owner',
           type: 'ByStr20',
-          value: `0x${process.env.GENESIS_ADDRESS}`,
+          value: process.env.GENESIS_ADDRESS as string,
         },
         {
           vname: '_scilla_version',
@@ -96,6 +99,7 @@ describe('Contract: hello world', () => {
       );
 
     address = <string>contract.address;
+    console.log(`Hello world address: ${address}`);
 
     expect(tx.isConfirmed()).toBeTruthy();
     expect(contract.status).toEqual(ContractStatus.Deployed);
@@ -137,7 +141,7 @@ describe('Contract: hello world', () => {
 
   it('should be rejected by the server if a non-existent contract is called', async () => {
     // setup a non-existent address
-    const contract = contractFactory.at('0123456789'.repeat(4));
+    const contract = contractFactory.at(`0x${'0123456789'.repeat(4)}`);
     const call = await contract.call(
       'setHello',
       [
@@ -233,7 +237,7 @@ describe('Contract: Simple DEX', () => {
           {
             vname: 'owner',
             type: 'ByStr20',
-            value: `0x${token1Owner.address}`,
+            value: token1Owner.address,
           },
           { vname: 'total_tokens', type: 'Uint128', value: '888888888888888' },
         ])
@@ -249,7 +253,7 @@ describe('Contract: Simple DEX', () => {
           {
             vname: 'owner',
             type: 'ByStr20',
-            value: `0x${token2Owner.address}`,
+            value: token2Owner.address,
           },
           { vname: 'total_tokens', type: 'Uint128', value: '888888888888888' },
         ])
@@ -265,7 +269,7 @@ describe('Contract: Simple DEX', () => {
           {
             vname: 'contractOwner',
             type: 'ByStr20',
-            value: `0x${simpleDexOwner.address}`,
+            value: simpleDexOwner.address,
           },
         ])
         .deploy({
@@ -294,7 +298,7 @@ describe('Contract: Simple DEX', () => {
       token1.call(
         'Transfer',
         [
-          { vname: 'to', type: 'ByStr20', value: `0x${token1Holder.address}` },
+          { vname: 'to', type: 'ByStr20', value: token1Holder.address },
           { vname: 'tokens', type: 'Uint128', value: '888' },
         ],
         {
@@ -308,7 +312,7 @@ describe('Contract: Simple DEX', () => {
       token2.call(
         'Transfer',
         [
-          { vname: 'to', type: 'ByStr20', value: `0x${token2Holder.address}` },
+          { vname: 'to', type: 'ByStr20', value: token2Holder.address },
           { vname: 'tokens', type: 'Uint128', value: '888' },
         ],
         {
@@ -342,7 +346,7 @@ describe('Contract: Simple DEX', () => {
           {
             vname: 'spender',
             type: 'ByStr20',
-            value: `0x${simpleDEX.address}`,
+            value: simpleDEX.address as string,
           },
           {
             vname: 'tokens',
@@ -364,7 +368,7 @@ describe('Contract: Simple DEX', () => {
           {
             vname: 'spender',
             type: 'ByStr20',
-            value: `0x${simpleDEX.address}`,
+            value: simpleDEX.address as string,
           },
           {
             vname: 'tokens',
@@ -410,7 +414,7 @@ describe('Contract: Simple DEX', () => {
         {
           vname: 'tokenA',
           type: 'ByStr20',
-          value: `0x${token1.address}`,
+          value: token1.address as string,
         },
         {
           vname: 'valueA',
@@ -420,7 +424,7 @@ describe('Contract: Simple DEX', () => {
         {
           vname: 'tokenB',
           type: 'ByStr20',
-          value: `0x${token2.address}`,
+          value: token2.address as string,
         },
         {
           vname: 'valueB',
@@ -600,7 +604,7 @@ describe('Contract: HWGC', async () => {
           // NOTE: all byte strings passed to Scilla contracts _must_ be
           // prefixed with 0x. Failure to do so will result in the network
           // rejecting the transaction while consuming gas!
-          value: `0x${process.env.GENESIS_ADDRESS}`,
+          value: process.env.GENESIS_ADDRESS as string,
         },
       ];
 
@@ -653,7 +657,6 @@ describe('Contract: HWGC', async () => {
       // Get the deployed contract address
       console.log('2nd contract address is:');
       console.log(chainchain2.address);
-      const cadd2 = `0x${chainchain2.address}`;
 
       // Instance of class Contract 3
       const contract3 = contractFactory.new(code3, init);
@@ -678,7 +681,6 @@ describe('Contract: HWGC', async () => {
       // Get the deployed contract address
       console.log('3rd contract address is:');
       console.log(chainchain3.address);
-      const cadd3 = `0x${chainchain3.address}`;
 
       // setAdd in contract 1 for contract 2
       const callTx1 = await chainchain1.call(
@@ -687,7 +689,7 @@ describe('Contract: HWGC', async () => {
           {
             vname: 'currentContractAdd',
             type: 'ByStr20',
-            value: cadd2,
+            value: chainchain2.address as string,
           },
         ],
         {
@@ -721,7 +723,7 @@ describe('Contract: HWGC', async () => {
           {
             vname: 'currentContractAdd',
             type: 'ByStr20',
-            value: cadd3,
+            value: chainchain3.address as string,
           },
         ],
         {
