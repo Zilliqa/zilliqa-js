@@ -14,6 +14,7 @@ describe('Account', () => {
     const keystore = await account.toFile('stronk_password');
 
     const decrypted = await Account.fromFile(keystore, 'stronk_password');
+    expect(decrypted.address).toEqual(account.address);
     expect(decrypted.privateKey).toEqual(account.privateKey);
   });
 
