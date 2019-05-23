@@ -5,6 +5,7 @@ import {
   TxBlockObj,
   BlockList,
 } from '@zilliqa-js/core';
+import { toChecksumAddress } from '@zilliqa-js/crypto';
 import { BN, Long, bytes } from '@zilliqa-js/util';
 
 import { Blockchain } from '../src/chain';
@@ -101,7 +102,8 @@ describe('[Integration]: Blockchain', () => {
 
   it('should be able to get a list of TxBlocks', async () => {
     const { result } = await bc.getNumTxBlocks();
-    const numTxBlocks = parseInt(<string>result, 10);
+    // mod reduce because there are way too many blocks
+    const numTxBlocks = parseInt(<string>result, 10) % 888;
 
     if (numTxBlocks > 10) {
       const numPages =
@@ -120,7 +122,7 @@ describe('[Integration]: Blockchain', () => {
       }, 0);
 
       expect(resolved.length).toEqual(numPages);
-      expect(receivedNumTxBlocks).toEqual(numTxBlocks);
+      expect(receivedNumTxBlocks).toEqual(numPages * 10);
     } else {
       const response = await bc.getTxBlockListing(1);
       expect((<BlockList>response.result).data.length).toEqual(numTxBlocks);
@@ -151,7 +153,7 @@ describe('[Integration]: Blockchain', () => {
     const transaction = new Transaction(
       {
         version: bytes.pack(CHAIN_ID, 1),
-        toAddr: 'd11238e5fcd70c817c22922c500830d00bc1e778',
+        toAddr: toChecksumAddress('d11238e5fcd70c817c22922c500830d00bc1e778'),
         amount: new BN(888),
         gasPrice: new BN(1000000000),
         gasLimit: Long.fromNumber(1),
