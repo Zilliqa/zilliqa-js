@@ -205,9 +205,13 @@ export class Contract {
       return Promise.resolve([]);
     }
 
+    if (!this.address) {
+      throw new Error('Cannot get state of uninitialised contract');
+    }
+
     const response = await this.provider.send(
       'GetSmartContractState',
-      this.address,
+      this.address.replace('0x', '').toLowerCase(),
     );
 
     return response.result;
@@ -218,9 +222,13 @@ export class Contract {
       return Promise.resolve([]);
     }
 
+    if (!this.address) {
+      throw new Error('Cannot get state of uninitialised contract');
+    }
+
     const response = await this.provider.send(
       'GetSmartContractInit',
-      this.address,
+      this.address.replace('0x', '').toLowerCase(),
     );
 
     return response.result;

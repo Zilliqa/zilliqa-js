@@ -32,7 +32,7 @@ export class Contracts implements ZilliqaModule {
     return toChecksumAddress(
       hash
         .sha256()
-        .update(tx.senderAddress, 'hex')
+        .update(tx.senderAddress.replace('0x', '').toLowerCase(), 'hex')
         .update(bytes.intToHexArray(nonce, 16).join(''), 'hex')
         .digest('hex')
         .slice(24),
