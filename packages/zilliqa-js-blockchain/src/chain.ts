@@ -240,13 +240,13 @@ export class Blockchain implements ZilliqaModule {
    * createTransaction
    *
    * Creates a transaction and polls the lookup node for a transaction
-   * receipt. The transaction is considered to be lost if it is not confirmed 
+   * receipt. The transaction is considered to be lost if it is not confirmed
    * within the timeout period.
    *
    * @param {Transaction} tx
    * @param {number} maxAttempts - (optional) number of times to poll before timing out
    * @param {number} number - (optional) interval in ms
-   * @returns {Promise<Transaction>} - the Transaction that has been signed and 
+   * @returns {Promise<Transaction>} - the Transaction that has been signed and
    * broadcasted to the network.
    */
   @sign
@@ -373,7 +373,10 @@ export class Blockchain implements ZilliqaModule {
    * @returns {Promise<RPCResponse<any, string>>}
    */
   getBalance(address: string): Promise<RPCResponse<any, string>> {
-    return this.provider.send(RPCMethod.GetBalance, address);
+    return this.provider.send(
+      RPCMethod.GetBalance,
+      address.replace('0x', '').toLowerCase(),
+    );
   }
 
   /**
