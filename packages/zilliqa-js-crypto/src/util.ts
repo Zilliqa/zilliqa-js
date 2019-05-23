@@ -18,11 +18,13 @@ export const getAddressFromPrivateKey = (privateKey: string): string => {
   const keyPair = secp256k1.keyFromPrivate(privateKey, 'hex');
   const pub = keyPair.getPublic(true, 'hex');
 
-  return hashjs
-    .sha256()
-    .update(pub, 'hex')
-    .digest('hex')
-    .slice(24);
+  return toChecksumAddress(
+    hashjs
+      .sha256()
+      .update(pub, 'hex')
+      .digest('hex')
+      .slice(24),
+  );
 };
 
 /**
@@ -59,11 +61,13 @@ export const compressPublicKey = (publicKey: string): string => {
  * @returns {string}
  */
 export const getAddressFromPublicKey = (publicKey: string) => {
-  return hashjs
-    .sha256()
-    .update(publicKey, 'hex')
-    .digest('hex')
-    .slice(24);
+  return toChecksumAddress(
+    hashjs
+      .sha256()
+      .update(publicKey, 'hex')
+      .digest('hex')
+      .slice(24),
+  );
 };
 
 /**

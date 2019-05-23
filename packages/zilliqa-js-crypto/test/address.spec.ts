@@ -9,10 +9,11 @@ describe('addresses', () => {
       const generatedPub = crypto.getPubKeyFromPrivateKey(priv);
       const addressFromPriv = crypto.getAddressFromPrivateKey(priv);
       const addressFromPub = crypto.getAddressFromPrivateKey(priv);
+      const checksummedAddress = crypto.toChecksumAddress(address);
 
       expect(generatedPub.toUpperCase()).toEqual(pub);
-      expect(addressFromPriv.toUpperCase()).toEqual(address);
-      expect(addressFromPub.toUpperCase()).toEqual(address);
+      expect(addressFromPriv).toEqual(checksummedAddress);
+      expect(addressFromPub).toEqual(checksummedAddress);
     });
   });
 
