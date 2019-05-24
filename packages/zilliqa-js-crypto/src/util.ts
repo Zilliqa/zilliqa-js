@@ -209,49 +209,64 @@ export const verifyPrivateKey = (privateKey: string): boolean => {
  */
 export const getAddress = (
   address: string,
-  type?: AddressType,
-): ZilAddress | string => {
+  fromType: AddressType[] = [],
+  toType?: AddressType,
+): string => {
   if (!validation.isString(address)) {
     throw new Error(`${address} is not string`);
   }
   const zilAddr = new ZilAddress(address);
 
-  if (!type) {
-    return zilAddr;
-  }
+  const validateType: AddressType[] = fromType.length === 0 ? [] : fromType;
+  let total = 0;
 
-  switch (type) {
+  total = validateType
+    .map((type: AddressType) => {
+      const value: number = zilAddr.addressType === type ? 1 : 0;
+      return value;
+    })
+    .reduce((pre, cur) => {
+      return pre + cur;
+    });
+
+  if (total === 0 && validateType.length > 0) {
+    throw new Error('Address format is invalid');
+  }
+  if (!toType) {
+    return zilAddr.raw;
+  }
+  switch (toType) {
     case AddressType.bytes20: {
       if (!zilAddr.bytes20) {
-        throw new Error(`can not convert to ${type}`);
+        throw new Error(`can not convert to ${toType}`);
       } else {
         return zilAddr.bytes20;
       }
     }
     case AddressType.bytes20Hex: {
       if (!zilAddr.bytes20Hex) {
-        throw new Error(`can not convert to ${type}`);
+        throw new Error(`can not convert to ${toType}`);
       } else {
         return zilAddr.bytes20Hex;
       }
     }
     case AddressType.base58: {
       if (!zilAddr.base58) {
-        throw new Error(`can not convert to ${type}`);
+        throw new Error(`can not convert to ${toType}`);
       } else {
         return zilAddr.base58;
       }
     }
     case AddressType.bech32: {
       if (!zilAddr.bech32) {
-        throw new Error(`can not convert to ${type}`);
+        throw new Error(`can not convert to ${toType}`);
       } else {
         return zilAddr.bech32;
       }
     }
     case AddressType.checkSum: {
       if (!zilAddr.checkSum) {
-        throw new Error(`can not convert to ${type}`);
+        throw new Error(`can not convert to ${toType}`);
       } else {
         return zilAddr.checkSum;
       }

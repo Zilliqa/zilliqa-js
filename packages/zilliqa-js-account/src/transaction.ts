@@ -5,11 +5,11 @@ import {
   Signable,
 } from '@zilliqa-js/core';
 import {
-  fromBech32Address,
   getAddressFromPublicKey,
-  isValidChecksumAddress,
+  getAddress,
+  AddressType,
 } from '@zilliqa-js/crypto';
-import { BN, Long, validation } from '@zilliqa-js/util';
+import { BN, Long } from '@zilliqa-js/util';
 
 import { TxParams, TxReceipt, TxStatus, TxIncluded } from './types';
 import { encodeTransactionProto, sleep } from './util';
@@ -78,7 +78,12 @@ export class Transaction implements Signable {
   get txParams(): TxParams {
     return {
       version: this.version,
-      toAddr: this.normaliseAddress(this.toAddr),
+      // toAddr: this.normaliseAddress(this.toAddr),
+      toAddr: getAddress(
+        this.toAddr,
+        [AddressType.bech32, AddressType.checkSum],
+        AddressType.checkSum,
+      ),
       nonce: this.nonce,
       pubKey: this.pubKey,
       amount: this.amount,
@@ -115,7 +120,12 @@ export class Transaction implements Signable {
   ) {
     // private members
     this.version = params.version;
-    this.toAddr = this.normaliseAddress(params.toAddr);
+    // this.toAddr = this.normaliseAddress(params.toAddr);
+    this.toAddr = getAddress(
+      params.toAddr,
+      [AddressType.bech32, AddressType.checkSum],
+      AddressType.checkSum,
+    );
     this.nonce = params.nonce;
     this.pubKey = params.pubKey;
     this.amount = params.amount;
@@ -253,7 +263,12 @@ export class Transaction implements Signable {
 
   private setParams(params: TxParams) {
     this.version = params.version;
-    this.toAddr = this.normaliseAddress(params.toAddr);
+    // this.toAddr = this.normaliseAddress(params.toAddr);
+    this.toAddr = getAddress(
+      params.toAddr,
+      [AddressType.bech32, AddressType.checkSum],
+      AddressType.checkSum,
+    );
     this.nonce = params.nonce;
     this.pubKey = params.pubKey;
     this.amount = params.amount;
@@ -265,17 +280,17 @@ export class Transaction implements Signable {
     this.receipt = params.receipt;
   }
 
-  private normaliseAddress(address: string) {
-    if (validation.isBech32(address)) {
-      return fromBech32Address(address);
-    }
+  // private normaliseAddress(address: string) {
+  //   if (validation.isBech32(address)) {
+  //     return fromBech32Address(address);
+  //   }
 
-    if (isValidChecksumAddress(address)) {
-      return address;
-    }
+  //   if (isValidChecksumAddress(address)) {
+  //     return address;
+  //   }
 
-    throw new Error('Address format is invalid');
-  }
+  //   throw new Error('Address format is invalid');
+  // }
 
   private async trackTx(txHash: string): Promise<boolean> {
     const res: RPCResponse<TxIncluded, string> = await this.provider.send(
