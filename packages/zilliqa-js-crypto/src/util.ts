@@ -2,6 +2,7 @@ import elliptic from 'elliptic';
 import hashjs from 'hash.js';
 
 import { BN, validation } from '@zilliqa-js/util';
+import { ZilAddress, AddressType } from './zilAddress';
 
 const secp256k1 = elliptic.ec('secp256k1');
 
@@ -198,4 +199,62 @@ export const verifyPrivateKey = (privateKey: string): boolean => {
   const keyPair = secp256k1.keyFromPrivate(privateKey, 'hex');
   const { result } = keyPair.validate();
   return result;
+};
+
+/**
+ * getAddress
+ *
+ * @param {string} address
+ * @returns {ZilAddress}
+ */
+export const getAddress = (
+  address: string,
+  type?: AddressType,
+): ZilAddress | string => {
+  if (!validation.isString(address)) {
+    throw new Error(`${address} is not string`);
+  }
+  const zilAddr = new ZilAddress(address);
+
+  if (!type) {
+    return zilAddr;
+  }
+
+  switch (type) {
+    case AddressType.bytes20: {
+      if (!zilAddr.bytes20) {
+        throw new Error(`can not convert to ${type}`);
+      } else {
+        return zilAddr.bytes20;
+      }
+    }
+    case AddressType.bytes20Hex: {
+      if (!zilAddr.bytes20Hex) {
+        throw new Error(`can not convert to ${type}`);
+      } else {
+        return zilAddr.bytes20Hex;
+      }
+    }
+    case AddressType.base58: {
+      if (!zilAddr.base58) {
+        throw new Error(`can not convert to ${type}`);
+      } else {
+        return zilAddr.base58;
+      }
+    }
+    case AddressType.bech32: {
+      if (!zilAddr.bech32) {
+        throw new Error(`can not convert to ${type}`);
+      } else {
+        return zilAddr.bech32;
+      }
+    }
+    case AddressType.checkSum: {
+      if (!zilAddr.checkSum) {
+        throw new Error(`can not convert to ${type}`);
+      } else {
+        return zilAddr.checkSum;
+      }
+    }
+  }
 };
