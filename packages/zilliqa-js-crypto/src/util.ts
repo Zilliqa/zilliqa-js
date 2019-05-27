@@ -81,6 +81,10 @@ export const getAddressFromPublicKey = (publicKey: string) => {
  * @returns {string}
  */
 export const toChecksumAddress = (address: string): string => {
+  if (!validation.isAddress(address)) {
+    throw new Error(`${address} is not a valid base 16 address`);
+  }
+
   address = address.toLowerCase().replace('0x', '');
   const hash = hashjs
     .sha256()
