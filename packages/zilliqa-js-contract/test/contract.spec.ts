@@ -1,5 +1,6 @@
 import { Wallet } from '@zilliqa-js/account';
 import { HTTPProvider } from '@zilliqa-js/core';
+import { fromBech32Address, isValidChecksumAddress } from '@zilliqa-js/crypto';
 import { BN, Long, bytes } from '@zilliqa-js/util';
 
 import fetch from 'jest-fetch-mock';
@@ -401,5 +402,31 @@ describe('Contracts', () => {
 
     expect(receipt).toBeDefined();
     expect(receipt && receipt.success).toEqual(true);
+  });
+
+  it('should normalise addresses to base16 checksum', () => {
+    const contractAt = contractFactory.at(
+      'zil1az5e0c6e4s4pazgahhmlca2cvgamp6kjtaxf4q',
+    );
+    expect(isValidChecksumAddress(contractAt.address!)).toBe(true);
+  });
+
+  it('should call getState and getInit with the correct parameters', async () => {
+    const b32 = 'zil1az5e0c6e4s4pazgahhmlca2cvgamp6kjtaxf4q';
+    const b16 = fromBech32Address(b32)
+      .replace('0x', '')
+      .toLowerCase();
+    const contractAt = contractFactory.at(b32);
+
+    const sendMock = jest.fn(() => Promise.resolve({ result: 'mock' }));
+
+    contractAt.provider.send = sendMock;
+    await contractAt.getInit();
+    await contractAt.getState();
+
+    const [[, addressGetInit], [, addressGetState]] = sendMock.mock.calls;
+
+    expect(addressGetInit).toEqual(b16);
+    expect(addressGetState).toEqual(b16);
   });
 });
