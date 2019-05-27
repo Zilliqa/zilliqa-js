@@ -1,6 +1,6 @@
 {
   "name": "@zilliqa-js/core",
-  "version": "0.6.0",
+  "version": "0.6.2",
   "description": "Core abstractions that power the zilliqa JS client.",
   "main": "dist/index.js",
   "node": "dist/index.js",
@@ -19,7 +19,7 @@
     "clean": "rimraf ./dist"
   },
   "dependencies": {
-    "@zilliqa-js/crypto": "0.6.1",
+    "@zilliqa-js/crypto": "0.6.2",
     "@zilliqa-js/util": "0.6.0",
     "axios": "^0.18.0",
     "cross-fetch": "^2.2.2",
