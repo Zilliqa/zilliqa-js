@@ -1,5 +1,6 @@
 import { Wallet, Transaction, TxStatus } from '@zilliqa-js/account';
 import { GET_TX_ATTEMPTS, RPCMethod, Provider, sign } from '@zilliqa-js/core';
+import { fromBech32Address } from '@zilliqa-js/crypto';
 import { BN } from '@zilliqa-js/util';
 
 import { Contracts } from './factory';
@@ -43,7 +44,7 @@ export class Contract {
     // assume that we are accessing an existing contract
     if (address) {
       this.abi = abi;
-      this.address = address;
+      this.address = fromBech32Address(address);
       this.init = init;
       this.state = state;
       this.status = ContractStatus.Deployed;
