@@ -39,6 +39,12 @@ describe('addresses', () => {
     });
   });
 
+  it('should throw an error when a non-base 16 address is checksummed', () => {
+    expect(() =>
+      crypto.toChecksumAddress('zil1amezszdjv3uuu5l49gyynkaa443sure4nxcpvx'),
+    ).toThrow();
+  });
+
   it('should encode and decode to and from bech32', () => {
     bech32Tests.forEach(({ b16, b32 }) => {
       expect(crypto.fromBech32Address(b32)).toEqual(
