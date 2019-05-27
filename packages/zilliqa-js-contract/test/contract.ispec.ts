@@ -1,12 +1,11 @@
 import { Account, Transaction, Wallet } from '@zilliqa-js/account';
 import { Blockchain } from '@zilliqa-js/blockchain';
 import { HTTPProvider } from '@zilliqa-js/core';
-import { toChecksumAddress } from '@zilliqa-js/crypto';
+import { toChecksumAddress, normaliseAddress } from '@zilliqa-js/crypto';
 import { BN, Long, bytes, units } from '@zilliqa-js/util';
 import { Contracts, Contract, ContractStatus, Value } from '../src/index';
 import { testContract, zrc20, simpleDEX as dex, touchAndPay } from './fixtures';
 
-// testnet chain_id is always 2
 const CHAIN_ID: number = parseInt(process.env.CHAIN_ID as string, 10);
 const MSG_VERSION = 1;
 const VERSION = bytes.pack(CHAIN_ID, MSG_VERSION);
@@ -20,6 +19,8 @@ const blockchain = new Blockchain(provider, wallet);
 const contractFactory = new Contracts(provider, wallet);
 
 jest.setTimeout(720000);
+
+const GENESIS_ADDRESS = normaliseAddress(process.env.GENESIS_ADDRESS!);
 
 describe('Contract: touch and pay', () => {
   it('should fail with a receipt if data is not provided during deployment', async () => {
@@ -40,8 +41,7 @@ describe('Contract: touch and pay', () => {
 
   it('should not not cause subsequent transactions to fail', async () => {
     const numTx = 5;
-    const nonceRes = await blockchain.getBalance(process.env
-      .GENESIS_ADDRESS as string);
+    const nonceRes = await blockchain.getBalance(GENESIS_ADDRESS);
     const txns: any[] = [];
 
     for (let i = nonceRes.result.nonce + 1; i <= numTx; i++) {
@@ -80,7 +80,7 @@ describe('Contract: hello world', () => {
         {
           vname: 'owner',
           type: 'ByStr20',
-          value: process.env.GENESIS_ADDRESS as string,
+          value: GENESIS_ADDRESS,
         },
         {
           vname: '_scilla_version',
@@ -165,7 +165,7 @@ describe('Contract: hello world', () => {
 
 describe('Contract: Simple DEX', () => {
   // accounts
-  let banker: Account = wallet.accounts[process.env.GENESIS_ADDRESS as string];
+  let banker: Account = wallet.accounts[GENESIS_ADDRESS];
   let simpleDexOwner: Account;
   let token1Owner: Account;
   let token2Owner: Account;
@@ -604,7 +604,7 @@ describe('Contract: HWGC', async () => {
           // NOTE: all byte strings passed to Scilla contracts _must_ be
           // prefixed with 0x. Failure to do so will result in the network
           // rejecting the transaction while consuming gas!
-          value: process.env.GENESIS_ADDRESS as string,
+          value: GENESIS_ADDRESS,
         },
       ];
 
