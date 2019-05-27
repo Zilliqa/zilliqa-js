@@ -3,6 +3,8 @@ import hashjs from 'hash.js';
 
 import { BN, validation } from '@zilliqa-js/util';
 
+import { fromBech32Address } from './bech32';
+
 const secp256k1 = elliptic.ec('secp256k1');
 
 /**
@@ -113,6 +115,29 @@ export const isValidChecksumAddress = (address: string): boolean => {
     validation.isAddress(address.replace('0x', '')) &&
     toChecksumAddress(address) === address
   );
+};
+
+/**
+ * normaliseAddress
+ *
+ * takes in either a checksum base16 address or a zilliqa bech32 encoded address
+ * and returns a checksum base16 address. If the provided string is either an
+ * invalid checksum address or an invalid bech32 address, the function throws
+ * an error.
+ *
+ * @param {string)} address
+ * @returns {string}
+ */
+export const normaliseAddress = (address: string): string => {
+  if (validation.isBech32(address)) {
+    return fromBech32Address(address);
+  }
+
+  if (isValidChecksumAddress(address)) {
+    return address;
+  }
+
+  throw new Error('Address format is invalid');
 };
 
 /**
