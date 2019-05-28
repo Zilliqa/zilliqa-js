@@ -120,6 +120,18 @@ Determines if a given string is a valid address.
 
 - `boolean` - `true` if the string is an address.
 
+### `isBech32(address: string): boolean`
+
+Determines if a given string is a valid Zilliqa bech32 address.
+
+**Parameters**
+
+- `address`: `string`.
+
+**Returns**
+
+- `boolean` - `true` if the string is a valid Zilliqa bech32 address.
+
 ### `isPrivateKey(privateKey: string): boolean`
 
 Determines if a given string is a valid private key.
