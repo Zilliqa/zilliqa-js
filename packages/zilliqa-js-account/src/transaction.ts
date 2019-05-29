@@ -3,6 +3,8 @@ import {
   Provider,
   RPCResponse,
   Signable,
+  TxBlockObj,
+  RPCMethod,
 } from '@zilliqa-js/core';
 import {
   getAddressFromPublicKey,
@@ -49,6 +51,7 @@ export class Transaction implements Signable {
   id?: string;
   status: TxStatus;
   toDS: boolean;
+  blockConfirmation?: number;
 
   // parameters
   private version: number;
@@ -79,11 +82,10 @@ export class Transaction implements Signable {
     return {
       version: this.version,
       // toAddr: this.normaliseAddress(this.toAddr),
-      toAddr: getAddress(
-        this.toAddr,
-        [AddressType.bech32, AddressType.checkSum],
+      toAddr: getAddress(this.toAddr, AddressType.checkSum, [
+        AddressType.bech32,
         AddressType.checkSum,
-      ),
+      ]),
       nonce: this.nonce,
       pubKey: this.pubKey,
       amount: this.amount,
@@ -121,11 +123,10 @@ export class Transaction implements Signable {
     // private members
     this.version = params.version;
     // this.toAddr = this.normaliseAddress(params.toAddr);
-    this.toAddr = getAddress(
-      params.toAddr,
-      [AddressType.bech32, AddressType.checkSum],
+    this.toAddr = getAddress(params.toAddr, AddressType.checkSum, [
+      AddressType.bech32,
       AddressType.checkSum,
-    );
+    ]);
     this.nonce = params.nonce;
     this.pubKey = params.pubKey;
     this.amount = params.amount;
@@ -140,6 +141,7 @@ export class Transaction implements Signable {
     this.provider = provider;
     this.status = status;
     this.toDS = toDS;
+    this.blockConfirmation = 0;
   }
 
   /**
@@ -203,6 +205,60 @@ export class Transaction implements Signable {
   }
 
   /**
+   * blockConfirm
+   *
+   * Use `RPCMethod.GetLatestBlock` to get latest blockNumber
+   * Use interval to get the latestBlockNumber
+   * After BlockNumber change, then we use `RPCMethod.GetTransaction` to get the receipt
+   *
+   * @param {string} txHash
+   * @param {number} maxblockCount
+   * @param {number} interval interval in milliseconds
+   * @returns {Promise<Transaction>}
+   */
+  async blockConfirm(
+    txHash: string,
+    maxblockCount: number = 4,
+    interval: number = 1000,
+  ) {
+    this.status = TxStatus.Pending;
+    const blockStart: BN = await this.getBlockNumber();
+    let blockChecked = blockStart;
+    for (let attempt = 0; attempt < maxblockCount; attempt += 1) {
+      try {
+        const blockLatest: BN = await this.getBlockNumber();
+        const blockNext: BN = blockChecked.add(
+          new BN(attempt === 0 ? attempt : 1),
+        );
+        if (blockLatest.gte(blockNext)) {
+          blockChecked = blockLatest;
+          if (await this.trackTx(txHash)) {
+            this.blockConfirmation = blockLatest.sub(blockStart).toNumber();
+            return this;
+          }
+        } else {
+          attempt = attempt - 1 >= 0 ? attempt - 1 : 0;
+        }
+      } catch (err) {
+        this.status = TxStatus.Rejected;
+        throw err;
+      }
+
+      if (attempt + 1 < maxblockCount) {
+        await sleep(interval);
+      }
+    }
+
+    // if failed
+    const blockFailed: BN = await this.getBlockNumber();
+    this.blockConfirmation = blockFailed.sub(blockStart).toNumber();
+    this.status = TxStatus.Rejected;
+
+    throw new Error(
+      `The transaction is still not confirmed after ${maxblockCount} blocks.`,
+    );
+  }
+  /**
    * confirmReceipt
    *
    * Similar to the Promise API. This sets the Transaction instance to a state
@@ -264,11 +320,10 @@ export class Transaction implements Signable {
   private setParams(params: TxParams) {
     this.version = params.version;
     // this.toAddr = this.normaliseAddress(params.toAddr);
-    this.toAddr = getAddress(
-      params.toAddr,
-      [AddressType.bech32, AddressType.checkSum],
+    this.toAddr = getAddress(params.toAddr, AddressType.checkSum, [
+      AddressType.bech32,
       AddressType.checkSum,
-    );
+    ]);
     this.nonce = params.nonce;
     this.pubKey = params.pubKey;
     this.amount = params.amount;
@@ -280,21 +335,9 @@ export class Transaction implements Signable {
     this.receipt = params.receipt;
   }
 
-  // private normaliseAddress(address: string) {
-  //   if (validation.isBech32(address)) {
-  //     return fromBech32Address(address);
-  //   }
-
-  //   if (isValidChecksumAddress(address)) {
-  //     return address;
-  //   }
-
-  //   throw new Error('Address format is invalid');
-  // }
-
   private async trackTx(txHash: string): Promise<boolean> {
     const res: RPCResponse<TxIncluded, string> = await this.provider.send(
-      'GetTransaction',
+      RPCMethod.GetTransaction,
       txHash,
     );
 
@@ -312,5 +355,21 @@ export class Transaction implements Signable {
         ? TxStatus.Confirmed
         : TxStatus.Rejected;
     return true;
+  }
+
+  private async getBlockNumber(): Promise<BN> {
+    try {
+      const res: RPCResponse<TxBlockObj, string> = await this.provider.send(
+        RPCMethod.GetLatestTxBlock,
+      );
+      if (res.error === undefined && res.result.header.BlockNum) {
+        // if blockNumber is too high, we use BN to be safer
+        return new BN(res.result.header.BlockNum);
+      } else {
+        throw new Error('Can not get latest BlockNumber');
+      }
+    } catch (error) {
+      throw error;
+    }
   }
 }

@@ -209,32 +209,34 @@ export const verifyPrivateKey = (privateKey: string): boolean => {
  */
 export const getAddress = (
   address: string,
-  fromType: AddressType[] = [],
   toType?: AddressType,
+  fromTypes?: AddressType[],
 ): string => {
   if (!validation.isString(address)) {
     throw new Error(`${address} is not string`);
   }
   const zilAddr = new ZilAddress(address);
 
-  const validateType: AddressType[] = fromType.length === 0 ? [] : fromType;
+  const validateType: AddressType[] =
+    fromTypes === undefined || fromTypes.length === 0 ? [] : fromTypes;
   let total = 0;
 
-  total = validateType
-    .map((type: AddressType) => {
-      const value: number = zilAddr.addressType === type ? 1 : 0;
-      return value;
-    })
-    .reduce((pre, cur) => {
-      return pre + cur;
-    });
+  total =
+    validateType.length > 0
+      ? validateType
+          .map((type: AddressType) => {
+            const value: number = zilAddr.addressType === type ? 1 : 0;
+            return value;
+          })
+          .reduce((pre, cur) => {
+            return pre + cur;
+          })
+      : 0;
 
   if (total === 0 && validateType.length > 0) {
     throw new Error('Address format is invalid');
   }
-  if (!toType) {
-    return zilAddr.raw;
-  }
+
   switch (toType) {
     case AddressType.bytes20: {
       if (!zilAddr.bytes20) {
@@ -271,5 +273,7 @@ export const getAddress = (
         return zilAddr.checkSum;
       }
     }
+    default:
+      return zilAddr.raw;
   }
 };
