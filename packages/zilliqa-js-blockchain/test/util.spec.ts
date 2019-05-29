@@ -1,3 +1,4 @@
+import { Transaction } from '@zilliqa-js/account';
 import { toTxParams } from '../src/util';
 
 describe('blockchain utils', () => {
@@ -28,6 +29,6 @@ describe('blockchain utils', () => {
     };
 
     // @ts-ignore
-    expect(toTxParams(mockResponse));
+    expect(() => new Transaction(toTxParams(mockResponse))).not.toThrow();
   });
 });
