@@ -1,5 +1,6 @@
 import { TxParams } from '@zilliqa-js/account';
 import { RPCResponse, TransactionObj } from '@zilliqa-js/core';
+import { toChecksumAddress } from '@zilliqa-js/crypto';
 import { BN, Long } from '@zilliqa-js/util';
 
 export function toTxParams(
@@ -20,7 +21,7 @@ export function toTxParams(
   return {
     ...rest,
     version: parseInt(version, 10),
-    toAddr,
+    toAddr: toChecksumAddress(toAddr),
     pubKey: senderPubKey,
     gasPrice: new BN(gasPrice),
     gasLimit: Long.fromString(gasLimit, 10),
