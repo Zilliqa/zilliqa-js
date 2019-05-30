@@ -204,8 +204,15 @@ export const verifyPrivateKey = (privateKey: string): boolean => {
 /**
  * getAddress
  *
- * @param {string} address
- * @returns {ZilAddress}
+ * assume there is an address
+ * and transform it to target `toType`,
+ * also use `fromTypes` to limit the types with `type AddressType` array
+ *
+ *
+ * @param {string} address - an address to transform
+ * @param {AddressType} toType - to target `type AddressType`, if undefined, would return original
+ * @param {AddressType[]} fromTypes - to limit the types of input address, optional
+ * @returns {string} - return `toType` specific format of address
  */
 export const getAddress = (
   address: string,

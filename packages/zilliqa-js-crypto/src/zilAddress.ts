@@ -7,6 +7,9 @@ import {
 } from './util';
 import { toBech32Address, fromBech32Address } from './bech32';
 
+/**
+ * @enum AddressType
+ */
 enum AddressType {
   bytes20 = 'bytes20',
   bytes20Hex = 'bytes20Hex',

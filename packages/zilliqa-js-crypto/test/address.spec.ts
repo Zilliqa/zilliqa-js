@@ -45,4 +45,30 @@ describe('addresses', () => {
       );
     });
   });
+
+  it('should test with getAddress function', () => {
+    bech32Tests.forEach(({ b16, b32 }) => {
+      expect(crypto.getAddress(b32, crypto.AddressType.bytes20)).toEqual(b16);
+      expect(crypto.getAddress(b16, crypto.AddressType.bech32)).toEqual(b32);
+      expect(crypto.getAddress(b16, crypto.AddressType.checkSum)).toEqual(
+        crypto.fromBech32Address(b32),
+      );
+      expect(crypto.getAddress(b32, crypto.AddressType.bytes20Hex)).toEqual(
+        '0x' + b16.replace('0x', '').toLowerCase(),
+      );
+      expect(crypto.getAddress(b16)).toEqual(b16);
+      try {
+        crypto.getAddress(b16, crypto.AddressType.checkSum, [
+          crypto.AddressType.bech32,
+        ]);
+      } catch (error) {
+        expect(error.message).toEqual('Address format is invalid');
+      }
+      try {
+        crypto.getAddress('wrong address', crypto.AddressType.bech32);
+      } catch (error) {
+        expect(error.message).toEqual(`unknown address`);
+      }
+    });
+  });
 });
