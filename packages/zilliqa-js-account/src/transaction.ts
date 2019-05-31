@@ -323,6 +323,17 @@ export class Transaction implements Signable {
     this.receipt = params.receipt;
   }
 
+  private normaliseAddress(address: string) {
+    if (
+      ZilAddress.isValidBech32(address) ||
+      ZilAddress.isValidChecksum(address)
+    ) {
+      return getAddress(address).checkSum;
+    }
+
+    throw new Error('Address format is invalid');
+  }
+
   private async trackTx(txHash: string): Promise<boolean> {
     const res: RPCResponse<TxIncluded, string> = await this.provider.send(
       RPCMethod.GetTransaction,
