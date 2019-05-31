@@ -204,83 +204,15 @@ export const verifyPrivateKey = (privateKey: string): boolean => {
 /**
  * getAddress
  *
- * assume there is an address
- * and transform it to target `toType`,
- * also use `fromTypes` to limit the types with `type AddressType` array
  *
  *
  * @param {string} address - an address to transform
- * @param {AddressType} toType - to target `type AddressType`, if undefined, would return original
- * @param {AddressType[]} fromTypes - to limit the types of input address, optional
- * @returns {string} - return `toType` specific format of address
+ * @returns {ZilAddress} - return `toType` specific format of address
  */
-export const getAddress = (
-  address: string,
-  toType?: AddressType,
-  fromTypes?: AddressType[],
-): string => {
-  if (!validation.isString(address)) {
-    throw new Error(`${address} is not string`);
-  }
-  const zilAddr = new ZilAddress(address);
-
-  const validateType: AddressType[] =
-    fromTypes === undefined || fromTypes.length === 0 ? [] : fromTypes;
-  let total = 0;
-
-  total =
-    validateType.length > 0
-      ? validateType
-          .map((type: AddressType) => {
-            const value: number = zilAddr.addressType === type ? 1 : 0;
-            return value;
-          })
-          .reduce((pre, cur) => {
-            return pre + cur;
-          })
-      : 0;
-
-  if (total === 0 && validateType.length > 0) {
-    throw new Error('Address format is invalid');
-  }
-
-  switch (toType) {
-    case AddressType.bytes20: {
-      if (!zilAddr.bytes20) {
-        throw new Error(`can not convert to ${toType}`);
-      } else {
-        return zilAddr.bytes20;
-      }
-    }
-    case AddressType.bytes20Hex: {
-      if (!zilAddr.bytes20Hex) {
-        throw new Error(`can not convert to ${toType}`);
-      } else {
-        return zilAddr.bytes20Hex;
-      }
-    }
-    case AddressType.base58: {
-      if (!zilAddr.base58) {
-        throw new Error(`can not convert to ${toType}`);
-      } else {
-        return zilAddr.base58;
-      }
-    }
-    case AddressType.bech32: {
-      if (!zilAddr.bech32) {
-        throw new Error(`can not convert to ${toType}`);
-      } else {
-        return zilAddr.bech32;
-      }
-    }
-    case AddressType.checkSum: {
-      if (!zilAddr.checkSum) {
-        throw new Error(`can not convert to ${toType}`);
-      } else {
-        return zilAddr.checkSum;
-      }
-    }
-    default:
-      return zilAddr.raw;
+export const getAddress = (address: string): ZilAddress => {
+  try {
+    return new ZilAddress(address);
+  } catch (error) {
+    throw error;
   }
 };

@@ -9,7 +9,7 @@ import {
 import {
   getAddressFromPublicKey,
   getAddress,
-  AddressType,
+  ZilAddress,
 } from '@zilliqa-js/crypto';
 import { BN, Long } from '@zilliqa-js/util';
 
@@ -81,11 +81,7 @@ export class Transaction implements Signable {
   get txParams(): TxParams {
     return {
       version: this.version,
-      // toAddr: this.normaliseAddress(this.toAddr),
-      toAddr: getAddress(this.toAddr, AddressType.checkSum, [
-        AddressType.bech32,
-        AddressType.checkSum,
-      ]),
+      toAddr: this.normaliseAddress(this.toAddr),
       nonce: this.nonce,
       pubKey: this.pubKey,
       amount: this.amount,
@@ -122,11 +118,7 @@ export class Transaction implements Signable {
   ) {
     // private members
     this.version = params.version;
-    // this.toAddr = this.normaliseAddress(params.toAddr);
-    this.toAddr = getAddress(params.toAddr, AddressType.checkSum, [
-      AddressType.bech32,
-      AddressType.checkSum,
-    ]);
+    this.toAddr = this.normaliseAddress(params.toAddr);
     this.nonce = params.nonce;
     this.pubKey = params.pubKey;
     this.amount = params.amount;
@@ -319,11 +311,7 @@ export class Transaction implements Signable {
 
   private setParams(params: TxParams) {
     this.version = params.version;
-    // this.toAddr = this.normaliseAddress(params.toAddr);
-    this.toAddr = getAddress(params.toAddr, AddressType.checkSum, [
-      AddressType.bech32,
-      AddressType.checkSum,
-    ]);
+    this.toAddr = this.normaliseAddress(params.toAddr);
     this.nonce = params.nonce;
     this.pubKey = params.pubKey;
     this.amount = params.amount;
