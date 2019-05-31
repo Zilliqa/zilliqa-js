@@ -56,8 +56,10 @@ describe('addresses', () => {
       expect(crypto.getAddress(b32).bytes20Hex).toEqual(
         '0x' + b16.replace('0x', '').toLowerCase(),
       );
-      expect(crypto.getAddress(b16)).toEqual(b16);
-      expect(crypto.getAddress('wrong address').bech32).toThrow();
+      expect(crypto.getAddress(b16).bytes20).toEqual(b16);
+      expect(() => crypto.getAddress('wrong address').bech32).toThrow(
+        'unknown address',
+      );
     });
   });
 });

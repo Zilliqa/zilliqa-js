@@ -2,7 +2,7 @@ import elliptic from 'elliptic';
 import hashjs from 'hash.js';
 
 import { BN, validation } from '@zilliqa-js/util';
-import { ZilAddress, AddressType } from './zilAddress';
+import { ZilAddress } from './zilAddress';
 
 const secp256k1 = elliptic.ec('secp256k1');
 
