@@ -1,59 +1,45 @@
 import * as zcrypto from '@zilliqa-js/crypto';
+import {
+  SchnorrParty2,
+  SchnorrParty2Share,
+  SchnorrSignature,
+} from '@kzen-networks/thresh-sig';
+
+const P1_ENDPOINT = 'http://localhost:8000';
 
 export class Account {
-  /**
-   * fromFile
-   *
-   * Takes a JSON-encoded keystore and passphrase, returning a fully
-   * instantiated Account instance.
-   *
-   * @param {string} file
-   * @param {string} passphrase
-   * @returns {Promise<Account>}
-   */
-  static async fromFile(file: string, passphrase: string): Promise<Account> {
-    try {
-      const keystore = JSON.parse(file);
-      const privateKey = await zcrypto.decryptPrivateKey(passphrase, keystore);
-
-      return new Account(privateKey);
-    } catch (err) {
-      throw new Error(`Could not decrypt keystore file.`);
-    }
-  }
-
-  privateKey: string;
+  p2: SchnorrParty2;
+  // @ts-ignore
+  share: SchnorrParty2Share;
+  // @ts-ignore
   publicKey: string;
+  // @ts-ignore
   address: string;
 
-  constructor(privateKey: string) {
-    this.privateKey = privateKey;
-    this.publicKey = zcrypto.getPubKeyFromPrivateKey(this.privateKey);
-    this.address = zcrypto.getAddressFromPublicKey(this.publicKey);
+  constructor() {
+    this.p2 = new SchnorrParty2(P1_ENDPOINT);
   }
 
   /**
-   * toFile
+   * create
    *
-   * @param {string} passphrase
-   * @param {kdf} 'pbkdf2' | 'scrypt'
-   * @returns {Promise<string>}
+   * Creates a new share for the 2-of-2 Schnorr signature scheme.
+   * Should be called only once.
+   *
+   * @returns {string} - address of the new account
    */
-  async toFile(
-    passphrase: string,
-    kdf: 'pbkdf2' | 'scrypt' = 'scrypt',
-  ): Promise<string> {
-    if (!passphrase || !passphrase.length) {
-      throw new Error('Passphrase cannot have a length of 0');
+  async create() {
+    if (this.share) {
+      throw new Error(
+        'create should be called only once per account initialization',
+      );
     }
-
-    const keystore = await zcrypto.encryptPrivateKey(
-      kdf,
-      this.privateKey,
-      passphrase,
-    );
-
-    return keystore;
+    this.share = await this.p2.generateKey();
+    this.publicKey = this.share
+      .getPublicKey()
+      .encodeCompressed('hex')
+      .toString('hex');
+    this.address = zcrypto.getAddressFromPublicKey(this.publicKey);
   }
 
   /**
@@ -64,7 +50,8 @@ export class Account {
    * @returns {string} - the hex encoded signature. it is a concatenation of
    * the r and s values in hex, each padded to a length of 64.
    */
-  signTransaction(bytes: Buffer) {
-    return zcrypto.sign(bytes, this.privateKey, this.publicKey);
+  async signTransaction(bytes: Buffer): Promise<string> {
+    const signature: SchnorrSignature = await this.p2.sign(bytes, this.share);
+    return signature.toBuffer().toString('hex');
   }
 }

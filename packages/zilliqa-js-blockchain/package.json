@@ -19,11 +19,13 @@
     "clean": "rimraf ./dist"
   },
   "dependencies": {
+    "@types/lodash.range": "^3.2.6",
     "@zilliqa-js/account": "0.6.3",
     "@zilliqa-js/contract": "0.6.3",
     "@zilliqa-js/core": "0.6.3",
     "@zilliqa-js/crypto": "0.6.3",
     "@zilliqa-js/util": "0.6.3",
+    "lodash.range": "^3.2.0",
     "utility-types": "^3.4.1"
   }
 }

@@ -1,5 +1,3 @@
-import bip39 from 'bip39';
-import hdkey from 'hdkey';
 import { Signer, Provider } from '@zilliqa-js/core';
 import * as zcrypto from '@zilliqa-js/crypto';
 
@@ -41,9 +39,9 @@ export class Wallet extends Signer {
    *
    * @returns {string} - address of the new account
    */
-  create(): string {
-    const privateKey = zcrypto.schnorr.generatePrivateKey();
-    const newAccount = new Account(privateKey);
+  async create(): Promise<string> {
+    const newAccount = new Account();
+    await newAccount.create();
 
     this.accounts = { ...this.accounts, [newAccount.address]: newAccount };
 
@@ -52,91 +50,6 @@ export class Wallet extends Signer {
     }
 
     return newAccount.address;
-  }
-
-  /**
-   * addByPrivateKey
-   *
-   * Adds an account to the wallet by private key.
-   *
-   * @param {string} privateKey - hex-encoded private key
-   * @returns {string} - the corresponing address, computer from the private
-   * key.
-   */
-  addByPrivateKey(privateKey: string): string {
-    const newAccount = new Account(privateKey);
-    this.accounts = { ...this.accounts, [newAccount.address]: newAccount };
-
-    if (!this.defaultAccount) {
-      this.defaultAccount = newAccount;
-    }
-
-    return newAccount.address;
-  }
-
-  /**
-   * addByKeystore
-   *
-   * Adds an account by keystore. This method is asynchronous and returns
-   * a Promise<string>, in order not to block on the underlying decryption
-   * operation.
-   *
-   * @param {string} keystore
-   * @param {string} passphrase
-   * @returns {Promise<string>}
-   */
-  async addByKeystore(keystore: string, passphrase: string): Promise<string> {
-    const newAccount = await Account.fromFile(keystore, passphrase);
-    this.accounts = { ...this.accounts, [newAccount.address]: newAccount };
-
-    if (!this.defaultAccount) {
-      this.defaultAccount = newAccount;
-    }
-
-    return newAccount.address;
-  }
-
-  /**
-   * addByMnemonic
-   *
-   * Adds an `Account` by use of a mnemonic as specified in BIP-32 and BIP-39
-   *
-   * @param {string} phrase - 12-word mnemonic phrase
-   * @param {number} index=0 - the number of the child key to add
-   * @returns {string} - the corresponding address
-   */
-  addByMnemonic(phrase: string, index: number = 0): string {
-    if (!this.isValidMnemonic(phrase)) {
-      throw new Error(`Invalid mnemonic phrase: ${phrase}`);
-    }
-    const seed = bip39.mnemonicToSeed(phrase);
-    const hdKey = hdkey.fromMasterSeed(seed);
-    const childKey = hdKey.derive(`m/44'/313'/0'/0/${index}`);
-    const privateKey = childKey.privateKey.toString('hex');
-
-    return this.addByPrivateKey(privateKey);
-  }
-
-  /**
-   * export
-   *
-   * Exports the specified account as a keystore file.
-   *
-   * @param {string} address
-   * @param {string} passphrase
-   * @param {KDF} kdf='scrypt'
-   * @returns {Promise<string>}
-   */
-  export(
-    address: string,
-    passphrase: string,
-    kdf: zcrypto.KDF = 'scrypt',
-  ): Promise<string> {
-    if (!this.accounts[address]) {
-      throw new Error(`No account with address ${address} exists`);
-    }
-
-    return this.accounts[address].toFile(passphrase, kdf);
   }
 
   /**
@@ -235,30 +148,25 @@ export class Wallet extends Signer {
           };
         });
 
+        const signature = await signer.signTransaction(withNonce.bytes);
         return withNonce.map((txObj) => {
           // @ts-ignore
           return {
             ...txObj,
-            signature: signer.signTransaction(withNonce.bytes),
+            signature,
           };
         });
       }
 
+      const signature = await signer.signTransaction(tx.bytes);
       return tx.map((txObj) => {
         return {
           ...txObj,
-          signature: signer.signTransaction(tx.bytes),
+          signature,
         };
       });
     } catch (err) {
       throw err;
     }
-  }
-
-  private isValidMnemonic(phrase: string): boolean {
-    if (phrase.trim().split(/\s+/g).length < 12) {
-      return false;
-    }
-    return bip39.validateMnemonic(phrase);
   }
 }

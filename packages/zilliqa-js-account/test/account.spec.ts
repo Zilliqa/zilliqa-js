@@ -1,4 +1,3 @@
-import fs from 'fs';
 import Signature from 'elliptic/lib/elliptic/ec/signature';
 import { HTTPProvider } from '@zilliqa-js/core';
 import * as zcrypto from '@zilliqa-js/crypto';
@@ -8,53 +7,9 @@ import { Account } from '../src/account';
 import { Transaction } from '../src/transaction';
 
 describe('Account', () => {
-  it('should be able to encode itself as a keystore file', async () => {
-    const privateKey = zcrypto.schnorr.generatePrivateKey();
-    const account = new Account(privateKey);
-    const keystore = await account.toFile('stronk_password');
-
-    const decrypted = await Account.fromFile(keystore, 'stronk_password');
-    expect(decrypted.address).toEqual(account.address);
-    expect(decrypted.privateKey).toEqual(account.privateKey);
-  });
-
-  it('should fail if given the wrong passphrase', async () => {
-    const privateKey = zcrypto.schnorr.generatePrivateKey();
-    const account = new Account(privateKey);
-    const keystore = await account.toFile('stronk_password');
-
-    try {
-      await Account.fromFile(keystore, 'weak_password');
-    } catch (err) {
-      expect(err.message).toEqual('Could not decrypt keystore file.');
-    }
-  });
-
-  it('should create accounts from keystores', async () => {
-    const content = await new Promise((resolve, reject) => {
-      fs.readFile(
-        `${__dirname}/fixtures/keystores.json`,
-        'utf8',
-        (err, data) => {
-          err ? reject(err) : resolve(data);
-        },
-      );
-    });
-
-    const keystoreFixtures = JSON.parse(content as string);
-    for (const keystoreFixture of keystoreFixtures) {
-      const { privateKey, passphrase, keystore } = keystoreFixture;
-      const account = await Account.fromFile(
-        JSON.stringify(keystore),
-        passphrase,
-      );
-      expect(account.privateKey).toEqual(privateKey);
-    }
-  });
-
-  it('should be able to sign a transaction', () => {
-    const privateKey = zcrypto.schnorr.generatePrivateKey();
-    const account = new Account(privateKey);
+  it('should be able to sign a transaction', async () => {
+    const account = new Account();
+    await account.create();
 
     const rawTx = {
       version: 1,
@@ -72,7 +27,7 @@ describe('Account', () => {
       rawTx,
       new HTTPProvider('https://mock-provider.com'),
     );
-    const rawSignature = account.signTransaction(tx.bytes);
+    const rawSignature = await account.signTransaction(tx.bytes);
 
     const lgtm = zcrypto.schnorr.verify(
       tx.bytes,

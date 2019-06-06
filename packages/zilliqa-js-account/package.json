@@ -18,14 +18,17 @@
     "clean": "rimraf ./dist"
   },
   "dependencies": {
+    "@kzen-networks/thresh-sig": "^0.2.3",
     "@types/bip39": "^2.4.0",
     "@types/hdkey": "^0.7.0",
+    "@types/lodash.range": "^3.2.6",
     "@zilliqa-js/core": "0.6.3",
     "@zilliqa-js/crypto": "0.6.3",
     "@zilliqa-js/proto": "0.6.0",
     "@zilliqa-js/util": "0.6.3",
     "bip39": "^2.5.0",
-    "hdkey": "^1.1.0"
+    "hdkey": "^1.1.0",
+    "lodash.range": "3.2.0"
   },
   "devDependencies": {
     "web3": "^1.0.0-beta.36"

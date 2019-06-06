@@ -13,9 +13,12 @@ const VERSION = bytes.pack(8, 8);
 const provider = new HTTPProvider('https://mock.com');
 const wallet = new Wallet(provider);
 const contractFactory = new Contracts(provider, wallet);
-wallet.create();
 
-describe('Contracts', () => {
+describe('Contracts', async () => {
+  beforeAll(async () => {
+    await wallet.create();
+  });
+
   afterEach(() => {
     fetch.resetMocks();
   });

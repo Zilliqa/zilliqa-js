@@ -11,16 +11,21 @@ import { Transaction } from '../src/transaction';
 import { Wallet } from '../src/wallet';
 
 import fetch from 'jest-fetch-mock';
+import range from 'lodash.range';
 
 const provider = new HTTPProvider('https://mock.com');
 const wallet = new Wallet(provider);
 
 const generateChecksumAddress = () => toChecksumAddress(randomBytes(20));
 
-describe('Transaction', () => {
-  for (let i = 0; i < 10; i++) {
-    wallet.create();
-  }
+describe('Transaction', async () => {
+  beforeAll(async () => {
+    await Promise.all(
+      range(10).map(async () => {
+        await wallet.create();
+      }),
+    );
+  });
 
   afterEach(() => {
     fetch.resetMocks();

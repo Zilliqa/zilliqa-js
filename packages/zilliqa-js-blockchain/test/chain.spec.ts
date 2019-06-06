@@ -5,16 +5,22 @@ import { BN, Long } from '@zilliqa-js/util';
 import { Blockchain } from '../src/chain';
 
 import fetch from 'jest-fetch-mock';
+import range from 'lodash.range';
 
 const provider = new HTTPProvider('https://mock.com');
 const wallet = new Wallet(provider);
-for (let i = 0; i < 10; i++) {
-  wallet.create();
-}
-
-const blockchain = new Blockchain(provider, wallet);
 
 describe('Module: Blockchain', () => {
+  beforeAll(async () => {
+    await Promise.all(
+      range(10).map(async () => {
+        await wallet.create();
+      }),
+    );
+  });
+
+  const blockchain = new Blockchain(provider, wallet);
+
   afterEach(() => {
     fetch.resetMocks();
   });

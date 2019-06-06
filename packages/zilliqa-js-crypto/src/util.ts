@@ -51,7 +51,9 @@ export const getPubKeyFromPrivateKey = (privateKey: string) => {
  * @returns {string}
  */
 export const compressPublicKey = (publicKey: string): string => {
-  return secp256k1.keyFromPublic(publicKey, 'hex').getPublic(true, 'hex');
+  return secp256k1
+    .keyFromPublic(publicKey, 'hex')
+    .getPublic(true, 'hex') as string;
 };
 
 /**
