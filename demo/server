@@ -1,0 +1,4 @@
+#!/usr/bin/env node
+
+const {ZilliqaThreshSigServer} = require('../packages/zilliqa-js-account/dist/server');
+new ZilliqaThreshSigServer().launch();

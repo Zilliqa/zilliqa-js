@@ -14,7 +14,8 @@ import {
   PBKDF2Params,
   ScryptParams,
 } from './types';
-import { getAddressFromPrivateKey } from './util';
+import { getAddressFromPublicKey } from './util';
+import { SchnorrParty2Share } from '@kzen-networks/thresh-sig';
 
 const ALGO_IDENTIFIER = 'aes-128-ctr';
 
@@ -50,27 +51,31 @@ async function getDerivedKey(
 }
 
 /**
- * encryptPrivateKey
+ * encryptShare
  *
- * Encodes and encrypts an account in the format specified by
- * https://github.com/ethereum/wiki/wiki/Web3-Secret-Storage-Definition.
- * However, note that, in keeping with the hash function used by Zilliqa's
+ * Encodes and encrypts a private share.
+ * Note that, in keeping with the hash function used by Zilliqa's
  * core protocol, the MAC is generated using sha256 instead of keccak.
  *
  * NOTE: only scrypt and pbkdf2 are supported.
  *
  * @param {KDF} kdf - the key derivation function to be used
- * @param {string} privateKey - hex-encoded private key
+ * @param {string} share - hex-encoded private key
  * @param {string} passphrase - a passphrase used for encryption
  *
  * @returns {Promise<string>}
  */
-export const encryptPrivateKey = async (
+export const encryptShare = async (
   kdf: KDF,
-  privateKey: string,
+  share: SchnorrParty2Share,
   passphrase: string,
 ): Promise<string> => {
-  const address = getAddressFromPrivateKey(privateKey);
+  const address = getAddressFromPublicKey(
+    share
+      .getPublicKey()
+      .encodeCompressed('hex')
+      .toString('hex'),
+  );
   const salt = randomBytes(32);
   const iv = Buffer.from(randomBytes(16), 'hex');
   const kdfparams = {
@@ -92,7 +97,7 @@ export const encryptPrivateKey = async (
     new aes.Counter(iv),
   );
   const ciphertext = Buffer.from(
-    cipher.encrypt(Buffer.from(privateKey, 'hex')),
+    cipher.encrypt(Buffer.from(JSON.stringify(share))),
   );
 
   return JSON.stringify({
@@ -125,18 +130,18 @@ export const encryptPrivateKey = async (
 };
 
 /**
- * decryptPrivateKey
+ * decryptShare
  *
- * Recovers the private key from a keystore file using the given passphrase.
+ * Recovers the share from a keystore file using the given passphrase.
  *
  * @param {string} passphrase
  * @param {KeystoreV3} keystore
  * @returns {Promise<string>}
  */
-export const decryptPrivateKey = async (
+export const decryptShare = async (
   passphrase: string,
   keystore: KeystoreV3,
-): Promise<string> => {
+): Promise<SchnorrParty2Share> => {
   const ciphertext = Buffer.from(keystore.crypto.ciphertext, 'hex');
   const iv = Buffer.from(keystore.crypto.cipherparams.iv, 'hex');
   const kdfparams = keystore.crypto.kdfparams;
@@ -172,5 +177,7 @@ export const decryptPrivateKey = async (
     new aes.Counter(iv),
   );
 
-  return Buffer.from(cipher.decrypt(ciphertext)).toString('hex');
+  return SchnorrParty2Share.fromPlain(
+    JSON.parse(Buffer.from(cipher.decrypt(ciphertext)).toString()),
+  );
 };

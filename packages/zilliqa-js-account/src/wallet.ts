@@ -34,8 +34,8 @@ export class Wallet extends Signer {
   /**
    * create
    *
-   * Creates a new keypair with a randomly-generated private key. The new
-   * account is accessible by address.
+   * Creates a new account with a new share for the 2-of-2 Schnorr signature scheme.
+   * Note: this function assumes the co-signing server is up.
    *
    * @returns {string} - address of the new account
    */
@@ -43,6 +43,28 @@ export class Wallet extends Signer {
     const newAccount = new Account();
     await newAccount.create();
 
+    this.accounts = { ...this.accounts, [newAccount.address]: newAccount };
+
+    if (!this.defaultAccount) {
+      this.defaultAccount = newAccount;
+    }
+
+    return newAccount.address;
+  }
+
+  /**
+   * addByKeystore
+   *
+   * Adds an account by keystore. This method is asynchronous and returns
+   * a Promise<string>, in order not to block on the underlying decryption
+   * operation.
+   *
+   * @param {string} keystore
+   * @param {string} passphrase
+   * @returns {Promise<string>}
+   */
+  async addByKeystore(keystore: string, passphrase: string): Promise<string> {
+    const newAccount = await Account.fromFile(keystore, passphrase);
     this.accounts = { ...this.accounts, [newAccount.address]: newAccount };
 
     if (!this.defaultAccount) {

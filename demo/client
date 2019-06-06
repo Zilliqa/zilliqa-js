@@ -1,0 +1,87 @@
+#!/usr/bin/env node
+
+const { Zilliqa } = require('../packages/zilliqa');
+const zilliqa = new Zilliqa('https://dev-api.zilliqa.com');
+const zilCrypto = require ('../packages/zilliqa-js-crypto');
+const { BN, Long, bytes, units } = require('../packages/zilliqa-js-util');
+const { Account } = require('../packages/zilliqa-js-account');
+
+const program = require('commander');
+const path = require('path');
+const fs = require('fs');
+const CLIENT_DB_PATH = path.join(__dirname, '../client_db');
+const ENCRYPTED_SHARE_PATH = path.join(CLIENT_DB_PATH, 'enc-share.txt');
+const DEFAULT_PASSPHRASE = 'passphrase';  // only for demo purposes...
+const CHAIN_ID = 333;
+const MSG_VERSION = 1;
+const VERSION = bytes.pack(CHAIN_ID, MSG_VERSION);
+
+program
+  .command('address')
+  .action(async () => {
+    const account = await loadOrCreateAccount();
+    console.log(zilCrypto.toBech32Address(account.address));
+  });
+
+program
+  .command('balance <address>')
+  .action(async (address) => {
+    const normalizedAddress = zilCrypto.normaliseAddress(address);
+    const balance = await zilliqa.blockchain.getBalance(normalizedAddress);
+    console.log(balance);
+  });
+
+program
+  .command('transfer <from> <to> <amount>')
+  .action(async (from, to, amount) => {
+    let encryptedShare;
+    if (fs.existsSync(ENCRYPTED_SHARE_PATH)) {
+      encryptedShare = fs.readFileSync(ENCRYPTED_SHARE_PATH);
+    } else {
+      return console.error('Did not found an existing share.');
+    }
+
+    await zilliqa.wallet.addByKeystore(encryptedShare, DEFAULT_PASSPHRASE);
+    const minGasPriceResponse = await zilliqa.blockchain.getMinimumGasPrice();
+    const minGasPrice = new BN(minGasPriceResponse.result);
+    console.log('sending... (may take around a minute)');
+    const tx = await zilliqa.blockchain.createTransaction(
+      zilliqa.transactions.new({
+        version: VERSION,
+        toAddr: to,  // should be either a valid checksum or bech32 address
+        amount: new BN(units.toQa(amount, units.Units.Zil)),
+        gasPrice: minGasPrice,
+        gasLimit: Long.fromNumber(1)
+      })
+    );
+    console.log(tx);
+  });
+
+async function loadOrCreateAccount() {
+  let account;
+  let encryptedShare;
+  if (fs.existsSync(ENCRYPTED_SHARE_PATH)) {
+    encryptedShare = fs.readFileSync(ENCRYPTED_SHARE_PATH);
+  }
+
+  if (encryptedShare) {
+    account = await Account.fromFile(encryptedShare, DEFAULT_PASSPHRASE);
+  } else {
+    ensureDirSync(CLIENT_DB_PATH);
+    account = new Account();
+    await account.create();  // will perform the two-party key generation and store a share
+    const encryptedShare = await account.toFile(DEFAULT_PASSPHRASE);
+    fs.writeFileSync(ENCRYPTED_SHARE_PATH, encryptedShare);
+  }
+  return account;
+}
+
+function ensureDirSync(dirpath) {
+  try {
+    fs.mkdirSync(dirpath, { recursive: true })
+  } catch (err) {
+    if (err.code !== 'EEXIST') throw err
+  }
+}
+
+program.parse(process.argv);
