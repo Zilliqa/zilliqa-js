@@ -89,13 +89,10 @@ export class Wallet extends Signer {
     passphrase: string,
     kdf: zcrypto.KDF = 'scrypt',
   ): Promise<string> {
-    console.log('address =', address);
     if (!this.accounts[address]) {
-      console.log('no address');
       throw new Error(`No account with address ${address} exists`);
     }
 
-    console.log('toFile');
     return this.accounts[address].toFile(passphrase, kdf);
   }
 

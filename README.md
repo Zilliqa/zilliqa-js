@@ -62,7 +62,7 @@ Create a wallet:
 const { Zilliqa } = require('@zilliqa-js/zilliqa');
 const zilliqa = new Zilliqa('https://dev-api.zilliqa.com');
 const fs = require('fs');
-const ENCRYPTED_SHARE_PATH = './enc-share.txt';
+const ENCRYPTED_SHARE_PATH = './enc-share.json';
 
 async function createWallet() {
   await zilliqa.wallet.create();  // run two-party Schnorr key generation and store the share in default account
@@ -129,6 +129,9 @@ Commands:
   balance <address>
   transfer <from> <to> <amount>
 ```
+
+|![demo](https://raw.githubusercontent.com/KZen-networks/Zilliqa-JavaScript-Library/dev/demo/zilliqa-tss-demo.gif "Zilliqa Threshold Wallet Demo")|
+|:--:|
 
 ## API Documentation and examples
 

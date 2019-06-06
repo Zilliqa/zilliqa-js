@@ -9,7 +9,7 @@ const program = require('commander');
 const path = require('path');
 const fs = require('fs');
 const CLIENT_DB_PATH = path.join(__dirname, '../client_db');
-const ENCRYPTED_SHARE_PATH = path.join(CLIENT_DB_PATH, 'enc-share.txt');
+const ENCRYPTED_SHARE_PATH = path.join(CLIENT_DB_PATH, 'enc-share.json');
 const DEFAULT_PASSPHRASE = 'passphrase';  // only for demo purposes...
 const CHAIN_ID = 333;
 const MSG_VERSION = 1;
@@ -36,7 +36,7 @@ program
     await loadOrCreateWallet();
     const minGasPriceResponse = await zilliqa.blockchain.getMinimumGasPrice();
     const minGasPrice = new BN(minGasPriceResponse.result);
-    console.log('Sent. Waiting for confirmation... (may take around a minute)');
+    console.log('Sending... (confirmation may take around a minute)');
     const tx = await zilliqa.blockchain.createTransaction(
       zilliqa.transactions.new({
         version: VERSION,
