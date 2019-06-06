@@ -75,6 +75,31 @@ export class Wallet extends Signer {
   }
 
   /**
+   * export
+   *
+   * Exports the specified account as a keystore file.
+   *
+   * @param {string} address
+   * @param {string} passphrase
+   * @param {KDF} kdf='scrypt'
+   * @returns {Promise<string>}
+   */
+  export(
+    address: string,
+    passphrase: string,
+    kdf: zcrypto.KDF = 'scrypt',
+  ): Promise<string> {
+    console.log('address =', address);
+    if (!this.accounts[address]) {
+      console.log('no address');
+      throw new Error(`No account with address ${address} exists`);
+    }
+
+    console.log('toFile');
+    return this.accounts[address].toFile(passphrase, kdf);
+  }
+
+  /**
    * remove
    *
    * Removes an account from the wallet and returns boolean to indicate

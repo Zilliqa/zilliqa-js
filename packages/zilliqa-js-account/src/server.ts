@@ -1,6 +1,6 @@
 import { Party1 } from '@kzen-networks/thresh-sig';
 
-export class ZilliqaThreshSigServer {
+export class Server {
   private p1: Party1;
 
   constructor() {

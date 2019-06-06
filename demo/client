@@ -4,7 +4,6 @@ const { Zilliqa } = require('../packages/zilliqa');
 const zilliqa = new Zilliqa('https://dev-api.zilliqa.com');
 const zilCrypto = require ('../packages/zilliqa-js-crypto');
 const { BN, Long, bytes, units } = require('../packages/zilliqa-js-util');
-const { Account } = require('../packages/zilliqa-js-account');
 
 const program = require('commander');
 const path = require('path');
@@ -19,8 +18,8 @@ const VERSION = bytes.pack(CHAIN_ID, MSG_VERSION);
 program
   .command('address')
   .action(async () => {
-    const account = await loadOrCreateAccount();
-    console.log(zilCrypto.toBech32Address(account.address));
+    const address = await loadOrCreateWallet();
+    console.log(zilCrypto.toBech32Address(address));
   });
 
 program
@@ -34,14 +33,7 @@ program
 program
   .command('transfer <from> <to> <amount>')
   .action(async (from, to, amount) => {
-    let encryptedShare;
-    if (fs.existsSync(ENCRYPTED_SHARE_PATH)) {
-      encryptedShare = fs.readFileSync(ENCRYPTED_SHARE_PATH);
-    } else {
-      return console.error('Did not found an existing share.');
-    }
-
-    await zilliqa.wallet.addByKeystore(encryptedShare, DEFAULT_PASSPHRASE);
+    await loadOrCreateWallet();
     const minGasPriceResponse = await zilliqa.blockchain.getMinimumGasPrice();
     const minGasPrice = new BN(minGasPriceResponse.result);
     console.log('Sent. Waiting for confirmation... (may take around a minute)');
@@ -57,23 +49,22 @@ program
     console.log(tx);
   });
 
-async function loadOrCreateAccount() {
-  let account;
+async function loadOrCreateWallet() {
+  let address;
   let encryptedShare;
   if (fs.existsSync(ENCRYPTED_SHARE_PATH)) {
     encryptedShare = fs.readFileSync(ENCRYPTED_SHARE_PATH);
   }
 
   if (encryptedShare) {
-    account = await Account.fromFile(encryptedShare, DEFAULT_PASSPHRASE);
+    address = await zilliqa.wallet.addByKeystore(encryptedShare, DEFAULT_PASSPHRASE);
   } else {
     ensureDirSync(CLIENT_DB_PATH);
-    account = new Account();
-    await account.create();  // will perform the two-party key generation and store a share
-    const encryptedShare = await account.toFile(DEFAULT_PASSPHRASE);
+    address = await zilliqa.wallet.create();  // run two-party key generation and store a share in default account
+    const encryptedShare = await zilliqa.wallet.export(address, DEFAULT_PASSPHRASE);
     fs.writeFileSync(ENCRYPTED_SHARE_PATH, encryptedShare);
   }
-  return account;
+  return address;
 }
 
 function ensureDirSync(dirpath) {
