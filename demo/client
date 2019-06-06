@@ -44,7 +44,7 @@ program
     await zilliqa.wallet.addByKeystore(encryptedShare, DEFAULT_PASSPHRASE);
     const minGasPriceResponse = await zilliqa.blockchain.getMinimumGasPrice();
     const minGasPrice = new BN(minGasPriceResponse.result);
-    console.log('sending... (may take around a minute)');
+    console.log('Sent. Waiting for confirmation... (may take around a minute)');
     const tx = await zilliqa.blockchain.createTransaction(
       zilliqa.transactions.new({
         version: VERSION,
