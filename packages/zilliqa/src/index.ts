@@ -2,8 +2,9 @@ import { HTTPProvider, Provider } from '@zilliqa-js/core';
 import { TransactionFactory, Wallet } from '@zilliqa-js/account';
 import { Contracts } from '@zilliqa-js/contract';
 import { Blockchain, Network } from '@zilliqa-js/blockchain';
-import { HRP, tHRP } from '@zilliqa-js/crypto';
 import { ZilConfig, ChainType, ChainID } from './utils';
+
+export { ZilConfig, ChainType, ChainID };
 
 export class Zilliqa {
   provider: Provider;
@@ -14,16 +15,22 @@ export class Zilliqa {
   transactions: TransactionFactory;
   wallet: Wallet;
 
-  constructor(node: string, provider?: Provider, config?: ZilConfig) {
-    let zilProvider;
-
-    if (config) {
-      const zilConfig = this.getConfig(config);
-      zilProvider = zilConfig.provider;
+  get chainType(): string {
+    switch (this.provider.chainID) {
+      case ChainID.MainNet: {
+        return ChainType.MainNet;
+      }
+      case ChainID.TestNet: {
+        return ChainType.TestNet;
+      }
+      default: {
+        return '';
+      }
     }
-
+  }
+  constructor(setting: string | HTTPProvider | ZilConfig) {
     this.provider =
-      provider || zilProvider || new HTTPProvider(node, ChainID.MainNet);
+      setting instanceof HTTPProvider ? setting : this.getConfig(setting);
     this.wallet = new Wallet(this.provider);
     this.blockchain = new Blockchain(this.provider, this.wallet);
     this.network = new Network(this.provider, this.wallet);
@@ -31,26 +38,11 @@ export class Zilliqa {
     this.transactions = new TransactionFactory(this.provider, this.wallet);
   }
 
-  getConfig(config: ZilConfig) {
-    const { chainType, endpoint } = config;
-    let chainID = ChainID.MainNet;
-    let hrp = HRP;
-
-    switch (chainType) {
-      case ChainType.MainNet: {
-        chainID = ChainID.MainNet;
-        hrp = HRP;
-        break;
-      }
-      case ChainType.TestNet: {
-        chainID = ChainID.TestNet;
-        hrp = tHRP;
-        break;
-      }
-      default:
-        break;
+  getConfig(setting: string | ZilConfig): Provider {
+    if (typeof setting === 'string') {
+      return new HTTPProvider(setting, ChainID.MainNet);
     }
-    const provider = new HTTPProvider(endpoint, chainID);
-    return { provider, chainID, hrp };
+    const { chainID, endpoint } = setting;
+    return new HTTPProvider(endpoint, chainID);
   }
 }

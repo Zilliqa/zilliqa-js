@@ -7,6 +7,7 @@ type SubscriptionToken = symbol;
 
 export interface Provider {
   middleware: Middleware;
+  chainID: number;
   // TODO: strict typing when we have a better idea of how to generalise the
   // payloads sent to lookup nodes - protobuf?
   send<R = any, E = string>(

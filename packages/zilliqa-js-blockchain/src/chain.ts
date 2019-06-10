@@ -14,6 +14,7 @@ import {
   TxList,
   TransactionObj,
   ShardingStructure,
+  Emitter,
 } from '@zilliqa-js/core';
 
 import { Omit } from 'utility-types';
@@ -269,6 +270,33 @@ export class Blockchain implements ZilliqaModule {
         return tx.blockConfirm(response.result.TranID, maxAttempts, interval);
       }
       return tx.confirm(response.result.TranID, maxAttempts, interval);
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  createObservedTransaction(
+    tx: Transaction,
+    maxAttempts: number = GET_TX_ATTEMPTS,
+    interval: number = 1000,
+    blockConfirm: boolean = true,
+  ): Emitter {
+    try {
+      tx.getSigned(this.signer).then((signed) => {
+        signed.sendTransaction().then((response) => {
+          const [txReturned, TranID] = response;
+          signed = txReturned;
+          if (!blockConfirm) {
+            signed.confirm(TranID, maxAttempts, interval).then(() => {
+              signed.emitter.resolve(signed);
+            });
+          }
+          signed.blockConfirm(TranID, maxAttempts, interval).then(() => {
+            signed.emitter.resolve(signed);
+          });
+        });
+      });
+      return tx.emitter;
     } catch (err) {
       throw err;
     }

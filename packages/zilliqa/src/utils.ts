@@ -2,11 +2,11 @@ export enum ChainID {
   MainNet = 0,
   TestNet = 333,
 }
-export enum ChainType {
-  MainNet = 'MainNet',
-  TestNet = 'TestNet',
-}
+export const ChainType = Object.freeze({
+  MainNet: 'MainNet',
+  TestNet: 'TestNet',
+});
 export interface ZilConfig {
-  chainType: ChainType;
+  chainID: ChainID;
   endpoint: string;
 }

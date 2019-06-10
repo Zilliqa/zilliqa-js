@@ -20,8 +20,8 @@ export class BaseProvider {
     },
   };
 
+  chainID: number;
   protected nodeURL: string;
-  protected chainID: number;
   protected reqMiddleware: Map<Matcher, ReqMiddlewareFn[]>;
   protected resMiddleware: Map<Matcher, ResMiddlewareFn[]>;
 

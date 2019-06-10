@@ -89,7 +89,10 @@ export class Transaction implements Signable {
 
   get txParams(): TxParams {
     return {
-      version: this.provider.setVersion(this.version),
+      version:
+        this.version >> 16 > 0
+          ? this.version
+          : this.provider.setVersion(this.version),
       toAddr: this.normaliseAddress(this.toAddr),
       nonce: this.nonce,
       pubKey: this.pubKey,
