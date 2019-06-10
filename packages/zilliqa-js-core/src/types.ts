@@ -15,6 +15,7 @@ export interface Provider {
   ): Promise<RPCResponse<R, E>>;
   subscribe?(event: string, subscriber: Subscriber): symbol;
   unsubscribe?(token: symbol): void;
+  setVersion(version: number): number;
 }
 
 export abstract class Signer {

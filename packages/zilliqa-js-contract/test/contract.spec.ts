@@ -1,6 +1,6 @@
 import { Wallet } from '@zilliqa-js/account';
 import { HTTPProvider } from '@zilliqa-js/core';
-import { BN, Long, bytes } from '@zilliqa-js/util';
+import { BN, Long } from '@zilliqa-js/util';
 
 import fetch from 'jest-fetch-mock';
 
@@ -8,7 +8,8 @@ import { ContractStatus, Contracts } from '../src/index';
 import { abi } from './test.abi';
 import { testContract } from './fixtures';
 
-const VERSION = bytes.pack(8, 8);
+// const VERSION = bytes.pack(8, 8);
+const VERSION = 8;
 const provider = new HTTPProvider('https://mock.com');
 const wallet = new Wallet(provider);
 const contractFactory = new Contracts(provider, wallet);

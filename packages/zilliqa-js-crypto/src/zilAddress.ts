@@ -16,11 +16,16 @@ enum AddressType {
   checkSum = 'checkSum',
   base58 = 'base58',
   bech32 = 'bech32',
+  bech32TestNet = 'bech32TestNet',
 }
 
 class ZilAddress {
   static isValidBech32(address: string) {
     return new ZilAddress(address).isBech32();
+  }
+
+  static isValidBech32TestNet(address: string) {
+    return new ZilAddress(address).isBech32TestNet();
   }
 
   static isValidBase58(address: string) {
@@ -56,6 +61,9 @@ class ZilAddress {
   get bech32(): string {
     return toBech32Address(this.bytes20);
   }
+  get bech32TestNet(): string {
+    return toBech32Address(this.bytes20, 'tzil');
+  }
 
   get base58(): string {
     return encodeBase58(this.bytes20);
@@ -81,11 +89,15 @@ class ZilAddress {
   isBech32() {
     return this.addressType === AddressType.bech32;
   }
+  isBech32TestNet() {
+    return this.addressType === AddressType.bech32TestNet;
+  }
 
   private getAddressType() {
     const addrBool = validation.isAddress(this.raw);
     const base58Bool = validation.isBase58(this.raw);
     const bech32Bool = validation.isBech32(this.raw);
+    const bech32TestNetBool = validation.isBech32TestNet(this.raw);
     const checksumBool = isValidChecksumAddress(this.raw);
 
     if (addrBool === true && checksumBool === false) {
@@ -95,11 +107,23 @@ class ZilAddress {
         : this.raw;
       return;
     }
+
     if (addrBool === true && checksumBool === true) {
       this.addressType = AddressType.checkSum;
       this.bytes20 = this.raw.toLowerCase().substring(2);
       return;
     }
+
+    if (
+      bech32TestNetBool === true &&
+      validation.isAddress(fromBech32Address(this.raw, 'tzil'))
+    ) {
+      this.addressType = AddressType.bech32;
+      const decoded = fromBech32Address(this.raw, 'tzil').toLowerCase();
+      this.bytes20 = decoded.startsWith('0x') ? decoded.substring(2) : decoded;
+      return;
+    }
+
     if (
       bech32Bool === true &&
       validation.isAddress(fromBech32Address(this.raw))
@@ -109,6 +133,7 @@ class ZilAddress {
       this.bytes20 = decoded.startsWith('0x') ? decoded.substring(2) : decoded;
       return;
     }
+
     if (base58Bool === true && validation.isAddress(decodeBase58(this.raw))) {
       this.addressType = AddressType.base58;
       const decoded = decodeBase58(this.raw).toLowerCase();

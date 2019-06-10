@@ -1,6 +1,7 @@
 import { ReqMiddlewareFn, RPCMethod } from '@zilliqa-js/core';
 import { bytes, validation } from '@zilliqa-js/util';
 import { ZilliqaMessage } from '@zilliqa-js/proto';
+import { uuid } from '@zilliqa-js/crypto';
 import { TxReceipt, TxParams } from './types';
 
 export const encodeTransactionProto = (tx: TxParams): Buffer => {
@@ -90,3 +91,25 @@ export async function sleep(ms: number) {
     setTimeout(() => resolve(), ms);
   });
 }
+
+export interface EventLog {
+  logId: string;
+  eventName: string;
+  data?: any;
+  message?: any;
+  timeStamp: string;
+}
+
+export const eventLog = (
+  eventName: string,
+  data?: any,
+  message?: any,
+): EventLog => {
+  return {
+    eventName,
+    data,
+    message,
+    logId: uuid.v4(),
+    timeStamp: new Date().toUTCString(),
+  };
+};

@@ -254,6 +254,7 @@ export class Blockchain implements ZilliqaModule {
     tx: Transaction,
     maxAttempts: number = GET_TX_ATTEMPTS,
     interval: number = 1000,
+    useBlockConfirm: boolean = false,
   ): Promise<Transaction> {
     try {
       const response = await this.provider.send(RPCMethod.CreateTransaction, {
@@ -264,7 +265,9 @@ export class Blockchain implements ZilliqaModule {
       if (response.error) {
         throw response.error;
       }
-
+      if (useBlockConfirm) {
+        return tx.blockConfirm(response.result.TranID, maxAttempts, interval);
+      }
       return tx.confirm(response.result.TranID, maxAttempts, interval);
     } catch (err) {
       throw err;

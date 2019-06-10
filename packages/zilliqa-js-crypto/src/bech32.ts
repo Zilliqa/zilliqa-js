@@ -122,7 +122,8 @@ export const decode = (bechString: string) => {
 };
 
 // HRP is the human-readable part of zilliqa bech32 addresses
-const HRP = 'zil';
+export const HRP = 'zil';
+export const tHRP = 'tzil';
 
 /**
  * convertBits
@@ -186,7 +187,10 @@ export const convertBits = (
  * @param {string} 20 byte canonical address
  * @returns {string} 38 char bech32 encoded zilliqa address
  */
-export const toBech32Address = (address: string): string => {
+export const toBech32Address = (
+  address: string,
+  hrpPreset: string = HRP,
+): string => {
   if (!validation.isAddress(address)) {
     throw new Error('Invalid address format.');
   }
@@ -201,7 +205,7 @@ export const toBech32Address = (address: string): string => {
     throw new Error('Could not convert byte Buffer to 5-bit Buffer');
   }
 
-  return encode(HRP, addrBz);
+  return encode(hrpPreset, addrBz);
 };
 
 /**
@@ -210,7 +214,10 @@ export const toBech32Address = (address: string): string => {
  * @param {string} address - a valid Zilliqa bech32 address
  * @returns {string} a canonical 20-byte Ethereum-style address
  */
-export const fromBech32Address = (address: string): string => {
+export const fromBech32Address = (
+  address: string,
+  hrpPreset: string = HRP,
+): string => {
   const res = decode(address);
 
   if (res === null) {
@@ -219,8 +226,8 @@ export const fromBech32Address = (address: string): string => {
 
   const { hrp, data } = res;
 
-  if (hrp !== HRP) {
-    throw new Error(`Expected hrp to be ${HRP} but got ${hrp}`);
+  if (hrp !== hrpPreset) {
+    throw new Error(`Expected hrp to be ${hrpPreset} but got ${hrp}`);
   }
 
   const buf = convertBits(data, 5, 8, false);

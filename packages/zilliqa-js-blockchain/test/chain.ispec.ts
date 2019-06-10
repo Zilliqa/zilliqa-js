@@ -5,7 +5,7 @@ import {
   TxBlockObj,
   BlockList,
 } from '@zilliqa-js/core';
-import { BN, Long, bytes } from '@zilliqa-js/util';
+import { BN, Long } from '@zilliqa-js/util';
 
 import { Blockchain } from '../src/chain';
 import schemas from './schema.json';
@@ -14,7 +14,10 @@ jest.setTimeout(360000);
 
 const CHAIN_ID: number = parseInt(process.env.CHAIN_ID as string, 10);
 const accounts = [new Account(process.env.GENESIS_PRIV_KEY as string)];
-const provider = new HTTPProvider(process.env.HTTP_PROVIDER as string);
+const provider = new HTTPProvider(
+  process.env.HTTP_PROVIDER as string,
+  CHAIN_ID,
+);
 const bc = new Blockchain(provider, new Wallet(provider, accounts));
 
 describe('[Integration]: Blockchain', () => {
@@ -150,7 +153,7 @@ describe('[Integration]: Blockchain', () => {
   it('should be able to send a transaction', async () => {
     const transaction = new Transaction(
       {
-        version: bytes.pack(CHAIN_ID, 1),
+        version: 1,
         toAddr: 'd11238e5fcd70c817c22922c500830d00bc1e778',
         amount: new BN(888),
         gasPrice: new BN(1000000000),

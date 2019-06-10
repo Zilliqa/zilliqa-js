@@ -1,3 +1,4 @@
+import { bytes } from '@zilliqa-js/util';
 import { BaseProvider } from './base';
 import { RPCMethod, RPCRequest, RPCResponse, performRPC } from '../net';
 import { composeMiddleware } from '../util';
@@ -30,5 +31,8 @@ export class HTTPProvider extends BaseProvider implements Provider {
 
   unsubscribe(token: symbol) {
     throw new Error('HTTPProvider does not support subscriptions.');
+  }
+  setVersion(version: number) {
+    return bytes.pack(this.chainID, version);
   }
 }

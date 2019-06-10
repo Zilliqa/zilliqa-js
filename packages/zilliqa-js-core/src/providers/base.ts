@@ -21,15 +21,18 @@ export class BaseProvider {
   };
 
   protected nodeURL: string;
+  protected chainID: number;
   protected reqMiddleware: Map<Matcher, ReqMiddlewareFn[]>;
   protected resMiddleware: Map<Matcher, ResMiddlewareFn[]>;
 
   constructor(
     nodeURL: string,
+    chainID: number = 0,
     reqMiddleware: Map<Matcher, ReqMiddlewareFn[]> = new Map(),
     resMiddleware: Map<Matcher, ResMiddlewareFn[]> = new Map(),
   ) {
     this.nodeURL = nodeURL;
+    this.chainID = chainID;
     this.reqMiddleware = reqMiddleware;
     this.resMiddleware = resMiddleware;
   }
