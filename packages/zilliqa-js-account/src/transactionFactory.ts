@@ -22,17 +22,20 @@ import { Wallet } from './wallet';
 export class TransactionFactory implements ZilliqaModule {
   provider: Provider;
   signer: Wallet;
+  version: number;
 
-  constructor(provider: Provider, signer: Wallet) {
+  constructor(provider: Provider, signer: Wallet, version: number) {
     this.provider = provider;
     this.provider.middleware.request.use(
       formatOutgoingTx,
       RPCMethod.CreateTransaction,
     );
     this.signer = signer;
+    this.version = version;
   }
 
   new(txParams: TxParams, toDs: boolean = false) {
+    txParams.version = this.version;
     return new Transaction(txParams, this.provider, TxStatus.Initialised, toDs);
   }
 }

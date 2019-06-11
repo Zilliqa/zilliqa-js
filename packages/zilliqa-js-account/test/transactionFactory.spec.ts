@@ -7,7 +7,7 @@ import { Wallet } from '../src/wallet';
 
 const provider = new HTTPProvider('https://mock.com');
 const wallet = new Wallet(provider);
-const transactionFactory = new TransactionFactory(provider, wallet);
+const transactionFactory = new TransactionFactory(provider, wallet, 0);
 
 describe('TransactionFactory', () => {
   it('should be able to create a fresh tx', () => {

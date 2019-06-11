@@ -17,6 +17,13 @@ import { HTTPProvider, Provider } from '@zilliqa-js/core';
 import { TransactionFactory, Wallet } from '@zilliqa-js/account';
 import { Contracts } from '@zilliqa-js/contract';
 import { Blockchain, Network } from '@zilliqa-js/blockchain';
+import { bytes } from '@zilliqa-js/util';
+import {
+  ChainId,
+  MsgVersion,
+  NetworkType,
+  ProviderUrl,
+} from '@zilliqa-js/util/dist/presets';
 
 export class Zilliqa {
   provider: Provider;
@@ -27,12 +34,31 @@ export class Zilliqa {
   transactions: TransactionFactory;
   wallet: Wallet;
 
-  constructor(node: string, provider?: Provider) {
-    this.provider = provider || new HTTPProvider(node);
+  constructor(network: NetworkType) {
+    let nodeUrl = 'https://api.zilliqa.com';
+    let chainId = 1;
+    switch (network) {
+      case NetworkType.MainNet:
+        nodeUrl = ProviderUrl.MainNet;
+        chainId = ChainId.MainNet;
+        break;
+      case NetworkType.TestNet:
+        nodeUrl = ProviderUrl.TestNet;
+        chainId = ChainId.TestNet;
+        break;
+    }
+
+    const version = bytes.pack(chainId, MsgVersion);
+
+    this.provider = new HTTPProvider(nodeUrl);
     this.wallet = new Wallet(this.provider);
     this.blockchain = new Blockchain(this.provider, this.wallet);
     this.network = new Network(this.provider, this.wallet);
     this.contracts = new Contracts(this.provider, this.wallet);
-    this.transactions = new TransactionFactory(this.provider, this.wallet);
+    this.transactions = new TransactionFactory(
+      this.provider,
+      this.wallet,
+      version,
+    );
   }
 }
