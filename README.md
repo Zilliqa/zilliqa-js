@@ -48,19 +48,17 @@ a `semver` bump before being able to take advantage of new features/bug fixes.
 
 ```javascript
 const { Transaction } = require('@zilliqa-js/account');
-const { BN, Long, bytes, units } = require('@zilliqa-js/util');
+const { BN, Long, bytes, units, PRESETS } = require('@zilliqa-js/util');
 const { Zilliqa } = require('@zilliqa-js/zilliqa');
 const CP = require ('@zilliqa-js/crypto');
 
-const zilliqa = new Zilliqa('https://dev-api.zilliqa.com');
+const zilliqa = new Zilliqa(PRESETS.DEVNET_URL);
 
 // These are set by the core protocol, and may vary per-chain.
-// These numbers are JUST AN EXAMPLE. They will NOT WORK on the developer testnet
-// or mainnet.
+// You can choose to use the preset according to this example; 
+// or you can manually pack the bytes according to chain id and msg version.
 // For more information: https://apidocs.zilliqa.com/?shell#getnetworkid
-const CHAIN_ID = 2;
-const MSG_VERSION = 1;
-const VERSION = bytes.pack(CHAIN_ID, MSG_VERSION);
+const VERSION = PRESETS.DEVNET_VERSION;
 
 // Populate the wallet with an account
 const privkey = '3375F915F3F9AE35E6B301B7670F53AD1A5BE15D8221EC7FD5E503F21D3450C8';

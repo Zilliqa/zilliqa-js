@@ -15,6 +15,10 @@ See documentation at [long.js](https://github.com/dcodeIO/long.js). This is
 simply a re-export for similar reasons. Note that `long` is only required if
 you need to serialise integers with size greater than or equal to `2^53`.
 
+### `PRESETS`
+
+Commonly used variables such as DEVNET_URL. See [source](./src/presets.ts) for more info.
+
 ## Functions
 
 ### `intToHexArray(int: number, size: number): string[]`
