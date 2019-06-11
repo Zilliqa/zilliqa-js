@@ -16,7 +16,8 @@
 import * as bytes from './bytes';
 import * as validation from './validation';
 import * as units from './unit';
+import { PRESETS } from './presets';
 import BN from 'bn.js';
 import Long from 'long';
 
-export { BN, bytes, Long, units, validation };
+export { BN, bytes, Long, units, validation, PRESETS };
