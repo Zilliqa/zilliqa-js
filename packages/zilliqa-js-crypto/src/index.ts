@@ -1,4 +1,5 @@
 import * as schnorr from './schnorr';
+import hash from 'hash.js';
 
 /**
  * sign
@@ -31,6 +32,7 @@ export const sign = (
 };
 
 export { schnorr };
+export { hash };
 export * from './zilAddress';
 export * from './util';
 export * from './keystore';

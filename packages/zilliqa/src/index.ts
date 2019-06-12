@@ -1,10 +1,14 @@
 import { HTTPProvider, Provider } from '@zilliqa-js/core';
-import { TransactionFactory, Wallet } from '@zilliqa-js/account';
+import {
+  TransactionFactory,
+  Wallet,
+  TransactionPool,
+} from '@zilliqa-js/account';
 import { Contracts } from '@zilliqa-js/contract';
 import { Blockchain, Network } from '@zilliqa-js/blockchain';
-import { ZilConfig, ChainType, ChainID } from './utils';
+import { ZilConfig, ChainType, ChainID, PRESETS } from './utils';
 
-export { ZilConfig, ChainType, ChainID };
+export { ZilConfig, ChainType, ChainID, PRESETS };
 
 export class Zilliqa {
   provider: Provider;
@@ -13,6 +17,7 @@ export class Zilliqa {
   network: Network;
   contracts: Contracts;
   transactions: TransactionFactory;
+  transactionPool: TransactionPool;
   wallet: Wallet;
 
   get chainType(): string {
@@ -36,6 +41,7 @@ export class Zilliqa {
     this.network = new Network(this.provider, this.wallet);
     this.contracts = new Contracts(this.provider, this.wallet);
     this.transactions = new TransactionFactory(this.provider, this.wallet);
+    this.transactionPool = new TransactionPool(this.provider, this.wallet);
   }
 
   getConfig(setting: string | ZilConfig): Provider {

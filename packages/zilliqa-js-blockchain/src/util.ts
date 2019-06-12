@@ -22,7 +22,7 @@ export function toTxParams(
     ...rest,
     version: parseInt(version, 10),
     toAddr: getAddress(toAddr).checkSum,
-    pubKey: senderPubKey,
+    pubKey: senderPubKey.replace('0x', ''),
     gasPrice: new BN(gasPrice),
     gasLimit: Long.fromString(gasLimit, 10),
     amount: new BN(amount),

@@ -266,23 +266,71 @@ export class Blockchain implements ZilliqaModule {
       if (response.error) {
         throw response.error;
       }
-      if (useBlockConfirm) {
-        return tx.blockConfirm(response.result.TranID, maxAttempts, interval);
-      }
-      return tx.confirm(response.result.TranID, maxAttempts, interval);
+
+      return this.confirmTransaction(
+        tx,
+        response.result.TranID,
+        maxAttempts,
+        interval,
+        useBlockConfirm,
+      );
     } catch (err) {
       throw err;
     }
   }
 
+  async createTransactionWithSigner(
+    tx: Transaction,
+    signer: Wallet,
+    maxAttempts: number = GET_TX_ATTEMPTS,
+    interval: number = 1000,
+    useBlockConfirm: boolean = false,
+  ): Promise<Transaction> {
+    try {
+      const signed = await tx.getSigned(signer);
+      const [sent, TranID] = await this.sendSignedTransaction(signed);
+      return this.confirmTransaction(
+        sent,
+        TranID,
+        maxAttempts,
+        interval,
+        useBlockConfirm,
+      );
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async sendSignedTransaction(tx: Transaction): Promise<[Transaction, string]> {
+    if (!tx.txParams.signature) {
+      throw new Error('Transaction is not Signed');
+    }
+    const [sent, TranID] = await tx.sendTransaction();
+    return [sent, TranID];
+  }
+
+  async confirmTransaction(
+    tx: Transaction,
+    TranID: string,
+    maxAttempts: number = GET_TX_ATTEMPTS,
+    interval: number = 1000,
+    useBlockConfirm: boolean = false,
+  ) {
+    if (useBlockConfirm) {
+      return tx.blockConfirm(TranID, maxAttempts, interval);
+    }
+    return tx.confirm(TranID, maxAttempts, interval);
+  }
+
   createObservedTransaction(
     tx: Transaction,
+    signer: Wallet = this.signer,
     maxAttempts: number = GET_TX_ATTEMPTS,
     interval: number = 1000,
     blockConfirm: boolean = true,
   ): Emitter {
     try {
-      tx.getSigned(this.signer).then((signed) => {
+      tx.getSigned(signer).then((signed) => {
         signed.sendTransaction().then((response) => {
           const [txReturned, TranID] = response;
           signed = txReturned;
