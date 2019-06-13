@@ -14,7 +14,6 @@
 //   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import { Provider, RPCMethod, ZilliqaModule } from '@zilliqa-js/core';
-
 import { Transaction } from './transaction';
 import { TxParams, TxStatus } from './types';
 import { formatOutgoingTx } from './util';

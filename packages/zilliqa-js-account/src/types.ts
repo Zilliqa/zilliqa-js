@@ -54,11 +54,3 @@ export interface TxParams {
   pubKey?: string;
   signature?: string;
 }
-
-export enum TransactionEvents {
-  id = 'id',
-  error = 'error',
-  confirm = 'confirm',
-  receipt = 'receipt',
-  track = 'track',
-}

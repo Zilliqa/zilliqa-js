@@ -15,10 +15,7 @@ jest.setTimeout(360000);
 
 const CHAIN_ID: number = parseInt(process.env.CHAIN_ID as string, 10);
 const accounts = [new Account(process.env.GENESIS_PRIV_KEY as string)];
-const provider = new HTTPProvider(
-  process.env.HTTP_PROVIDER as string,
-  CHAIN_ID,
-);
+const provider = new HTTPProvider(process.env.HTTP_PROVIDER as string);
 const bc = new Blockchain(provider, new Wallet(provider, accounts));
 
 describe('[Integration]: Blockchain', () => {
