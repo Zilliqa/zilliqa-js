@@ -79,4 +79,5 @@ export type DeployError =
 export interface DeploySuccess {
   TranID: string;
   Info: string;
+  ContractAddress: string;
 }
