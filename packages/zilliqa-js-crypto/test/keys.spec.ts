@@ -18,10 +18,10 @@ describe('keypairs', () => {
 
   it('should convert a public key to an address', () => {
     pairs.forEach(({ public: pub, digest }) => {
-      const expected = digest.slice(24);
+      const expected = crypto.toChecksumAddress(digest.slice(24));
       const actual = crypto.getAddressFromPublicKey(pub);
 
-      expect(actual).toHaveLength(40);
+      expect(actual).toHaveLength(42);
       expect(actual).toEqual(expected);
     });
   });
@@ -33,7 +33,7 @@ describe('keypairs', () => {
     );
     const actual = crypto.getAddressFromPrivateKey(pair.private);
 
-    expect(actual).toHaveLength(40);
+    expect(actual).toHaveLength(42);
     expect(actual).toEqual(expected);
   });
 
@@ -44,8 +44,8 @@ describe('keypairs', () => {
         crypto.compressPublicKey(pub),
       );
 
-      expect(fromPrivateKey).toHaveLength(40);
-      expect(fromPublicKey).toHaveLength(40);
+      expect(fromPrivateKey).toHaveLength(42);
+      expect(fromPublicKey).toHaveLength(42);
       expect(fromPublicKey).toEqual(fromPrivateKey);
     });
   });

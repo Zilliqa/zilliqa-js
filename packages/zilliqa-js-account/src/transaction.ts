@@ -1,3 +1,18 @@
+//  This file is part of Zilliqa-Javascript-Library.
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//   This program is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details.
+//
+//   You should have received a copy of the GNU General Public License
+//   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import {
   GET_TX_ATTEMPTS,
   Provider,
@@ -7,11 +22,7 @@ import {
   RPCMethod,
   Emitter,
 } from '@zilliqa-js/core';
-import {
-  getAddressFromPublicKey,
-  getAddress,
-  ZilAddress,
-} from '@zilliqa-js/crypto';
+import { getAddressFromPublicKey, normaliseAddress } from '@zilliqa-js/crypto';
 import { BN, Long } from '@zilliqa-js/util';
 
 import {
@@ -89,11 +100,8 @@ export class Transaction implements Signable {
 
   get txParams(): TxParams {
     return {
-      version:
-        this.version >> 16 > 0
-          ? this.version
-          : this.provider.setVersion(this.version),
-      toAddr: this.normaliseAddress(this.toAddr),
+      version: this.version,
+      toAddr: normaliseAddress(this.toAddr),
       nonce: this.nonce,
       pubKey: this.pubKey,
       amount: this.amount,
@@ -130,7 +138,7 @@ export class Transaction implements Signable {
   ) {
     // private members
     this.version = params.version;
-    this.toAddr = this.normaliseAddress(params.toAddr);
+    this.toAddr = normaliseAddress(params.toAddr);
     this.nonce = params.nonce;
     this.pubKey = params.pubKey;
     this.amount = params.amount;
@@ -361,7 +369,7 @@ export class Transaction implements Signable {
 
   private setParams(params: TxParams) {
     this.version = params.version;
-    this.toAddr = this.normaliseAddress(params.toAddr);
+    this.toAddr = normaliseAddress(params.toAddr);
     this.nonce = params.nonce;
     this.pubKey = params.pubKey;
     this.amount = params.amount;
@@ -373,17 +381,6 @@ export class Transaction implements Signable {
     this.receipt = params.receipt;
   }
 
-  private normaliseAddress(address: string) {
-    if (
-      ZilAddress.isValidBech32TestNet(address) ||
-      ZilAddress.isValidBech32(address) ||
-      ZilAddress.isValidChecksum(address)
-    ) {
-      return getAddress(address).checkSum;
-    }
-
-    throw new Error('Address format is invalid');
-  }
   private async trackTx(txHash: string): Promise<boolean> {
     const res: RPCResponse<TxIncluded, string> = await this.provider.send(
       RPCMethod.GetTransaction,

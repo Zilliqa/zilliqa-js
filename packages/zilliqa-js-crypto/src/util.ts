@@ -1,8 +1,25 @@
+//  This file is part of Zilliqa-Javascript-Library.
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//   This program is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details.
+//
+//   You should have received a copy of the GNU General Public License
+//   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import elliptic from 'elliptic';
 import hashjs from 'hash.js';
 
 import { BN, validation } from '@zilliqa-js/util';
 import { ZilAddress } from './zilAddress';
+
+import { fromBech32Address } from './bech32';
 
 const secp256k1 = elliptic.ec('secp256k1');
 
@@ -19,11 +36,13 @@ export const getAddressFromPrivateKey = (privateKey: string): string => {
   const keyPair = secp256k1.keyFromPrivate(privateKey, 'hex');
   const pub = keyPair.getPublic(true, 'hex');
 
-  return hashjs
-    .sha256()
-    .update(pub, 'hex')
-    .digest('hex')
-    .slice(24);
+  return toChecksumAddress(
+    hashjs
+      .sha256()
+      .update(pub, 'hex')
+      .digest('hex')
+      .slice(24),
+  );
 };
 
 /**
@@ -60,11 +79,13 @@ export const compressPublicKey = (publicKey: string): string => {
  * @returns {string}
  */
 export const getAddressFromPublicKey = (publicKey: string) => {
-  return hashjs
-    .sha256()
-    .update(publicKey, 'hex')
-    .digest('hex')
-    .slice(24);
+  return toChecksumAddress(
+    hashjs
+      .sha256()
+      .update(publicKey, 'hex')
+      .digest('hex')
+      .slice(24),
+  );
 };
 
 /**
@@ -76,6 +97,10 @@ export const getAddressFromPublicKey = (publicKey: string) => {
  * @returns {string}
  */
 export const toChecksumAddress = (address: string): string => {
+  if (!validation.isAddress(address)) {
+    throw new Error(`${address} is not a valid base 16 address`);
+  }
+
   address = address.toLowerCase().replace('0x', '');
   const hash = hashjs
     .sha256()
@@ -110,6 +135,29 @@ export const isValidChecksumAddress = (address: string): boolean => {
     validation.isAddress(address.replace('0x', '')) &&
     toChecksumAddress(address) === address
   );
+};
+
+/**
+ * normaliseAddress
+ *
+ * takes in either a checksum base16 address or a zilliqa bech32 encoded address
+ * and returns a checksum base16 address. If the provided string is either an
+ * invalid checksum address or an invalid bech32 address, the function throws
+ * an error.
+ *
+ * @param {string)} address
+ * @returns {string}
+ */
+export const normaliseAddress = (address: string): string => {
+  if (validation.isBech32(address)) {
+    return fromBech32Address(address);
+  }
+
+  if (isValidChecksumAddress(address)) {
+    return address;
+  }
+
+  throw new Error('Address format is invalid');
 };
 
 /**

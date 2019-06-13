@@ -1,6 +1,25 @@
+//  This file is part of Zilliqa-Javascript-Library.
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//   This program is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details.
+//
+//   You should have received a copy of the GNU General Public License
+//   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import { Wallet, Transaction, TxStatus } from '@zilliqa-js/account';
 import { GET_TX_ATTEMPTS, RPCMethod, Provider, sign } from '@zilliqa-js/core';
-import { toChecksumAddress, isValidChecksumAddress } from '@zilliqa-js/crypto';
+import {
+  toChecksumAddress,
+  isValidChecksumAddress,
+  normaliseAddress,
+} from '@zilliqa-js/crypto';
 import { BN } from '@zilliqa-js/util';
 
 import { Contracts } from './factory';
@@ -44,7 +63,7 @@ export class Contract {
     // assume that we are accessing an existing contract
     if (address) {
       this.abi = abi;
-      this.address = address;
+      this.address = normaliseAddress(address);
       this.init = init;
       this.state = state;
       this.status = ContractStatus.Deployed;
@@ -106,7 +125,9 @@ export class Contract {
       this.address = undefined;
       return tx.setStatus(TxStatus.Rejected);
     }
-    this.address = toChecksumAddress(response.result.ContractAddress);
+    this.address = response.result.ContractAddress
+      ? toChecksumAddress(response.result.ContractAddress)
+      : undefined;
     return tx.confirm(response.result.TranID, attempts, interval);
   }
 
@@ -213,9 +234,13 @@ export class Contract {
       return Promise.resolve([]);
     }
 
+    if (!this.address) {
+      throw new Error('Cannot get state of uninitialised contract');
+    }
+
     const response = await this.provider.send(
       'GetSmartContractState',
-      this.address,
+      this.address.replace('0x', '').toLowerCase(),
     );
 
     return response.result;
@@ -226,9 +251,13 @@ export class Contract {
       return Promise.resolve([]);
     }
 
+    if (!this.address) {
+      throw new Error('Cannot get state of uninitialised contract');
+    }
+
     const response = await this.provider.send(
       'GetSmartContractInit',
-      this.address,
+      this.address.replace('0x', '').toLowerCase(),
     );
 
     return response.result;

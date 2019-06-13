@@ -9,10 +9,11 @@ describe('addresses', () => {
       const generatedPub = crypto.getPubKeyFromPrivateKey(priv);
       const addressFromPriv = crypto.getAddressFromPrivateKey(priv);
       const addressFromPub = crypto.getAddressFromPrivateKey(priv);
+      const checksummedAddress = crypto.toChecksumAddress(address);
 
       expect(generatedPub.toUpperCase()).toEqual(pub);
-      expect(addressFromPriv.toUpperCase()).toEqual(address);
-      expect(addressFromPub.toUpperCase()).toEqual(address);
+      expect(addressFromPriv).toEqual(checksummedAddress);
+      expect(addressFromPub).toEqual(checksummedAddress);
     });
   });
 
@@ -36,6 +37,12 @@ describe('addresses', () => {
       const actual = crypto.isValidChecksumAddress(badlychecksummed);
       expect(actual).toBeFalsy();
     });
+  });
+
+  it('should throw an error when a non-base 16 address is checksummed', () => {
+    expect(() =>
+      crypto.toChecksumAddress('zil1amezszdjv3uuu5l49gyynkaa443sure4nxcpvx'),
+    ).toThrow();
   });
 
   it('should encode and decode to and from bech32', () => {

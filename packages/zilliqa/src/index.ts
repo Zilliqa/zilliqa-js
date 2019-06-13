@@ -1,14 +1,22 @@
+//  This file is part of Zilliqa-Javascript-Library.
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//   This program is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details.
+//
+//   You should have received a copy of the GNU General Public License
+//   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import { HTTPProvider, Provider } from '@zilliqa-js/core';
-import {
-  TransactionFactory,
-  Wallet,
-  TransactionPool,
-} from '@zilliqa-js/account';
+import { TransactionFactory, Wallet } from '@zilliqa-js/account';
 import { Contracts } from '@zilliqa-js/contract';
 import { Blockchain, Network } from '@zilliqa-js/blockchain';
-import { ZilConfig, ChainType, ChainID, PRESETS } from './utils';
-
-export { ZilConfig, ChainType, ChainID, PRESETS };
 
 export class Zilliqa {
   provider: Provider;
@@ -17,38 +25,14 @@ export class Zilliqa {
   network: Network;
   contracts: Contracts;
   transactions: TransactionFactory;
-  transactionPool: TransactionPool;
   wallet: Wallet;
 
-  get chainType(): string {
-    switch (this.provider.chainID) {
-      case ChainID.MainNet: {
-        return ChainType.MainNet;
-      }
-      case ChainID.TestNet: {
-        return ChainType.TestNet;
-      }
-      default: {
-        return '';
-      }
-    }
-  }
-  constructor(setting: string | HTTPProvider | ZilConfig) {
-    this.provider =
-      setting instanceof HTTPProvider ? setting : this.getConfig(setting);
+  constructor(node: string, provider?: Provider) {
+    this.provider = provider || new HTTPProvider(node);
     this.wallet = new Wallet(this.provider);
     this.blockchain = new Blockchain(this.provider, this.wallet);
     this.network = new Network(this.provider, this.wallet);
     this.contracts = new Contracts(this.provider, this.wallet);
     this.transactions = new TransactionFactory(this.provider, this.wallet);
-    this.transactionPool = new TransactionPool(this.provider, this.wallet);
-  }
-
-  getConfig(setting: string | ZilConfig): Provider {
-    if (typeof setting === 'string') {
-      return new HTTPProvider(setting, ChainID.MainNet);
-    }
-    const { chainID, endpoint } = setting;
-    return new HTTPProvider(endpoint, chainID);
   }
 }

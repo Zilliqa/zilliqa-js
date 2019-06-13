@@ -1,3 +1,18 @@
+//  This file is part of Zilliqa-Javascript-Library.
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//   This program is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details.
+//
+//   You should have received a copy of the GNU General Public License
+//   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import { Transaction, Wallet, util } from '@zilliqa-js/account';
 import { ContractObj, Value } from '@zilliqa-js/contract';
 import {
@@ -14,7 +29,6 @@ import {
   TxList,
   TransactionObj,
   ShardingStructure,
-  Emitter,
 } from '@zilliqa-js/core';
 
 import { Omit } from 'utility-types';
@@ -255,7 +269,6 @@ export class Blockchain implements ZilliqaModule {
     tx: Transaction,
     maxAttempts: number = GET_TX_ATTEMPTS,
     interval: number = 1000,
-    useBlockConfirm: boolean = false,
   ): Promise<Transaction> {
     try {
       const response = await this.provider.send(RPCMethod.CreateTransaction, {
@@ -267,84 +280,7 @@ export class Blockchain implements ZilliqaModule {
         throw response.error;
       }
 
-      return this.confirmTransaction(
-        tx,
-        response.result.TranID,
-        maxAttempts,
-        interval,
-        useBlockConfirm,
-      );
-    } catch (err) {
-      throw err;
-    }
-  }
-
-  async createTransactionWithSigner(
-    tx: Transaction,
-    signer: Wallet,
-    maxAttempts: number = GET_TX_ATTEMPTS,
-    interval: number = 1000,
-    useBlockConfirm: boolean = false,
-  ): Promise<Transaction> {
-    try {
-      const signed = await tx.getSigned(signer);
-      const [sent, TranID] = await this.sendSignedTransaction(signed);
-      return this.confirmTransaction(
-        sent,
-        TranID,
-        maxAttempts,
-        interval,
-        useBlockConfirm,
-      );
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async sendSignedTransaction(tx: Transaction): Promise<[Transaction, string]> {
-    if (!tx.txParams.signature) {
-      throw new Error('Transaction is not Signed');
-    }
-    const [sent, TranID] = await tx.sendTransaction();
-    return [sent, TranID];
-  }
-
-  async confirmTransaction(
-    tx: Transaction,
-    TranID: string,
-    maxAttempts: number = GET_TX_ATTEMPTS,
-    interval: number = 1000,
-    useBlockConfirm: boolean = false,
-  ) {
-    if (useBlockConfirm) {
-      return tx.blockConfirm(TranID, maxAttempts, interval);
-    }
-    return tx.confirm(TranID, maxAttempts, interval);
-  }
-
-  createObservedTransaction(
-    tx: Transaction,
-    signer: Wallet = this.signer,
-    maxAttempts: number = GET_TX_ATTEMPTS,
-    interval: number = 1000,
-    blockConfirm: boolean = true,
-  ): Emitter {
-    try {
-      tx.getSigned(signer).then((signed) => {
-        signed.sendTransaction().then((response) => {
-          const [txReturned, TranID] = response;
-          signed = txReturned;
-          if (!blockConfirm) {
-            signed.confirm(TranID, maxAttempts, interval).then(() => {
-              signed.emitter.resolve(signed);
-            });
-          }
-          signed.blockConfirm(TranID, maxAttempts, interval).then(() => {
-            signed.emitter.resolve(signed);
-          });
-        });
-      });
-      return tx.emitter;
+      return tx.confirm(response.result.TranID, maxAttempts, interval);
     } catch (err) {
       throw err;
     }
@@ -452,7 +388,10 @@ export class Blockchain implements ZilliqaModule {
    * @returns {Promise<RPCResponse<any, string>>}
    */
   getBalance(address: string): Promise<RPCResponse<any, string>> {
-    return this.provider.send(RPCMethod.GetBalance, address);
+    return this.provider.send(
+      RPCMethod.GetBalance,
+      address.replace('0x', '').toLowerCase(),
+    );
   }
 
   /**

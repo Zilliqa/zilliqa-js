@@ -1,15 +1,15 @@
 import { Account, Transaction, Wallet } from '@zilliqa-js/account';
 import { Blockchain } from '@zilliqa-js/blockchain';
 import { HTTPProvider } from '@zilliqa-js/core';
-import { toChecksumAddress, getAddress } from '@zilliqa-js/crypto';
+import { toChecksumAddress, normaliseAddress } from '@zilliqa-js/crypto';
 import { BN, Long, bytes, units } from '@zilliqa-js/util';
 import { Contracts, Contract, ContractStatus, Value } from '../src/index';
 import { testContract, zrc20, simpleDEX as dex, touchAndPay } from './fixtures';
 
 const CHAIN_ID: number = parseInt(process.env.CHAIN_ID as string, 10);
 const MSG_VERSION = 1;
-// const VERSION = bytes.pack(CHAIN_ID, MSG_VERSION);
-const VERSION = MSG_VERSION;
+const VERSION = bytes.pack(CHAIN_ID, MSG_VERSION);
+// const VERSION = MSG_VERSION;
 const MIN_GAS_PRICE = new BN(1000000000);
 const MIN_GAS_LIMIT = Long.fromNumber(1);
 
@@ -24,7 +24,7 @@ const contractFactory = new Contracts(provider, wallet);
 
 jest.setTimeout(720000);
 
-const GENESIS_ADDRESS = getAddress(process.env.GENESIS_ADDRESS!).checkSum;
+const GENESIS_ADDRESS = normaliseAddress(process.env.GENESIS_ADDRESS!);
 
 describe('Contract: touch and pay', () => {
   it('should fail with a receipt if data is not provided during deployment', async () => {

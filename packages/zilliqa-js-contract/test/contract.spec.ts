@@ -1,6 +1,7 @@
 import { Wallet } from '@zilliqa-js/account';
 import { HTTPProvider } from '@zilliqa-js/core';
-import { BN, Long } from '@zilliqa-js/util';
+import { fromBech32Address, isValidChecksumAddress } from '@zilliqa-js/crypto';
+import { BN, Long, bytes } from '@zilliqa-js/util';
 
 import fetch from 'jest-fetch-mock';
 
@@ -8,8 +9,7 @@ import { ContractStatus, Contracts } from '../src/index';
 import { abi } from './test.abi';
 import { testContract } from './fixtures';
 
-// const VERSION = bytes.pack(8, 8);
-const VERSION = 8;
+const VERSION = bytes.pack(8, 8);
 const provider = new HTTPProvider('https://mock.com');
 const wallet = new Wallet(provider);
 const contractFactory = new Contracts(provider, wallet);
@@ -63,6 +63,7 @@ describe('Contracts', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
+          ContractAddress: `0x0000000000000000000000000000000000000000`,
           TranID: 'some_hash',
           Info: 'Non-contract txn, sent to shard',
         },
@@ -124,6 +125,7 @@ describe('Contracts', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
+          ContractAddress: `0x0000000000000000000000000000000000000000`,
           TranID: 'some_hash',
           Info: 'Non-contract txn, sent to shard',
         },
@@ -261,6 +263,7 @@ describe('Contracts', () => {
         jsonrpc: '2.0',
         result: {
           TranID: 'some_hash',
+          ContractAddress: `0x0000000000000000000000000000000000000000`,
         },
       },
       {
@@ -402,5 +405,31 @@ describe('Contracts', () => {
 
     expect(receipt).toBeDefined();
     expect(receipt && receipt.success).toEqual(true);
+  });
+
+  it('should normalise addresses to base16 checksum', () => {
+    const contractAt = contractFactory.at(
+      'zil1az5e0c6e4s4pazgahhmlca2cvgamp6kjtaxf4q',
+    );
+    expect(isValidChecksumAddress(contractAt.address!)).toBe(true);
+  });
+
+  it('should call getState and getInit with the correct parameters', async () => {
+    const b32 = 'zil1az5e0c6e4s4pazgahhmlca2cvgamp6kjtaxf4q';
+    const b16 = fromBech32Address(b32)
+      .replace('0x', '')
+      .toLowerCase();
+    const contractAt = contractFactory.at(b32);
+
+    const sendMock = jest.fn(() => Promise.resolve({ result: 'mock' }));
+
+    contractAt.provider.send = sendMock;
+    await contractAt.getInit();
+    await contractAt.getState();
+
+    const [[, addressGetInit], [, addressGetState]] = sendMock.mock.calls;
+
+    expect(addressGetInit).toEqual(b16);
+    expect(addressGetState).toEqual(b16);
   });
 });

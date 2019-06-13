@@ -15,6 +15,10 @@ See documentation at [long.js](https://github.com/dcodeIO/long.js). This is
 simply a re-export for similar reasons. Note that `long` is only required if
 you need to serialise integers with size greater than or equal to `2^53`.
 
+### `PRESETS`
+
+Commonly used variables such as DEVNET_URL. See [source](./src/presets.ts) for more info.
+
 ## Functions
 
 ### `intToHexArray(int: number, size: number): string[]`
@@ -119,6 +123,18 @@ Determines if a given string is a valid address.
 **Returns**
 
 - `boolean` - `true` if the string is an address.
+
+### `isBech32(address: string): boolean`
+
+Determines if a given string is a valid Zilliqa bech32 address.
+
+**Parameters**
+
+- `address`: `string`.
+
+**Returns**
+
+- `boolean` - `true` if the string is a valid Zilliqa bech32 address.
 
 ### `isPrivateKey(privateKey: string): boolean`
 
