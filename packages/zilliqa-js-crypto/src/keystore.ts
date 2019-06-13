@@ -189,5 +189,3 @@ export const decryptPrivateKey = async (
 
   return Buffer.from(cipher.decrypt(ciphertext)).toString('hex');
 };
-
-export { uuid };

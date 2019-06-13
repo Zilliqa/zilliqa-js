@@ -20,20 +20,12 @@ import {
   Signable,
   TxBlockObj,
   RPCMethod,
-  Emitter,
 } from '@zilliqa-js/core';
 import { getAddressFromPublicKey, normaliseAddress } from '@zilliqa-js/crypto';
 import { BN, Long } from '@zilliqa-js/util';
 
-import {
-  TxParams,
-  TxReceipt,
-  TxStatus,
-  TxIncluded,
-  TransactionEvents,
-} from './types';
-import { encodeTransactionProto, sleep, eventLog, EventLog } from './util';
-import { Wallet } from './wallet';
+import { TxParams, TxReceipt, TxStatus, TxIncluded } from './types';
+import { encodeTransactionProto, sleep } from './util';
 
 /**
  * Transaction
@@ -71,7 +63,6 @@ export class Transaction implements Signable {
   status: TxStatus;
   toDS: boolean;
   blockConfirmation?: number;
-  emitter: Emitter;
 
   // parameters
   private version: number;
@@ -153,7 +144,6 @@ export class Transaction implements Signable {
     this.status = status;
     this.toDS = toDS;
     this.blockConfirmation = 0;
-    this.emitter = new Emitter();
   }
 
   /**
@@ -265,11 +255,8 @@ export class Transaction implements Signable {
     const blockFailed: BN = await this.getBlockNumber();
     this.blockConfirmation = blockFailed.sub(blockStart).toNumber();
     this.status = TxStatus.Rejected;
-    this.emitEventLog(
-      eventLog(TransactionEvents.confirm, txHash, TxStatus.Rejected),
-    );
     const errorMessage = `The transaction is still not confirmed after ${maxblockCount} blocks.`;
-    this.emitEventLog(eventLog(TransactionEvents.error, txHash, errorMessage));
+
     throw new Error(errorMessage);
   }
   /**
@@ -311,11 +298,7 @@ export class Transaction implements Signable {
       }
     }
     this.status = TxStatus.Rejected;
-    this.emitEventLog(
-      eventLog(TransactionEvents.confirm, txHash, TxStatus.Rejected),
-    );
     const errorMessage = `The transaction is still not confirmed after ${maxAttempts} attempts.`;
-    this.emitEventLog(eventLog(TransactionEvents.error, txHash, errorMessage));
     throw new Error(errorMessage);
   }
 
@@ -332,39 +315,6 @@ export class Transaction implements Signable {
     this.setParams(newParams);
 
     return this;
-  }
-
-  async getSigned(signer: Wallet): Promise<Transaction> {
-    const result = await signer.sign(this);
-    this.setParams(result.txParams);
-    return this;
-  }
-
-  async sendTransaction(): Promise<[Transaction, string]> {
-    // TODO: we use eth RPC setting for now, incase we have other params, we should add here
-    if (this.signature === undefined) {
-      throw new Error('Transaction not signed');
-    }
-
-    const response = await this.provider.send(RPCMethod.CreateTransaction, {
-      ...this.txParams,
-      priority: this.toDS,
-    });
-
-    if (response.error) {
-      this.emitEventLog(
-        eventLog(TransactionEvents.error, response.error, 'Transaction Error'),
-      );
-      throw response.error;
-    }
-    this.emitEventLog(
-      eventLog(
-        TransactionEvents.id,
-        response.result.TranID,
-        'Got Transaction ID',
-      ),
-    );
-    return [this, response.result.TranID];
   }
 
   private setParams(params: TxParams) {
@@ -388,9 +338,6 @@ export class Transaction implements Signable {
     );
 
     if (res.error) {
-      this.emitEventLog(
-        eventLog(TransactionEvents.track, txHash, res.error.message),
-      );
       return false;
     }
 
@@ -399,23 +346,12 @@ export class Transaction implements Signable {
       ...res.result.receipt,
       cumulative_gas: parseInt(res.result.receipt.cumulative_gas, 10),
     };
-    this.emitEventLog(
-      eventLog(TransactionEvents.receipt, txHash, this.receipt),
-    );
+
     this.status =
       this.receipt && this.receipt.success
         ? TxStatus.Confirmed
         : TxStatus.Rejected;
 
-    if (this.status === TxStatus.Confirmed) {
-      this.emitEventLog(
-        eventLog(TransactionEvents.confirm, txHash, TxStatus.Confirmed),
-      );
-    } else if (this.status === TxStatus.Rejected) {
-      this.emitEventLog(
-        eventLog(TransactionEvents.confirm, txHash, TxStatus.Rejected),
-      );
-    }
     return true;
   }
 
@@ -433,9 +369,5 @@ export class Transaction implements Signable {
     } catch (error) {
       throw error;
     }
-  }
-
-  private emitEventLog(log: EventLog) {
-    this.emitter.emit(log.eventName, log);
   }
 }

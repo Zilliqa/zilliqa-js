@@ -128,4 +128,136 @@ describe('Module: Blockchain', () => {
       'The transaction is still not confirmed after 40 attempts.',
     );
   });
+  it('should test the maxAttempts parameter using blockConfirm', async () => {
+    const responses = [
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: 888,
+          nonce: 1,
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          TranID: 'some_hash',
+          Info: 'Non-contract txn, sent to shard',
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          header: {
+            BlockNum: '10001',
+          },
+        },
+      },
+
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          header: {
+            BlockNum: '10001',
+          },
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        error: {
+          code: -888,
+          message: 'Not found',
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          header: {
+            BlockNum: '10002',
+          },
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        error: {
+          code: -888,
+          message: 'Not found',
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          header: {
+            BlockNum: '10003',
+          },
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        error: {
+          code: -888,
+          message: 'Not found',
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          header: {
+            BlockNum: '10004',
+          },
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        error: {
+          code: -888,
+          message: 'Not found',
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          header: {
+            BlockNum: '10004',
+          },
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          ID: 'some_hash',
+          receipt: { cumulative_gas: '1000', success: true },
+        },
+      },
+    ].map((res) => [JSON.stringify(res)] as [string]);
+
+    fetch.mockResponses(...responses);
+
+    const tx = new Transaction(
+      {
+        version: 0,
+        toAddr: '0x1234567890123456789012345678901234567890',
+        amount: new BN(0),
+        gasPrice: new BN(1000),
+        gasLimit: Long.fromNumber(1000),
+      },
+      provider,
+    );
+
+    await expect(blockchain.createTransaction(tx, 4, 0, true)).rejects.toThrow(
+      'The transaction is still not confirmed after 4 blocks.',
+    );
+  });
 });
