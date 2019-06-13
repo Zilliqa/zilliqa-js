@@ -346,12 +346,10 @@ export class Transaction implements Signable {
       ...res.result.receipt,
       cumulative_gas: parseInt(res.result.receipt.cumulative_gas, 10),
     };
-
     this.status =
       this.receipt && this.receipt.success
         ? TxStatus.Confirmed
         : TxStatus.Rejected;
-
     return true;
   }
 

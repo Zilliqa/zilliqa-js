@@ -13,10 +13,8 @@ const VERSION = bytes.pack(CHAIN_ID, MSG_VERSION);
 const MIN_GAS_PRICE = new BN(1000000000);
 const MIN_GAS_LIMIT = Long.fromNumber(1);
 
-const provider = new HTTPProvider(
-  process.env.HTTP_PROVIDER as string,
-  CHAIN_ID,
-);
+const provider = new HTTPProvider(process.env.HTTP_PROVIDER as string);
+
 const accounts = [new Account(process.env.GENESIS_PRIV_KEY as string)];
 const wallet = new Wallet(provider, accounts);
 const blockchain = new Blockchain(provider, wallet);
