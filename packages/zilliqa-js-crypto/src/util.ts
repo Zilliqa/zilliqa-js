@@ -17,7 +17,6 @@ import elliptic from 'elliptic';
 import hashjs from 'hash.js';
 
 import { BN, validation } from '@zilliqa-js/util';
-import { ZilAddress } from './zilAddress';
 
 import { fromBech32Address } from './bech32';
 
@@ -247,20 +246,4 @@ export const verifyPrivateKey = (privateKey: string): boolean => {
   const keyPair = secp256k1.keyFromPrivate(privateKey, 'hex');
   const { result } = keyPair.validate();
   return result;
-};
-
-/**
- * getAddress
- *
- *
- *
- * @param {string} address - an address to transform
- * @returns {ZilAddress} - return `toType` specific format of address
- */
-export const getAddress = (address: string): ZilAddress => {
-  try {
-    return new ZilAddress(address);
-  } catch (error) {
-    throw error;
-  }
 };

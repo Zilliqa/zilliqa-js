@@ -47,7 +47,6 @@ export const sign = (
 
 export { schnorr };
 
-export * from './zilAddress';
 export * from './util';
 export * from './keystore';
 export * from './random';

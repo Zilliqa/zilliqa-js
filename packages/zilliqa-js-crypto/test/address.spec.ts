@@ -52,21 +52,4 @@ describe('addresses', () => {
       );
     });
   });
-
-  it('should test with getAddress function', () => {
-    bech32Tests.forEach(({ b16, b32 }) => {
-      expect(crypto.getAddress(b32).bytes20).toEqual(b16);
-      expect(crypto.getAddress(b16).bech32).toEqual(b32);
-      expect(crypto.getAddress(b16).checkSum).toEqual(
-        crypto.fromBech32Address(b32),
-      );
-      expect(crypto.getAddress(b32).bytes20Hex).toEqual(
-        '0x' + b16.replace('0x', '').toLowerCase(),
-      );
-      expect(crypto.getAddress(b16).bytes20).toEqual(b16);
-      expect(() => crypto.getAddress('wrong address').bech32).toThrow(
-        'unknown address',
-      );
-    });
-  });
 });

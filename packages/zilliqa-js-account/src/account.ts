@@ -41,42 +41,6 @@ export class Account {
   publicKey: string;
   address: string;
 
-  get checksumAddress(): string {
-    try {
-      return zcrypto.getAddress(this.address).checkSum;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  get bech32Address(): string {
-    try {
-      return zcrypto.getAddress(this.address).bech32;
-    } catch (error) {
-      throw error;
-    }
-  }
-  get bech32TestNetAddress(): string {
-    try {
-      return zcrypto.getAddress(this.address).bech32TestNet;
-    } catch (error) {
-      throw error;
-    }
-  }
-  get base58Address(): string {
-    try {
-      return zcrypto.getAddress(this.address).base58;
-    } catch (error) {
-      throw error;
-    }
-  }
-  get hexAddress(): string {
-    try {
-      return zcrypto.getAddress(this.address).bytes20Hex;
-    } catch (error) {
-      throw error;
-    }
-  }
   constructor(privateKey: string) {
     this.privateKey = privateKey;
     this.publicKey = zcrypto.getPubKeyFromPrivateKey(this.privateKey);
