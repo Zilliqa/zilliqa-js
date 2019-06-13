@@ -7,4 +7,3 @@ dist
 includes
 .env
 coverage
-devTestOnly/
