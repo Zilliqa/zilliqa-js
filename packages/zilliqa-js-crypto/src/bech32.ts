@@ -204,7 +204,7 @@ export const convertBits = (
  */
 export const toBech32Address = (
   address: string,
-  hrpPreset: string = HRP,
+  testnet: boolean = false,
 ): string => {
   if (!validation.isAddress(address)) {
     throw new Error('Invalid address format.');
@@ -220,7 +220,7 @@ export const toBech32Address = (
     throw new Error('Could not convert byte Buffer to 5-bit Buffer');
   }
 
-  return encode(hrpPreset, addrBz);
+  return encode(testnet ? tHRP : HRP, addrBz);
 };
 
 /**
@@ -231,7 +231,7 @@ export const toBech32Address = (
  */
 export const fromBech32Address = (
   address: string,
-  hrpPreset: string = HRP,
+  testnet: boolean = false,
 ): string => {
   const res = decode(address);
 
@@ -241,8 +241,9 @@ export const fromBech32Address = (
 
   const { hrp, data } = res;
 
-  if (hrp !== hrpPreset) {
-    throw new Error(`Expected hrp to be ${hrpPreset} but got ${hrp}`);
+  const shouldBe = testnet ? tHRP : HRP;
+  if (hrp !== shouldBe) {
+    throw new Error(`Expected hrp to be ${shouldBe} but got ${hrp}`);
   }
 
   const buf = convertBits(data, 5, 8, false);

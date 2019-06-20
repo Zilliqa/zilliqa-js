@@ -364,6 +364,40 @@ tx.confirm(some_hash)
   .catch((err) => // handle the error);
 ```
 
+### `blockConfirm(txHash: string, maxblockCount: number = 4, interval: number = 1000): Promise<Transaction>`
+
+Checks whether the `Transaction` is confirmed on the blockchain, by verifying
+the its `receipt` status (`boolean`). This method uses latest blockNumber to get the transaction receipt, which is more frendily to remote lookup node. By default, the number of blockCount is 4, with
+a starting interval of 1000ms. The member `Transaction.blockConfirmation` will count the block numbers during the process.
+
+**Parameters**
+
+- `txHash`: `string` - the transaction hash to use for polling.
+- `maxblockCount`: `number = 4` (Optional) - the maximum number of block count
+  before setting status as `Rejected`.
+- `interval`: `number = 1000` (Optional) - the initial interval. This grows
+  exponentially between attempts.
+
+**Returns**
+
+- `Promise<Transaction>` - `Transaction` with its status confirmed onchain.
+
+**Example**
+
+```typescript
+import { HTTPProvider } from '@zilliqa-js/core';
+import { Transaction } from '@zilliqa-js/account';
+
+// hash can be obtained from CreateTransaction
+const my_hash = 'some_known_tx_hash';
+conts tx = new Transaction(params, new HTTPProvider('http://my-api.com'));
+
+tx.blockConfirm(some_hash)
+  .map((tx) => // do something)
+  .catch((err) => // handle the error);
+
+```
+
 ### `map(txHash): Transaction`
 
 Maps over the transaction, taking a callback that accepts `TxParams`. The user
