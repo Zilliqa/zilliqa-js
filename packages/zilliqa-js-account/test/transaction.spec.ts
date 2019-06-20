@@ -10,6 +10,7 @@ import { BN, Long } from '@zilliqa-js/util';
 import { Transaction } from '../src/transaction';
 import { Wallet } from '../src/wallet';
 
+// tslint:disable-next-line: no-implicit-dependencies
 import fetch from 'jest-fetch-mock';
 
 const provider = new HTTPProvider('https://mock.com');
@@ -258,6 +259,220 @@ describe('Transaction', () => {
 
     await expect(pending.confirm('some_hash', 40, 0)).rejects.toThrow(
       'The transaction is still not confirmed after 40 attempts.',
+    );
+  });
+
+  it('should use block confirm to confirm a txn', async () => {
+    const responses = [
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: 888,
+          nonce: 1,
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          TranID: 'some_hash',
+          Info: 'Non-contract txn, sent to shard',
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          header: {
+            BlockNum: '10000',
+          },
+        },
+      },
+
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          header: {
+            BlockNum: '10000',
+          },
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        error: {
+          code: -888,
+          message: 'Not found',
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          header: {
+            BlockNum: '10001',
+          },
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          ID: 'some_hash',
+          receipt: { cumulative_gas: 1000, success: true },
+        },
+      },
+    ].map((res) => [JSON.stringify(res)] as [string]);
+
+    fetch.mockResponses(...responses);
+    const tx = await wallet.sign(
+      new Transaction(
+        {
+          version: 0,
+          toAddr: '0x1234567890123456789012345678901234567890',
+          amount: new BN(0),
+          gasPrice: new BN(1000),
+          gasLimit: Long.fromNumber(1000),
+        },
+        provider,
+      ),
+    );
+
+    const res = await provider.send(RPCMethod.CreateTransaction, tx.txParams);
+    const confirmed = await tx.blockConfirm(res.result.TranID);
+    const state = confirmed.txParams;
+
+    expect(confirmed.isConfirmed()).toBeTruthy();
+    expect(state.receipt).toEqual({ success: true, cumulative_gas: 1000 });
+    expect(confirmed.blockConfirmation).toEqual(1);
+  });
+  it('should use block confirm to reject a txn', async () => {
+    const responses = [
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: 888,
+          nonce: 1,
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          TranID: 'some_hash',
+          Info: 'Non-contract txn, sent to shard',
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          header: {
+            BlockNum: '10001',
+          },
+        },
+      },
+
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          header: {
+            BlockNum: '10001',
+          },
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        error: {
+          code: -888,
+          message: 'Not found',
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          header: {
+            BlockNum: '10002',
+          },
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        error: {
+          code: -888,
+          message: 'Not found',
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          header: {
+            BlockNum: '10003',
+          },
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        error: {
+          code: -888,
+          message: 'Not found',
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          header: {
+            BlockNum: '10004',
+          },
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        error: {
+          code: -888,
+          message: 'Not found',
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          header: {
+            BlockNum: '10004',
+          },
+        },
+      },
+    ].map((res) => [JSON.stringify(res)] as [string]);
+
+    fetch.mockResponses(...responses);
+    const tx = await wallet.sign(
+      new Transaction(
+        {
+          version: 0,
+          toAddr: '0x1234567890123456789012345678901234567890',
+          amount: new BN(0),
+          gasPrice: new BN(1000),
+          gasLimit: Long.fromNumber(1000),
+        },
+        provider,
+      ),
+    );
+
+    const res = await provider.send(RPCMethod.CreateTransaction, tx.txParams);
+
+    await expect(tx.blockConfirm(res.result.TranID, 4, 1000)).rejects.toThrow(
+      'The transaction is still not confirmed after 4 blocks.',
     );
   });
 });

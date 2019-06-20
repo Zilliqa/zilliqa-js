@@ -63,6 +63,7 @@ describe('Contracts', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
+          ContractAddress: `0x0000000000000000000000000000000000000000`,
           TranID: 'some_hash',
           Info: 'Non-contract txn, sent to shard',
         },
@@ -124,6 +125,7 @@ describe('Contracts', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
+          ContractAddress: `0x0000000000000000000000000000000000000000`,
           TranID: 'some_hash',
           Info: 'Non-contract txn, sent to shard',
         },
@@ -261,6 +263,7 @@ describe('Contracts', () => {
         jsonrpc: '2.0',
         result: {
           TranID: 'some_hash',
+          ContractAddress: `0x0000000000000000000000000000000000000000`,
         },
       },
       {

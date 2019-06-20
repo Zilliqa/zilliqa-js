@@ -128,7 +128,6 @@ export class Wallet extends Signer {
     const hdKey = hdkey.fromMasterSeed(seed);
     const childKey = hdKey.derive(`m/44'/313'/0'/0/${index}`);
     const privateKey = childKey.privateKey.toString('hex');
-
     return this.addByPrivateKey(privateKey);
   }
 

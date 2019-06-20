@@ -135,6 +135,7 @@ export interface TxBlockHeader {
 
 export interface TxBlockObj {
   body: {
+    // TODO: add Blockhash due to latest `GetTxBlock` api
     HeaderSign: string;
     MicroBlockEmpty: number[];
     MicroBlockHashes: string[];

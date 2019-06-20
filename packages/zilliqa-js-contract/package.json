@@ -21,6 +21,7 @@
   "dependencies": {
     "@zilliqa-js/account": "0.6.3",
     "@zilliqa-js/core": "0.6.3",
+    "@zilliqa-js/crypto": "^0.6.3",
     "@zilliqa-js/util": "0.6.3",
     "hash.js": "^1.1.5",
     "utility-types": "^2.1.0"

@@ -482,7 +482,6 @@ describe('Contract: HWGC', async () => {
     try {
       // Deploy contract 1
       const code1 = `scilla_version 0
-
     library ChainChain1
     
     let one_msg = 
@@ -531,7 +530,6 @@ describe('Contract: HWGC', async () => {
     end`;
 
       const code2 = `scilla_version 0
-
     library ChainChain2
     
     let one_msg = 
@@ -575,7 +573,6 @@ describe('Contract: HWGC', async () => {
     end`;
 
       const code3 = `scilla_version 0
-
     library ChainChain3
     
     let one_msg = 

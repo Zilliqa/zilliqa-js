@@ -18,6 +18,8 @@ import {
   Provider,
   RPCResponse,
   Signable,
+  TxBlockObj,
+  RPCMethod,
 } from '@zilliqa-js/core';
 import { getAddressFromPublicKey, normaliseAddress } from '@zilliqa-js/crypto';
 import { BN, Long } from '@zilliqa-js/util';
@@ -60,6 +62,7 @@ export class Transaction implements Signable {
   id?: string;
   status: TxStatus;
   toDS: boolean;
+  blockConfirmation?: number;
 
   // parameters
   private version: number;
@@ -136,11 +139,11 @@ export class Transaction implements Signable {
     this.gasPrice = params.gasPrice;
     this.gasLimit = params.gasLimit;
     this.receipt = params.receipt;
-
     // public members
     this.provider = provider;
     this.status = status;
     this.toDS = toDS;
+    this.blockConfirmation = 0;
   }
 
   /**
@@ -204,6 +207,59 @@ export class Transaction implements Signable {
   }
 
   /**
+   * blockConfirm
+   *
+   * Use `RPCMethod.GetLatestBlock` to get latest blockNumber
+   * Use interval to get the latestBlockNumber
+   * After BlockNumber change, then we use `RPCMethod.GetTransaction` to get the receipt
+   *
+   * @param {string} txHash
+   * @param {number} maxblockCount
+   * @param {number} interval interval in milliseconds
+   * @returns {Promise<Transaction>}
+   */
+  async blockConfirm(
+    txHash: string,
+    maxblockCount: number = 4,
+    interval: number = 1000,
+  ) {
+    this.status = TxStatus.Pending;
+    const blockStart: BN = await this.getBlockNumber();
+    let blockChecked = blockStart;
+    for (let attempt = 0; attempt < maxblockCount; attempt += 1) {
+      try {
+        const blockLatest: BN = await this.getBlockNumber();
+        const blockNext: BN = blockChecked.add(
+          new BN(attempt === 0 ? attempt : 1),
+        );
+        if (blockLatest.gte(blockNext)) {
+          blockChecked = blockLatest;
+          if (await this.trackTx(txHash)) {
+            this.blockConfirmation = blockLatest.sub(blockStart).toNumber();
+            return this;
+          }
+        } else {
+          attempt = attempt - 1 >= 0 ? attempt - 1 : 0;
+        }
+      } catch (err) {
+        this.status = TxStatus.Rejected;
+        throw err;
+      }
+
+      if (attempt + 1 < maxblockCount) {
+        await sleep(interval);
+      }
+    }
+
+    // if failed
+    const blockFailed: BN = await this.getBlockNumber();
+    this.blockConfirmation = blockFailed.sub(blockStart).toNumber();
+    this.status = TxStatus.Rejected;
+    const errorMessage = `The transaction is still not confirmed after ${maxblockCount} blocks.`;
+
+    throw new Error(errorMessage);
+  }
+  /**
    * confirmReceipt
    *
    * Similar to the Promise API. This sets the Transaction instance to a state
@@ -242,9 +298,8 @@ export class Transaction implements Signable {
       }
     }
     this.status = TxStatus.Rejected;
-    throw new Error(
-      `The transaction is still not confirmed after ${maxAttempts} attempts.`,
-    );
+    const errorMessage = `The transaction is still not confirmed after ${maxAttempts} attempts.`;
+    throw new Error(errorMessage);
   }
 
   /**
@@ -278,7 +333,7 @@ export class Transaction implements Signable {
 
   private async trackTx(txHash: string): Promise<boolean> {
     const res: RPCResponse<TxIncluded, string> = await this.provider.send(
-      'GetTransaction',
+      RPCMethod.GetTransaction,
       txHash,
     );
 
@@ -296,5 +351,21 @@ export class Transaction implements Signable {
         ? TxStatus.Confirmed
         : TxStatus.Rejected;
     return true;
+  }
+
+  private async getBlockNumber(): Promise<BN> {
+    try {
+      const res: RPCResponse<TxBlockObj, string> = await this.provider.send(
+        RPCMethod.GetLatestTxBlock,
+      );
+      if (res.error === undefined && res.result.header.BlockNum) {
+        // if blockNumber is too high, we use BN to be safer
+        return new BN(res.result.header.BlockNum);
+      } else {
+        throw new Error('Can not get latest BlockNumber');
+      }
+    } catch (error) {
+      throw error;
+    }
   }
 }

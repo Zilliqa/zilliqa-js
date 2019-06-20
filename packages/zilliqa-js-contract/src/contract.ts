@@ -15,7 +15,11 @@
 
 import { Wallet, Transaction, TxStatus } from '@zilliqa-js/account';
 import { GET_TX_ATTEMPTS, RPCMethod, Provider, sign } from '@zilliqa-js/core';
-import { normaliseAddress } from '@zilliqa-js/crypto';
+import {
+  toChecksumAddress,
+  isValidChecksumAddress,
+  normaliseAddress,
+} from '@zilliqa-js/crypto';
 import { BN } from '@zilliqa-js/util';
 
 import { Contracts } from './factory';
@@ -117,9 +121,14 @@ export class Contract {
       { ...tx.txParams, priority: tx.toDS },
     );
 
-    return response.error
-      ? tx.setStatus(TxStatus.Rejected)
-      : tx.confirm(response.result.TranID, attempts, interval);
+    if (response.error) {
+      this.address = undefined;
+      return tx.setStatus(TxStatus.Rejected);
+    }
+    this.address = response.result.ContractAddress
+      ? toChecksumAddress(response.result.ContractAddress)
+      : undefined;
+    return tx.confirm(response.result.TranID, attempts, interval);
   }
 
   /**
@@ -160,11 +169,15 @@ export class Contract {
 
       if (tx.isRejected()) {
         this.status = ContractStatus.Rejected;
+        this.address = undefined;
         return [tx, this];
       }
 
       this.status = ContractStatus.Deployed;
-      this.address = Contracts.getAddressForContract(tx);
+      this.address =
+        this.address && isValidChecksumAddress(this.address)
+          ? this.address
+          : Contracts.getAddressForContract(tx);
 
       return [tx, this];
     } catch (err) {

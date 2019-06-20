@@ -37,7 +37,7 @@ export function toTxParams(
     ...rest,
     version: parseInt(version, 10),
     toAddr: toChecksumAddress(toAddr),
-    pubKey: senderPubKey,
+    pubKey: senderPubKey.replace('0x', ''),
     gasPrice: new BN(gasPrice),
     gasLimit: Long.fromString(gasLimit, 10),
     amount: new BN(amount),
