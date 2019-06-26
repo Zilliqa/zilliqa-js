@@ -406,7 +406,10 @@ export class Blockchain implements ZilliqaModule {
   getSmartContractCode(
     address: string,
   ): Promise<RPCResponse<{ code: string }, string>> {
-    return this.provider.send(RPCMethod.GetSmartContractCode, address);
+    return this.provider.send(
+      RPCMethod.GetSmartContractCode,
+      address.replace('0x', '').toLowerCase(),
+    );
   }
 
   /**
@@ -416,7 +419,10 @@ export class Blockchain implements ZilliqaModule {
    * @returns {Promise<RPCResponse<Value[], string>>}
    */
   getSmartContractInit(address: string): Promise<RPCResponse<Value[], string>> {
-    return this.provider.send(RPCMethod.GetSmartContractInit, address);
+    return this.provider.send(
+      RPCMethod.GetSmartContractInit,
+      address.replace('0x', '').toLowerCase(),
+    );
   }
 
   /**
@@ -428,7 +434,10 @@ export class Blockchain implements ZilliqaModule {
   getSmartContractState(
     address: string,
   ): Promise<RPCResponse<Value[], string>> {
-    return this.provider.send(RPCMethod.GetSmartContractState, address);
+    return this.provider.send(
+      RPCMethod.GetSmartContractState,
+      address.replace('0x', '').toLowerCase(),
+    );
   }
 
   /**
@@ -440,7 +449,10 @@ export class Blockchain implements ZilliqaModule {
   getSmartContracts(
     address: string,
   ): Promise<RPCResponse<Omit<ContractObj, 'init' | 'abi'>, string>> {
-    return this.provider.send(RPCMethod.GetSmartContracts, address);
+    return this.provider.send(
+      RPCMethod.GetSmartContracts,
+      address.replace('0x', '').toLowerCase(),
+    );
   }
 
   /**
