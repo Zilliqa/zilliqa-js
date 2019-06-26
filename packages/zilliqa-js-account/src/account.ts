@@ -40,11 +40,13 @@ export class Account {
   privateKey: string;
   publicKey: string;
   address: string;
+  bech32Address: string;
 
   constructor(privateKey: string) {
     this.privateKey = privateKey;
     this.publicKey = zcrypto.getPubKeyFromPrivateKey(this.privateKey);
     this.address = zcrypto.getAddressFromPublicKey(this.publicKey);
+    this.bech32Address = zcrypto.toBech32Address(this.address);
   }
 
   /**
