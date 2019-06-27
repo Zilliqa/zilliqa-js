@@ -14,6 +14,8 @@
 //   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import { Transaction, Wallet, util } from '@zilliqa-js/account';
+import { fromBech32Address } from '@zilliqa-js/crypto';
+import { validation } from '@zilliqa-js/util';
 import { ContractObj, Value } from '@zilliqa-js/contract';
 import {
   GET_TX_ATTEMPTS,
@@ -390,7 +392,8 @@ export class Blockchain implements ZilliqaModule {
    * @param {string} address
    * @returns {Promise<RPCResponse<any, string>>}
    */
-  getBalance(address: string): Promise<RPCResponse<any, string>> {
+  getBalance(addr: string): Promise<RPCResponse<any, string>> {
+    const address = validation.isBech32(addr) ? fromBech32Address(addr) : addr;
     return this.provider.send(
       RPCMethod.GetBalance,
       address.replace('0x', '').toLowerCase(),
@@ -404,9 +407,13 @@ export class Blockchain implements ZilliqaModule {
    * @returns {Promise<RPCResponse< code: string }, string>>}
    */
   getSmartContractCode(
-    address: string,
+    addr: string,
   ): Promise<RPCResponse<{ code: string }, string>> {
-    return this.provider.send(RPCMethod.GetSmartContractCode, address);
+    const address = validation.isBech32(addr) ? fromBech32Address(addr) : addr;
+    return this.provider.send(
+      RPCMethod.GetSmartContractCode,
+      address.replace('0x', '').toLowerCase(),
+    );
   }
 
   /**
@@ -415,8 +422,12 @@ export class Blockchain implements ZilliqaModule {
    * @param {string} address
    * @returns {Promise<RPCResponse<Value[], string>>}
    */
-  getSmartContractInit(address: string): Promise<RPCResponse<Value[], string>> {
-    return this.provider.send(RPCMethod.GetSmartContractInit, address);
+  getSmartContractInit(addr: string): Promise<RPCResponse<Value[], string>> {
+    const address = validation.isBech32(addr) ? fromBech32Address(addr) : addr;
+    return this.provider.send(
+      RPCMethod.GetSmartContractInit,
+      address.replace('0x', '').toLowerCase(),
+    );
   }
 
   /**
@@ -425,10 +436,12 @@ export class Blockchain implements ZilliqaModule {
    * @param {string} address
    * @returns {Promise<RPCResponse<Value[], string>>}
    */
-  getSmartContractState(
-    address: string,
-  ): Promise<RPCResponse<Value[], string>> {
-    return this.provider.send(RPCMethod.GetSmartContractState, address);
+  getSmartContractState(addr: string): Promise<RPCResponse<Value[], string>> {
+    const address = validation.isBech32(addr) ? fromBech32Address(addr) : addr;
+    return this.provider.send(
+      RPCMethod.GetSmartContractState,
+      address.replace('0x', '').toLowerCase(),
+    );
   }
 
   /**
@@ -438,9 +451,13 @@ export class Blockchain implements ZilliqaModule {
    * @returns {Promise<RPCResponse<Omit<ContractObj, 'init' | 'abi'>, string>>}
    */
   getSmartContracts(
-    address: string,
+    addr: string,
   ): Promise<RPCResponse<Omit<ContractObj, 'init' | 'abi'>, string>> {
-    return this.provider.send(RPCMethod.GetSmartContracts, address);
+    const address = validation.isBech32(addr) ? fromBech32Address(addr) : addr;
+    return this.provider.send(
+      RPCMethod.GetSmartContracts,
+      address.replace('0x', '').toLowerCase(),
+    );
   }
 
   /**
