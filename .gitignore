@@ -5,6 +5,7 @@ lerna-debug.log
 yarn-error.log
 dist
 includes
+tsconfig.tsbuildinfo
 .env
 coverage
 devTestOnly/
