@@ -1,0 +1,15 @@
+########## Global owners ##########
+
+*               @edisonljh @AmritKumar
+
+########## Source Code ##########
+
+*.ts            @edisonljh @neeboo
+
+########## Documentation ##########
+
+/README.md      @edisonljh @evesnow91 @AmritKumar 
+
+########## GitHub metadata, including this file ##########
+
+/.github/        @edisonljh @AmritKumar
