@@ -33,58 +33,12 @@ import { createLogger, c } from './logger';
 const logPreProcess = createLogger('preprocess');
 const logBundle = createLogger('bundle');
 
-/**
- * preProcess
- *
- * This function exists for the purpose of preprocessing problematic
- * third-party modules like elliptic.js with webpack, which cause problems
- * with rollup due to things like circular dependencies.
- */
-function preProcess() {
-  const modules = project.preprocess.map((mod) => {
-    return new Promise((resolve, reject) => {
-      const compiler = webpack({
-        entry: {
-          [mod.name]: path.join(mod.path, mod.entry),
-        },
-        output: {
-          filename: '[name].js',
-          library: mod.name,
-          libraryTarget: 'commonjs2',
-          path: mod.outDir,
-        },
-        mode: 'production',
-        optimization: {
-          minimize: false,
-        },
-      });
-
-      compiler.run((err, stats) => {
-        if (err) {
-          reject(err);
-        } else {
-          logPreProcess(
-            `Successfully preprocessed ${Object.keys(
-              stats.compilation.assets,
-            ).join(' ,')}`,
-          );
-          resolve(stats);
-        }
-      });
-    });
-  });
-
-  return Promise.all(modules);
-}
-
 async function bundle() {
   try {
     const outputs = process.argv.slice(2)[0].split(',');
     const packages = project.packages.filter(
       ({ name }) => name !== 'zilliqa-js-proto',
     );
-
-    await preProcess();
 
     const count = packages.length;
     let cur = 0;
@@ -102,11 +56,6 @@ async function bundle() {
         input: path.join(pkg.src, 'index.ts'),
         plugins: [
           alias({
-            elliptic: path.resolve(
-              __dirname,
-              '../',
-              'includes/elliptic/elliptic.js',
-            ),
             proto: path.resolve(__dirname, '../', 'includes/proto/index.js'),
           }),
           resolve({

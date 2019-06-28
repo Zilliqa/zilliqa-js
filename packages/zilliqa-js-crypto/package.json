@@ -21,7 +21,7 @@
     "@zilliqa-js/util": "0.7.1",
     "aes-js": "^3.1.1",
     "bsert": "^0.0.4",
-    "elliptic": "^6.4.1",
+    "elliptic": "^6.5.0",
     "hash.js": "^1.1.5",
     "hmac-drbg": "^1.0.1",
     "pbkdf2": "^3.0.16",
