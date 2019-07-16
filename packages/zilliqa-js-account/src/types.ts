@@ -54,3 +54,9 @@ export interface TxParams {
   pubKey?: string;
   signature?: string;
 }
+
+export const enum TxEventName {
+  Error = 'error',
+  Receipt = 'receipt',
+  Track = 'track',
+}
