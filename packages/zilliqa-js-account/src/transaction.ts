@@ -217,16 +217,6 @@ export class Transaction implements Signable {
   }
 
   observed(): EventEmitter<Transaction> {
-    try {
-      if (this.eventEmitter.resolve) {
-        this.eventEmitter.resolve(this);
-      }
-    } catch (error) {
-      if (this.eventEmitter.reject) {
-        this.eventEmitter.reject(error);
-      }
-      throw error;
-    }
     return this.eventEmitter;
   }
   /**
