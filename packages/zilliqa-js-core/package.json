@@ -21,7 +21,6 @@
   "dependencies": {
     "@zilliqa-js/crypto": "0.7.2",
     "@zilliqa-js/util": "0.7.1",
-    "axios": "^0.18.0",
     "cross-fetch": "^2.2.2",
     "mitt": "^1.1.3"
   }
