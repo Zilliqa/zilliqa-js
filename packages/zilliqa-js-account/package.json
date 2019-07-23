@@ -1,6 +1,6 @@
 {
   "name": "@zilliqa-js/account",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "Used for signing transactions.",
   "main": "dist/index.js",
   "node": "dist/index.js",
@@ -20,7 +20,7 @@
   "dependencies": {
     "@types/bip39": "^2.4.0",
     "@types/hdkey": "^0.7.0",
-    "@zilliqa-js/core": "0.7.2",
+    "@zilliqa-js/core": "0.7.3",
     "@zilliqa-js/crypto": "0.7.2",
     "@zilliqa-js/proto": "0.7.0",
     "@zilliqa-js/util": "0.7.1",
