@@ -421,7 +421,7 @@ describe('Contracts', () => {
       .toLowerCase();
     const contractAt = contractFactory.at(b32);
 
-    const sendMock = jest.fn(() => Promise.resolve({ result: 'mock' }));
+    const sendMock = jest.fn().mockResolvedValue({ result: 'mock' });
 
     contractAt.provider.send = sendMock;
     await contractAt.getInit();
