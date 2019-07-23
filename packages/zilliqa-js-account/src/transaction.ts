@@ -20,11 +20,19 @@ import {
   Signable,
   TxBlockObj,
   RPCMethod,
+  EventEmitter,
 } from '@zilliqa-js/core';
 import { getAddressFromPublicKey, normaliseAddress } from '@zilliqa-js/crypto';
 import { BN, Long } from '@zilliqa-js/util';
 
-import { TxParams, TxReceipt, TxStatus, TxIncluded } from './types';
+import {
+  TxParams,
+  TxReceipt,
+  TxStatus,
+  TxIncluded,
+  TxEventName,
+  // TxEvents,
+} from './types';
 import { encodeTransactionProto, sleep } from './util';
 
 /**
@@ -59,6 +67,7 @@ export class Transaction implements Signable {
   }
 
   provider: Provider;
+  eventEmitter: EventEmitter<Transaction>;
   id?: string;
   status: TxStatus;
   toDS: boolean;
@@ -144,6 +153,7 @@ export class Transaction implements Signable {
     this.status = status;
     this.toDS = toDS;
     this.blockConfirmation = 0;
+    this.eventEmitter = new EventEmitter();
   }
 
   /**
@@ -206,6 +216,9 @@ export class Transaction implements Signable {
     return this;
   }
 
+  observed(): EventEmitter<Transaction> {
+    return this.eventEmitter;
+  }
   /**
    * blockConfirm
    *
@@ -234,6 +247,11 @@ export class Transaction implements Signable {
         );
         if (blockLatest.gte(blockNext)) {
           blockChecked = blockLatest;
+          this.emit(TxEventName.Track, {
+            txHash,
+            attempt,
+            currentBlock: blockChecked.toString(),
+          });
           if (await this.trackTx(txHash)) {
             this.blockConfirmation = blockLatest.sub(blockStart).toNumber();
             return this;
@@ -285,6 +303,10 @@ export class Transaction implements Signable {
   ): Promise<Transaction> {
     this.status = TxStatus.Pending;
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      this.emit(TxEventName.Track, {
+        txHash,
+        attempt,
+      });
       try {
         if (await this.trackTx(txHash)) {
           return this;
@@ -338,6 +360,7 @@ export class Transaction implements Signable {
     );
 
     if (res.error) {
+      this.emit(TxEventName.Error, res.error);
       return false;
     }
 
@@ -346,6 +369,7 @@ export class Transaction implements Signable {
       ...res.result.receipt,
       cumulative_gas: parseInt(res.result.receipt.cumulative_gas, 10),
     };
+    this.emit(TxEventName.Receipt, this.receipt);
     this.status =
       this.receipt && this.receipt.success
         ? TxStatus.Confirmed
@@ -367,5 +391,8 @@ export class Transaction implements Signable {
     } catch (error) {
       throw error;
     }
+  }
+  private emit(event: TxEventName | string, txEvent: any) {
+    this.eventEmitter.emit(event, { ...txEvent, event });
   }
 }
