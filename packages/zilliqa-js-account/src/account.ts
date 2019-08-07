@@ -14,6 +14,7 @@
 //   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import * as zcrypto from '@zilliqa-js/crypto';
+import { validation } from '@zilliqa-js/util';
 
 export class Account {
   /**
@@ -43,7 +44,7 @@ export class Account {
   bech32Address: string;
 
   constructor(privateKey: string) {
-    this.privateKey = privateKey;
+    this.privateKey = this.normalizePrivateKey(privateKey);
     this.publicKey = zcrypto.getPubKeyFromPrivateKey(this.privateKey);
     this.address = zcrypto.getAddressFromPublicKey(this.publicKey);
     this.bech32Address = zcrypto.toBech32Address(this.address);
@@ -83,5 +84,16 @@ export class Account {
    */
   signTransaction(bytes: Buffer) {
     return zcrypto.sign(bytes, this.privateKey, this.publicKey);
+  }
+
+  private normalizePrivateKey(privateKey: string) {
+    try {
+      if (!validation.isPrivateKey(privateKey)) {
+        throw new Error('Private key is not correct');
+      }
+      return privateKey.toLowerCase().replace('0x', '');
+    } catch (error) {
+      throw error;
+    }
   }
 }
