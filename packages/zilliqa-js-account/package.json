@@ -1,6 +1,6 @@
 {
   "name": "@zilliqa-js/account",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "description": "Used for signing transactions.",
   "main": "dist/index.js",
   "node": "dist/index.js",
