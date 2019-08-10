@@ -14,7 +14,6 @@
 //   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import * as zcrypto from '@zilliqa-js/crypto';
-import { validation } from '@zilliqa-js/util';
 
 export class Account {
   /**
@@ -87,13 +86,6 @@ export class Account {
   }
 
   private normalizePrivateKey(privateKey: string) {
-    try {
-      if (!validation.isPrivateKey(privateKey)) {
-        throw new Error('Private key is not correct');
-      }
-      return privateKey.toLowerCase().replace('0x', '');
-    } catch (error) {
-      throw error;
-    }
+    return zcrypto.normalizePrivateKey(privateKey);
   }
 }
