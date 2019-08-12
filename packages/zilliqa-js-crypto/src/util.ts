@@ -18,7 +18,7 @@ import hashjs from 'hash.js';
 
 import { BN, validation } from '@zilliqa-js/util';
 
-import { fromBech32Address } from './bech32';
+import { fromBech32Address, toBech32Address } from './bech32';
 
 const secp256k1 = elliptic.ec('secp256k1');
 
@@ -32,7 +32,8 @@ const secp256k1 = elliptic.ec('secp256k1');
  * @returns {string}
  */
 export const getAddressFromPrivateKey = (privateKey: string): string => {
-  const keyPair = secp256k1.keyFromPrivate(privateKey, 'hex');
+  const normalizedPrviateKey = normalizePrivateKey(privateKey);
+  const keyPair = secp256k1.keyFromPrivate(normalizedPrviateKey, 'hex');
   const pub = keyPair.getPublic(true, 'hex');
 
   return toChecksumAddress(
@@ -54,8 +55,52 @@ export const getAddressFromPrivateKey = (privateKey: string): string => {
  * @returns {string}
  */
 export const getPubKeyFromPrivateKey = (privateKey: string) => {
-  const keyPair = secp256k1.keyFromPrivate(privateKey, 'hex');
+  const normalizedPrviateKey = normalizePrivateKey(privateKey);
+  const keyPair = secp256k1.keyFromPrivate(normalizedPrviateKey, 'hex');
   return keyPair.getPublic(true, 'hex');
+};
+
+export const getAccountFrom0xPrivateKey = (privateKeyWith0x: string) => {
+  const privateKeyWithout0x = normalizePrivateKey(privateKeyWith0x);
+  const keyPair = secp256k1.keyFromPrivate(privateKeyWith0x, 'hex');
+  const publicKeyWith0x = keyPair.getPublic(true, 'hex');
+  const addressWith0x = getAddressFromPublicKey(publicKeyWith0x);
+  const bech32With0x = toBech32Address(addressWith0x);
+  const with0x = {
+    prv: privateKeyWith0x,
+    pub: publicKeyWith0x,
+    addr: addressWith0x,
+    bech32: bech32With0x,
+  };
+
+  const keyPair2 = secp256k1.keyFromPrivate(privateKeyWithout0x, 'hex');
+  const publicKeyWithout0x = keyPair2.getPublic(true, 'hex');
+  const addressWithout0x = getAddressFromPublicKey(publicKeyWithout0x);
+  const bech32Without0x = toBech32Address(addressWithout0x);
+  const without0x = {
+    prv: privateKeyWithout0x,
+    pub: publicKeyWithout0x,
+    addr: addressWithout0x,
+    bech32: bech32Without0x,
+  };
+
+  const privateKeyAfterChange = keyPair.getPrivate('hex');
+  const publicKeyAfterChange = keyPair.getPublic(true, 'hex');
+  const addressAfterChange = getAddressFromPublicKey(publicKeyAfterChange);
+  const bech32AfterChange = toBech32Address(addressAfterChange);
+
+  const changed = {
+    prv: privateKeyAfterChange,
+    pub: publicKeyAfterChange,
+    addr: addressAfterChange,
+    bech32: bech32AfterChange,
+  };
+
+  return {
+    with0x,
+    without0x,
+    changed,
+  };
 };
 
 /**
@@ -246,4 +291,19 @@ export const verifyPrivateKey = (privateKey: string): boolean => {
   const keyPair = secp256k1.keyFromPrivate(privateKey, 'hex');
   const { result } = keyPair.validate();
   return result;
+};
+
+export const normalizePrivateKey = (privateKey: string) => {
+  try {
+    if (!validation.isPrivateKey(privateKey)) {
+      throw new Error('Private key is not correct');
+    }
+    const normalized = privateKey.toLowerCase().replace('0x', '');
+    if (!verifyPrivateKey(normalized)) {
+      throw new Error('Private key is not correct');
+    }
+    return normalized;
+  } catch (error) {
+    throw error;
+  }
 };
