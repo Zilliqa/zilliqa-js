@@ -60,6 +60,14 @@ export const getPubKeyFromPrivateKey = (privateKey: string) => {
   return keyPair.getPublic(true, 'hex');
 };
 
+/**
+ * getAccountFrom0xPrivateKey
+ *
+ * Utility method for recovering account from 0x private key.
+ * See https://github.com/Zilliqa/Zilliqa-JavaScript-Library/pull/159
+ * @param privateKeyWith0x : private key with 0x prefix
+ */
+
 export const getAccountFrom0xPrivateKey = (privateKeyWith0x: string) => {
   const privateKeyWithout0x = normalizePrivateKey(privateKeyWith0x);
   const keyPair = secp256k1.keyFromPrivate(privateKeyWith0x, 'hex');
@@ -293,7 +301,14 @@ export const verifyPrivateKey = (privateKey: string): boolean => {
   return result;
 };
 
-export const normalizePrivateKey = (privateKey: string) => {
+/**
+ * normalizePrivateKey : normalise private key from 0x or without 0x prefix
+ *
+ * @param {string} privateKey
+ * @returns {string}
+ */
+
+export const normalizePrivateKey = (privateKey: string): string => {
   try {
     if (!validation.isPrivateKey(privateKey)) {
       throw new Error('Private key is not correct');
