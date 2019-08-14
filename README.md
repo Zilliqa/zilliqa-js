@@ -47,56 +47,56 @@ a `semver` bump before being able to take advantage of new features/bug fixes.
 ## Quick Start
 
 ```javascript
-const { Transaction } = require('@zilliqa-js/account');
-const { BN, Long, bytes, units, PRESETS } = require('@zilliqa-js/util');
-const { Zilliqa } = require('@zilliqa-js/zilliqa');
-const CP = require ('@zilliqa-js/crypto');
+const { BN, Long, bytes, units } = require("@zilliqa-js/util");
+const { Zilliqa } = require("@zilliqa-js/zilliqa");
+const { toBech32Address, getAddressFromPrivateKey} = require("@zilliqa-js/crypto");
 
-const zilliqa = new Zilliqa(PRESETS.DEVNET_URL);
+const zilliqa = new Zilliqa("https://dev-api.zilliqa.com");
 
 // These are set by the core protocol, and may vary per-chain.
-// You can choose to use the preset according to this example; 
-// or you can manually pack the bytes according to chain id and msg version.
+// You can manually pack the bytes according to chain id and msg version.
 // For more information: https://apidocs.zilliqa.com/?shell#getnetworkid
-const VERSION = PRESETS.DEVNET_VERSION;
+
+const chainId = 333; // chainId of the developer testnet
+const msgVersion = 1; // current msgVersion
+const VERSION = bytes.pack(chainId, msgVersion);
 
 // Populate the wallet with an account
-const privkey = '3375F915F3F9AE35E6B301B7670F53AD1A5BE15D8221EC7FD5E503F21D3450C8';
+const privateKey= '3375F915F3F9AE35E6B301B7670F53AD1A5BE15D8221EC7FD5E503F21D3450C8';
 
-zilliqa.wallet.addByPrivateKey(
-  privkey
-);
+zilliqa.wallet.addByPrivateKey(privateKey);
 
-const address = CP.getAddressFromPrivateKey(privkey);
-console.log("Your account address is:");
-console.log(`0x${address}`);
+const address = getAddressFromPrivateKey(privateKey);
+console.log(`My account address is: 0x${address}.`);
+console.log(`My account bech32 address is: ${toBech32Address(address)}.`);
+
 
 async function testBlockchain() {
   try {
-
     // Get Balance
     const balance = await zilliqa.blockchain.getBalance(address);
     // Get Minimum Gas Price from blockchain
     const minGasPrice = await zilliqa.blockchain.getMinimumGasPrice();
+
+    // Account balance (See note 1)
     console.log(`Your account balance is:`);
-    console.log(balance.result)
+    console.log(balance.result);
     console.log(`Current Minimum Gas Price: ${minGasPrice.result}`);
-    const myGasPrice = units.toQa('1000', units.Units.Li); // Gas Price that will be used by all transactions
-    console.log(`My Gas Price ${myGasPrice.toString()}`)
-    console.log('Sufficient Gas Price?');
-    console.log(myGasPrice.gte(new BN(minGasPrice.result))); // Checks if your gas price is less than the minimum gas price
+    const myGasPrice = units.toQa("1000", units.Units.Li); // Gas Price that will be used by all transactions
+    console.log(`My Gas Price ${myGasPrice.toString()}`);
+    const isGasSufficient = myGasPrice.gte(new BN(minGasPrice.result)); // Checks if your gas price is less than the minimum gas price
+    console.log(`Is the gas price sufficient? ${isGasSufficient}`);
 
     // Send a transaction to the network
     const tx = await zilliqa.blockchain.createTransaction(
       zilliqa.transactions.new({
         version: VERSION,
-        toAddr: "573EC96638C8BB1C386394602E1460634F02ADDA",
+        toAddr: "0xA54E49719267E8312510D7b78598ceF16ff127CE",
         amount: new BN(units.toQa("1", units.Units.Zil)), // Sending an amount in Zil (1) and converting the amount to Qa
         gasPrice: myGasPrice, // Minimum gasPrice veries. Check the `GetMinimumGasPrice` on the blockchain
         gasLimit: Long.fromNumber(1)
       })
     );
-    
 
     console.log(`The transaction status is:`);
     console.log(tx.receipt);
@@ -155,9 +155,6 @@ async function testBlockchain() {
       {
         vname: "owner",
         type: "ByStr20",
-        // NOTE: all byte strings passed to Scilla contracts _must_ be
-        // prefixed with 0x. Failure to do so will result in the network
-        // rejecting the transaction while consuming gas!
         value: `0x${address}`
       }
     ];
@@ -186,7 +183,7 @@ async function testBlockchain() {
         {
           vname: "msg",
           type: "String",
-          value: "Hello World"
+          value: "Hello World!"
         }
       ],
       {
@@ -194,15 +191,17 @@ async function testBlockchain() {
         version: VERSION,
         amount: new BN(0),
         gasPrice: myGasPrice,
-        gasLimit: Long.fromNumber(8000),
+        gasLimit: Long.fromNumber(8000)
       }
     );
-    console.log(callTx);
+
+    // Retrieving the transaction receipt (See note 2)
+    console.log(JSON.stringify(callTx.receipt, null, 4));
 
     //Get the contract state
     const state = await hello.getState();
     console.log("The state of the contract is:");
-    console.log(state);
+    console.log(JSON.stringify(state, null, 4));
   } catch (err) {
     console.log(err);
   }
@@ -210,8 +209,50 @@ async function testBlockchain() {
 
 testBlockchain();
 
-
 ```
+
+### Notes on the Quick Start script
+
+#### Note 1: Account balance
+
+The account balance is an object with two fields, `balance` and `nonce`. 
+
+`balance` is the account balance in Qa, which is the lowest denomination in Zilliqa. 
+For more information about gas accounting, please refer to here: https://forum.zilliqa.com/t/gas-accounting-in-zilliqa/199
+
+`nonce` is a counter that keeps track of how many transactions are sent from a given address. In Zilliqa, every transaction sent from an address must have a unique nonce.
+
+```json
+{ balance: '296505000000000', nonce: 3 }
+```
+
+#### Note 2: Retrieving transaction receipt
+
+An example of a transaction receipt is this:
+```json
+{
+    "cumulative_gas": 357,
+    "epoch_num": "676201",
+    "event_logs": [
+        {
+            "_eventname": "setHello()",
+            "address": "0x7a4aa130650396ab7c4006c471576a8404f5092b",
+            "params": [
+                {
+                    "type": "Int32",
+                    "value": "2",
+                    "vname": "code"
+                }
+            ]
+        }
+    ],
+    "success": true
+}
+```
+
+`event_logs` comprises of all the events emitted in the transaction. For example, if your transaction calls a transition which emits 3 events, it will be an array of three events. The `address` is the contract address of the contract which emits the event.
+
+`success` indicates if the transaction is successful.
 
 ## API Documentation and examples
 
