@@ -99,7 +99,7 @@ deployed.
 **Parameters**
 
 - `address`: `string` - the contract address.
-- `abi`: `ABI` (optional) - the ABI return by `scilla-checker`.
+- `abi`: `ABI` (optional) - the ABI return by `scilla-checker` with `-contractinfo` flag.
 - `code`: `string` (optional) - UTF-8 encoded Scilla smart contract code.
 - `init`: `Init` (optional) - the initialisation parameters of the smart contract.
 - `state`: `State` (optional) - the current smart contract state.
@@ -126,9 +126,7 @@ The contract may subsequently be deployed.
 ### `Contract(factory: Contracts, code?: string, address?: string, abi?: ABI,  init?: Init, state?: State): Contracts`
 
 A class representing a single smart contract. Allows for deployment and
-calling the smart contract's transitions. This class is still under
-development, and its API should, as of now, be considered unstable and
-a candidate for breaking changes prior to the launch of the Zilliqa main net.
+calling the smart contract's transitions. 
 
 **Parameters**
 
@@ -137,6 +135,7 @@ a candidate for breaking changes prior to the launch of the Zilliqa main net.
 - `address`: `string` (Optional)
 - `init`: `any` (Optional) - contract initialisation parameters.
 - `state`: `any` (Optional) - contract state.
+- `abi`: `string` (Optional) - scilla interface
 
 **Returns**
 

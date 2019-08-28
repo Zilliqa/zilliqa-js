@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@zilliqa-js/account": "0.7.5",
+    "@zilliqa-js/blockchain": "^0.7.5",
     "@zilliqa-js/core": "0.7.5",
     "@zilliqa-js/crypto": "0.7.5",
     "@zilliqa-js/util": "0.7.1",

@@ -40,20 +40,25 @@ export interface ContractObj {
 }
 
 export interface Transition {
-  name: string;
+  vname: string;
   params: Field[];
 }
 
+/**
+ * Interface for ABI returned by scilla-checker
+ */
 export interface ABI {
-  name: string;
+  scilla_major_version: number;
+  vname: string;
   fields: Field[];
   params: Field[];
   transitions: Transition[];
 }
 
 export interface Field {
-  name: string;
+  vname: string;
   type: string;
+  depth?: number;
 }
 
 export interface Value {

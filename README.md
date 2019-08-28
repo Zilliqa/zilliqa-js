@@ -223,7 +223,7 @@ For more information about gas accounting, please refer to here: https://forum.z
 `nonce` is a counter that keeps track of how many transactions are sent from a given address. In Zilliqa, every transaction sent from an address must have a unique nonce.
 
 ```json
-{ balance: '296505000000000', nonce: 3 }
+{ "balance": "296505000000000", "nonce": "3" }
 ```
 
 #### Note 2: Retrieving transaction receipt

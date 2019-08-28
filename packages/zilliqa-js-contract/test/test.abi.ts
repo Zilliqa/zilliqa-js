@@ -1,108 +1,113 @@
 export const abi = {
-  name: 'NonfungibleToken',
+  scilla_major_version: 0,
+  vname: 'NonfungibleToken',
   params: [
     {
-      name: 'contractOwner',
+      vname: 'contractOwner',
       type: 'ByStr20',
     },
     {
-      name: 'name',
+      vname: 'name',
       type: 'String',
     },
     {
-      name: 'symbol',
+      vname: 'symbol',
       type: 'String',
     },
   ],
   fields: [
     {
-      name: 'tokenOwnerMap',
+      vname: 'tokenOwnerMap',
       type: 'Map (Uint256) (ByStr20)',
+      depth: 1,
     },
     {
-      name: 'ownedTokenCount',
+      vname: 'ownedTokenCount',
       type: 'Map (ByStr20) (Uint256)',
+      depth: 1,
     },
     {
-      name: 'tokenApprovals',
+      vname: 'tokenApprovals',
       type: 'Map (Uint256) (ByStr20)',
+      depth: 1,
     },
     {
-      name: 'operatorApprovals',
+      vname: 'operatorApprovals',
       type: 'Map (ByStr20) (Map (ByStr20) (Bool))',
+      depth: 2,
     },
   ],
   transitions: [
     {
-      name: 'balanceOf',
+      vname: 'balanceOf',
       params: [
         {
-          name: 'address',
+          vname: 'address',
           type: 'ByStr20',
         },
       ],
     },
     {
-      name: 'ownerOf',
+      vname: 'ownerOf',
       params: [
         {
-          name: 'tokenId',
+          vname: 'tokenId',
           type: 'Uint256',
         },
       ],
     },
     {
-      name: 'mint',
+      vname: 'mint',
       params: [
         {
-          name: 'to',
+          vname: 'to',
           type: 'ByStr20',
         },
         {
-          name: 'tokenId',
+          vname: 'tokenId',
           type: 'Uint256',
         },
       ],
     },
     {
-      name: 'transferFrom',
+      vname: 'transferFrom',
       params: [
         {
-          name: 'from',
+          vname: 'from',
           type: 'ByStr20',
         },
         {
-          name: 'to',
+          vname: 'to',
           type: 'ByStr20',
         },
         {
-          name: 'tokenId',
+          vname: 'tokenId',
           type: 'Uint256',
         },
       ],
     },
     {
-      name: 'approve',
+      vname: 'approve',
       params: [
         {
-          name: 'to',
+          vname: 'to',
           type: 'ByStr20',
         },
         {
-          name: 'tokenId',
+          vname: 'tokenId',
           type: 'Uint256',
         },
       ],
     },
     {
-      name: 'setApprovalForAll',
+      vname: 'setApprovalForAll',
       params: [
         {
-          name: 'to',
+          vname: 'to',
           type: 'ByStr20',
         },
         {
-          name: 'approved',
+          vname: 'approved',
           type: 'Bool',
         },
       ],
