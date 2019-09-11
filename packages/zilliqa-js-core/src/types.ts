@@ -75,6 +75,8 @@ export interface TransactionObj {
   nonce: string;
   toAddr: string;
   amount: string;
+  code: string;
+  data: string;
   gasPrice: string;
   gasLimit: string;
   signature: string;
