@@ -39,11 +39,6 @@ yarn add @zilliqa-js/zilliqa
 yarn add bn.js
 ```
 
-As this library is still in a relatively early stage of development, we
-recommend using the `next` tag to install it in NPM. This will ensure that you
-receive the latest published version, as it may not be ideal to wait for
-a `semver` bump before being able to take advantage of new features/bug fixes.
-
 ## Quick Start
 
 ```javascript
@@ -67,8 +62,8 @@ const privateKey= '3375F915F3F9AE35E6B301B7670F53AD1A5BE15D8221EC7FD5E503F21D345
 zilliqa.wallet.addByPrivateKey(privateKey);
 
 const address = getAddressFromPrivateKey(privateKey);
-console.log(`My account address is: 0x${address}.`);
-console.log(`My account bech32 address is: ${toBech32Address(address)}.`);
+console.log(`My account address is: ${address}`);
+console.log(`My account bech32 address is: ${toBech32Address(address)}`);
 
 
 async function testBlockchain() {
@@ -223,7 +218,7 @@ For more information about gas accounting, please refer to here: https://forum.z
 `nonce` is a counter that keeps track of how many transactions are sent from a given address. In Zilliqa, every transaction sent from an address must have a unique nonce.
 
 ```json
-{ balance: '296505000000000', nonce: 3 }
+{ "balance": "296505000000000", "nonce": "3" }
 ```
 
 #### Note 2: Retrieving transaction receipt

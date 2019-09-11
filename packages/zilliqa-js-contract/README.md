@@ -43,7 +43,7 @@ interface Value {
 }
 
 type Init = Value[];
-type State = Value[];
+type State = any;
 ```
 
 # Classes
@@ -99,7 +99,7 @@ deployed.
 **Parameters**
 
 - `address`: `string` - the contract address.
-- `abi`: `ABI` (optional) - the ABI return by `scilla-checker`.
+- `abi`: `ABI` (optional) - the ABI return by `scilla-checker` with `-contractinfo` flag.
 - `code`: `string` (optional) - UTF-8 encoded Scilla smart contract code.
 - `init`: `Init` (optional) - the initialisation parameters of the smart contract.
 - `state`: `State` (optional) - the current smart contract state.
@@ -126,9 +126,7 @@ The contract may subsequently be deployed.
 ### `Contract(factory: Contracts, code?: string, address?: string, abi?: ABI,  init?: Init, state?: State): Contracts`
 
 A class representing a single smart contract. Allows for deployment and
-calling the smart contract's transitions. This class is still under
-development, and its API should, as of now, be considered unstable and
-a candidate for breaking changes prior to the launch of the Zilliqa main net.
+calling the smart contract's transitions. 
 
 **Parameters**
 
@@ -137,6 +135,7 @@ a candidate for breaking changes prior to the launch of the Zilliqa main net.
 - `address`: `string` (Optional)
 - `init`: `any` (Optional) - contract initialisation parameters.
 - `state`: `any` (Optional) - contract state.
+- `abi`: `string` (Optional) - scilla interface
 
 **Returns**
 
@@ -240,7 +239,7 @@ will return the _entire_ state of the smart contract. As a result, if you have
 a large amount of data stored in a smart contract do not use this method on
 a client. Instead, use a server-side layer to cache and proxy such queries.
 
-_This API is temporary and will be subject to breaking changes_
+P.S: As of `zilliqa-js 0.8.0` onwards, `getState` function is only compatible with zilliqa 5.0.0 onwards.
 
 **Parameters**
 

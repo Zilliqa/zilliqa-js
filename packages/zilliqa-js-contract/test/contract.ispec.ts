@@ -75,7 +75,7 @@ describe('Contract: hello world', () => {
   let address: string;
 
   it('should be able to deploy the contract', async () => {
-    let [tx, contract] = await contractFactory
+    const [tx, contract] = await contractFactory
       .new(testContract, [
         {
           vname: 'owner',
@@ -165,7 +165,7 @@ describe('Contract: hello world', () => {
 
 describe('Contract: Simple DEX', () => {
   // accounts
-  let banker: Account = wallet.accounts[GENESIS_ADDRESS];
+  const banker: Account = wallet.accounts[GENESIS_ADDRESS];
   let simpleDexOwner: Account;
   let token1Owner: Account;
   let token2Owner: Account;
@@ -204,7 +204,7 @@ describe('Contract: Simple DEX', () => {
     }
 
     // distribute tokens to all 5 accounts
-    return await Promise.all(
+    return Promise.all(
       actors.map((actor, i) => {
         const tx = new Transaction(
           {
@@ -230,7 +230,7 @@ describe('Contract: Simple DEX', () => {
 
   // deploy our contracts;
   it('deploys all the necessary contracts', async () => {
-    let res = await Promise.all([
+    const res = await Promise.all([
       contractFactory
         .new(zrc20, [
           { vname: '_scilla_version', type: 'Uint32', value: '0' },
