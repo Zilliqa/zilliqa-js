@@ -43,7 +43,7 @@ interface Value {
 }
 
 type Init = Value[];
-type State = Value[];
+type State = any;
 ```
 
 # Classes
@@ -239,7 +239,7 @@ will return the _entire_ state of the smart contract. As a result, if you have
 a large amount of data stored in a smart contract do not use this method on
 a client. Instead, use a server-side layer to cache and proxy such queries.
 
-_This API is temporary and will be subject to breaking changes_
+P.S: As of `zilliqa-js 0.8.0` onwards, `getState` function is only compatible with zilliqa 5.0.0 onwards.
 
 **Parameters**
 

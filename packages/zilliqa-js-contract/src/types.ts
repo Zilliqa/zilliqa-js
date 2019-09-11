@@ -78,7 +78,8 @@ export type TransitionParam = Value;
 
 export type Init = Value[];
 
-export type State = Value[];
+// Post v5.0.0 upgrade
+export type State = any;
 
 export interface TransitionPayload {
   // the name of the transtion to be called

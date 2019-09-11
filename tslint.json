@@ -8,7 +8,7 @@
     "no-console": false,
     "no-default-export": true,
     "no-empty-interface": false,
-    "no-implicit-dependencies": true,
+    "no-implicit-dependencies": false,
     "no-submodule-imports": false,
     "ordered-imports": [false],
     "object-literal-sort-keys": false,

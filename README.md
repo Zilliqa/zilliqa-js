@@ -39,11 +39,6 @@ yarn add @zilliqa-js/zilliqa
 yarn add bn.js
 ```
 
-As this library is still in a relatively early stage of development, we
-recommend using the `next` tag to install it in NPM. This will ensure that you
-receive the latest published version, as it may not be ideal to wait for
-a `semver` bump before being able to take advantage of new features/bug fixes.
-
 ## Quick Start
 
 ```javascript
