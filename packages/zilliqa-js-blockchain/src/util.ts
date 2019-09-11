@@ -30,6 +30,8 @@ export function toTxParams(
     amount,
     receipt,
     version,
+    code,
+    data,
     ...rest
   } = <TransactionObj>response.result;
 

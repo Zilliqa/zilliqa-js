@@ -62,8 +62,8 @@ const privateKey= '3375F915F3F9AE35E6B301B7670F53AD1A5BE15D8221EC7FD5E503F21D345
 zilliqa.wallet.addByPrivateKey(privateKey);
 
 const address = getAddressFromPrivateKey(privateKey);
-console.log(`My account address is: 0x${address}.`);
-console.log(`My account bech32 address is: ${toBech32Address(address)}.`);
+console.log(`My account address is: ${address}`);
+console.log(`My account bech32 address is: ${toBech32Address(address)}`);
 
 
 async function testBlockchain() {

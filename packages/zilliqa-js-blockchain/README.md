@@ -28,6 +28,8 @@ export interface TransactionObj {
   version: string;
   nonce: number;
   toAddr: string;
+  code: string;
+  data: string;
   amount: string;
   gasPrice: string;
   gasLimit: string;
