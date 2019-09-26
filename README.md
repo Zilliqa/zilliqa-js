@@ -35,11 +35,22 @@ of the umbrella package `@zilliqa-js/zilliqa`. This takes care of bootstrapping 
 
 ```shell
 yarn add @zilliqa-js/zilliqa
+# you may also need to install the tslib package.
+yarn add tslib
 # bn.js should be added with the above package. if it is not, install it manually.
 yarn add bn.js
 ```
 
 ## Quick Start
+
+>**Ideally, you should [Create a new Nucleus Wallet](https://dev-wallet.zilliqa.com/generate) (an [open source](https://github.com/Zilliqa/nucleus-wallet) Zilliqa testnet wallet)**.
+>
+>You should 'fund' the wallet by sending testnet ZIL tokens from the [ZIL faucet](https://dev-wallet.zilliqa.com/faucet)
+>
+>You should then replace the value of `const privateKey` with the one from this wallet.
+>
+>The code should work with the existing private key but this cannot be guaranteed.
+
 
 ```javascript
 const { BN, Long, bytes, units } = require("@zilliqa-js/util");
@@ -83,6 +94,7 @@ async function testBlockchain() {
     console.log(`Is the gas price sufficient? ${isGasSufficient}`);
 
     // Send a transaction to the network
+    console.log("Sending a payment transaction to the network...");
     const tx = await zilliqa.blockchain.createTransaction(
       zilliqa.transactions.new({
         version: VERSION,
@@ -97,6 +109,7 @@ async function testBlockchain() {
     console.log(tx.receipt);
 
     // Deploy a contract
+    console.log(`Deploying a new contract....`);
     const code = `scilla_version 0
 
     (* HelloWorld contract *)
@@ -150,7 +163,7 @@ async function testBlockchain() {
       {
         vname: "owner",
         type: "ByStr20",
-        value: `0x${address}`
+        value: `${address}`
       }
     ];
 
@@ -172,13 +185,19 @@ async function testBlockchain() {
     // Get the deployed contract address
     console.log("The contract address is:");
     console.log(hello.address);
+    //Following line added to fix issue https://github.com/Zilliqa/Zilliqa-JavaScript-Library/issues/168
+    const deployedContract = zilliqa.contracts.at(hello.address);
+    
+    //Create a new timebased message and call setHello
+    const newMsg = 'Hello, the time is ' + Date.now();
+    console.log('Calling setHello transition with msg: ' + newMsg);
     const callTx = await hello.call(
       "setHello",
       [
         {
           vname: "msg",
           type: "String",
-          value: "Hello World!"
+          value: newMsg
         }
       ],
       {
@@ -194,7 +213,8 @@ async function testBlockchain() {
     console.log(JSON.stringify(callTx.receipt, null, 4));
 
     //Get the contract state
-    const state = await hello.getState();
+    console.log("Getting contract state...");
+    const state = await deployedContract.getState();
     console.log("The state of the contract is:");
     console.log(JSON.stringify(state, null, 4));
   } catch (err) {
@@ -287,12 +307,12 @@ yarn build:ts -w
 
 Tests for each package reside in `packages/src/*/tests`, and are run using
 `jest`. Files containing unit tests always have the prefix `*.spec.ts`, while integration/e2e tests have the
-prefix `*.ispect.ts`.
+prefix `*.ispec.ts`.
 
 In order to run any tests, you must first make sure the source files are
 compiled and all dependencies are installed by running `yarn bootstrap`.
 
-If you wish to run integration tests, you may do so agains a local or remote
+If you wish to run integration tests, you may do so against a local or remote
 Zilliqa testnet. However, note that the public testnet may not always be
 caught up to the state-of-the-art, and, therefore, can cause `zilliqa-js` to
 behave in unexpected ways.
