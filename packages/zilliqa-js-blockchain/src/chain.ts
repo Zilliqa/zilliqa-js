@@ -434,9 +434,9 @@ export class Blockchain implements ZilliqaModule {
    * getSmartContractState
    *
    * @param {string} address
-   * @returns {Promise<RPCResponse<Value[], string>>}
+   * @returns {Promise<RPCResponse<any, string>>}
    */
-  getSmartContractState(addr: string): Promise<RPCResponse<Value[], string>> {
+  getSmartContractState(addr: string): Promise<RPCResponse<any, string>> {
     const address = validation.isBech32(addr) ? fromBech32Address(addr) : addr;
     return this.provider.send(
       RPCMethod.GetSmartContractState,
