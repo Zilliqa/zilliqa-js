@@ -115,6 +115,7 @@ export class Contract {
     tx: Transaction,
     attempts: number = GET_TX_ATTEMPTS,
     interval: number = 1000,
+    isDeploy: boolean,
   ): Promise<Transaction> {
     const response = await this.provider.send<DeploySuccess, DeployError>(
       RPCMethod.CreateTransaction,
@@ -125,9 +126,13 @@ export class Contract {
       this.address = undefined;
       return tx.setStatus(TxStatus.Rejected);
     }
-    this.address = response.result.ContractAddress
-      ? toChecksumAddress(response.result.ContractAddress)
-      : undefined;
+
+    if (isDeploy) {
+      this.address = response.result.ContractAddress
+        ? toChecksumAddress(response.result.ContractAddress)
+        : undefined;
+    }
+
     return tx.confirm(response.result.TranID, attempts, interval);
   }
 
@@ -165,6 +170,7 @@ export class Contract {
         ),
         attempts,
         interval,
+        true,
       );
 
       if (tx.isRejected()) {
@@ -223,6 +229,7 @@ export class Contract {
         ),
         attempts,
         interval,
+        false,
       );
     } catch (err) {
       throw err;
