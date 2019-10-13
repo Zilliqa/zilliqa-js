@@ -192,7 +192,7 @@ export const isValidChecksumAddress = (address: string): boolean => {
 /**
  * normaliseAddress
  *
- * takes in either a checksum base16 address or a zilliqa bech32 encoded address
+ * takes in an base16 address or a zilliqa bech32 encoded address
  * and returns a checksum base16 address. If the provided string is either an
  * invalid checksum address or an invalid bech32 address, the function throws
  * an error.
@@ -205,11 +205,7 @@ export const normaliseAddress = (address: string): string => {
     return fromBech32Address(address);
   }
 
-  if (isValidChecksumAddress(address)) {
-    return address;
-  }
-
-  throw new Error('Address format is invalid');
+  return toChecksumAddress(address);
 };
 
 /**
