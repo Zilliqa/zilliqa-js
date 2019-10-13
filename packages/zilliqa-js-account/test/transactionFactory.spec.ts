@@ -34,14 +34,14 @@ describe('TransactionFactory', () => {
     expect(txb32.isInitialised()).toBeTruthy();
   });
 
-  it('should throw if toAddr is an invalid checksum address', () => {
+  it('should throw if toAddr is an invalid address', () => {
     const createTx = () => {
       return transactionFactory.new({
         version: 0,
         amount: new BN(0),
         gasPrice: new BN(1),
         gasLimit: Long.fromNumber(100),
-        toAddr: '0x4bAf5fada8E5dB92C3D3242618C5b47133ae003c',
+        toAddr: '0x4bAf5fada8E5dB92C3D3242618C5b47133ae00c',
       });
     };
 
