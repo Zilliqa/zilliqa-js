@@ -2,6 +2,11 @@
   "name": "@zilliqa-js/util",
   "version": "0.7.1",
   "description": "Utilities for working with Zilliqa.",
+  "author": "Ian Tan (https://github.com/iantanwx)",
+  "maintainers": ["Edison Lim <edison.limjh@gmail.com> (https://github.com/edisonljh)"],
+  "bugs": {
+    "url": "https://github.com/Zilliqa/Zilliqa-JavaScript-Library/issues"
+  },
   "main": "dist/index.js",
   "node": "dist/index.js",
   "browser": "dist/index.umd.js",
@@ -22,5 +27,8 @@
     "@types/long": "^4.0.0",
     "bn.js": "^4.11.8",
     "long": "^4.0.0"
+  },
+  "engines": {
+    "node": ">=10.0.0 <=12.12.0"
   }
 }

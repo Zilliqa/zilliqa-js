@@ -2,6 +2,11 @@
   "name": "@zilliqa-js/proto",
   "version": "0.7.0",
   "description": "Protobuf dependencies for message serialization",
+  "author": "Ian Tan (https://github.com/iantanwx)",
+  "maintainers": ["Edison Lim <edison.limjh@gmail.com> (https://github.com/edisonljh)"],
+  "bugs": {
+    "url": "https://github.com/Zilliqa/Zilliqa-JavaScript-Library/issues"
+  },
   "main": "dist/index.js",
   "node": "dist/index.js",
   "browser": "dist/index.js",
@@ -22,5 +27,8 @@
   },
   "dependencies": {
     "protobufjs": "^6.8.8"
+  },
+  "engines": {
+    "node": ">=10.0.0 <=12.12.0"
   }
 }

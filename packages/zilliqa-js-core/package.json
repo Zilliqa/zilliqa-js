@@ -10,7 +10,11 @@
   "types": "dist/index.d.ts",
   "typings": "dist/index.d.ts",
   "repository": "https://github.com/Zilliqa/Zilliqa-Javascript-Library",
-  "author": "ian@zilliqa.com",
+  "author": "Ian Tan (https://github.com/iantanwx)",
+  "maintainers": ["Edison Lim <edison.limjh@gmail.com> (https://github.com/edisonljh)"],
+  "bugs": {
+    "url": "https://github.com/Zilliqa/Zilliqa-JavaScript-Library/issues"
+  },
   "license": "GPL-3.0",
   "publishConfig": {
     "access": "public"
@@ -23,5 +27,8 @@
     "@zilliqa-js/util": "0.7.1",
     "cross-fetch": "^2.2.2",
     "mitt": "^1.1.3"
+  },
+  "engines": {
+    "node": ">=10.0.0 <=12.12.0"
   }
 }

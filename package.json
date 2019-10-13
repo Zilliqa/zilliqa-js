@@ -1,6 +1,11 @@
 {
   "description": "Root repository for the zilliqa-js suite of tools",
   "repository": "https://github.com/Zilliqa/Zilliqa-Javascript-Library",
+  "author": "Ian Tan (https://github.com/iantanwx)",
+  "maintainers": ["Edison Lim <edison.limjh@gmail.com> (https://github.com/edisonljh)"],
+  "bugs": {
+    "url": "https://github.com/Zilliqa/Zilliqa-JavaScript-Library/issues"
+  },
   "private": true,
   "license": "GPL-3.0",
   "scripts": {

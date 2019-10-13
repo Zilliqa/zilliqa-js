@@ -1,6 +1,11 @@
 {
   "name": "@zilliqa-js/account",
   "version": "0.8.1-alpha.1",
+  "author": "Ian Tan (https://github.com/iantanwx)",
+  "maintainers": ["Edison Lim <edison.limjh@gmail.com> (https://github.com/edisonljh)"],
+  "bugs": {
+    "url": "https://github.com/Zilliqa/Zilliqa-JavaScript-Library/issues"
+  },
   "description": "Used for signing transactions.",
   "main": "dist/index.js",
   "node": "dist/index.js",
@@ -29,5 +34,8 @@
   },
   "devDependencies": {
     "web3": "^1.0.0-beta.36"
+  },
+  "engines": {
+    "node": ">=10.0.0 <=12.12.0"
   }
 }

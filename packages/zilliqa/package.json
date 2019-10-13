@@ -2,12 +2,18 @@
   "name": "@zilliqa-js/zilliqa",
   "version": "0.8.1-alpha.1",
   "description": "Main entry point to the Zilliqa JS client.",
+  "author": "Ian Tan (https://github.com/iantanwx)",
+  "maintainers": [
+    "Edison Lim <edison.limjh@gmail.com> (https://github.com/edisonljh)"
+  ],
   "main": "dist/index.js",
   "node": "dist/index.js",
   "types": "dist/index.d.ts",
   "typings": "dist/index.d.ts",
   "repository": "https://www.github.com/Zilliqa/Zilliqa-Javascript-Library",
-  "author": "ian@zilliqa.com",
+  "bugs": {
+    "url": "https://github.com/Zilliqa/Zilliqa-JavaScript-Library/issues"
+  },
   "license": "GPL-3.0",
   "publishConfig": {
     "access": "public"
@@ -22,5 +28,8 @@
     "@zilliqa-js/core": "0.8.1-alpha.1",
     "@zilliqa-js/crypto": "0.8.1-alpha.1",
     "@zilliqa-js/util": "0.7.1"
+  },
+  "engines": {
+    "node": ">=10.0.0 <=12.12.0"
   }
 }
