@@ -1,9 +1,11 @@
 {
   "name": "@zilliqa-js/proto",
-  "version": "0.7.0",
+  "version": "0.8.1-alpha.2",
   "description": "Protobuf dependencies for message serialization",
   "author": "Ian Tan (https://github.com/iantanwx)",
-  "maintainers": ["Edison Lim <edison.limjh@gmail.com> (https://github.com/edisonljh)"],
+  "maintainers": [
+    "Edison Lim <edison.limjh@gmail.com> (https://github.com/edisonljh)"
+  ],
   "bugs": {
     "url": "https://github.com/Zilliqa/Zilliqa-JavaScript-Library/issues"
   },

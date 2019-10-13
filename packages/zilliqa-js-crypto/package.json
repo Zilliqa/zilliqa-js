@@ -1,9 +1,11 @@
 {
   "name": "@zilliqa-js/crypto",
-  "version": "0.8.1-alpha.1",
+  "version": "0.8.1-alpha.2",
   "description": "Core crypto utilities for signing/verification/hashing Zilliqa transactions.",
   "author": "Ian Tan (https://github.com/iantanwx)",
-  "maintainers": ["Edison Lim <edison.limjh@gmail.com> (https://github.com/edisonljh)"],
+  "maintainers": [
+    "Edison Lim <edison.limjh@gmail.com> (https://github.com/edisonljh)"
+  ],
   "bugs": {
     "url": "https://github.com/Zilliqa/Zilliqa-JavaScript-Library/issues"
   },
@@ -26,7 +28,7 @@
     "scrypt.js": "^0.3.0"
   },
   "dependencies": {
-    "@zilliqa-js/util": "0.7.1",
+    "@zilliqa-js/util": "0.8.1-alpha.2",
     "aes-js": "^3.1.1",
     "bsert": "^0.0.4",
     "elliptic": "^6.5.0",
