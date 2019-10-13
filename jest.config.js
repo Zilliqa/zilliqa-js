@@ -38,7 +38,7 @@ const config = {
     '!**/node_modules/**',
   ],
   setupFiles: ['<rootDir>/jest-setup.js'],
-  setupFilesAfterEnv: ['<rootDir>/jest-framework-setup.js'],
+  setupTestFrameworkScriptFile: '<rootDir>/jest-framework-setup.js',
   watchPlugins: [
     'jest-watch-typeahead/filename',
     'jest-watch-typeahead/testname',
