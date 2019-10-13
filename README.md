@@ -305,6 +305,8 @@ yarn build:ts -w
 ```
 ### Tests
 
+#### Unit Test
+
 Tests for each package reside in `packages/src/*/tests`, and are run using
 `jest`. Files containing unit tests always have the prefix `*.spec.ts`, while integration/e2e tests have the
 prefix `*.ispec.ts`.
@@ -312,6 +314,8 @@ prefix `*.ispec.ts`.
 In order to run any tests, you must first make sure the source files are
 compiled and all dependencies are installed by running `yarn bootstrap`.
 
+
+#### Integration Test
 If you wish to run integration tests, you may do so against a local or remote
 Zilliqa testnet. However, note that the public testnet may not always be
 caught up to the state-of-the-art, and, therefore, can cause `zilliqa-js` to
@@ -331,6 +335,17 @@ vim .env
 
 # run all integration tests
 yarn test:integration
+```
+
+#### Local Test
+
+To test with a local project without publishing it, you can use `yarn link` to create a sym-link to the SDK in development.
+
+```
+yarn link [zilliqaJs-projectDir]/packages/zilliqa
+
+# cd to your local project
+yarn link @zilliqa-js/zilliqa
 ```
 
 ### Bundling
