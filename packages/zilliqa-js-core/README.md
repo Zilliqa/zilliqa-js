@@ -37,6 +37,8 @@ const enum RPCMethod {
   GetSmartContractCode = 'GetSmartContractCode',
   GetSmartContractInit = 'GetSmartContractInit',
   GetSmartContractState = 'GetSmartContractState',
+  GetSmartContractSubState = 'GetSmartContractSubState',
+
   GetContractAddressFromTransactionID = 'GetContractAddressFromTransactionID',
 
   // Account-related methods
