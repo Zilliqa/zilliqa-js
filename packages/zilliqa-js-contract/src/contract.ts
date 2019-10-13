@@ -246,7 +246,7 @@ export class Contract {
     return response.result;
   }
 
-  async getSubState(): Promise<State> {
+  async getSubState(variableName?: string, indices?: string): Promise<State> {
     if (this.status !== ContractStatus.Deployed) {
       return Promise.resolve([]);
     }
@@ -258,6 +258,8 @@ export class Contract {
     const response = await this.provider.send(
       RPCMethod.GetSmartContractSubState,
       this.address.replace('0x', '').toLowerCase(),
+      variableName,
+      indices,
     );
 
     return response.result;
