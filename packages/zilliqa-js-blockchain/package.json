@@ -1,6 +1,6 @@
 {
   "name": "@zilliqa-js/blockchain",
-  "version": "0.8.1-alpha.2",
+  "version": "0.8.1",
   "description": "Class(es) for interacting with the Zilliqa blockchain.",
   "main": "dist/index.js",
   "node": "dist/index.js",
@@ -25,9 +25,9 @@
     "clean": "rimraf ./dist"
   },
   "dependencies": {
-    "@zilliqa-js/account": "0.8.1-alpha.2",
-    "@zilliqa-js/contract": "0.8.1-alpha.2",
-    "@zilliqa-js/core": "0.8.1-alpha.2",
+    "@zilliqa-js/account": "0.8.1",
+    "@zilliqa-js/contract": "0.8.1",
+    "@zilliqa-js/core": "0.8.1",
     "@zilliqa-js/crypto": "0.8.1-alpha.2",
     "@zilliqa-js/util": "0.8.1-alpha.2",
     "utility-types": "^3.4.1"
