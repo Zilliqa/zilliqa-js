@@ -290,3 +290,87 @@ Gets a paginated list of Tx blocks.
 **Returns**
 
 - `Promise<RPCResponse<BlockList, string>>`
+
+### `getSmartContractCode(addr: string): Promise<RPCResponse<any, string>>`
+
+Queries the blockchain for the smart contract's state. Note that this method
+will return the _entire_ state of the smart contract. As a result, if you have
+a large amount of data stored in a smart contract do not use this method on
+a client. Instead, use a server-side layer to cache and proxy such queries.
+
+**Parameters**
+
+- `addr`: `string` - the address of a smart contract
+
+**Returns**
+
+- `Promise<RPCResponse<any, string>>` - the Contract state.
+
+### `getSmartContractInit(addr: string): Promise<RPCResponse<Value[], string>>`
+
+Queries the blockchain for the smart contract's init (a.k.a. immutable variables of a contract)
+
+**Parameters**
+
+- `addr`: `string` - the address of a smart contract
+
+**Returns**
+
+- `Promise<RPCResponse<Value[], string>>` - the Contract Init.
+
+### `getSmartContractState(addr: string): Promise<RPCResponse<any, string>>`
+
+Queries the blockchain for the smart contract's state. Note that this method
+will return the _entire_ state of the smart contract. As a result, if you have
+a large amount of data stored in a smart contract do not use this method on
+a client. Instead, use a server-side layer to cache and proxy such queries.
+
+**Parameters**
+
+- `addr`: `string` - the address of a smart contract
+
+**Returns**
+
+- `Promise<RPCResponse<any, string>>` - the Contract state.
+
+### `getSmartContractSubState(addr: string, variableName: string, indices: string[]): Promise<RPCResponse<any, string>>`
+
+Queries the contract state, filtered by the variable names. This function is the filtered version of `getSmartContractState`. As `getSubState` performs the filtering, `variableName` of a field is required. 
+
+If the `subState` is not found, this returns a `null` response.
+
+**Parameters**
+
+- `addr`: `string` - the address of a smart contract
+- `variableName`: `string` - the variable name within a state
+- `indices` : `string[]` - optional variable. If the `variableName` is a `Map`, an array of indices may be provided. See `examples/` to see how to use this method.
+
+**Returns**
+
+- `Promise<RPCResponse<any, string>>` - the Contract Init.
+
+### `getSmartContracts(addr: string): Promise<RPCResponse<Omit<ContractObj, 'init' | 'abi'>, string>>`
+
+Retrieves __all__ smart contracts deployed by a user, including the address and the state. The response object is large, and is not recommended on client-side.
+
+**Parameters**
+
+- `addr`: `string` - address of a wallet
+
+**Returns**
+
+- `Promise<RPCResponse<Omit<ContractObj, 'init' | 'abi'>, string>>` - A contract address
+
+
+
+### `getContractAddressFromTransactionID(addr: string): Promise<RPCResponse<string, string>>`
+
+Retrieves a smart contract address from the transaction ID.
+
+**Parameters**
+
+- `txHash`: `string` - the transaction hash
+
+**Returns**
+
+- `Promise<RPCResponse<string, string>>` - A contract address

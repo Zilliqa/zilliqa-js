@@ -401,10 +401,10 @@ export class Blockchain implements ZilliqaModule {
   }
 
   /**
-   * getSmartContractCode
+   * getSmartContractCode - returns the smart contract code of a deployed contract.
    *
    * @param {string} address
-   * @returns {Promise<RPCResponse< code: string }, string>>}
+   * @returns {Promise<RPCResponse<{code: string }, string>>}
    */
   getSmartContractCode(
     addr: string,
@@ -431,7 +431,7 @@ export class Blockchain implements ZilliqaModule {
   }
 
   /**
-   * getSmartContractState
+   * getSmartContractState - retrieves the entire state of a smart contract
    *
    * @param {string} address
    * @returns {Promise<RPCResponse<any, string>>}
@@ -441,6 +441,36 @@ export class Blockchain implements ZilliqaModule {
     return this.provider.send(
       RPCMethod.GetSmartContractState,
       address.replace('0x', '').toLowerCase(),
+    );
+  }
+
+  /**
+   * getSmartContractSubState - Queries the contract state, filtered by the variable names.
+   * This function is the filtered version of `getSmartContractState`.
+   * As `getSubState` performs the filtering, `variableName` of a field is required.
+   * If the `subState` is not found, this returns a `null` response.
+   *
+   * @param {string} address
+   * @param { string } variableName - variable name within the state
+   * @param { string[] } indices - (optional) If the variable is of map type, you can specify an index (or indices)
+   * @returns {Promise<RPCResponse<any, string>>}
+   */
+
+  getSmartContractSubState(
+    addr: string,
+    variableName: string,
+    indices?: string[],
+  ): Promise<RPCResponse<any, string>> {
+    const address = validation.isBech32(addr) ? fromBech32Address(addr) : addr;
+    if (!variableName) {
+      throw new Error('Variable name required');
+    }
+
+    return this.provider.send(
+      RPCMethod.GetSmartContractSubState,
+      address.replace('0x', '').toLowerCase(),
+      variableName,
+      indices === undefined ? [] : indices,
     );
   }
 

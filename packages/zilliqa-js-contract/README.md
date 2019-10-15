@@ -239,8 +239,6 @@ will return the _entire_ state of the smart contract. As a result, if you have
 a large amount of data stored in a smart contract do not use this method on
 a client. Instead, use a server-side layer to cache and proxy such queries.
 
-P.S: As of `zilliqa-js 0.8.0` onwards, `getState` function is only compatible with zilliqa 5.0.0 onwards.
-
 **Parameters**
 
 None
@@ -248,3 +246,33 @@ None
 **Returns**
 
 - `Promise<State>` - the Contract state.
+
+### `getInit(): Promise<State>`
+
+Queries the blockchain for the smart contract's init (a.k.a. immutable variables of a contract)
+
+**Parameters**
+
+None
+
+**Returns**
+
+- `Promise<State>` - the Contract Init.
+
+### `getSubState(variableName: string, indices: string[]): Promise<State>`
+
+Queries the contract state, filtered by the variable names. This function is the filtered version of `getState`. As `getSubState` performs the filtering, `variableName` of a field is required. 
+
+If the `subState` is not found, this returns a `null` response.
+
+**Parameters**
+
+- `variableName`: `string` - the variable name within a state
+- `indices` : `string[]` - optional variable. If the `variableName` is a `Map`, an array of indices may be provided. See `examples/` to see how to use this method.
+
+**Returns**
+
+- `Promise<State>` - the Contract Init.
+
+
+

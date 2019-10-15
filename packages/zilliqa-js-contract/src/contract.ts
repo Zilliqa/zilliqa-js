@@ -115,6 +115,7 @@ export class Contract {
     tx: Transaction,
     attempts: number = GET_TX_ATTEMPTS,
     interval: number = 1000,
+    isDeploy: boolean,
   ): Promise<Transaction> {
     const response = await this.provider.send<DeploySuccess, DeployError>(
       RPCMethod.CreateTransaction,
@@ -125,9 +126,13 @@ export class Contract {
       this.address = undefined;
       return tx.setStatus(TxStatus.Rejected);
     }
-    this.address = response.result.ContractAddress
-      ? toChecksumAddress(response.result.ContractAddress)
-      : undefined;
+
+    if (isDeploy) {
+      this.address = response.result.ContractAddress
+        ? toChecksumAddress(response.result.ContractAddress)
+        : undefined;
+    }
+
     return tx.confirm(response.result.TranID, attempts, interval);
   }
 
@@ -165,6 +170,7 @@ export class Contract {
         ),
         attempts,
         interval,
+        true,
       );
 
       if (tx.isRejected()) {
@@ -223,11 +229,14 @@ export class Contract {
         ),
         attempts,
         interval,
+        false,
       );
     } catch (err) {
       throw err;
     }
   }
+
+  // FIXME: Link to @zilliqa-js/blockchain package (reuse code)
 
   async getState(): Promise<State> {
     if (this.status !== ContractStatus.Deployed) {
@@ -239,12 +248,47 @@ export class Contract {
     }
 
     const response = await this.provider.send(
-      'GetSmartContractState',
+      RPCMethod.GetSmartContractState,
       this.address.replace('0x', '').toLowerCase(),
     );
 
     return response.result;
   }
+
+  // FIXME: Link to @zilliqa-js/blockchain package (reuse code)
+
+  /**
+   * getSubState
+   *
+   * @param { string } variableName - variable name within the state
+   * @param { string[] } indices -  (optional) If the variable is of map type, you can specify an index (or indices)
+   * @returns {Promise<RPCResponse<any, string>>}
+   */
+
+  async getSubState(variableName: string, indices: string[]): Promise<State> {
+    if (this.status !== ContractStatus.Deployed) {
+      return Promise.resolve([]);
+    }
+
+    if (!this.address) {
+      throw new Error('Cannot get state of uninitialised contract');
+    }
+
+    if (!variableName) {
+      throw new Error('Variable name required');
+    }
+
+    const response = await this.provider.send(
+      RPCMethod.GetSmartContractSubState,
+      this.address.replace('0x', '').toLowerCase(),
+      variableName,
+      indices === undefined ? [] : indices,
+    );
+
+    return response.result;
+  }
+
+  // FIXME: Link to @zilliqa-js/blockchain package (reuse code)
 
   async getInit(): Promise<State> {
     if (this.status !== ContractStatus.Deployed) {
@@ -256,7 +300,7 @@ export class Contract {
     }
 
     const response = await this.provider.send(
-      'GetSmartContractInit',
+      RPCMethod.GetSmartContractInit,
       this.address.replace('0x', '').toLowerCase(),
     );
 
