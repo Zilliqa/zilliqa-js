@@ -83,7 +83,7 @@
     "pretty-quick": "^1.8.0",
     "protobufjs": "^6.8.8",
     "rimraf": "^2.6.2",
-    "rollup": "^0.66.6",
+    "rollup": "^1.25.1",
     "rollup-plugin-alias": "^1.4.0",
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-json": "^3.1.0",
