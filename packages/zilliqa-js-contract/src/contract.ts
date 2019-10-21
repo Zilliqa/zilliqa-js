@@ -265,7 +265,7 @@ export class Contract {
    * @returns {Promise<RPCResponse<any, string>>}
    */
 
-  async getSubState(variableName: string, indices: string[]): Promise<State> {
+  async getSubState(variableName: string, indices?: string[]): Promise<State> {
     if (this.status !== ContractStatus.Deployed) {
       return Promise.resolve([]);
     }
