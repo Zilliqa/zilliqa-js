@@ -1,6 +1,6 @@
 {
   "name": "@zilliqa-js/proto",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "Protobuf dependencies for message serialization",
   "author": "Ian Tan (https://github.com/iantanwx)",
   "maintainers": [
