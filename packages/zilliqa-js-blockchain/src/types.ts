@@ -97,6 +97,7 @@ export interface TxList {
 export interface TransactionReceiptObj {
   success: boolean;
   cumulative_gas: string;
+  epoch_num: string;
   event_logs: EventLogEntry[];
 }
 

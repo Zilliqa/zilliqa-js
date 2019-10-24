@@ -7,7 +7,7 @@ import {
 import { getAddressFromPublicKey, toChecksumAddress } from '@zilliqa-js/crypto';
 import { BN, Long } from '@zilliqa-js/util';
 
-import { TxParams, TxReceipt, TxStatus, TxIncluded } from './types';
+import { TxIncluded, TxParams, TxReceipt, TxStatus } from './types';
 import { encodeTransactionProto, sleep } from './util';
 
 /**
@@ -17,6 +17,29 @@ import { encodeTransactionProto, sleep } from './util';
  * Transaction can be in:  Confirmed, Rejected, Pending, or Initialised (i.e., not broadcasted).
  */
 export class Transaction implements Signable {
+  errorMap = new Map([
+    [0, 'CHECKER_FAILED'],
+    [1, 'RUNNER_FAILED'],
+    [2, 'BALANCE_TRANSFER_FAILED'],
+    [3, 'EXECUTE_CMD_FAILED'],
+    [4, 'EXECUTE_CMD_TIMEOUT'],
+    [5, 'NO_GAS_REMAINING_FOUND'],
+    [6, 'NO_ACCEPTED_FOUND'],
+    [7, 'CALL_CONTRACT_FAILED'],
+    [8, 'CREATE_CONTRACT_FAILED'],
+    [9, 'JSON_OUTPUT_CORRUPTED'],
+    [10, 'CONTRACT_NOT_EXIST'],
+    [11, 'STATE_CORRUPTED'],
+    [12, 'LOG_ENTRY_INSTALL_FAILED'],
+    [13, 'MESSAGE_CORRUPTED'],
+    [14, 'RECEIPT_IS_NULL'],
+    [15, 'MAX_DEPTH_REACHED'],
+    [16, 'CHAIN_CALL_DIFF_SHARD'],
+    [17, 'PREPARATION_FAILED'],
+    [18, 'NO_OUTPUT'],
+    [19, 'OUTPUT_ILLEGAL'],
+  ]);
+
   /**
    * confirm
    *
@@ -173,6 +196,10 @@ export class Transaction implements Signable {
     this.provider = provider;
   }
 
+  getReceipt(): undefined | TxReceipt {
+    return this.receipt;
+  }
+
   /**
    * setStatus
    *
@@ -272,6 +299,14 @@ export class Transaction implements Signable {
 
     this.id = res.result.ID;
     this.receipt = res.result.receipt;
+    if (!this.receipt.success) {
+      const err = this.receipt.errors;
+      if (err !== undefined) {
+        const values = Object.values(err);
+        const code = values.flat(2)[0];
+        this.receipt.error_message = this.errorMap.get(code);
+      }
+    }
     this.status =
       this.receipt && this.receipt.success
         ? TxStatus.Confirmed

@@ -25,6 +25,9 @@ export interface TxIncluded {
 export interface TxReceipt {
   success: boolean;
   cumulative_gas: number;
+  epoch_num: string;
+  errors?: Map<string, number[]>;
+  error_message?: string;
 }
 
 export interface TxParams {

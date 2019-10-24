@@ -1,4 +1,4 @@
-import { RPCMethod, HTTPProvider } from '@zilliqa-js/core';
+import { HTTPProvider, RPCMethod } from '@zilliqa-js/core';
 import { isValidChecksumAddress, randomBytes } from '@zilliqa-js/crypto';
 import { BN, Long } from '@zilliqa-js/util';
 
@@ -116,6 +116,65 @@ describe('Transaction', () => {
     await expect(
       provider.send(RPCMethod.CreateTransaction, tx.txParams),
     ).rejects.toThrow();
+  });
+
+  it('should translate error code to specific err message', async () => {
+    const responses = [
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: 888,
+          nonce: 1,
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          TranID: 'some_hash',
+          Info: 'Non-contract txn, sent to shard',
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          ID: 'some_hash',
+          receipt: {
+            cumulative_gas: '1000',
+            success: false,
+            errors: {
+              1: [2],
+            },
+          },
+        },
+      },
+    ].map((res) => [JSON.stringify(res)] as [string]);
+
+    fetch.mockResponses(...responses);
+
+    const tx = await wallet.sign(
+      new Transaction(
+        {
+          version: 0,
+          toAddr: '0x1234567890123456789012345678901234567890',
+          amount: new BN(0),
+          gasPrice: new BN(1000),
+          gasLimit: Long.fromNumber(1000),
+        },
+        provider,
+      ),
+    );
+
+    const res = await provider.send(RPCMethod.CreateTransaction, tx.txParams);
+    const rejected = await tx.confirm(res.result.TranID);
+    const receipt = rejected.getReceipt();
+    if (receipt !== undefined) {
+      await expect(receipt.error_message).toEqual('BALANCE_TRANSFER_FAILED');
+    } else {
+      throw new Error('test failed');
+    }
   });
 
   it('should not reject the promise if receipt.success === false', async () => {
