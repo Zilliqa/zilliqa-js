@@ -150,7 +150,7 @@ export interface TxList {
   TxnHashes: string[];
 }
 
-export const enum TransactionError {
+export enum TransactionError {
   CHECKER_FAILED = 0,
   RUNNER_FAILED,
   BALANCE_TRANSFER_FAILED,
@@ -177,8 +177,12 @@ export interface TransactionErrorObj {
   [depth: number]: TransactionError[];
 }
 
+export interface TransactionErrorMessageObj {
+  [depth: number]: string[];
+}
+
 export interface TransactionReceiptObj<TGas = string> {
-  errors: TransactionErrorObj;
+  errors: any;
   success: boolean;
   cumulative_gas: TGas;
   event_logs: EventLogEntry[];

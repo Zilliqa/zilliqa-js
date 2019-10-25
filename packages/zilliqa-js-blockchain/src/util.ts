@@ -14,7 +14,12 @@
 //   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import { TxParams } from '@zilliqa-js/account';
-import { RPCResponse, TransactionObj } from '@zilliqa-js/core';
+import {
+  RPCResponse,
+  TransactionError,
+  TransactionErrorMessageObj,
+  TransactionObj,
+} from '@zilliqa-js/core';
 import { toChecksumAddress } from '@zilliqa-js/crypto';
 import { BN, Long } from '@zilliqa-js/util';
 
@@ -35,6 +40,17 @@ export function toTxParams(
     ...rest
   } = <TransactionObj>response.result;
 
+  const msg: TransactionErrorMessageObj = {};
+  if (receipt.errors) {
+    const messageList: string[] = [];
+    const errList = Object.values(receipt.errors).flat(2);
+    const errDepth = Object.keys(receipt.errors);
+    for (const errCode of errList) {
+      messageList.push(TransactionError[errCode]);
+    }
+    msg[+errDepth[0]] = messageList;
+  }
+
   return {
     ...rest,
     version: parseInt(version, 10),
@@ -46,6 +62,7 @@ export function toTxParams(
     nonce: parseInt(nonce, 10),
     receipt: {
       ...receipt,
+      errors: msg,
       cumulative_gas: parseInt(receipt.cumulative_gas, 10),
     },
   };

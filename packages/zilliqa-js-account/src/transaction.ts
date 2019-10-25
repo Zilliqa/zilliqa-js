@@ -14,24 +14,23 @@
 //   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import {
+  EventEmitter,
   GET_TX_ATTEMPTS,
   Provider,
+  RPCMethod,
   RPCResponse,
   Signable,
   TxBlockObj,
-  RPCMethod,
-  EventEmitter,
 } from '@zilliqa-js/core';
 import { getAddressFromPublicKey, normaliseAddress } from '@zilliqa-js/crypto';
 import { BN, Long } from '@zilliqa-js/util';
 
 import {
+  TxEventName,
+  TxIncluded,
   TxParams,
   TxReceipt,
   TxStatus,
-  TxIncluded,
-  TxEventName,
-  // TxEvents,
 } from './types';
 import { encodeTransactionProto, sleep } from './util';
 
@@ -174,6 +173,10 @@ export class Transaction implements Signable {
     return this.status === TxStatus.Initialised;
   }
 
+  getReceipt(): TxReceipt | undefined {
+    return this.receipt;
+  }
+
   /**
    * isConfirmed
    *
@@ -219,6 +222,7 @@ export class Transaction implements Signable {
   observed(): EventEmitter<Transaction> {
     return this.eventEmitter;
   }
+
   /**
    * blockConfirm
    *
@@ -277,6 +281,7 @@ export class Transaction implements Signable {
 
     throw new Error(errorMessage);
   }
+
   /**
    * confirmReceipt
    *
@@ -392,6 +397,7 @@ export class Transaction implements Signable {
       throw error;
     }
   }
+
   private emit(event: TxEventName | string, txEvent: any) {
     this.eventEmitter.emit(event, { ...txEvent, event });
   }

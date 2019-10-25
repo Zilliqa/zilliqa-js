@@ -1,12 +1,12 @@
 import { Account, Transaction, Wallet } from '@zilliqa-js/account';
 import {
+  BlockList,
   HTTPProvider,
   RPCResponse,
   TxBlockObj,
-  BlockList,
 } from '@zilliqa-js/core';
 import { toChecksumAddress } from '@zilliqa-js/crypto';
-import { BN, Long, bytes } from '@zilliqa-js/util';
+import { BN, bytes, Long } from '@zilliqa-js/util';
 
 import { Blockchain } from '../src/chain';
 import schemas from './schema.json';
@@ -186,5 +186,19 @@ describe('[Integration]: Blockchain', () => {
   it('should be able to get the minimum gas price', async () => {
     const response = await bc.getMinimumGasPrice();
     expect(typeof response.result).toBe('string');
+  });
+
+  it('should be able to get transaction with error', async () => {
+    const response = await bc.getTransaction(
+      '2d6e09f01d519e4f3d6f174d8a45c3502abe9777eee7391a28fe18ab21e7335a',
+    );
+    const receipt = response.getReceipt();
+    if (receipt !== undefined) {
+      expect(receipt.errors).toEqual({
+        0: ['CREATE_CONTRACT_FAILED', 'RUNNER_FAILED'],
+      });
+    } else {
+      throw new Error('test failed');
+    }
   });
 });
