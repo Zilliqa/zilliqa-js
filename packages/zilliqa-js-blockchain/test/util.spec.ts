@@ -22,7 +22,6 @@ describe('blockchain utils', () => {
           cumulative_gas: '1000',
           success: true,
           event_logs: [],
-          errors: {},
         },
         version: '65537',
       },
