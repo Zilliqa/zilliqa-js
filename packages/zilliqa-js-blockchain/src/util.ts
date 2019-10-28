@@ -42,13 +42,11 @@ export function toTxParams(
 
   const msg: TransactionErrorMessageObj = {};
   if (receipt.errors) {
-    const messageList: string[] = [];
-    const errList = Object.values(receipt.errors).flat(2);
-    const errDepth = Object.keys(receipt.errors);
-    for (const errCode of errList) {
-      messageList.push(TransactionError[errCode]);
-    }
-    msg[+errDepth[0]] = messageList;
+    const messageList = Object.values(receipt.errors)
+      .flat(2)
+      .map((cur) => TransactionError[cur]);
+    const errDepth = Object.keys(receipt.errors)[0];
+    msg[+errDepth] = messageList;
   }
 
   return {
