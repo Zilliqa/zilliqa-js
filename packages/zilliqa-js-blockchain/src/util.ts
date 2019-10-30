@@ -17,7 +17,6 @@ import { TxParams } from '@zilliqa-js/account';
 import {
   RPCResponse,
   TransactionError,
-  TransactionErrorMessageObj,
   TransactionObj,
 } from '@zilliqa-js/core';
 import { toChecksumAddress } from '@zilliqa-js/crypto';
@@ -40,14 +39,14 @@ export function toTxParams(
     ...rest
   } = <TransactionObj>response.result;
 
-  const msg: TransactionErrorMessageObj = {};
-  if (receipt.errors) {
-    const messageList = Object.values(receipt.errors)
-      .flat(2)
-      .map((cur) => TransactionError[cur]);
-    const errDepth = Object.keys(receipt.errors)[0];
-    msg[+errDepth] = messageList;
-  }
+  const msg = receipt.errors
+    ? Object.keys(receipt.errors).reduce((acc, depth) => {
+        const errorMsgList = receipt.errors[depth].map(
+          (num: any) => TransactionError[num],
+        );
+        return { ...acc, [depth]: errorMsgList };
+      }, {})
+    : {};
 
   return {
     ...rest,

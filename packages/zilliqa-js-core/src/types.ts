@@ -177,10 +177,6 @@ export interface TransactionErrorObj {
   [depth: number]: TransactionError[];
 }
 
-export interface TransactionErrorMessageObj {
-  [depth: number]: string[];
-}
-
 export interface TransactionReceiptObj<TGas = string> {
   errors: any;
   success: boolean;
