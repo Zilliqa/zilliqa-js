@@ -42,7 +42,7 @@ export function toTxParams(
   const msg = receipt.errors
     ? Object.keys(receipt.errors).reduce((acc, depth) => {
         const errorMsgList = receipt.errors[depth].map(
-          (num: any) => TransactionError[num],
+          (num: number) => TransactionError[num],
         );
         return { ...acc, [depth]: errorMsgList };
       }, {})
