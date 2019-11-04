@@ -1,3 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`WebSocketProvider should be able to connect to websocket server 1`] = `"received is not a function"`;
