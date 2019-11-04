@@ -29,3 +29,12 @@ export const enum SocketState {
   SOCKET_CLOSE = 'socket_close',
   SOCKET_ERROR = 'socket_error',
 }
+
+export interface NewBlockQuery {
+  query: string;
+}
+
+export interface NewEventQuery {
+  query: string;
+  addresses: string[];
+}
