@@ -26,7 +26,8 @@
   },
   "homepage": "https://github.com/Zilliqa/Zilliqa-Javascript-Library#readme",
   "dependencies": {
-    "@types/socket.io": "^2.1.4",
-    "socket.io": "^2.3.0"
+    "mitt": "1.2.0",
+    "websocket": "^1.0.28",
+    "@zilliqa-js/core": "0.8.3"
   }
 }
