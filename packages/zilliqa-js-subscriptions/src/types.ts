@@ -14,3 +14,18 @@
 //   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 export type QueryParam = 'NewBlock' | 'EventLog';
+
+export const enum SocketConnect {
+  READY = 'ready',
+  CONNECT = 'connect',
+  ERROR = 'error',
+  CLOSE = 'close',
+}
+
+export const enum SocketState {
+  SOCKET_CONNECT = 'socket_connect',
+  SOCKET_MESSAGE = 'socket_message',
+  SOCKET_READY = 'socket_ready',
+  SOCKET_CLOSE = 'socket_close',
+  SOCKET_ERROR = 'socket_error',
+}
