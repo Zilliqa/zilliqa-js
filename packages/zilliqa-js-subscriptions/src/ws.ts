@@ -15,7 +15,12 @@
 
 import mitt from 'mitt';
 import { w3cwebsocket as W3CWebsocket } from 'websocket';
-import { NewBlockQuery, NewEventQuery, SocketConnect } from './types';
+import {
+  NewBlockQuery,
+  NewEventQuery,
+  SocketConnect,
+  SocketState,
+} from './types';
 
 export class WebSocketProvider {
   public static NewWebSocket(
@@ -52,6 +57,7 @@ export class WebSocketProvider {
   emitter: mitt.Emitter;
   handlers: any = {};
   websocket: WebSocket | W3CWebsocket;
+  // use concrete object instead of `any`
   subscriptions: any;
 
   // basically, options is a collection of metadata things like protocol or headers
@@ -61,6 +67,30 @@ export class WebSocketProvider {
     this.websocket = WebSocketProvider.NewWebSocket(url, options);
     this.subscriptions = {};
     // todo register event listener
+    this.websocket.onopen = this.onConnect.bind(this);
+    this.websocket.onclose = this.onClose.bind(this);
+    this.websocket.onmessage = this.onMessage.bind(this);
+  }
+
+  onClose(closeEvent: any) {
+    // todo impl this
+    console.log('close');
+    this.websocket.close();
+    return;
+  }
+
+  async onConnect() {
+    if (!this.subscriptions) {
+      this.subscriptions = {};
+    }
+    // todo handle reconnect issue
+    this.emitter.emit(SocketState.SOCKET_CONNECT);
+    this.emitter.emit(SocketConnect.CONNECT);
+  }
+
+  onMessage(msg: MessageEvent) {
+    // todo impl this
+    console.log(msg);
   }
 
   addEventListener(type: string, handler: mitt.Handler) {
