@@ -160,7 +160,7 @@ describe('WebSocketProvider', () => {
       expect(event).toEqual(sendData);
       console.log(event);
     });
-    await ws.subscribe({ query: '1000' });
+    ws.subscribe({ query: '1000' });
     // await ws.subscribe({query: '1000'});
   });
 });
