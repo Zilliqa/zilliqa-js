@@ -48,6 +48,7 @@ export class Contract {
   address?: string;
   code?: string;
   status: ContractStatus;
+  error?: any;
 
   constructor(
     factory: Contracts,
@@ -123,7 +124,9 @@ export class Contract {
     );
 
     if (response.error) {
-      throw new Error(response.error.message);
+      this.address = undefined;
+      this.error = response.error;
+      return tx.setStatus(TxStatus.Rejected);
     }
 
     if (isDeploy) {
