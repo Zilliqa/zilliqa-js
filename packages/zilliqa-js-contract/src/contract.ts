@@ -13,26 +13,26 @@
 //   You should have received a copy of the GNU General Public License
 //   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { Wallet, Transaction, TxStatus } from '@zilliqa-js/account';
-import { GET_TX_ATTEMPTS, RPCMethod, Provider, sign } from '@zilliqa-js/core';
+import { Transaction, TxStatus, Wallet } from '@zilliqa-js/account';
+import { GET_TX_ATTEMPTS, Provider, RPCMethod, sign } from '@zilliqa-js/core';
 import {
-  toChecksumAddress,
   isValidChecksumAddress,
   normaliseAddress,
+  toChecksumAddress,
 } from '@zilliqa-js/crypto';
 import { BN } from '@zilliqa-js/util';
 
 import { Contracts } from './factory';
 import {
   ABI,
+  CallParams,
   ContractStatus,
+  DeployError,
+  DeployParams,
+  DeploySuccess,
   Init,
   State,
   Value,
-  DeployError,
-  DeploySuccess,
-  CallParams,
-  DeployParams,
 } from './types';
 
 const NIL_ADDRESS = '0x0000000000000000000000000000000000000000';
@@ -48,6 +48,7 @@ export class Contract {
   address?: string;
   code?: string;
   status: ContractStatus;
+  error?: any;
 
   constructor(
     factory: Contracts,
@@ -124,6 +125,7 @@ export class Contract {
 
     if (response.error) {
       this.address = undefined;
+      this.error = response.error;
       return tx.setStatus(TxStatus.Rejected);
     }
 
