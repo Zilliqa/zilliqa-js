@@ -30,6 +30,11 @@ export const enum SocketState {
   SOCKET_ERROR = 'socket_error',
 }
 
+export const enum EventType {
+  NEW_BLOCK = 'new_block',
+  EVENT_LOG = 'event_log',
+}
+
 export interface NewBlockQuery {
   query: string;
 }

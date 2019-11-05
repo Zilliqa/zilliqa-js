@@ -16,6 +16,7 @@
 import mitt from 'mitt';
 import { w3cwebsocket as W3CWebsocket } from 'websocket';
 import {
+  EventType,
   NewBlockQuery,
   NewEventQuery,
   SocketConnect,
@@ -89,8 +90,17 @@ export class WebSocketProvider {
   }
 
   onMessage(msg: MessageEvent) {
-    // todo impl this
-    console.log(msg);
+    if (msg.data) {
+      const dataObj = JSON.parse(msg.data);
+      let event;
+      event = Array.isArray(dataObj)
+        ? EventType.EVENT_LOG
+        : EventType.NEW_BLOCK;
+      this.emitter.emit(SocketState.SOCKET_MESSAGE, msg.data);
+      this.emitter.emit(event, msg.data);
+    } else {
+      throw new Error('unsupported msg: ' + msg);
+    }
   }
 
   addEventListener(type: string, handler: mitt.Handler) {

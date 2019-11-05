@@ -1,5 +1,5 @@
 import { Server } from 'mock-socket';
-import { WebSocketProvider } from '../src';
+import { EventType, WebSocketProvider } from '../src';
 // import {WebSocketProvider} from '../dist/ws';
 
 describe('WebSocketProvider', () => {
@@ -122,5 +122,45 @@ describe('WebSocketProvider', () => {
 
     const ws = new WebSocketProvider(fakeURL);
     expect(ws.subscribe({ query: '1000' })).resolves.toReturn();
+  });
+
+  it('should able to emit event while receiving message', async () => {
+    const mockServer = new Server(fakeURL);
+    const sendData =
+      '[\n' +
+      '    {\n' +
+      '        "address" : "521a39bec5df87f65ab58a3b6df1044b285a1c48",\n' +
+      '        "event_logs" : \n' +
+      '        [\n' +
+      '            {\n' +
+      '                "_eventname" : "setTargetFailure",\n' +
+      '                "params" : \n' +
+      '                [\n' +
+      '                    {\n' +
+      '                        "type" : "Uint128",\n' +
+      '                        "value" : "1000",\n' +
+      '                        "vname" : "target"\n' +
+      '                    }\n' +
+      '                ]\n' +
+      '            }\n' +
+      '        ]\n' +
+      '    }\n' +
+      ']';
+    mockServer.on('connection', (socket) => {
+      socket.on('message', (data) => {
+        console.log('data = ', data);
+        expect(data).toEqual('{"query":"1000"}');
+        socket.send(sendData);
+        socket.close();
+      });
+    });
+
+    const ws = new WebSocketProvider(fakeURL);
+    ws.emitter.on(EventType.EVENT_LOG, (event) => {
+      expect(event).toEqual(sendData);
+      console.log(event);
+    });
+    await ws.subscribe({ query: '1000' });
+    // await ws.subscribe({query: '1000'});
   });
 });
