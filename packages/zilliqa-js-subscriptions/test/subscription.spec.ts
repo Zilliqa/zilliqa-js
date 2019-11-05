@@ -3,9 +3,8 @@ import { EventType, WebSocketProvider } from '../src';
 // import {WebSocketProvider} from '../dist/ws';
 
 describe('WebSocketProvider', () => {
-  const fakeURL = 'ws://localhost:8080';
-
   it('should be able to connect to websocket server', async () => {
+    const fakeURL = 'ws://localhost:8080';
     const mockServer = new Server(fakeURL);
     mockServer.on('connection', (socket) => {
       socket.on('message', (data) => {
@@ -24,6 +23,7 @@ describe('WebSocketProvider', () => {
   });
 
   it('should be able to receive json object', async () => {
+    const fakeURL = 'ws://localhost:8081';
     const mockServer = new Server(fakeURL);
     mockServer.on('connection', (socket) => {
       socket.on('message', (data) => {
@@ -90,6 +90,7 @@ describe('WebSocketProvider', () => {
   });
 
   it('should be able to receive json array', async () => {
+    const fakeURL = 'ws://localhost:8082';
     const mockServer = new Server(fakeURL);
     mockServer.on('connection', (socket) => {
       socket.on('message', (data) => {
@@ -125,6 +126,7 @@ describe('WebSocketProvider', () => {
   });
 
   it('should able to emit event while receiving message', async () => {
+    const fakeURL = 'ws://localhost:8083';
     const mockServer = new Server(fakeURL);
     const sendData =
       '[\n' +
