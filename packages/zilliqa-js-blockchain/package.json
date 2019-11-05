@@ -1,6 +1,6 @@
 {
   "name": "@zilliqa-js/blockchain",
-  "version": "0.8.4",
+  "version": "0.8.5",
   "description": "Class(es) for interacting with the Zilliqa blockchain.",
   "main": "dist/index.js",
   "node": "dist/index.js",
@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@zilliqa-js/account": "^0.8.4",
-    "@zilliqa-js/contract": "^0.8.4",
+    "@zilliqa-js/contract": "0.8.5",
     "@zilliqa-js/core": "^0.8.4",
     "@zilliqa-js/crypto": "0.8.3",
     "@zilliqa-js/util": "0.8.3",
