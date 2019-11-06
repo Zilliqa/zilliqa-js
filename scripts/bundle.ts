@@ -15,7 +15,6 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { promisify } from 'util';
 
 import * as rollup from 'rollup';
 import alias from 'rollup-plugin-alias';
@@ -24,14 +23,20 @@ import json from 'rollup-plugin-json';
 import globals from 'rollup-plugin-node-globals';
 import resolve from 'rollup-plugin-node-resolve';
 import typescript2 from 'rollup-plugin-typescript2';
-import webpack from 'webpack';
 import ts from 'typescript';
 
 import project from './project';
-import { createLogger, c } from './logger';
+import { c, createLogger } from './logger';
 
 const logPreProcess = createLogger('preprocess');
 const logBundle = createLogger('bundle');
+
+function getKeys(p) {
+  const packageJsonFile = `${process.cwd()}/packages/${p}/package.json`;
+  const data = fs.readFileSync(packageJsonFile, 'utf-8');
+  const { dependencies } = JSON.parse(data);
+  return dependencies ? Object.keys(dependencies) : [];
+}
 
 async function bundle() {
   try {
@@ -88,10 +93,11 @@ async function bundle() {
         ],
         // mark all packages that are not *this* package as external so they don't get included in the bundle
         // include tslib in the bundles since only __decorate is really used by multiple packages (we can figure out a way to deduplicate that later on if need be)
-        external: project.packages
-          .filter((p) => p.name !== pkg.name)
-          .map((p) => p.scopedName)
-          .concat(['cross-fetch']),
+        external: getKeys(pkg.name),
+        // external: project.packages
+        //   .filter((p) => p.name !== pkg.name)
+        //   .map((p) => p.scopedName)
+        //   .concat(['cross-fetch']),
       });
 
       // 'amd' | 'cjs' | 'system' | 'es' | 'esm' | 'iife' | 'umd'
@@ -118,8 +124,12 @@ async function bundle() {
           exports: 'named',
           name: pkg.globalName,
           globals: {
-            ...project.packages.reduce((g, pkg) => {
-              g[pkg.scopedName] = pkg.globalName;
+            ...getKeys(pkg.name).reduce((g, packages) => {
+              if (packages === pkg.name) {
+                g[pkg.scopedName] = pkg.globalName;
+              } else {
+                g[packages] = packages;
+              }
               return g;
             }, {}),
             tslib: 'tslib',

@@ -146,10 +146,9 @@ export class WebSocketProvider {
         parameters: payload,
       };
     } else {
-      // tslint:disable-next-line:forin
-      for (const index in addrs) {
-        this.subscriptions[addrs[index]] = {
-          id: addrs[index],
+      for (const addr of addrs) {
+        this.subscriptions[addr] = {
+          id: addr,
           parameters: payload,
         };
       }
