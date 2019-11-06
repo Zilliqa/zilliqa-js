@@ -96,6 +96,7 @@ export class WebSocketProvider {
       event = Array.isArray(dataObj)
         ? EventType.EVENT_LOG
         : EventType.NEW_BLOCK;
+      // may need to emit specific event (like single smart contract address)
       this.emitter.emit(SocketState.SOCKET_MESSAGE, msg.data);
       this.emitter.emit(event, msg.data);
     } else {
@@ -137,13 +138,22 @@ export class WebSocketProvider {
     });
   }
 
-  async subscribe(payload: NewBlockQuery | NewEventQuery) {
-    const response = await this.send(payload);
-    // todo tell if this subscribe action caused correct result
-    this.subscriptions[response.result] = {
-      id: response.result,
-      parameters: payload.query,
-    };
-    return response.result;
+  async subscribe(payload: NewBlockQuery | NewEventQuery): Promise<any> {
+    const addrs = (payload as NewEventQuery).addresses;
+    if (addrs === undefined) {
+      this.subscriptions[payload.query] = {
+        id: payload.query,
+        parameters: payload,
+      };
+    } else {
+      // tslint:disable-next-line:forin
+      for (const index in addrs) {
+        this.subscriptions[addrs[index]] = {
+          id: addrs[index],
+          parameters: payload,
+        };
+      }
+    }
+    return this.send(payload);
   }
 }

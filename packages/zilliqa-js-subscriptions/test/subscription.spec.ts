@@ -16,7 +16,7 @@ describe('WebSocketProvider', () => {
     });
 
     const ws = new WebSocketProvider(fakeURL);
-    expect(ws.subscribe({ query: '1000' })).resolves.toReturn();
+    expect(ws.subscribe({ query: 'NewBlock' })).resolves.toReturn();
     // following code will cause timeout error which makes this unit test failed
     // I have not reach out a good way to let this unit test succeed, but indeed it is a good tool test our class for now
     // await expect(ws.subscribe({query: '1000'})).resolves.toReturn();
@@ -86,7 +86,7 @@ describe('WebSocketProvider', () => {
       });
     });
     const ws = new WebSocketProvider(fakeURL);
-    expect(ws.subscribe({ query: '1000' })).resolves.toReturn();
+    expect(ws.subscribe({ query: 'NewBlock' })).resolves.toReturn();
   });
 
   it('should be able to receive json array', async () => {
@@ -95,7 +95,7 @@ describe('WebSocketProvider', () => {
     mockServer.on('connection', (socket) => {
       socket.on('message', (data) => {
         console.log('data = ', data);
-        expect(data).toEqual('{"query":"1000"}');
+        expect(data).toEqual('{"query":"NewBlock"}');
         socket.send(
           '[\n' +
             '    {\n' +
@@ -122,7 +122,7 @@ describe('WebSocketProvider', () => {
     });
 
     const ws = new WebSocketProvider(fakeURL);
-    expect(ws.subscribe({ query: '1000' })).resolves.toReturn();
+    expect(ws.subscribe({ query: 'NewBlock' })).resolves.toReturn();
   });
 
   it('should able to emit event while receiving message', async () => {
@@ -148,10 +148,12 @@ describe('WebSocketProvider', () => {
       '        ]\n' +
       '    }\n' +
       ']';
+    const query =
+      '{"query":"EventLog","addresses":["zil1wt7276q45kuu98cy2aj3c5qa5f2kpvxqh4le20","0x0000000000000000000000000000000000000001"]}';
     mockServer.on('connection', (socket) => {
       socket.on('message', (data) => {
         console.log('data = ', data);
-        expect(data).toEqual('{"query":"1000"}');
+        expect(data).toEqual(query);
         socket.send(sendData);
         socket.close();
       });
@@ -160,9 +162,14 @@ describe('WebSocketProvider', () => {
     const ws = new WebSocketProvider(fakeURL);
     ws.emitter.on(EventType.EVENT_LOG, (event) => {
       expect(event).toEqual(sendData);
-      console.log(event);
+      console.log('receive event: ', event);
     });
-    ws.subscribe({ query: '1000' });
-    // await ws.subscribe({query: '1000'});
+    ws.subscribe({
+      query: 'EventLog',
+      addresses: [
+        'zil1wt7276q45kuu98cy2aj3c5qa5f2kpvxqh4le20',
+        '0x0000000000000000000000000000000000000001',
+      ],
+    });
   });
 });
