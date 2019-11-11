@@ -67,16 +67,23 @@ export class WebSocketProvider {
     this.emitter = mitt(this.handlers);
     this.websocket = WebSocketProvider.NewWebSocket(url, options);
     this.subscriptions = {};
-    // todo register event listener
     this.websocket.onopen = this.onConnect.bind(this);
     this.websocket.onclose = this.onClose.bind(this);
     this.websocket.onmessage = this.onMessage.bind(this);
   }
 
-  onClose(closeEvent: any) {
+  onClose(event: any) {
     // todo impl this
-    console.log('close');
-    this.websocket.close();
+    console.log('close: ', event);
+    if (this.websocket.CONNECTING) {
+      this.websocket.close();
+    }
+    return;
+  }
+
+  onError(event: any) {
+    // todo impl this
+    console.log('close: ', event);
     return;
   }
 
@@ -103,6 +110,20 @@ export class WebSocketProvider {
             throw new Error('unsupported value type');
           }
         }
+      } else if (dataObj.query === EventType.NEW_BLOCK) {
+        // subscribe NewBlock succeed
+        this.subscriptions[dataObj.query] = {
+          id: dataObj.query,
+          parameters: dataObj,
+        };
+        this.emitter.emit(EventType.NEW_BLOCK, dataObj);
+      } else if (dataObj.query === EventType.EVENT_LOG) {
+        // subscribe EventLog succeed
+        this.subscriptions[dataObj.query] = {
+          id: dataObj.query,
+          parameters: dataObj,
+        };
+        this.emitter.emit(EventType.EVENT_LOG, dataObj);
       } else {
         throw new Error('unsupported message type');
       }
@@ -145,21 +166,8 @@ export class WebSocketProvider {
     });
   }
 
-  async subscribe(payload: NewBlockQuery | NewEventQuery): Promise<any> {
-    const addrs = (payload as NewEventQuery).addresses;
-    if (addrs === undefined) {
-      this.subscriptions[payload.query] = {
-        id: payload.query,
-        parameters: payload,
-      };
-    } else {
-      for (const addr of addrs) {
-        this.subscriptions[addr] = {
-          id: addr,
-          parameters: payload,
-        };
-      }
-    }
-    return this.send(payload);
+  async subscribe(payload: NewBlockQuery | NewEventQuery): Promise<boolean> {
+    const result = await this.send(payload);
+    return result.query === payload.query;
   }
 }

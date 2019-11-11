@@ -31,8 +31,10 @@ export const enum SocketState {
 }
 
 export const enum EventType {
-  NEW_BLOCK = 'new_block',
-  EVENT_LOG = 'event_log',
+  NEW_BLOCK = 'NewBlock',
+  EVENT_LOG = 'EventLog',
+  SUBSCRIBE_BLOCK = 'SUBSCRIBE_BLOCK',
+  SUBSCRIBE_EVENT_LOG = 'SUBSCRIBE_EVENT_LOG',
 }
 
 export interface NewBlockQuery {
