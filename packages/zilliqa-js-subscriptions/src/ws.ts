@@ -99,7 +99,7 @@ export class WebSocketProvider {
   onMessage(msg: MessageEvent) {
     if (msg.data) {
       const dataObj = JSON.parse(msg.data);
-      if (dataObj.type === 'notification') {
+      if (dataObj.type === EventType.NOTIFICATION) {
         this.emitter.emit(SocketState.SOCKET_MESSAGE, dataObj);
         for (const value of dataObj.values) {
           if (value.query === 'NewBlock') {
