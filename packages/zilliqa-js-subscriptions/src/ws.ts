@@ -21,6 +21,8 @@ import {
   NewEventQuery,
   SocketConnect,
   SocketState,
+  UnsubscribeEventLog,
+  UnsubscribeNewBlock,
 } from './types';
 
 export class WebSocketProvider {
@@ -124,6 +126,8 @@ export class WebSocketProvider {
           parameters: dataObj,
         };
         this.emitter.emit(EventType.EVENT_LOG, dataObj);
+      } else if (dataObj.query === EventType.UNSUBSCRIBE) {
+        this.emitter.emit(EventType.UNSUBSCRIBE, dataObj);
       } else {
         throw new Error('unsupported message type');
       }
@@ -169,5 +173,16 @@ export class WebSocketProvider {
   async subscribe(payload: NewBlockQuery | NewEventQuery): Promise<boolean> {
     const result = await this.send(payload);
     return result.query === payload.query;
+  }
+
+  async unsubscribe(
+    payload: UnsubscribeNewBlock | UnsubscribeEventLog,
+  ): Promise<boolean> {
+    const result = await this.send(payload);
+    const succeed = result.query === payload.query;
+    if (succeed) {
+      this.subscriptions[payload.query] = null;
+    }
+    return succeed;
   }
 }

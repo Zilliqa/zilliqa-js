@@ -38,4 +38,27 @@ describe('WebSocketProvider', () => {
       }),
     ).resolves.toEqual(true);
   });
+
+  it('should be able to unsubscribe New Block', async () => {
+    const fakeURL = 'ws://localhost:8082';
+    const mockServer = new Server(fakeURL);
+    mockServer.on('connection', (socket) => {
+      socket.on('message', (data) => {
+        const d =
+          '{\n' +
+          '  "query":"Unsubscribe",\n' +
+          '  "value":["NewBlock"]\n' +
+          '}';
+        socket.send(d);
+        socket.close();
+      });
+    });
+    const ws = new WebSocketProvider(fakeURL);
+    await expect(
+      ws.unsubscribe({
+        query: 'Unsubscribe',
+        type: 'NewBlock',
+      }),
+    ).resolves.toEqual(true);
+  });
 });
