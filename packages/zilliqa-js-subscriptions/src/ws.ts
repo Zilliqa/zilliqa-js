@@ -92,15 +92,22 @@ export class WebSocketProvider {
   onMessage(msg: MessageEvent) {
     if (msg.data) {
       const dataObj = JSON.parse(msg.data);
-      let event;
-      event = Array.isArray(dataObj)
-        ? EventType.EVENT_LOG
-        : EventType.NEW_BLOCK;
-      // may need to emit specific event (like single smart contract address)
-      this.emitter.emit(SocketState.SOCKET_MESSAGE, msg.data);
-      this.emitter.emit(event, msg.data);
+      if (dataObj.type === 'notification') {
+        this.emitter.emit(SocketState.SOCKET_MESSAGE, dataObj);
+        for (const value of dataObj.values) {
+          if (value.query === 'NewBlock') {
+            this.emitter.emit(EventType.NEW_BLOCK, value);
+          } else if (value.query === 'EventLog') {
+            this.emitter.emit(EventType.EVENT_LOG, value);
+          } else {
+            throw new Error('unsupported value type');
+          }
+        }
+      } else {
+        throw new Error('unsupported message type');
+      }
     } else {
-      throw new Error('unsupported msg: ' + msg);
+      throw new Error('message data is empty');
     }
   }
 
