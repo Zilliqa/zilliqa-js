@@ -118,14 +118,14 @@ export class WebSocketProvider {
           id: dataObj.query,
           parameters: dataObj,
         };
-        this.emitter.emit(EventType.NEW_BLOCK, dataObj);
+        this.emitter.emit(EventType.SUBSCRIBE_NEW_BLOCK, dataObj);
       } else if (dataObj.query === EventType.EVENT_LOG) {
         // subscribe EventLog succeed
         this.subscriptions[dataObj.query] = {
           id: dataObj.query,
           parameters: dataObj,
         };
-        this.emitter.emit(EventType.EVENT_LOG, dataObj);
+        this.emitter.emit(EventType.SUBSCRIBE_EVENT_LOG, dataObj);
       } else if (dataObj.query === EventType.UNSUBSCRIBE) {
         this.emitter.emit(EventType.UNSUBSCRIBE, dataObj);
       } else {
@@ -156,7 +156,15 @@ export class WebSocketProvider {
         } catch (error) {
           throw error;
         }
-        this.emitter.on(query.query, (data) => {
+        let queryParam;
+        if (query.query === EventType.NEW_BLOCK) {
+          queryParam = EventType.SUBSCRIBE_NEW_BLOCK;
+        } else if (query.query === EventType.EVENT_LOG) {
+          queryParam = EventType.SUBSCRIBE_EVENT_LOG;
+        } else {
+          queryParam = query.query;
+        }
+        this.emitter.on(queryParam, (data) => {
           resolve(data);
         });
         this.emitter.on(SocketConnect.ERROR, reject);

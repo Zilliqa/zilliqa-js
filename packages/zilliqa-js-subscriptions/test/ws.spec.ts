@@ -1,6 +1,5 @@
 import { Server } from 'mock-socket';
 import { WebSocketProvider } from '../src';
-// import {WebSocketProvider} from '../dist/ws';
 
 describe('WebSocketProvider', () => {
   it('should be able to subscribe NewBlock', async () => {
@@ -8,7 +7,6 @@ describe('WebSocketProvider', () => {
     const mockServer = new Server(fakeURL);
     mockServer.on('connection', (socket) => {
       socket.on('message', (data) => {
-        console.log('data = ', data);
         expect(data).toEqual('{"query":"NewBlock"}');
         socket.send(data);
         socket.close();

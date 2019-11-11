@@ -35,6 +35,8 @@ export const enum EventType {
   EVENT_LOG = 'EventLog',
   NOTIFICATION = 'notification',
   UNSUBSCRIBE = 'Unsubscribe',
+  SUBSCRIBE_NEW_BLOCK = 'SubscribeNewBlock',
+  SUBSCRIBE_EVENT_LOG = 'SubscribeEventLog',
 }
 
 export interface NewBlockQuery {
