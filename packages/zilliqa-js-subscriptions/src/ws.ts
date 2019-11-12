@@ -108,6 +108,8 @@ export class WebSocketProvider {
             this.emitter.emit(EventType.NEW_BLOCK, value);
           } else if (value.query === 'EventLog') {
             this.emitter.emit(EventType.EVENT_LOG, value);
+          } else if (value.query === 'Unsubscribe') {
+            this.emitter.emit(EventType.UNSUBSCRIBE, value);
           } else {
             throw new Error('unsupported value type');
           }
