@@ -13,4 +13,11 @@
 //   You should have received a copy of the GNU General Public License
 //   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-export class NewTxBlockSubscription {}
+import { Subscription } from './subscription';
+import { EventType } from './types';
+
+export class NewTxBlockSubscription extends Subscription {
+  constructor(url: string, options: any = {}) {
+    super({ query: EventType.NEW_BLOCK }, url, options);
+  }
+}
