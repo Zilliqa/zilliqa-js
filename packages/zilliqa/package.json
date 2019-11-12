@@ -27,7 +27,8 @@
     "@zilliqa-js/contract": "^0.8.4",
     "@zilliqa-js/core": "^0.8.4",
     "@zilliqa-js/crypto": "0.8.3",
-    "@zilliqa-js/util": "0.8.3"
+    "@zilliqa-js/util": "0.8.3",
+    "@zilliqa-js/subscriptions": "0.8.3"
   },
   "engines": {
     "node": ">=10.0.0 <=12.12.0"
