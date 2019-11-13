@@ -17,7 +17,7 @@ import { HTTPProvider, Provider } from '@zilliqa-js/core';
 import { TransactionFactory, Wallet } from '@zilliqa-js/account';
 import { Contracts } from '@zilliqa-js/contract';
 import { Blockchain, Network } from '@zilliqa-js/blockchain';
-import { NewTxBlockSubscription } from '@zilliqa-js/subscriptions';
+import { SubscriptionBuilder } from '@zilliqa-js/subscriptions';
 
 export class Zilliqa {
   provider: Provider;
@@ -26,15 +26,15 @@ export class Zilliqa {
   contracts: Contracts;
   transactions: TransactionFactory;
   wallet: Wallet;
-  newTxBlockSubscription: NewTxBlockSubscription;
+  subscriptionBuilder: SubscriptionBuilder;
 
-  constructor(node: string, websocket: string, provider?: Provider) {
+  constructor(node: string, provider?: Provider) {
     this.provider = provider || new HTTPProvider(node);
     this.wallet = new Wallet(this.provider);
     this.blockchain = new Blockchain(this.provider, this.wallet);
     this.network = new Network(this.provider, this.wallet);
     this.contracts = new Contracts(this.provider, this.wallet);
     this.transactions = new TransactionFactory(this.provider, this.wallet);
-    this.newTxBlockSubscription = new NewTxBlockSubscription(websocket);
+    this.subscriptionBuilder = new SubscriptionBuilder();
   }
 }

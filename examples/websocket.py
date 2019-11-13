@@ -65,7 +65,8 @@ class WebSocketsHandler(SocketServer.StreamRequestHandler):
         self.send_message(message)
         while True:
             self.send_message('{"type": "notification","values":[{"query":"NewBlock","value":"content of new block"}]}')
-            time.sleep(10)
+            self.send_message('{"type": "notification","values":[{"query":"EventLog","value":"content of event log"}]}')
+            time.sleep(2)
 
 if __name__ == "__main__":
     server = SocketServer.TCPServer(

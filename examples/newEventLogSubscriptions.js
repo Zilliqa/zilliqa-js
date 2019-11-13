@@ -7,11 +7,11 @@ async function test() {
   const subscriber = zilliqa.subscriptionBuilder.buildNewBlockSubscriptions(
     'ws://localhost:9998',
   );
-  subscriber.emitter.on(EventType.SUBSCRIBE_NEW_BLOCK, (event) => {
-    console.log('get SubscribeNewBlock echo: ', event);
+  subscriber.emitter.on(EventType.SUBSCRIBE_EVENT_LOG, (event) => {
+    console.log('get SubscribeEventLog echo: ', event);
   });
-  subscriber.emitter.on(EventType.NEW_BLOCK, (event) => {
-    console.log('get new block: ', event);
+  subscriber.emitter.on(EventType.EVENT_LOG, (event) => {
+    console.log('get new event log: ', event);
   });
   await subscriber.start();
 }
