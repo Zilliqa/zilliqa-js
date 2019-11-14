@@ -13,7 +13,11 @@ async function test() {
   subscriber.emitter.on(EventType.NEW_BLOCK, (event) => {
     console.log('get new block: ', event);
   });
+  subscriber.emitter.on(EventType.UNSUBSCRIBE, (event) => {
+    console.log('get unsubscribe event: ', event);
+  });
   await subscriber.start();
+  await subscriber.stop();
 }
 
 test();

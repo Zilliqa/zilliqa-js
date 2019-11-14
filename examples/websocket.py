@@ -63,12 +63,13 @@ class WebSocketsHandler(SocketServer.StreamRequestHandler):
     def on_message(self, message):
         print message
         self.send_message(message)
-        while True:
+        numbers = [1,2,3]
+        for number in numbers:
+            print 'send: ',number
             self.send_message('{"type": "notification","values":[{"query":"NewBlock","value":"content of new block"}]}')
             self.send_message('{"type": "notification","values":[{"query":"EventLog","value":"content of event log"}]}')
-            time.sleep(2)
 
 if __name__ == "__main__":
     server = SocketServer.TCPServer(
-        ("localhost", 9998), WebSocketsHandler)
+        ("localhost", 9997), WebSocketsHandler)
     server.serve_forever()

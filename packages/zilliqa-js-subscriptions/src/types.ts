@@ -48,12 +48,7 @@ export interface NewEventQuery {
   addresses: string[];
 }
 
-export interface UnsubscribeNewBlock {
-  query: 'Unsubscribe';
-  type: 'NewBlock';
-}
-
-export interface UnsubscribeEventLog {
-  query: 'Unsubscribe';
-  type: 'EventLog';
+export interface Unsubscribe {
+  query: string;
+  type: string;
 }

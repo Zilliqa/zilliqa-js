@@ -13,7 +13,7 @@
 //   You should have received a copy of the GNU General Public License
 //   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { WebSocketProvider } from './ws';
-import { NewBlockQuery, NewEventQuery } from './types';
+import { EventType, NewBlockQuery, NewEventQuery } from './types';
 
 export class Subscription extends WebSocketProvider {
   subject: NewBlockQuery | NewEventQuery;
@@ -29,5 +29,16 @@ export class Subscription extends WebSocketProvider {
 
   async start(): Promise<boolean> {
     return super.subscribe(this.subject);
+  }
+
+  async stop() {
+    const event =
+      this.subject.query === EventType.NEW_BLOCK
+        ? {
+            query: 'Unsubscribe',
+            type: 'NewBlock',
+          }
+        : { query: 'Unsubscribe', type: 'EventLog' };
+    return super.unsubscribe(event);
   }
 }

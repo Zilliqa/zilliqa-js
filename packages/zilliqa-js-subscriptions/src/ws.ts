@@ -21,8 +21,7 @@ import {
   NewEventQuery,
   SocketConnect,
   SocketState,
-  UnsubscribeEventLog,
-  UnsubscribeNewBlock,
+  Unsubscribe,
 } from './types';
 
 export class WebSocketProvider {
@@ -185,10 +184,9 @@ export class WebSocketProvider {
     return result.query === payload.query;
   }
 
-  async unsubscribe(
-    payload: UnsubscribeNewBlock | UnsubscribeEventLog,
-  ): Promise<boolean> {
+  async unsubscribe(payload: Unsubscribe): Promise<boolean> {
     const result = await this.send(payload);
+    // todo handle separately
     const succeed = result.query === payload.query;
     if (succeed) {
       this.subscriptions[payload.query] = null;
