@@ -74,8 +74,7 @@ export class WebSocketProvider {
   }
 
   onClose(event: any) {
-    // todo impl this
-    console.log('close: ', event);
+    this.emitter.emit(SocketConnect.CLOSE, event);
     if (this.websocket.CONNECTING) {
       this.websocket.close();
     }
@@ -83,8 +82,10 @@ export class WebSocketProvider {
   }
 
   onError(event: any) {
-    // todo impl this
-    console.log('close: ', event);
+    this.emitter.emit(SocketConnect.ERROR, event);
+    if (this.websocket.CONNECTING) {
+      this.websocket.close();
+    }
     return;
   }
 

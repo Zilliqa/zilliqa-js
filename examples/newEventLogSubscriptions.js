@@ -6,6 +6,12 @@ async function test() {
   const zilliqa = new Zilliqa('https://dev-api.zilliqa.com');
   const subscriber = zilliqa.subscriptionBuilder.buildEventLogSubscriptions(
     'ws://localhost:9997',
+    {
+      addresses: [
+        '0x0000000000000000000000000000000000000000',
+        '0x1111111111111111111111111111111111111111',
+      ],
+    },
   );
   subscriber.emitter.on(EventType.SUBSCRIBE_EVENT_LOG, (event) => {
     console.log('get SubscribeEventLog echo: ', event);

@@ -5,7 +5,7 @@ async function test() {
   // first run `python websocket.py` to start websocket server locally
   const zilliqa = new Zilliqa('https://dev-api.zilliqa.com');
   const subscriber = zilliqa.subscriptionBuilder.buildNewBlockSubscriptions(
-    'ws://localhost:9998',
+    'ws://localhost:9997',
   );
   subscriber.emitter.on(EventType.SUBSCRIBE_NEW_BLOCK, (event) => {
     console.log('get SubscribeNewBlock echo: ', event);
