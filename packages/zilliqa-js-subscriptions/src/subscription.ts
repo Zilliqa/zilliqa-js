@@ -41,10 +41,10 @@ export class Subscription extends WebSocketProvider {
     const event =
       this.subject.query === QueryParam.NEW_BLOCK
         ? {
-            query: 'Unsubscribe',
-            type: 'NewBlock',
+            query: QueryParam.UNSUBSCRIBE,
+            type: QueryParam.NEW_BLOCK,
           }
-        : { query: 'Unsubscribe', type: 'EventLog' };
+        : { query: QueryParam.UNSUBSCRIBE, type: QueryParam.EVENT_LOG };
     return super.unsubscribe(event);
   }
 }
