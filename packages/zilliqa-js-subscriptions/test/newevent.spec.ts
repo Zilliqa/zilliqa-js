@@ -1,6 +1,6 @@
 import { Server } from 'mock-socket';
-import { MessageType } from '../src';
-import { NewEventSubscription } from '../src/newevent';
+import { MessageType, QueryParam } from '../src';
+import { NewEventSubscription } from '../src';
 
 describe('NewEventSubscription', () => {
   it('should be able to start listen on new event log coming', async () => {
@@ -24,7 +24,7 @@ describe('NewEventSubscription', () => {
       ],
     });
     subscriber.emitter.on(MessageType.EVENT_LOG, (event) => {
-      expect(event.query).toEqual('EventLog');
+      expect(event.query).toEqual(QueryParam.EVENT_LOG);
     });
     await subscriber.start();
   });

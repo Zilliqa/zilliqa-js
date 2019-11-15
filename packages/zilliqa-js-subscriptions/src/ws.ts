@@ -69,7 +69,7 @@ export class WebSocketProvider {
   subscriptions: any;
 
   // basically, options is a collection of metadata things like protocol or headers
-  constructor(url: string, options: any = {}) {
+  constructor(url: string, options?: SubscriptionOption) {
     this.url = url;
     this.emitter = new mitt(this.handlers);
     this.websocket = WebSocketProvider.NewWebSocket(url, options);
