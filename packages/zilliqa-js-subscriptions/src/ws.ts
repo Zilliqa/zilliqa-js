@@ -21,23 +21,28 @@ import {
   NewEventQuery,
   SocketConnect,
   SocketState,
+  SubscriptionOption,
   Unsubscribe,
 } from './types';
 
 export class WebSocketProvider {
   public static NewWebSocket(
     url: string,
-    options: any = {},
+    options?: SubscriptionOption,
   ): WebSocket | W3CWebsocket {
     // tslint:disable-next-line: no-string-literal
     if (typeof window !== 'undefined' && (<any>window).WebSocket) {
       // tslint:disable-next-line: no-string-literal
-      return new WebSocket(url, options.protocol);
+      return new WebSocket(url, options !== undefined ? options.protocol : []);
     } else {
-      const headers = options.headers || {};
+      const headers = options !== undefined ? options.headers || {} : undefined;
       const urlObject = new URL(url);
-
-      if (!headers.authorization && urlObject.username && urlObject.password) {
+      if (
+        headers !== undefined &&
+        !headers.authorization &&
+        urlObject.username &&
+        urlObject.password
+      ) {
         const authToken = Buffer.from(
           `${urlObject.username}:${urlObject.password}`,
         ).toString('base64');
@@ -46,11 +51,11 @@ export class WebSocketProvider {
 
       return new W3CWebsocket(
         url,
-        options.protocol,
+        options !== undefined ? options.protocol : undefined,
         undefined,
         headers,
         undefined,
-        options.clientConfig,
+        options !== undefined ? options.clientConfig : undefined,
       );
     }
   }
@@ -59,7 +64,6 @@ export class WebSocketProvider {
   emitter: mitt.Emitter;
   handlers: any = {};
   websocket: WebSocket | W3CWebsocket;
-  // use concrete object instead of `any`
   subscriptions: any;
 
   // basically, options is a collection of metadata things like protocol or headers
@@ -73,7 +77,7 @@ export class WebSocketProvider {
     this.websocket.onmessage = this.onMessage.bind(this);
   }
 
-  onClose(event: any) {
+  onClose(event: Event) {
     this.emitter.emit(SocketConnect.CLOSE, event);
     if (this.websocket.CONNECTING) {
       this.websocket.close();
@@ -81,7 +85,7 @@ export class WebSocketProvider {
     return;
   }
 
-  onError(event: any) {
+  onError(event: Event) {
     this.emitter.emit(SocketConnect.ERROR, event);
     if (this.websocket.CONNECTING) {
       this.websocket.close();

@@ -13,6 +13,8 @@
 //   You should have received a copy of the GNU General Public License
 //   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import { IClientConfig } from 'websocket';
+
 export type QueryParam = 'NewBlock' | 'EventLog';
 
 export const enum SocketConnect {
@@ -51,4 +53,14 @@ export interface NewEventQuery {
 export interface Unsubscribe {
   query: string;
   type: string;
+}
+
+export interface SubscriptionOption {
+  addresses?: string[];
+  clientConfig?: IClientConfig;
+  headers?: {
+    authorization?: string;
+  };
+  protocol?: string;
+  protocols?: string | string[];
 }

@@ -1,12 +1,13 @@
 import { NewTxBlockSubscription } from './newblock';
 import { NewEventSubscription } from './newevent';
+import { SubscriptionOption } from './types';
 
 export class SubscriptionBuilder {
-  buildNewBlockSubscriptions(url: string) {
-    return new NewTxBlockSubscription(url);
+  buildNewBlockSubscriptions(url: string, options?: SubscriptionOption) {
+    return new NewTxBlockSubscription(url, options);
   }
 
-  buildEventLogSubscriptions(url: string, options: any = {}) {
+  buildEventLogSubscriptions(url: string, options?: SubscriptionOption) {
     return new NewEventSubscription(url, options);
   }
 }

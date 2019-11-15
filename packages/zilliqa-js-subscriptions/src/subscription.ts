@@ -13,7 +13,12 @@
 //   You should have received a copy of the GNU General Public License
 //   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { WebSocketProvider } from './ws';
-import { EventType, NewBlockQuery, NewEventQuery } from './types';
+import {
+  EventType,
+  NewBlockQuery,
+  NewEventQuery,
+  SubscriptionOption,
+} from './types';
 
 export class Subscription extends WebSocketProvider {
   subject: NewBlockQuery | NewEventQuery;
@@ -21,7 +26,7 @@ export class Subscription extends WebSocketProvider {
   constructor(
     subject: NewBlockQuery | NewEventQuery,
     url: string,
-    options: any = {},
+    options?: SubscriptionOption,
   ) {
     super(url, options);
     this.subject = subject;

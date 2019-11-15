@@ -13,14 +13,14 @@
 //   You should have received a copy of the GNU General Public License
 //   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { Subscription } from './subscription';
-import { EventType } from './types';
+import { EventType, SubscriptionOption } from './types';
 
 export class NewEventSubscription extends Subscription {
-  constructor(url: string, options: any = {}) {
+  constructor(url: string, options?: SubscriptionOption) {
     super({ query: EventType.EVENT_LOG }, url, options);
     this.subject = {
       query: 'EventLog',
-      addresses: options.addresses,
+      addresses: options !== undefined ? options.addresses : [],
     };
   }
 }
