@@ -16,11 +16,13 @@
 import mitt from 'mitt';
 import { w3cwebsocket as W3CWebsocket } from 'websocket';
 import {
-  EventType,
+  MessageType,
   NewBlockQuery,
   NewEventQuery,
+  QueryParam,
   SocketConnect,
   SocketState,
+  StatusType,
   SubscriptionOption,
   Unsubscribe,
 } from './types';
@@ -105,35 +107,35 @@ export class WebSocketProvider {
   onMessage(msg: MessageEvent) {
     if (msg.data) {
       const dataObj = JSON.parse(msg.data);
-      if (dataObj.type === EventType.NOTIFICATION) {
+      if (dataObj.type === MessageType.NOTIFICATION) {
         this.emitter.emit(SocketState.SOCKET_MESSAGE, dataObj);
         for (const value of dataObj.values) {
-          if (value.query === EventType.NEW_BLOCK) {
-            this.emitter.emit(EventType.NEW_BLOCK, value);
-          } else if (value.query === EventType.EVENT_LOG) {
-            this.emitter.emit(EventType.EVENT_LOG, value);
-          } else if (value.query === EventType.UNSUBSCRIBE) {
-            this.emitter.emit(EventType.UNSUBSCRIBE, value);
+          if (value.query === MessageType.NEW_BLOCK) {
+            this.emitter.emit(MessageType.NEW_BLOCK, value);
+          } else if (value.query === MessageType.EVENT_LOG) {
+            this.emitter.emit(MessageType.EVENT_LOG, value);
+          } else if (value.query === MessageType.UNSUBSCRIBE) {
+            this.emitter.emit(MessageType.UNSUBSCRIBE, value);
           } else {
             throw new Error('unsupported value type');
           }
         }
-      } else if (dataObj.query === EventType.NEW_BLOCK) {
+      } else if (dataObj.query === QueryParam.NEW_BLOCK) {
         // subscribe NewBlock succeed
         this.subscriptions[dataObj.query] = {
           id: dataObj.query,
           parameters: dataObj,
         };
-        this.emitter.emit(EventType.SUBSCRIBE_NEW_BLOCK, dataObj);
-      } else if (dataObj.query === EventType.EVENT_LOG) {
+        this.emitter.emit(StatusType.SUBSCRIBE_NEW_BLOCK, dataObj);
+      } else if (dataObj.query === QueryParam.EVENT_LOG) {
         // subscribe EventLog succeed
         this.subscriptions[dataObj.query] = {
           id: dataObj.query,
           parameters: dataObj,
         };
-        this.emitter.emit(EventType.SUBSCRIBE_EVENT_LOG, dataObj);
-      } else if (dataObj.query === EventType.UNSUBSCRIBE) {
-        this.emitter.emit(EventType.UNSUBSCRIBE, dataObj);
+        this.emitter.emit(StatusType.SUBSCRIBE_EVENT_LOG, dataObj);
+      } else if (dataObj.query === QueryParam.UNSUBSCRIBE) {
+        this.emitter.emit(MessageType.UNSUBSCRIBE, dataObj);
       } else {
         throw new Error('unsupported message type');
       }
@@ -163,10 +165,10 @@ export class WebSocketProvider {
           throw error;
         }
         let queryParam;
-        if (query.query === EventType.NEW_BLOCK) {
-          queryParam = EventType.SUBSCRIBE_NEW_BLOCK;
-        } else if (query.query === EventType.EVENT_LOG) {
-          queryParam = EventType.SUBSCRIBE_EVENT_LOG;
+        if (query.query === QueryParam.NEW_BLOCK) {
+          queryParam = StatusType.SUBSCRIBE_NEW_BLOCK;
+        } else if (query.query === QueryParam.EVENT_LOG) {
+          queryParam = StatusType.SUBSCRIBE_EVENT_LOG;
         } else {
           queryParam = query.query;
         }

@@ -15,8 +15,6 @@
 
 import { IClientConfig } from 'websocket';
 
-export type QueryParam = 'NewBlock' | 'EventLog';
-
 export const enum SocketConnect {
   READY = 'ready',
   CONNECT = 'connect',
@@ -32,11 +30,23 @@ export const enum SocketState {
   SOCKET_ERROR = 'socket_error',
 }
 
-export const enum EventType {
+// message type pushed by server side
+export const enum MessageType {
   NEW_BLOCK = 'NewBlock',
   EVENT_LOG = 'EventLog',
   NOTIFICATION = 'notification',
   UNSUBSCRIBE = 'Unsubscribe',
+}
+
+// message type that we can query with to server
+export const enum QueryParam {
+  NEW_BLOCK = 'NewBlock',
+  EVENT_LOG = 'EventLog',
+  UNSUBSCRIBE = 'Unsubscribe',
+}
+
+// indicate that whether we subscribe successfully
+export const enum StatusType {
   SUBSCRIBE_NEW_BLOCK = 'SubscribeNewBlock',
   SUBSCRIBE_EVENT_LOG = 'SubscribeEventLog',
 }

@@ -15,9 +15,9 @@
 
 import { WebSocketProvider } from './ws';
 import {
-  EventType,
   NewBlockQuery,
   NewEventQuery,
+  QueryParam,
   SubscriptionOption,
 } from './types';
 
@@ -39,7 +39,7 @@ export class Subscription extends WebSocketProvider {
 
   async stop() {
     const event =
-      this.subject.query === EventType.NEW_BLOCK
+      this.subject.query === QueryParam.NEW_BLOCK
         ? {
             query: 'Unsubscribe',
             type: 'NewBlock',

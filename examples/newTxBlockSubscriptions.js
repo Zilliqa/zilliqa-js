@@ -1,5 +1,5 @@
 const { Zilliqa } = require('@zilliqa-js/zilliqa');
-const { EventType } = require('@zilliqa-js/subscriptions');
+const { StatusType, MessageType } = require('@zilliqa-js/subscriptions');
 
 async function test() {
   // first run `python websocket.py` to start websocket server locally
@@ -7,13 +7,13 @@ async function test() {
   const subscriber = zilliqa.subscriptionBuilder.buildNewBlockSubscriptions(
     'ws://localhost:9997',
   );
-  subscriber.emitter.on(EventType.SUBSCRIBE_NEW_BLOCK, (event) => {
+  subscriber.emitter.on(StatusType.SUBSCRIBE_NEW_BLOCK, (event) => {
     console.log('get SubscribeNewBlock echo: ', event);
   });
-  subscriber.emitter.on(EventType.NEW_BLOCK, (event) => {
+  subscriber.emitter.on(MessageType.NEW_BLOCK, (event) => {
     console.log('get new block: ', event);
   });
-  subscriber.emitter.on(EventType.UNSUBSCRIBE, (event) => {
+  subscriber.emitter.on(MessageType.UNSUBSCRIBE, (event) => {
     console.log('get unsubscribe event: ', event);
   });
   await subscriber.start();

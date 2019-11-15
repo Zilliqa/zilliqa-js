@@ -14,10 +14,10 @@
 //   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import { Subscription } from './subscription';
-import { EventType, SubscriptionOption } from './types';
+import { QueryParam, SubscriptionOption } from './types';
 
 export class NewTxBlockSubscription extends Subscription {
   constructor(url: string, options?: SubscriptionOption) {
-    super({ query: EventType.NEW_BLOCK }, url, options);
+    super({ query: QueryParam.NEW_BLOCK }, url, options);
   }
 }

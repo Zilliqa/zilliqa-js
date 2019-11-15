@@ -1,5 +1,5 @@
 const { Zilliqa } = require('@zilliqa-js/zilliqa');
-const { EventType } = require('@zilliqa-js/subscriptions');
+const { StatusType, MessageType } = require('@zilliqa-js/subscriptions');
 
 async function test() {
   // first run `python websocket.py` to start websocket server locally
@@ -13,13 +13,13 @@ async function test() {
       ],
     },
   );
-  subscriber.emitter.on(EventType.SUBSCRIBE_EVENT_LOG, (event) => {
+  subscriber.emitter.on(StatusType.SUBSCRIBE_EVENT_LOG, (event) => {
     console.log('get SubscribeEventLog echo: ', event);
   });
-  subscriber.emitter.on(EventType.EVENT_LOG, (event) => {
+  subscriber.emitter.on(MessageType.EVENT_LOG, (event) => {
     console.log('get new event log: ', event);
   });
-  subscriber.emitter.on(EventType.UNSUBSCRIBE, (event) => {
+  subscriber.emitter.on(MessageType.UNSUBSCRIBE, (event) => {
     console.log('get unsubscribe event: ', event);
   });
 
