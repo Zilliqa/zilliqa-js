@@ -133,7 +133,7 @@ describe('Contract: hello world', () => {
     const state = await contract.getState();
 
     expect(
-      state.filter((v) => {
+      state.filter((v: any) => {
         return v.vname === 'welcome_msg';
       })[0].value,
     ).toEqual('Hello World');

@@ -1,0 +1,33 @@
+{
+  "name": "@zilliqa-js/subscriptions",
+  "version": "0.8.3",
+  "description": "Class(es) for interactiong with websocket API of Zilliqa node",
+  "main": "dist/index.js",
+  "node": "dist/index.js",
+  "browser": "dist/index.umd.js",
+  "module": "dist/index.esm.js",
+  "jsnext:main": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "typings": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "clean": "rimraf ./dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zilliqa/Zilliqa-Javascript-Library.git"
+  },
+  "author": "renlulu (https://github.com/renlulu)",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Zilliqa/Zilliqa-Javascript-Library/issues"
+  },
+  "homepage": "https://github.com/Zilliqa/Zilliqa-Javascript-Library#readme",
+  "dependencies": {
+    "@zilliqa-js/core": "0.8.3",
+    "mock-socket": "^9.0.2",
+    "websocket": "^1.0.28"
+  }
+}
