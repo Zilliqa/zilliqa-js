@@ -108,11 +108,11 @@ export class WebSocketProvider {
       if (dataObj.type === EventType.NOTIFICATION) {
         this.emitter.emit(SocketState.SOCKET_MESSAGE, dataObj);
         for (const value of dataObj.values) {
-          if (value.query === 'NewBlock') {
+          if (value.query === EventType.NEW_BLOCK) {
             this.emitter.emit(EventType.NEW_BLOCK, value);
-          } else if (value.query === 'EventLog') {
+          } else if (value.query === EventType.EVENT_LOG) {
             this.emitter.emit(EventType.EVENT_LOG, value);
-          } else if (value.query === 'Unsubscribe') {
+          } else if (value.query === EventType.UNSUBSCRIBE) {
             this.emitter.emit(EventType.UNSUBSCRIBE, value);
           } else {
             throw new Error('unsupported value type');
