@@ -1,5 +1,5 @@
 import { Server } from 'mock-socket';
-import { EventType, Subscription } from '../src';
+import { MessageType, Subscription } from '../src';
 
 describe('Subscription', () => {
   it('should be able to receive NewBlock', async () => {
@@ -15,7 +15,7 @@ describe('Subscription', () => {
       });
     });
     const subscription = new Subscription({ query: 'NewBlock' }, fakeURL);
-    subscription.emitter.on(EventType.NEW_BLOCK, (event) => {
+    subscription.emitter.on(MessageType.NEW_BLOCK, (event) => {
       expect(event.query).toEqual('NewBlock');
       expect(event.TxHashes).toEqual([
         ['1beb32a5435e993aa3025a70d8a5e71df43c10e2fe3f6ef832d1a5c371a63852'],

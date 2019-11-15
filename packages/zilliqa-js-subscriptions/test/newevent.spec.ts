@@ -1,5 +1,5 @@
 import { Server } from 'mock-socket';
-import { EventType } from '../src';
+import { MessageType } from '../src';
 import { NewEventSubscription } from '../src/newevent';
 
 describe('NewEventSubscription', () => {
@@ -23,7 +23,7 @@ describe('NewEventSubscription', () => {
         '0x1111111111111111111111111111111111111111',
       ],
     });
-    subscriber.emitter.on(EventType.EVENT_LOG, (event) => {
+    subscriber.emitter.on(MessageType.EVENT_LOG, (event) => {
       expect(event.query).toEqual('EventLog');
     });
     await subscriber.start();

@@ -1,5 +1,5 @@
 import { Server } from 'mock-socket';
-import { EventType, NewTxBlockSubscription } from '../src';
+import { MessageType, NewTxBlockSubscription } from '../src';
 
 describe('NewTxBlockSubscription', () => {
   it('should be able to start listen on new block coming', async () => {
@@ -17,7 +17,7 @@ describe('NewTxBlockSubscription', () => {
       });
     });
     const subscriber = new NewTxBlockSubscription(fakeURL);
-    subscriber.emitter.on(EventType.NEW_BLOCK, (event) => {
+    subscriber.emitter.on(MessageType.NEW_BLOCK, (event) => {
       expect(event.query).toEqual('NewBlock');
       expect(event.TxHashes).toEqual([
         ['1beb32a5435e993aa3025a70d8a5e71df43c10e2fe3f6ef832d1a5c371a63852'],
