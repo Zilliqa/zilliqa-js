@@ -34,7 +34,7 @@ export const enum SocketState {
 export const enum MessageType {
   NEW_BLOCK = 'NewBlock',
   EVENT_LOG = 'EventLog',
-  NOTIFICATION = 'notification',
+  NOTIFICATION = 'Notification',
   UNSUBSCRIBE = 'Unsubscribe',
 }
 
