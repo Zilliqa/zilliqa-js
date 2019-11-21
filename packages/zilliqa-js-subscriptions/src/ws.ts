@@ -77,6 +77,7 @@ export class WebSocketProvider {
     this.websocket.onopen = this.onConnect.bind(this);
     this.websocket.onclose = this.onClose.bind(this);
     this.websocket.onmessage = this.onMessage.bind(this);
+    this.websocket.onerror = this.onError.bind(this);
   }
 
   onClose(event: Event) {
