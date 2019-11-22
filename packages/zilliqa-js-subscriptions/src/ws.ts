@@ -63,29 +63,72 @@ export class WebSocketProvider {
   }
 
   url: string;
+  options?: SubscriptionOption;
   emitter: mitt.Emitter;
   handlers: any = {};
   websocket: WebSocket | W3CWebsocket;
+
   subscriptions: any;
 
   // basically, options is a collection of metadata things like protocol or headers
   constructor(url: string, options?: SubscriptionOption) {
     this.url = url;
+    this.options = options;
     this.emitter = new mitt(this.handlers);
     this.websocket = WebSocketProvider.NewWebSocket(url, options);
     this.subscriptions = {};
+    this.registerEventListeners();
+  }
+
+  registerEventListeners() {
     this.websocket.onopen = this.onConnect.bind(this);
     this.websocket.onclose = this.onClose.bind(this);
     this.websocket.onmessage = this.onMessage.bind(this);
     this.websocket.onerror = this.onError.bind(this);
   }
 
-  onClose(event: Event) {
-    this.emitter.emit(SocketConnect.CLOSE, event);
-    if (this.websocket.CONNECTING) {
-      this.websocket.close();
+  removeAllSocketListeners() {
+    this.removeEventListener(SocketState.SOCKET_MESSAGE);
+    this.removeEventListener(SocketState.SOCKET_READY);
+    this.removeEventListener(SocketState.SOCKET_CLOSE);
+    this.removeEventListener(SocketState.SOCKET_ERROR);
+    this.removeEventListener(SocketState.SOCKET_CONNECT);
+  }
+
+  removeEventListener(type?: string, handler?: mitt.Handler) {
+    if (!type) {
+      this.handlers = {};
+      return;
     }
-    return;
+    if (!handler) {
+      delete this.handlers[type];
+    } else {
+      return this.emitter.off(type, handler);
+    }
+  }
+
+  reconnect() {
+    setTimeout(() => {
+      this.removeAllSocketListeners();
+      this.websocket = WebSocketProvider.NewWebSocket(this.url, this.options);
+      this.registerEventListeners();
+    }, 5000);
+  }
+
+  async onClose(event: CloseEvent) {
+    // reconnect
+    if (this.subscriptions !== null && !event.wasClean) {
+      this.emitter.emit(SocketConnect.RECONNECT, event);
+      this.reconnect();
+      return;
+    }
+
+    // normal close
+    if (this.websocket.CONNECTING) {
+      this.emitter.emit(SocketConnect.CLOSE, event);
+      this.websocket.close();
+      return;
+    }
   }
 
   onError(event: Event) {
@@ -100,7 +143,17 @@ export class WebSocketProvider {
     if (!this.subscriptions) {
       this.subscriptions = {};
     }
-    // todo handle reconnect issue
+    // retry logic
+    const subscriptionKeys = Object.keys(this.subscriptions);
+    if (subscriptionKeys.length > 0) {
+      for (const key of subscriptionKeys) {
+        const id = key;
+        const parameters = this.subscriptions[key].parameters;
+        delete this.subscriptions[id];
+        await this.subscribe(parameters);
+      }
+    }
+
     this.emitter.emit(SocketState.SOCKET_CONNECT);
     this.emitter.emit(SocketConnect.CONNECT);
   }
@@ -128,6 +181,7 @@ export class WebSocketProvider {
           parameters: dataObj,
         };
         this.emitter.emit(StatusType.SUBSCRIBE_NEW_BLOCK, dataObj);
+        this.emitter.emit(SocketConnect.RECONNECT);
       } else if (dataObj.query === QueryParam.EVENT_LOG) {
         // subscribe EventLog succeed
         this.subscriptions[dataObj.query] = {
@@ -135,6 +189,7 @@ export class WebSocketProvider {
           parameters: dataObj,
         };
         this.emitter.emit(StatusType.SUBSCRIBE_EVENT_LOG, dataObj);
+        this.emitter.emit(SocketConnect.RECONNECT);
       } else if (dataObj.query === QueryParam.UNSUBSCRIBE) {
         this.emitter.emit(MessageType.UNSUBSCRIBE, dataObj);
       } else {
@@ -147,10 +202,6 @@ export class WebSocketProvider {
 
   addEventListener(type: string, handler: mitt.Handler) {
     this.emitter.on(type, handler);
-  }
-
-  removeEventListener(type: string, handler: mitt.Handler) {
-    this.emitter.off(type, handler);
   }
 
   connecting() {
@@ -178,12 +229,18 @@ export class WebSocketProvider {
         });
         this.emitter.on(SocketConnect.ERROR, reject);
       }
-      // may be emitted inside onConnect
-      this.emitter.on(SocketConnect.CONNECT, () => {
+
+      const connectHandler = () => {
         this.send(query)
           .then(resolve)
           .catch(reject);
-      });
+      };
+
+      const offConnectHandler = () => {
+        this.emitter.off(SocketConnect.CONNECT, connectHandler);
+      };
+      this.emitter.on(SocketConnect.CONNECT, connectHandler);
+      this.emitter.on(SocketConnect.RECONNECT, offConnectHandler);
     });
   }
 

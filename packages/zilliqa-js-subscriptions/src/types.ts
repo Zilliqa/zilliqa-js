@@ -20,6 +20,7 @@ export const enum SocketConnect {
   CONNECT = 'connect',
   ERROR = 'error',
   CLOSE = 'close',
+  RECONNECT = 'reconnect',
 }
 
 export const enum SocketState {
