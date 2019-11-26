@@ -13,24 +13,24 @@
 //   You should have received a copy of the GNU General Public License
 //   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { Transaction, Wallet, util } from '@zilliqa-js/account';
+import { Transaction, util, Wallet } from '@zilliqa-js/account';
 import { fromBech32Address } from '@zilliqa-js/crypto';
 import { validation } from '@zilliqa-js/util';
 import { ContractObj, Value } from '@zilliqa-js/contract';
 import {
-  GET_TX_ATTEMPTS,
-  sign,
-  Provider,
-  ZilliqaModule,
-  RPCResponse,
-  RPCMethod,
   BlockchainInfo,
-  DsBlockObj,
   BlockList,
+  DsBlockObj,
+  GET_TX_ATTEMPTS,
+  Provider,
+  RPCMethod,
+  RPCResponse,
+  ShardingStructure,
+  sign,
+  TransactionObj,
   TxBlockObj,
   TxList,
-  TransactionObj,
-  ShardingStructure,
+  ZilliqaModule,
 } from '@zilliqa-js/core';
 
 import { Omit } from 'utility-types';
@@ -286,6 +286,23 @@ export class Blockchain implements ZilliqaModule {
         return tx.blockConfirm(response.result.TranID, maxAttempts, interval);
       }
       return tx.confirm(response.result.TranID, maxAttempts, interval);
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  @sign
+  async createTransactionWithoutConfirm(tx: Transaction): Promise<Transaction> {
+    try {
+      const response = await this.provider.send(RPCMethod.CreateTransaction, {
+        ...tx.txParams,
+        priority: tx.toDS,
+      });
+      if (response.error) {
+        throw response.error;
+      }
+      tx.id = response.result.TranID;
+      return tx;
     } catch (err) {
       throw err;
     }
