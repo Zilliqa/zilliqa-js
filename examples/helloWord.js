@@ -44,10 +44,10 @@ async function testBlockchain() {
     // Send a transaction to the network
     console.log('Sending a payment transaction to the network...');
     const tx = await zilliqa.blockchain.createTransaction(
-      // Notice here we have a default function parameter named toDs which means the priority of the transaction
-      // If the value of toDs is false, then the transaction will be sent to a normal shard, otherwise, the transaction
-      // will be sent to ds shard. More info on design of sharding for smart contract can be found in
-      // https://blog.zilliqa.com/provisioning-sharding-for-smart-contracts-a-design-for-zilliqa-cd8d012ee735
+      // Notice here we have a default function parameter named toDs which means the priority of the transaction.
+      // If the value of toDs is false, then the transaction will be sent to a normal shard, otherwise, the transaction.
+      // will be sent to ds shard. More info on design of sharding for smart contract can be found in.
+      // https://blog.zilliqa.com/provisioning-sharding-for-smart-contracts-a-design-for-zilliqa-cd8d012ee735.
       // For payment transaction, it should always be false.
       zilliqa.transactions.new(
         {
@@ -126,9 +126,9 @@ async function testBlockchain() {
     // Instance of class Contract
     const contract = zilliqa.contracts.new(code, init);
 
-    // Deploy the contract
+    // Deploy the contract.
     // Also notice here we have a default function parameter named toDs as mentioned above.
-    // A contract can be deployed at either the shard or at the DS.
+    // A contract can be deployed at either the shard or at the DS. Always set this value to false.
     const [deployTx, hello] = await contract.deploy(
       {
         version: VERSION,
@@ -154,6 +154,7 @@ async function testBlockchain() {
     // Create a new timebased message and call setHello
     // Also notice here we have a default function parameter named toDs as mentioned above.
     // For calling a smart contract, any transaction can be processed in the DS but not every transaction can be processed in the shards.
+    // For those transactions are involved in chain call, the value of toDs should always be true.
     // If a transaction of contract invocation is sent to a shard and if the shard is not allowed to process it, then the transaction will be dropped.
     const newMsg = 'Hello, the time is ' + Date.now();
     console.log('Calling setHello transition with msg: ' + newMsg);
