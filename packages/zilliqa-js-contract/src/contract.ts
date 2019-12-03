@@ -213,6 +213,10 @@ export class Contract {
       params: args,
     };
 
+    if (this.error) {
+      return Promise.reject(this.error);
+    }
+
     if (!this.address) {
       return Promise.reject('Contract has not been deployed!');
     }
