@@ -405,12 +405,12 @@ export class Blockchain implements ZilliqaModule {
   /**
    * getPendingTxn
    * See the pending status of transaction
-   * @param tx
+   * @param txId
    */
-  getPendingTxn(tx: string): Promise<RPCResponse<PendingTxnResult, string>> {
+  getPendingTxn(txId: string): Promise<RPCResponse<PendingTxnResult, string>> {
     return this.provider.send(
       RPCMethod.GetPendingTxn,
-      tx.replace('0x', '').toLowerCase(),
+      txId.replace('0x', '').toLowerCase(),
     );
   }
 
