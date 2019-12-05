@@ -43,7 +43,7 @@ async function testBlockchain() {
 
     // Send a transaction to the network
     console.log('Sending a payment transaction to the network...');
-    const tx = await zilliqa.blockchain.createTransaction(
+    const tx = await zilliqa.blockchain.createTransactionWithoutConfirm(
       // Notice here we have a default function parameter named toDs which means the priority of the transaction.
       // If the value of toDs is false, then the transaction will be sent to a normal shard, otherwise, the transaction.
       // will be sent to ds shard. More info on design of sharding for smart contract can be found in.
@@ -61,8 +61,24 @@ async function testBlockchain() {
       ),
     );
 
+    // check the pending status
+    const pendingStatus = await zilliqa.blockchain.getPendingTxn(tx.id);
+    console.log(`Pending status is: `);
+    console.log(pendingStatus.result);
+
+    // process confirm
+    console.log(`The transaction id is:`, tx.id);
+    const confirmedTxn = await tx.confirm(tx.id);
+
     console.log(`The transaction status is:`);
-    console.log(tx.receipt);
+    console.log(confirmedTxn.receipt);
+
+    // check the pending status after confirming
+    const pendingStatusAfterConfirming = await zilliqa.blockchain.getPendingTxn(
+      tx.id,
+    );
+    console.log(`Pending status is: `);
+    console.log(pendingStatusAfterConfirming.result);
 
     // Deploy a contract
     console.log(`Deploying a new contract....`);
