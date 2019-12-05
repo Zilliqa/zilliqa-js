@@ -28,7 +28,9 @@ export interface Provider {
     method: string,
     ...params: any[]
   ): Promise<RPCResponse<R, E>>;
+
   subscribe?(event: string, subscriber: Subscriber): symbol;
+
   unsubscribe?(token: symbol): void;
 }
 
@@ -194,4 +196,10 @@ export interface EventParam {
   vname: string;
   type: string;
   value: string;
+}
+
+export interface PendingTxnResult {
+  code: number;
+  confirmed: boolean;
+  info: string;
 }
