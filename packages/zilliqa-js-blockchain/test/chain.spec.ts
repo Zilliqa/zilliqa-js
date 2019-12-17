@@ -124,7 +124,8 @@ describe('Module: Blockchain', () => {
       provider,
     );
 
-    await expect(blockchain.createTransaction(tx, 40, 0)).rejects.toThrow(
+    const confirmedTx = await blockchain.createTransaction(tx, 40, 0);
+    expect(confirmedTx.errorMsg).toEqual(
       'The transaction is still not confirmed after 40 attempts.',
     );
   });

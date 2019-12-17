@@ -1,15 +1,14 @@
-import { RPCMethod, HTTPProvider } from '@zilliqa-js/core';
+import { HTTPProvider, RPCMethod } from '@zilliqa-js/core';
 import {
-  toBech32Address,
-  toChecksumAddress,
   isValidChecksumAddress,
   randomBytes,
+  toBech32Address,
+  toChecksumAddress,
 } from '@zilliqa-js/crypto';
 import { BN, Long } from '@zilliqa-js/util';
 
 import { Transaction } from '../src/transaction';
 import { Wallet } from '../src/wallet';
-
 // tslint:disable-next-line: no-implicit-dependencies
 import fetch from 'jest-fetch-mock';
 
@@ -256,8 +255,8 @@ describe('Transaction', () => {
     );
 
     await provider.send(RPCMethod.CreateTransaction, pending.txParams);
-
-    await expect(pending.confirm('some_hash', 40, 0)).rejects.toThrow(
+    const tx = await pending.confirm('some_hash', 40, 0);
+    expect(tx.errorMsg).toEqual(
       'The transaction is still not confirmed after 40 attempts.',
     );
   });
