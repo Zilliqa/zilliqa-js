@@ -138,6 +138,49 @@ export class Contract {
     return tx.confirm(response.result.TranID, attempts, interval);
   }
 
+  @sign
+  async prepare(tx: Transaction): Promise<string | undefined> {
+    const response = await this.provider.send<DeploySuccess, DeployError>(
+      RPCMethod.CreateTransaction,
+      { ...tx.txParams, priority: tx.toDS },
+    );
+
+    if (response.error || !response.result) {
+      this.address = undefined;
+      this.error = response.error;
+      tx.setStatus(TxStatus.Rejected);
+    } else {
+      tx.id = response.result.TranID;
+      return response.result.ContractAddress;
+    }
+  }
+
+  async deployWithoutConfirm(
+    params: DeployParams,
+    toDs: boolean = false,
+  ): Promise<[Transaction, Contract]> {
+    if (!this.code || !this.init) {
+      throw new Error(
+        'Cannot deploy without code or initialisation parameters.',
+      );
+    }
+    const tx = new Transaction(
+      {
+        ...params,
+        toAddr: NIL_ADDRESS,
+        amount: new BN(0),
+        code: this.code,
+        data: JSON.stringify(this.init).replace(/\\"/g, '"'),
+      },
+      this.provider,
+      TxStatus.Initialised,
+      toDs,
+    );
+
+    this.address = await this.prepare(tx);
+    return [tx, this];
+  }
+
   /**
    * deploy
    *
