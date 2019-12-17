@@ -126,7 +126,9 @@ async function testBlockchain() {
 
     console.log(`The transaction status is:`);
     console.log(confirmedTxn.receipt);
-    console.log(`Contract address is: ${deployedContract.address}`);
+    if (confirmedTxn.receipt.success === true) {
+      console.log(`Contract address is: ${deployedContract.address}`);
+    }
   } catch (err) {
     console.log(err);
   }
