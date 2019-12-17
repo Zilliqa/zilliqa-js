@@ -69,6 +69,7 @@ export class Transaction implements Signable {
   eventEmitter: EventEmitter<Transaction>;
   id?: string;
   status: TxStatus;
+  errorMsg?: string;
   toDS: boolean;
   blockConfirmation?: number;
 
@@ -307,6 +308,8 @@ export class Transaction implements Signable {
     interval = 1000,
   ): Promise<Transaction> {
     this.status = TxStatus.Pending;
+    // set transaction id to this, in case that users will be willing to separate confirmation from creation
+    this.id = txHash;
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       this.emit(TxEventName.Track, {
         txHash,
@@ -325,8 +328,8 @@ export class Transaction implements Signable {
       }
     }
     this.status = TxStatus.Rejected;
-    const errorMessage = `The transaction is still not confirmed after ${maxAttempts} attempts.`;
-    throw new Error(errorMessage);
+    this.errorMsg = `The transaction is still not confirmed after ${maxAttempts} attempts.`;
+    return this;
   }
 
   /**

@@ -156,53 +156,62 @@ async function testBlockchain() {
       false,
     );
 
-    // Introspect the state of the underlying transaction
-    console.log(`Deployment Transaction ID: ${deployTx.id}`);
-    console.log(`Deployment Transaction Receipt:`);
-    console.log(deployTx.txParams.receipt);
+    // check if contract been deployed successfully
+    if (deployTx.isRejected()) {
+      console.error(deployTx.errorMsg);
+      console.log(`Transaction ID: ${deployTx.id}`);
+      // check the pending status if needed, it may tell you something more about the failure
+      const pendingStatus = await zilliqa.blockchain.getPendingTxn(deployTx.id);
+      console.log(`Pending status is: `);
+      console.log(pendingStatus.result);
+    } else {
+      // Introspect the state of the underlying transaction
+      console.log(`Deployment Transaction ID: ${deployTx.id}`);
+      console.log(`Deployment Transaction Receipt:`);
+      console.log(deployTx.txParams.receipt);
+      // Get the deployed contract address
+      console.log('The contract address is:');
+      console.log(hello.address);
+      //Following line added to fix issue https://github.com/Zilliqa/Zilliqa-JavaScript-Library/issues/168
+      const deployedContract = zilliqa.contracts.at(hello.address);
 
-    // Get the deployed contract address
-    console.log('The contract address is:');
-    console.log(hello.address);
-    //Following line added to fix issue https://github.com/Zilliqa/Zilliqa-JavaScript-Library/issues/168
-    const deployedContract = zilliqa.contracts.at(hello.address);
-
-    // Create a new timebased message and call setHello
-    // Also notice here we have a default function parameter named toDs as mentioned above.
-    // For calling a smart contract, any transaction can be processed in the DS but not every transaction can be processed in the shards.
-    // For those transactions are involved in chain call, the value of toDs should always be true.
-    // If a transaction of contract invocation is sent to a shard and if the shard is not allowed to process it, then the transaction will be dropped.
-    const newMsg = 'Hello, the time is ' + Date.now();
-    console.log('Calling setHello transition with msg: ' + newMsg);
-    const callTx = await hello.call(
-      'setHello',
-      [
+      // Create a new timebased message and call setHello
+      // Also notice here we have a default function parameter named toDs as mentioned above.
+      // For calling a smart contract, any transaction can be processed in the DS but not every transaction can be processed in the shards.
+      // For those transactions are involved in chain call, the value of toDs should always be true.
+      // If a transaction of contract invocation is sent to a shard and if the shard is not allowed to process it, then the transaction will be dropped.
+      const newMsg = 'Hello, the time is ' + Date.now();
+      console.log('Calling setHello transition with msg: ' + newMsg);
+      const callTx = await hello.call(
+        'setHello',
+        [
+          {
+            vname: 'msg',
+            type: 'String',
+            value: newMsg,
+          },
+        ],
         {
-          vname: 'msg',
-          type: 'String',
-          value: newMsg,
+          // amount, gasPrice and gasLimit must be explicitly provided
+          version: VERSION,
+          amount: new BN(0),
+          gasPrice: myGasPrice,
+          gasLimit: Long.fromNumber(8000),
         },
-      ],
-      {
-        // amount, gasPrice and gasLimit must be explicitly provided
-        version: VERSION,
-        amount: new BN(0),
-        gasPrice: myGasPrice,
-        gasLimit: Long.fromNumber(8000),
-      },
-      33,
-      100,
-      false,
-    );
+        33,
+        100,
+        false,
+      );
 
-    // Retrieving the transaction receipt (See note 2)
-    console.log(JSON.stringify(callTx.receipt, null, 4));
+      // Retrieving the transaction receipt (See note 2)
+      console.log(JSON.stringify(callTx.receipt, null, 4));
 
-    //Get the contract state
-    console.log('Getting contract state...');
-    const state = await deployedContract.getState();
-    console.log('The state of the contract is:');
-    console.log(JSON.stringify(state, null, 4));
+      //Get the contract state
+      console.log('Getting contract state...');
+      const state = await deployedContract.getState();
+      console.log('The state of the contract is:');
+      console.log(JSON.stringify(state, null, 4));
+    }
   } catch (err) {
     console.log(err);
   }
