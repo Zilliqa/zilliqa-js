@@ -156,6 +156,11 @@ export class Contract {
     }
   }
 
+  /**
+   * deploy smart contract with no confirm
+   * @param params
+   * @param toDs
+   */
   async deployWithoutConfirm(
     params: DeployParams,
     toDs: boolean = false,
@@ -178,12 +183,16 @@ export class Contract {
       toDs,
     );
 
-    this.address = await this.prepare(tx);
-    this.status =
-      this.address === undefined
-        ? ContractStatus.Rejected
-        : ContractStatus.Initialised;
-    return [tx, this];
+    try {
+      this.address = await this.prepare(tx);
+      this.status =
+        this.address === undefined
+          ? ContractStatus.Rejected
+          : ContractStatus.Initialised;
+      return [tx, this];
+    } catch (err) {
+      throw err;
+    }
   }
 
   /**
