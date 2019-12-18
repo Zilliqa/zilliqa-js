@@ -1,11 +1,11 @@
 import { Wallet } from '@zilliqa-js/account';
 import { HTTPProvider } from '@zilliqa-js/core';
 import { fromBech32Address, isValidChecksumAddress } from '@zilliqa-js/crypto';
-import { BN, Long, bytes } from '@zilliqa-js/util';
+import { BN, bytes, Long } from '@zilliqa-js/util';
 
 import fetch from 'jest-fetch-mock';
 
-import { ContractStatus, Contracts } from '../src/index';
+import { Contracts, ContractStatus } from '../src/index';
 import { abi } from './test.abi';
 import { testContract } from './fixtures';
 
@@ -152,6 +152,63 @@ describe('Contracts', () => {
     expect(deployed.isDeployed()).toBeTruthy();
     expect(deployed.status).toEqual(ContractStatus.Deployed);
     expect(contract.address).toMatch(/[A-F0-9]+/);
+  });
+
+  it('should be able to deploy a contract without confirmation', async () => {
+    const contract = contractFactory.new(
+      testContract,
+      [
+        {
+          vname: 'contractOwner',
+          type: 'ByStr20',
+          value: '0x124567890124567890124567890124567890',
+        },
+        { vname: 'name', type: 'String', value: 'NonFungibleToken' },
+        { vname: 'symbol', type: 'String', value: 'NFT' },
+      ],
+      abi,
+    );
+
+    const responses = [
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: 888,
+          nonce: 1,
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          ContractAddress: `0x0000000000000000000000000000000000000000`,
+          TranID: 'some_hash',
+          Info: 'Non-contract txn, sent to shard',
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          ID: 'some_hash',
+          receipt: { success: true, cumulative_gas: '1000' },
+        },
+      },
+    ].map((res) => [JSON.stringify(res)] as [string]);
+
+    fetch.mockResponses(...responses);
+
+    const [tx, deployedContract] = await contract.deployWithoutConfirm({
+      version: VERSION,
+      gasPrice: new BN(1000),
+      gasLimit: Long.fromNumber(1000),
+    });
+
+    expect(tx.id).toEqual('some_hash');
+    expect(deployedContract.address).toEqual(
+      '0x0000000000000000000000000000000000000000',
+    );
   });
 
   it('should not swallow network errors', async () => {
