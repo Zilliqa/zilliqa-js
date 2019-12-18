@@ -151,6 +151,7 @@ export class Contract {
       tx.setStatus(TxStatus.Rejected);
     } else {
       tx.id = response.result.TranID;
+      tx.setStatus(TxStatus.Pending);
       return response.result.ContractAddress;
     }
   }
@@ -178,6 +179,10 @@ export class Contract {
     );
 
     this.address = await this.prepare(tx);
+    this.status =
+      this.address === undefined
+        ? ContractStatus.Rejected
+        : ContractStatus.Initialised;
     return [tx, this];
   }
 

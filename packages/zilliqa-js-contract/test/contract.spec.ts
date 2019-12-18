@@ -206,6 +206,8 @@ describe('Contracts', () => {
     });
 
     expect(tx.id).toEqual('some_hash');
+    expect(tx.isPending()).toBeTruthy();
+    expect(deployedContract.status).toEqual(ContractStatus.Initialised);
     expect(deployedContract.address).toEqual(
       '0x0000000000000000000000000000000000000000',
     );
@@ -253,7 +255,8 @@ describe('Contracts', () => {
       gasLimit: Long.fromNumber(1000),
     });
 
-    expect(tx.isRejected()).toEqual(true);
+    expect(tx.isRejected()).toBeTruthy();
+    expect(deployedContract.status).toEqual(ContractStatus.Rejected);
     expect(deployedContract.address).toEqual(undefined);
   });
 
