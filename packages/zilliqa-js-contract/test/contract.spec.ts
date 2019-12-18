@@ -211,6 +211,52 @@ describe('Contracts', () => {
     );
   });
 
+  it('should be rejected if underling transaction fails for deploy without confirmation', async () => {
+    const contract = contractFactory.new(
+      testContract,
+      [
+        {
+          vname: 'contractOwner',
+          type: 'ByStr20',
+          value: '0x124567890124567890124567890124567890',
+        },
+        { vname: 'name', type: 'String', value: 'NonFungibleToken' },
+        { vname: 'symbol', type: 'String', value: 'NFT' },
+      ],
+      abi,
+    );
+
+    const responses = [
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: 888,
+          nonce: 1,
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        error: {
+          code: 444,
+          message: 'Mega fail',
+        },
+      },
+    ].map((res) => [JSON.stringify(res)] as [string]);
+
+    fetch.mockResponses(...responses);
+
+    const [tx, deployedContract] = await contract.deployWithoutConfirm({
+      version: VERSION,
+      gasPrice: new BN(1000),
+      gasLimit: Long.fromNumber(1000),
+    });
+
+    expect(tx.isRejected()).toEqual(true);
+    expect(deployedContract.address).toEqual(undefined);
+  });
+
   it('should not swallow network errors', async () => {
     const contract = contractFactory.new(
       testContract,
