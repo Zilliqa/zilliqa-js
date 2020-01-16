@@ -202,7 +202,12 @@ export const normaliseAddress = (address: string): string => {
   if (validation.isBech32(address)) {
     return fromBech32Address(address);
   }
-  return toChecksumAddress(address);
+
+  if (!isValidChecksumAddress(address)) {
+    throw Error('wrong address format, should be bech32 or checksum');
+  }
+
+  return address;
 };
 
 /**
