@@ -1,15 +1,14 @@
-import { RPCMethod, HTTPProvider } from '@zilliqa-js/core';
+import { HTTPProvider, RPCMethod } from '@zilliqa-js/core';
 import {
-  toBech32Address,
-  toChecksumAddress,
   isValidChecksumAddress,
   randomBytes,
+  toBech32Address,
+  toChecksumAddress,
 } from '@zilliqa-js/crypto';
 import { BN, Long } from '@zilliqa-js/util';
 
 import { Transaction } from '../src/transaction';
 import { Wallet } from '../src/wallet';
-
 // tslint:disable-next-line: no-implicit-dependencies
 import fetch from 'jest-fetch-mock';
 
@@ -60,6 +59,27 @@ describe('Transaction', () => {
 
     expect(isValidChecksumAddress(tx.txParams.toAddr)).toBe(true);
     expect(tx.txParams.toAddr).toEqual(b16);
+  });
+
+  it('should not accept normal address', () => {
+    const addr = randomBytes(20);
+    try {
+      const tx = new Transaction(
+        {
+          version: 0,
+          toAddr: addr,
+          amount: new BN(0),
+          gasPrice: new BN(1000),
+          gasLimit: Long.fromNumber(1000),
+        },
+        provider,
+      );
+      console.log(tx.txParams);
+    } catch (e) {
+      expect(e.message).toEqual(
+        'wrong address format, should be bech32 or checksum',
+      );
+    }
   });
 
   it('should poll and call queued handlers on confirmation', async () => {
