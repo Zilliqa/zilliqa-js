@@ -184,11 +184,24 @@ export interface TransactionReceiptObj<TGas = string> {
   success: boolean;
   cumulative_gas: TGas;
   event_logs: EventLogEntry[];
+  transitions: TransitionEntry[];
 }
 
 export interface EventLogEntry {
   address: string;
   _eventname: string;
+  params: EventParam[];
+}
+
+export interface TransitionEntry {
+  addr: string;
+  msg: TransitionMsg;
+}
+
+export interface TransitionMsg {
+  _amount: string;
+  _recipient: string;
+  _tag: string;
   params: EventParam[];
 }
 
