@@ -68,7 +68,7 @@ describe('Module: Blockchain', () => {
     expect(tx.isConfirmed()).toEqual(true);
   });
 
-  it('should sign and send raw transactions', async () => {
+  it('should send raw transactions', async () => {
     const payload =
       '{"version":65537,"nonce":2,"toAddr":"39550aB45D74cCe5feF70e857c1326b2d9bEE096","pubKey":"03bb0637134af801bcc912f7cf61448aed05fea21f4a6460a7f15a48c8704f2aea","amount":"0","gasPrice":"1000000000","gasLimit":"40000","code":"","data":"{\\"_tag\\":\\"ProxyTransfer\\",\\"params\\":[{\\"vname\\":\\"to\\",\\"type\\":\\"ByStr20\\",\\"value\\":\\"0x0200a288be83e2a2061d7519d3397b3c6da05f29\\"},{\\"vname\\":\\"value\\",\\"type\\":\\"Uint128\\",\\"value\\":\\"10000000\\"}]}","signature":"8ae91f246b428248c73d6646e3c6d57ceb7877ad9d074e867b4860fbe7d248fbedfbd2a37822ab8610305756f643b76c62f2c7573c6ef0240e6af32d7ff106e6","priority":false}';
 
@@ -86,6 +86,32 @@ describe('Module: Blockchain', () => {
     fetch.mockResponses(...responses);
     const id = await blockchain.createTransactionRaw(payload);
     expect(id).toEqual('some_hash');
+  });
+
+  it('should handle error properly while sending raw transactions', async () => {
+    const payload =
+      '{"version":65537,"nonce":2,"toAddr":"39550aB45D74cCe5feF70e857c1326b2d9bEE096","pubKey":"03bb0637134af801bcc912f7cf61448aed05fea21f4a6460a7f15a48c8704f2aea","amount":"0","gasPrice":"1000000000","gasLimit":"40000","code":"","data":"{\\"_tag\\":\\"ProxyTransfer\\",\\"params\\":[{\\"vname\\":\\"to\\",\\"type\\":\\"ByStr20\\",\\"value\\":\\"0x0200a288be83e2a2061d7519d3397b3c6da05f29\\"},{\\"vname\\":\\"value\\",\\"type\\":\\"Uint128\\",\\"value\\":\\"10000000\\"}]}","signature":"8ae91f246b428248c73d6646e3c6d57ceb7877ad9d074e867b4860fbe7d248fbedfbd2a37822ab8610305756f643b76c62f2c7573c6ef0240e6af32d7ff106e6","priority":false}';
+
+    const responses = [
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        error: {
+          code: -8,
+          message: 'Nonce (1012) lower than current (1012)',
+        },
+      },
+    ].map((res) => [JSON.stringify(res)] as [string]);
+
+    fetch.mockResponses(...responses);
+    try {
+      await blockchain.createTransactionRaw(payload);
+    } catch (error) {
+      expect(error).toEqual({
+        code: -8,
+        message: 'Nonce (1012) lower than current (1012)',
+      });
+    }
   });
 
   it('should respect the maxAttempts parameter', async () => {
