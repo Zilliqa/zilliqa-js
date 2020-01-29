@@ -85,7 +85,7 @@ describe('Module: Blockchain', () => {
 
     fetch.mockResponses(...responses);
     const id = await blockchain.createTransactionRaw(payload);
-    expect(id).toHaveProperty('some_hash');
+    expect(id).toEqual('some_hash');
   });
 
   it('should respect the maxAttempts parameter', async () => {
