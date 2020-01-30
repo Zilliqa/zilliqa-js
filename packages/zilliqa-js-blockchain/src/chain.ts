@@ -292,6 +292,32 @@ export class Blockchain implements ZilliqaModule {
     }
   }
 
+  /**
+   * createTransactionRaw
+   *
+   * Create a transaction by using a exist signed transaction payload
+   * This payload may come form some offline signing software like ledger
+   * Currently we haven't supported convert a singed transaction back to transaction param, so we won't perform
+   * confirm logic here, but there is another convenient way to do so, can refer examples/createTransactionRaw.js
+   *
+   * @param payload
+   */
+  async createTransactionRaw(payload: string): Promise<string> {
+    try {
+      const tx = JSON.parse(payload);
+      const response = await this.provider.send(
+        RPCMethod.CreateTransaction,
+        tx,
+      );
+      if (response.error) {
+        throw response.error;
+      }
+      return response.result.TranID;
+    } catch (err) {
+      throw err;
+    }
+  }
+
   @sign
   async createTransactionWithoutConfirm(tx: Transaction): Promise<Transaction> {
     try {
