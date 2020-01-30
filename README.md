@@ -232,7 +232,7 @@ async function testBlockchain() {
         gasLimit: Long.fromNumber(8000),
       },
       33,
-      100,
+      1000,
       false,
     );
 
