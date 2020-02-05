@@ -77,7 +77,7 @@ describe('Transaction', () => {
       console.log(tx.txParams);
     } catch (e) {
       expect(e.message).toEqual(
-        'wrong address format, should be bech32 or checksum',
+        'Wrong address format, should be either bech32 or checksummed address',
       );
     }
   });
