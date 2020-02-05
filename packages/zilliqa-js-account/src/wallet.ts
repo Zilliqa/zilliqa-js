@@ -258,7 +258,14 @@ export class Wallet extends Signer {
         });
       }
 
-      return tx.map((txObj) => {
+      const withPublicKey = tx.map((txObj) => {
+        return {
+          ...txObj,
+          pubKey: signer.publicKey,
+        };
+      });
+
+      return withPublicKey.map((txObj) => {
         return {
           ...txObj,
           signature: signer.signTransaction(tx.bytes),
