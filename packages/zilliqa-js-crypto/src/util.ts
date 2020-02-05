@@ -204,7 +204,9 @@ export const normaliseAddress = (address: string): string => {
   }
 
   if (!isValidChecksumAddress(address)) {
-    throw Error('wrong address format, should be bech32 or checksum');
+    throw Error(
+      'Wrong address format, should be either bech32 or checksummed address',
+    );
   }
 
   return address;
