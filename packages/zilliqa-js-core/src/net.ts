@@ -43,6 +43,7 @@ export const enum RPCMethod {
   GetCurrentDSEpoch = 'GetCurrentDSEpoch',
   GetPrevDifficulty = 'GetPrevDifficulty',
   GetPrevDSDifficulty = 'GetPrevDSDifficulty',
+  GetTotalCoinSupply = 'GetTotalCoinSupply',
 
   // Transaction-related methods
   CreateTransaction = 'CreateTransaction',

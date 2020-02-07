@@ -255,6 +255,15 @@ export class Blockchain implements ZilliqaModule {
   }
 
   /**
+   * getTotalCoinSupply
+   *
+   * Returns the total supply (ZIL) of coins in the network.
+   */
+  getTotalCoinSupply(): Promise<RPCResponse<string, string>> {
+    return this.provider.send(RPCMethod.GetTotalCoinSupply);
+  }
+
+  /**
    * createTransaction
    *
    * Creates a transaction and polls the lookup node for a transaction
