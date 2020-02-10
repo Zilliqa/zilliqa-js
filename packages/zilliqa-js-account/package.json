@@ -1,6 +1,6 @@
 {
   "name": "@zilliqa-js/account",
-  "version": "0.8.8",
+  "version": "0.8.9",
   "author": "Ian Tan (https://github.com/iantanwx)",
   "maintainers": [
     "Edison Lim <edison.limjh@gmail.com> (https://github.com/edisonljh)"
@@ -27,8 +27,8 @@
   "dependencies": {
     "@types/bip39": "^2.4.0",
     "@types/hdkey": "^0.7.0",
-    "@zilliqa-js/core": "0.8.8",
-    "@zilliqa-js/crypto": "0.8.8",
+    "@zilliqa-js/core": "0.8.9",
+    "@zilliqa-js/crypto": "0.8.9",
     "@zilliqa-js/proto": "0.8.3",
     "@zilliqa-js/util": "0.8.8",
     "bip39": "^2.5.0",

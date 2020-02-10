@@ -1,6 +1,6 @@
 {
   "name": "@zilliqa-js/contract",
-  "version": "0.8.8",
+  "version": "0.8.9",
   "description": "Contract-related functionality.",
   "main": "dist/index.js",
   "node": "dist/index.js",
@@ -25,10 +25,10 @@
     "clean": "rimraf ./dist"
   },
   "dependencies": {
-    "@zilliqa-js/account": "0.8.8",
-    "@zilliqa-js/blockchain": "0.8.8",
-    "@zilliqa-js/core": "0.8.8",
-    "@zilliqa-js/crypto": "0.8.8",
+    "@zilliqa-js/account": "0.8.9",
+    "@zilliqa-js/blockchain": "0.8.9",
+    "@zilliqa-js/core": "0.8.9",
+    "@zilliqa-js/crypto": "0.8.9",
     "@zilliqa-js/util": "0.8.8",
     "hash.js": "^1.1.5",
     "utility-types": "^2.1.0"
