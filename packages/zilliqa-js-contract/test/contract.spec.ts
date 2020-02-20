@@ -513,6 +513,106 @@ describe('Contracts', () => {
     expect(receipt && receipt.success).toEqual(true);
   });
 
+  it('should be able to call a transition without confirmation', async () => {
+    const responses = [
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: 888,
+          nonce: 1,
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          TranID: 'some_hash',
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          ID: 'some_hash',
+          senderPubKey:
+            '0314738163B9BB67AD11AA464FE69A1147DF263E8970D7DCFD8F993DDD39E81BD9',
+          receipt: {
+            success: true,
+            cumulative_gas: 1000,
+          },
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: 888,
+          nonce: 2,
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          TranID: 'some_hash',
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          ID: 'some_hash',
+          senderPubKey:
+            '0314738163B9BB67AD11AA464FE69A1147DF263E8970D7DCFD8F993DDD39E81BD9',
+          receipt: {
+            success: true,
+            cumulative_gas: 1000,
+          },
+        },
+      },
+    ].map((res) => [JSON.stringify(res)] as [string]);
+
+    fetch.mockResponses(...responses);
+
+    const [, contract] = await contractFactory
+      .new(
+        testContract,
+        [
+          {
+            vname: 'contractOwner',
+            type: 'ByStr20',
+            value: '0x124567890124567890124567890124567890',
+          },
+          { vname: 'name', type: 'String', value: 'NonFungibleToken' },
+          { vname: 'symbol', type: 'String', value: 'NFT' },
+        ],
+        abi,
+      )
+      .deploy({
+        version: VERSION,
+        gasPrice: new BN(1000),
+        gasLimit: Long.fromNumber(1000),
+      });
+
+    const callTx = await contract.callWithoutConfirm(
+      'myTransition',
+      [
+        { vname: 'param_1', type: 'String', value: 'hello' },
+        { vname: 'param_2', type: 'String', value: 'world' },
+      ],
+      {
+        version: VERSION,
+        amount: new BN(0),
+        gasPrice: new BN(1000),
+        gasLimit: Long.fromNumber(1000),
+      },
+    );
+
+    expect(callTx.id).toEqual('some_hash');
+    expect(callTx.isPending()).toBeTruthy();
+  });
+
   it('should normalise addresses to base16 checksum', () => {
     const contractAt = contractFactory.at(
       'zil1az5e0c6e4s4pazgahhmlca2cvgamp6kjtaxf4q',

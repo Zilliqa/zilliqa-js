@@ -250,6 +250,44 @@ export class Contract {
     }
   }
 
+  async callWithoutConfirm(
+    transition: string,
+    args: Value[],
+    params: CallParams,
+    toDs: boolean = false,
+  ): Promise<Transaction> {
+    const data = {
+      _tag: transition,
+      params: args,
+    };
+
+    if (this.error) {
+      return Promise.reject(this.error);
+    }
+
+    if (!this.address) {
+      return Promise.reject('Contract has not been deployed!');
+    }
+
+    const tx = new Transaction(
+      {
+        ...params,
+        toAddr: this.address,
+        data: JSON.stringify(data),
+      },
+      this.provider,
+      TxStatus.Initialised,
+      toDs,
+    );
+
+    try {
+      await this.prepare(tx);
+      return tx;
+    } catch (err) {
+      throw err;
+    }
+  }
+
   /**
    * call
    *

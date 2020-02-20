@@ -41,88 +41,45 @@ async function testBlockchain() {
     const isGasSufficient = myGasPrice.gte(new BN(minGasPrice.result)); // Checks if your gas price is less than the minimum gas price
     console.log(`Is the gas price sufficient? ${isGasSufficient}`);
 
-    // Deploy a contract
-    console.log(`Deploying a new contract....`);
-    const code = `scilla_version 0
+    const deployedContract = zilliqa.contracts.at(
+      'zil1v6tjt9s0nua80tvvays5m2g763npxgkez0gnnq',
+    );
 
-    (* HelloWorld contract *)
-
-    import ListUtils
-
-    (***************************************************)
-    (*               Associated library                *)
-    (***************************************************)
-    library HelloWorld
-
-    let not_owner_code = Int32 1
-    let set_hello_code = Int32 2
-
-    (***************************************************)
-    (*             The contract definition             *)
-    (***************************************************)
-
-    contract HelloWorld
-    (owner: ByStr20)
-
-    field welcome_msg : String = ""
-
-    transition setHello (msg : String)
-      is_owner = builtin eq owner _sender;
-      match is_owner with
-      | False =>
-        e = {_eventname : "setHello()"; code : not_owner_code};
-        event e
-      | True =>
-        welcome_msg := msg;
-        e = {_eventname : "setHello()"; code : set_hello_code};
-        event e
-      end
-    end
-
-
-    transition getHello ()
-        r <- welcome_msg;
-        e = {_eventname: "getHello()"; msg: r};
-        event e
-    end`;
-
-    const init = [
-      // this parameter is mandatory for all init arrays
-      {
-        vname: '_scilla_version',
-        type: 'Uint32',
-        value: '0',
-      },
-      {
-        vname: 'owner',
-        type: 'ByStr20',
-        value: `${address}`,
-      },
-    ];
-
-    const contract = zilliqa.contracts.new(code, init);
-
-    // Deploy the contract.
+    // Create a new timebased message and call setHello
     // Also notice here we have a default function parameter named toDs as mentioned above.
-    // A contract can be deployed at either the shard or at the DS. Always set this value to false.
-    const [deployTx, deployedContract] = await contract.deployWithoutConfirm(
+    // For calling a smart contract, any transaction can be processed in the DS but not every transaction can be processed in the shards.
+    // For those transactions are involved in chain call, the value of toDs should always be true.
+    // If a transaction of contract invocation is sent to a shard and if the shard is not allowed to process it, then the transaction will be dropped.
+    const newMsg = 'Hello, the time is ' + Date.now();
+    console.log('Calling setHello transition with msg: ' + newMsg);
+    const callTx = await deployedContract.callWithoutConfirm(
+      'setHello',
+      [
+        {
+          vname: 'msg',
+          type: 'String',
+          value: newMsg,
+        },
+      ],
       {
+        // amount, gasPrice and gasLimit must be explicitly provided
         version: VERSION,
+        amount: new BN(0),
         gasPrice: myGasPrice,
-        gasLimit: Long.fromNumber(10000),
+        gasLimit: Long.fromNumber(8000),
       },
       false,
     );
 
     // check the pending status
-    const pendingStatus = await zilliqa.blockchain.getPendingTxn(deployTx.id);
+    const pendingStatus = await zilliqa.blockchain.getPendingTxn(callTx.id);
     console.log(`Pending status is: `);
     console.log(pendingStatus.result);
 
     // process confirm
-    console.log(`The transaction id is:`, deployTx.id);
+    console.log(`The transaction id is:`, callTx.id);
     console.log(`Waiting transaction be confirmed`);
-    const confirmedTxn = await deployTx.confirm(deployTx.id);
+    const confirmedTxn = await callTx.confirm(callTx.id);
 
     console.log(`The transaction status is:`);
     console.log(confirmedTxn.receipt);
