@@ -49,7 +49,7 @@ export class TransactionFactory implements ZilliqaModule {
         throw response.error;
       }
       const fund = new BN(response.result.balance);
-      if (txParams.amount.cmp(fund) === -1) {
+      if (txParams.amount.cmp(fund) === 1) {
         throw new Error('No sufficient fund');
       }
     }
