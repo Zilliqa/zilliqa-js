@@ -18,6 +18,7 @@ import { Transaction } from './transaction';
 import { TxParams, TxStatus } from './types';
 import { formatOutgoingTx } from './util';
 import { Wallet } from './wallet';
+import BN from 'bn.js';
 
 export class TransactionFactory implements ZilliqaModule {
   provider: Provider;
@@ -34,5 +35,31 @@ export class TransactionFactory implements ZilliqaModule {
 
   new(txParams: TxParams, toDs: boolean = false) {
     return new Transaction(txParams, this.provider, TxStatus.Initialised, toDs);
+  }
+
+  /**
+   * This constructor could help you to check if there is a default account to be used, and further more, if it has
+   * sufficient fund to do the transfer.
+   * @param txParams
+   */
+  async payment(txParams: TxParams) {
+    const defaultAccount = this.signer.defaultAccount;
+    if (defaultAccount != null) {
+      const addr = defaultAccount.address;
+      const response = await this.provider.send(
+        RPCMethod.GetBalance,
+        addr.replace('0x', '').toLowerCase(),
+      );
+      if (response.error) {
+        throw response.error;
+      }
+      const fund = new BN(response.result.balance);
+      if (txParams.amount.cmp(fund) === 1) {
+        throw new Error('No sufficient fund');
+      }
+    } else {
+      throw new Error('No default wallet');
+    }
+    return this.new(txParams, true);
   }
 }
