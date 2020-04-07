@@ -15,6 +15,8 @@ export function toTxParams(
     nonce,
     receipt,
     version,
+    code,
+    data,
     ...rest
   } = <TransactionObj>response.result;
 
@@ -22,6 +24,8 @@ export function toTxParams(
     ...rest,
     version: parseInt(version, 10),
     toAddr,
+    code,
+    data,
     gasPrice: new BN(gasPrice),
     gasLimit: Long.fromString(gasLimit, 10),
     amount: new BN(amount),
