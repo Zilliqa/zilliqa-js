@@ -403,6 +403,21 @@ export class Blockchain implements ZilliqaModule {
   }
 
   /**
+   * getTxnBodiesForTxBlock
+   *
+   * @param {number} txBlock
+   * @returns { romise<RPCResponse<TransactionObj[], string>>}
+   */
+  getTxnBodiesForTxBlock(
+    txBlock: number,
+  ): Promise<RPCResponse<TransactionObj[], string>> {
+    return this.provider.send(
+      RPCMethod.GetTxnBodiesForTxBlock,
+      txBlock.toString(),
+    );
+  }
+
+  /**
    * getNumTxnsTxEpoch
    *
    * Gets the number of transactions procesed for a given Tx Epoch.
