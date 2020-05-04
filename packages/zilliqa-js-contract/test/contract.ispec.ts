@@ -132,11 +132,7 @@ describe('Contract: hello world', () => {
 
     const state = await contract.getState();
 
-    expect(
-      state.filter((v: any) => {
-        return v.vname === 'welcome_msg';
-      })[0].value,
-    ).toEqual('Hello World');
+    expect(state['welcome_msg']).toEqual('Hello World');
   });
 
   it('should be rejected by the server if a non-existent contract is called', async () => {
