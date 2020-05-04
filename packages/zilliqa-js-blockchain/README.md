@@ -158,6 +158,19 @@ Creates a transaction and polls the lookup node for a transaction receipt. The t
 
 - `Promise<Transaction>` - the Transaction that has been signed and broadcasted to the network.
 
+### `getTxnBodiesForTxBlock(txBlock: number): Promise<RPCResponse<TransactionObj[], string>>`
+
+Returns the validated transactions (in verbose form) included within a specified final transaction block.
+
+**Parameters**
+- `txBlock`: `number` - Specified TX block number to return.
+
+**Returns**
+
+- `Promise<RPCResponse<TransactionObj[], string>>` - Validated transactions in verbose form.
+
+*Note: This API is available for private seed nodes only. It is not accessible via the official public API services, i.e., https://api.zilliqa.com.*
+
 ### `getBlockChainInfo(): Promise<RPCResponse<ShardingStructure, string>>`
 
 Retrieves generally blockchain information, such as the number of nodes per
