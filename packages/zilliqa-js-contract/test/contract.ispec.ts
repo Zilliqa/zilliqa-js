@@ -3,7 +3,7 @@ import { Blockchain } from '@zilliqa-js/blockchain';
 import { HTTPProvider } from '@zilliqa-js/core';
 import { toChecksumAddress, normaliseAddress } from '@zilliqa-js/crypto';
 import { BN, Long, bytes, units } from '@zilliqa-js/util';
-import { Contracts, Contract, ContractStatus, Value } from '../src/index';
+import { Contracts, Contract, ContractStatus } from '../src/index';
 import { testContract, zrc20, simpleDEX as dex, touchAndPay } from './fixtures';
 
 const CHAIN_ID: number = parseInt(process.env.CHAIN_ID as string, 10);
@@ -92,7 +92,7 @@ describe('Contract: hello world', () => {
         {
           version: VERSION,
           gasPrice: new BN(1000000000),
-          gasLimit: Long.fromNumber(5000),
+          gasLimit: Long.fromNumber(10000),
         },
         38,
         1000,
@@ -121,7 +121,7 @@ describe('Contract: hello world', () => {
         version: VERSION,
         amount: new BN(0),
         gasPrice: new BN(1000000000),
-        gasLimit: Long.fromNumber(5000),
+        gasLimit: Long.fromNumber(10000),
       },
       38,
       1000,
@@ -467,11 +467,8 @@ describe('Contract: Simple DEX', () => {
 
 describe('Contract: HWGC', async () => {
   it('should not change the balance of contracts when the callee does not accept', async () => {
-    const getContractBalance = (state: Value[]): number => {
-      const [balance] = state
-        .filter(({ vname }) => vname === '_balance')
-        .map(({ value }) => parseInt(<string>value, 10));
-
+    const getContractBalance = (state: any): number => {
+      const balance = parseInt(state['_balance']);
       return balance;
     };
 
