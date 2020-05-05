@@ -3,7 +3,7 @@ import { Blockchain } from '@zilliqa-js/blockchain';
 import { HTTPProvider } from '@zilliqa-js/core';
 import { toChecksumAddress, normaliseAddress } from '@zilliqa-js/crypto';
 import { BN, Long, bytes, units } from '@zilliqa-js/util';
-import { Contracts, Contract, ContractStatus, Value } from '../src/index';
+import { Contracts, Contract, ContractStatus } from '../src/index';
 import { testContract, zrc20, simpleDEX as dex, touchAndPay } from './fixtures';
 
 const CHAIN_ID: number = parseInt(process.env.CHAIN_ID as string, 10);
@@ -92,7 +92,7 @@ describe('Contract: hello world', () => {
         {
           version: VERSION,
           gasPrice: new BN(1000000000),
-          gasLimit: Long.fromNumber(5000),
+          gasLimit: Long.fromNumber(10000),
         },
         38,
         1000,
@@ -121,7 +121,7 @@ describe('Contract: hello world', () => {
         version: VERSION,
         amount: new BN(0),
         gasPrice: new BN(1000000000),
-        gasLimit: Long.fromNumber(5000),
+        gasLimit: Long.fromNumber(10000),
       },
       38,
       1000,
@@ -132,11 +132,7 @@ describe('Contract: hello world', () => {
 
     const state = await contract.getState();
 
-    expect(
-      state.filter((v: any) => {
-        return v.vname === 'welcome_msg';
-      })[0].value,
-    ).toEqual('Hello World');
+    expect(state['welcome_msg']).toEqual('Hello World');
   });
 
   it('should be rejected by the server if a non-existent contract is called', async () => {
@@ -212,7 +208,7 @@ describe('Contract: Simple DEX', () => {
             nonce: balance.result.nonce + i + 1,
             pubKey: banker.publicKey,
             toAddr: actor.address,
-            amount: units.toQa(1000000, units.Units.Zil),
+            amount: units.toQa(15, units.Units.Zil),
             gasPrice: MIN_GAS_PRICE,
             gasLimit: MIN_GAS_LIMIT,
           },
@@ -237,15 +233,15 @@ describe('Contract: Simple DEX', () => {
           {
             vname: 'owner',
             type: 'ByStr20',
-            value: token1Owner.address,
+            value: `${token1Owner.address}`,
           },
           { vname: 'total_tokens', type: 'Uint128', value: '888888888888888' },
         ])
         .deploy({
           version: VERSION,
-          pubKey: token1Owner.publicKey,
+          pubKey: `${token1Owner.publicKey}`,
           gasPrice: new BN(1000000000),
-          gasLimit: Long.fromNumber(100000),
+          gasLimit: Long.fromNumber(30000),
         }),
       contractFactory
         .new(zrc20, [
@@ -253,15 +249,15 @@ describe('Contract: Simple DEX', () => {
           {
             vname: 'owner',
             type: 'ByStr20',
-            value: token2Owner.address,
+            value: `${token2Owner.address}`,
           },
           { vname: 'total_tokens', type: 'Uint128', value: '888888888888888' },
         ])
         .deploy({
           version: VERSION,
-          pubKey: token2Owner.publicKey,
+          pubKey: `${token2Owner.publicKey}`,
           gasPrice: new BN(1000000000),
-          gasLimit: Long.fromNumber(100000),
+          gasLimit: Long.fromNumber(30000),
         }),
       contractFactory
         .new(dex, [
@@ -269,14 +265,14 @@ describe('Contract: Simple DEX', () => {
           {
             vname: 'contractOwner',
             type: 'ByStr20',
-            value: simpleDexOwner.address,
+            value: `${simpleDexOwner.address}`,
           },
         ])
         .deploy({
           version: VERSION,
-          pubKey: simpleDexOwner.publicKey,
+          pubKey: `${simpleDexOwner.publicKey}`,
           gasPrice: new BN(1000000000),
-          gasLimit: Long.fromNumber(100000),
+          gasLimit: Long.fromNumber(30000),
         }),
     ]);
 
@@ -298,12 +294,12 @@ describe('Contract: Simple DEX', () => {
       token1.call(
         'Transfer',
         [
-          { vname: 'to', type: 'ByStr20', value: token1Holder.address },
+          { vname: 'to', type: 'ByStr20', value: `${token1Holder.address}` },
           { vname: 'tokens', type: 'Uint128', value: '888' },
         ],
         {
           version: VERSION,
-          pubKey: token1Owner.publicKey,
+          pubKey: `${token1Owner.publicKey}`,
           amount: new BN(0),
           gasPrice: new BN(1000000000),
           gasLimit: Long.fromNumber(10000),
@@ -312,12 +308,12 @@ describe('Contract: Simple DEX', () => {
       token2.call(
         'Transfer',
         [
-          { vname: 'to', type: 'ByStr20', value: token2Holder.address },
+          { vname: 'to', type: 'ByStr20', value: `${token2Holder.address}` },
           { vname: 'tokens', type: 'Uint128', value: '888' },
         ],
         {
           version: VERSION,
-          pubKey: token2Owner.publicKey,
+          pubKey: `${token2Owner.publicKey}`,
           amount: new BN(0),
           gasPrice: new BN(1000000000),
           gasLimit: Long.fromNumber(10000),
@@ -346,7 +342,7 @@ describe('Contract: Simple DEX', () => {
           {
             vname: 'spender',
             type: 'ByStr20',
-            value: simpleDEX.address as string,
+            value: `${simpleDEX.address}`,
           },
           {
             vname: 'tokens',
@@ -356,10 +352,10 @@ describe('Contract: Simple DEX', () => {
         ],
         {
           version: VERSION,
-          pubKey: token1Holder.publicKey,
+          pubKey: `${token1Holder.publicKey}`,
           amount: new BN(0),
           gasPrice: new BN(1000000000),
-          gasLimit: Long.fromNumber(5000),
+          gasLimit: Long.fromNumber(10000),
         },
       ),
       token2.call(
@@ -368,7 +364,7 @@ describe('Contract: Simple DEX', () => {
           {
             vname: 'spender',
             type: 'ByStr20',
-            value: simpleDEX.address as string,
+            value: `${simpleDEX.address}`,
           },
           {
             vname: 'tokens',
@@ -378,7 +374,7 @@ describe('Contract: Simple DEX', () => {
         ],
         {
           version: VERSION,
-          pubKey: token2Holder.publicKey,
+          pubKey: `${token2Holder.publicKey}`,
           amount: new BN(0),
           gasPrice: new BN(1000000000),
           gasLimit: Long.fromNumber(10000),
@@ -414,7 +410,7 @@ describe('Contract: Simple DEX', () => {
         {
           vname: 'tokenA',
           type: 'ByStr20',
-          value: token1.address as string,
+          value: `${token1.address}`,
         },
         {
           vname: 'valueA',
@@ -424,7 +420,7 @@ describe('Contract: Simple DEX', () => {
         {
           vname: 'tokenB',
           type: 'ByStr20',
-          value: token2.address as string,
+          value: `${token2.address}`,
         },
         {
           vname: 'valueB',
@@ -439,10 +435,10 @@ describe('Contract: Simple DEX', () => {
       ],
       {
         version: VERSION,
-        pubKey: token1Holder.publicKey,
+        pubKey: `${token1Holder.publicKey}`,
         amount: new BN(0),
         gasPrice: new BN(1000000000),
-        gasLimit: Long.fromNumber(100000),
+        gasLimit: Long.fromNumber(10000),
       },
       38,
       1000,
@@ -461,7 +457,7 @@ describe('Contract: Simple DEX', () => {
 
     // check states
     const state = await simpleDEX.getState();
-    expect(state.length).toBeGreaterThan(0);
+    expect(Object.keys(state).length).toBeGreaterThan(0);
   });
 
   afterAll(() => {
@@ -471,11 +467,8 @@ describe('Contract: Simple DEX', () => {
 
 describe('Contract: HWGC', async () => {
   it('should not change the balance of contracts when the callee does not accept', async () => {
-    const getContractBalance = (state: Value[]): number => {
-      const [balance] = state
-        .filter(({ vname }) => vname === '_balance')
-        .map(({ value }) => parseInt(<string>value, 10));
-
+    const getContractBalance = (state: any): number => {
+      const balance = parseInt(state['_balance']);
       return balance;
     };
 
