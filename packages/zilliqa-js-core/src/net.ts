@@ -50,6 +50,7 @@ export const enum RPCMethod {
   GetTransaction = 'GetTransaction',
   GetRecentTransactions = 'GetRecentTransactions',
   GetTransactionsForTxBlock = 'GetTransactionsForTxBlock',
+  GetTxnBodiesForTxBlock = 'GetTxnBodiesForTxBlock',
   GetNumTxnsTxEpoch = 'GetNumTxnsTxEpoch',
   GetNumTxnsDSEpoch = 'GetNumTxnsDSEpoch',
   GetMinimumGasPrice = 'GetMinimumGasPrice',

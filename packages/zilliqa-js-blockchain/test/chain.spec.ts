@@ -245,6 +245,29 @@ describe('Module: Blockchain', () => {
     ]);
   });
 
+  it('should receive transaction bodies', async () => {
+    const responses = [
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: [
+          {
+            ID: 'some_hash',
+          },
+        ],
+      },
+    ].map((res) => [JSON.stringify(res)] as [string]);
+
+    fetch.mockResponses(...responses);
+
+    const result = await blockchain.getTxnBodiesForTxBlock(1339810);
+    expect(result.result).toBeDefined();
+    // @ts-ignore
+    expect(result.result.length).toEqual(1);
+    // @ts-ignore
+    expect(result.result[0].ID).toEqual('some_hash');
+  });
+
   it('should test the maxAttempts parameter using blockConfirm', async () => {
     const responses = [
       {
