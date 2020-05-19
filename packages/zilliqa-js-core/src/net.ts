@@ -44,6 +44,7 @@ export const enum RPCMethod {
   GetPrevDifficulty = 'GetPrevDifficulty',
   GetPrevDSDifficulty = 'GetPrevDSDifficulty',
   GetTotalCoinSupply = 'GetTotalCoinSupply',
+  GetMinerInfo = 'GetMinerInfo',
 
   // Transaction-related methods
   CreateTransaction = 'CreateTransaction',
