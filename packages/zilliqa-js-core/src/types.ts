@@ -216,3 +216,13 @@ export interface PendingTxnResult {
   confirmed: boolean;
   info: string;
 }
+
+export interface MinerInfo {
+  dscommittee: string[];
+  shards: ShardInfo[];
+}
+
+export interface ShardInfo {
+  nodes: string[];
+  size: number;
+}
