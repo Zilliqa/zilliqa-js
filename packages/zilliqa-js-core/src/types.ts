@@ -211,6 +211,15 @@ export interface EventParam {
   value: string;
 }
 
+export interface PendingTxns {
+  Txns: TransactionStatus[];
+}
+
+export interface TransactionStatus {
+  Status: number;
+  TxnHash: string;
+}
+
 export interface PendingTxnResult {
   code: number;
   confirmed: boolean;
