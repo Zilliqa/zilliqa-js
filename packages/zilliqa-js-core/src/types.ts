@@ -221,7 +221,7 @@ export interface TransitionMsg {
 export interface EventParam {
   vname: string;
   type: string;
-  value: string;
+  value: any;
 }
 
 export interface PendingTxns {
