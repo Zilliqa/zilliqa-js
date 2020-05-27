@@ -119,30 +119,35 @@ const enum TxBlockType {
 }
 
 export interface TxBlockHeader {
-  Type: TxBlockType;
-  Version: number;
+  BlockNum: string;
+  DSBlockNum: string;
   GasLimit: string;
   GasUsed: string;
-  Rewards: string;
-  PrevBlockHash: string;
-  BlockNum: string;
-  Timestamp: string;
-
-  TxnHash: string;
-  StateHash: string;
-  NumTxns: number;
-  NumMicroBlocks: number;
-
+  MbInfoHash: string;
   MinerPubKey: string;
-  DSBlockNum: string;
+  NumMicroBlocks: number;
+  NumTxns: number;
+  PrevBlockHash: string;
+  Rewards: string;
+  StateDeltaHash: string;
+  StateRootHash: string;
+  Timestamp: string;
+  Version: number;
+
+  Type: TxBlockType;
+}
+
+export interface MicroBlockInfoObj {
+  MicroBlockHash: string;
+  MicroBlockShardId: number;
+  MicroBlockTxnRootHash: string;
 }
 
 export interface TxBlockObj {
   body: {
-    // TODO: add Blockhash due to latest `GetTxBlock` api
+    BlockHash: string;
     HeaderSign: string;
-    MicroBlockEmpty: number[];
-    MicroBlockHashes: string[];
+    MicroBlockInfos: MicroBlockInfoObj[];
   };
   header: TxBlockHeader;
 }
