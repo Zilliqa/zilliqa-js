@@ -82,7 +82,7 @@ describe('Wallet', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
-          balance: 888,
+          balance: '39999999000000000',
           nonce: 1,
         },
       }),
@@ -98,6 +98,36 @@ describe('Wallet', () => {
 
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(lgtm).toBeTruthy();
+  });
+
+  it('should throw funds not sufficient error', async () => {
+    const [wallet] = createWallet(1);
+    const pubKey = (wallet.defaultAccount &&
+      wallet.defaultAccount.publicKey) as string;
+
+    const tx = new Transaction(
+      {
+        version: 1,
+        toAddr: '0x1234567890123456789012345678901234567890',
+        amount: new BN(0),
+        gasPrice: new BN(1000),
+        gasLimit: Long.fromNumber(1000),
+        pubKey,
+      },
+      provider,
+    );
+
+    fetch.once(
+      JSON.stringify({
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: '100',
+          nonce: 1,
+        },
+      }),
+    );
+    await expect(wallet.sign(tx)).rejects.toThrow();
   });
 
   it('should respect the supplied nonce, if any', async () => {
@@ -118,6 +148,17 @@ describe('Wallet', () => {
       provider,
     );
 
+    fetch.once(
+      JSON.stringify({
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: '39999999000000000',
+          nonce: 1,
+        },
+      }),
+    );
+
     const signed = await wallet.sign(tx);
     const signature = schnorr.toSignature(signed.txParams.signature as string);
     const lgtm = schnorr.verify(
@@ -126,7 +167,6 @@ describe('Wallet', () => {
       Buffer.from(pubKey, 'hex'),
     );
 
-    expect(fetch).not.toHaveBeenCalled();
     expect(lgtm).toBeTruthy();
   });
 

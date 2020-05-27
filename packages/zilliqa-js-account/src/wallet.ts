@@ -20,6 +20,7 @@ import * as zcrypto from '@zilliqa-js/crypto';
 
 import { Account } from './account';
 import { Transaction } from './transaction';
+import BN from 'bn.js';
 
 export class Wallet extends Signer {
   accounts: { [address: string]: Account } = {};
@@ -228,15 +229,32 @@ export class Wallet extends Signer {
       );
     }
 
+    const signer = this.accounts[account];
+
+    const balance = await this.provider.send(
+      'GetBalance',
+      signer.address.replace('0x', '').toLowerCase(),
+    );
+
+    if (balance.result === undefined) {
+      throw new Error('Could not get balance');
+    }
+
+    const gasPrice = tx.txParams.gasPrice;
+    const gasLimit = new BN(tx.txParams.gasLimit.toString());
+    const debt = gasPrice.mul(gasLimit).add(tx.txParams.amount);
+    const bal = new BN(balance.result.balance);
+    if (debt.gt(bal)) {
+      throw new Error(
+        'You do not have enough funds, need ' +
+          debt.toString() +
+          ' but only have ' +
+          bal.toString(),
+      );
+    }
+
     try {
-      const signer = this.accounts[account];
-
       if (!tx.txParams.nonce) {
-        const balance = await this.provider.send(
-          'GetBalance',
-          signer.address.replace('0x', '').toLowerCase(),
-        );
-
         if (typeof balance.result.nonce !== 'number') {
           throw new Error('Could not get nonce');
         }
