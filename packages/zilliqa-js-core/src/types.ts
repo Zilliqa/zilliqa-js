@@ -185,11 +185,18 @@ export interface TransactionErrorObj {
 }
 
 export interface TransactionReceiptObj<TGas = string> {
-  errors: any;
-  success: boolean;
   cumulative_gas: TGas;
+  epoch_num: string;
   event_logs: EventLogEntry[];
+  exceptions: ExceptionEntry[];
+  success: boolean;
   transitions: TransitionEntry[];
+  errors: any;
+}
+
+export interface ExceptionEntry {
+  line: number;
+  message: string;
 }
 
 export interface EventLogEntry {
@@ -200,6 +207,7 @@ export interface EventLogEntry {
 
 export interface TransitionEntry {
   addr: string;
+  depth: number;
   msg: TransitionMsg;
 }
 
