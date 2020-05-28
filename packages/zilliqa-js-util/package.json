@@ -1,6 +1,6 @@
 {
   "name": "@zilliqa-js/util",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "description": "Utilities for working with Zilliqa.",
   "author": "Ian Tan (https://github.com/iantanwx)",
   "maintainers": [
