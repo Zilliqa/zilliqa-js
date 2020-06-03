@@ -88,7 +88,7 @@ describe('Transaction', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
-          balance: 888,
+          balance: '39999999000000000',
           nonce: 1,
         },
       },
@@ -140,7 +140,7 @@ describe('Transaction', () => {
           id: 1,
           jsonrpc: '2.0',
           result: {
-            balance: 888,
+            balance: '39999999000000000',
             nonce: 1,
           },
         }),
@@ -171,7 +171,7 @@ describe('Transaction', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
-          balance: 888,
+          balance: '39999999000000000',
           nonce: 1,
         },
       },
@@ -222,7 +222,7 @@ describe('Transaction', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
-          balance: 888,
+          balance: '39999999000000000',
           nonce: 1,
         },
       },
@@ -288,7 +288,7 @@ describe('Transaction', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
-          balance: 888,
+          balance: '39999999000000000',
           nonce: 1,
         },
       },
@@ -374,7 +374,7 @@ describe('Transaction', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
-          balance: 888,
+          balance: '39999999000000000',
           nonce: 1,
         },
       },

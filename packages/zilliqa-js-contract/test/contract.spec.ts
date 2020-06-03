@@ -55,7 +55,7 @@ describe('Contracts', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
-          balance: 888,
+          balance: '39999999000000000',
           nonce: 1,
         },
       },
@@ -117,7 +117,7 @@ describe('Contracts', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
-          balance: 888,
+          balance: '39999999000000000',
           nonce: 1,
         },
       },
@@ -174,7 +174,7 @@ describe('Contracts', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
-          balance: 888,
+          balance: '39999999000000000',
           nonce: 1,
         },
       },
@@ -233,7 +233,7 @@ describe('Contracts', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
-          balance: 888,
+          balance: '39999999000000000',
           nonce: 1,
         },
       },
@@ -280,7 +280,7 @@ describe('Contracts', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
-          balance: 888,
+          balance: '39999999000000000',
           nonce: 1,
         },
       },
@@ -313,7 +313,7 @@ describe('Contracts', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
-          balance: 888,
+          balance: '39999999000000000',
           nonce: 1,
         },
       },
@@ -360,7 +360,7 @@ describe('Contracts', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
-          balance: 888,
+          balance: '39999999000000000',
           nonce: 1,
         },
       },
@@ -417,7 +417,7 @@ describe('Contracts', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
-          balance: 888,
+          balance: '39999999000000000',
           nonce: 1,
         },
       },
@@ -445,7 +445,7 @@ describe('Contracts', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
-          balance: 888,
+          balance: '39999999000000000',
           nonce: 2,
         },
       },
@@ -519,7 +519,7 @@ describe('Contracts', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
-          balance: 888,
+          balance: '39999999000000000',
           nonce: 1,
         },
       },
@@ -547,7 +547,7 @@ describe('Contracts', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
-          balance: 888,
+          balance: '39999999000000000',
           nonce: 2,
         },
       },

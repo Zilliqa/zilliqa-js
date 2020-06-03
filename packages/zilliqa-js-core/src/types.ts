@@ -119,30 +119,35 @@ const enum TxBlockType {
 }
 
 export interface TxBlockHeader {
-  Type: TxBlockType;
-  Version: number;
+  BlockNum: string;
+  DSBlockNum: string;
   GasLimit: string;
   GasUsed: string;
-  Rewards: string;
-  PrevBlockHash: string;
-  BlockNum: string;
-  Timestamp: string;
-
-  TxnHash: string;
-  StateHash: string;
-  NumTxns: number;
-  NumMicroBlocks: number;
-
+  MbInfoHash: string;
   MinerPubKey: string;
-  DSBlockNum: string;
+  NumMicroBlocks: number;
+  NumTxns: number;
+  PrevBlockHash: string;
+  Rewards: string;
+  StateDeltaHash: string;
+  StateRootHash: string;
+  Timestamp: string;
+  Version: number;
+
+  Type: TxBlockType;
+}
+
+export interface MicroBlockInfoObj {
+  MicroBlockHash: string;
+  MicroBlockShardId: number;
+  MicroBlockTxnRootHash: string;
 }
 
 export interface TxBlockObj {
   body: {
-    // TODO: add Blockhash due to latest `GetTxBlock` api
+    BlockHash: string;
     HeaderSign: string;
-    MicroBlockEmpty: number[];
-    MicroBlockHashes: string[];
+    MicroBlockInfos: MicroBlockInfoObj[];
   };
   header: TxBlockHeader;
 }
@@ -180,11 +185,18 @@ export interface TransactionErrorObj {
 }
 
 export interface TransactionReceiptObj<TGas = string> {
-  errors: any;
-  success: boolean;
   cumulative_gas: TGas;
+  epoch_num: string;
   event_logs: EventLogEntry[];
+  exceptions: ExceptionEntry[];
+  success: boolean;
   transitions: TransitionEntry[];
+  errors: any;
+}
+
+export interface ExceptionEntry {
+  line: number;
+  message: string;
 }
 
 export interface EventLogEntry {
@@ -195,6 +207,7 @@ export interface EventLogEntry {
 
 export interface TransitionEntry {
   addr: string;
+  depth: number;
   msg: TransitionMsg;
 }
 
@@ -208,11 +221,30 @@ export interface TransitionMsg {
 export interface EventParam {
   vname: string;
   type: string;
-  value: string;
+  value: any;
+}
+
+export interface PendingTxns {
+  Txns: TransactionStatus[];
+}
+
+export interface TransactionStatus {
+  Status: number;
+  TxnHash: string;
 }
 
 export interface PendingTxnResult {
   code: number;
   confirmed: boolean;
   info: string;
+}
+
+export interface MinerInfo {
+  dscommittee: string[];
+  shards: ShardInfo[];
+}
+
+export interface ShardInfo {
+  nodes: string[];
+  size: number;
 }

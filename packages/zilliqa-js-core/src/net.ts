@@ -44,16 +44,19 @@ export const enum RPCMethod {
   GetPrevDifficulty = 'GetPrevDifficulty',
   GetPrevDSDifficulty = 'GetPrevDSDifficulty',
   GetTotalCoinSupply = 'GetTotalCoinSupply',
+  GetMinerInfo = 'GetMinerInfo',
 
   // Transaction-related methods
   CreateTransaction = 'CreateTransaction',
   GetTransaction = 'GetTransaction',
   GetRecentTransactions = 'GetRecentTransactions',
   GetTransactionsForTxBlock = 'GetTransactionsForTxBlock',
+  GetTxnBodiesForTxBlock = 'GetTxnBodiesForTxBlock',
   GetNumTxnsTxEpoch = 'GetNumTxnsTxEpoch',
   GetNumTxnsDSEpoch = 'GetNumTxnsDSEpoch',
   GetMinimumGasPrice = 'GetMinimumGasPrice',
   GetPendingTxn = 'GetPendingTxn',
+  GetPendingTxns = 'GetPendingTxns',
 
   // Contract-related methods
   GetSmartContracts = 'GetSmartContracts',

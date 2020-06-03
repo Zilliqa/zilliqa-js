@@ -23,12 +23,14 @@ import {
   DsBlockObj,
   GET_TX_ATTEMPTS,
   PendingTxnResult,
+  PendingTxns,
   Provider,
   RPCMethod,
   RPCResponse,
   ShardingStructure,
   sign,
   TransactionObj,
+  MinerInfo,
   TxBlockObj,
   TxList,
   ZilliqaModule,
@@ -264,6 +266,21 @@ export class Blockchain implements ZilliqaModule {
   }
 
   /**
+   * getMinerInfo
+   *
+   * Returns the mining nodes (i.e., the members of the DS committee and shards) at the specified DS block.
+   *
+   * Notes:
+   * 1. Nodes owned by Zilliqa Research are omitted.
+   * 2. dscommittee has no size field since the DS committee size is fixed for a given chain.
+   * 3. For the Zilliqa Mainnet, this API is only available from DS block 5500 onwards.
+   *
+   */
+  getMinerInfo(dsBlockNumber: string): Promise<RPCResponse<MinerInfo, any>> {
+    return this.provider.send(RPCMethod.GetMinerInfo, dsBlockNumber);
+  }
+
+  /**
    * createTransaction
    *
    * Creates a transaction and polls the lookup node for a transaction
@@ -403,6 +420,21 @@ export class Blockchain implements ZilliqaModule {
   }
 
   /**
+   * getTxnBodiesForTxBlock
+   *
+   * @param {number} txBlock
+   * @returns { romise<RPCResponse<TransactionObj[], string>>}
+   */
+  getTxnBodiesForTxBlock(
+    txBlock: number,
+  ): Promise<RPCResponse<TransactionObj[], string>> {
+    return this.provider.send(
+      RPCMethod.GetTxnBodiesForTxBlock,
+      txBlock.toString(),
+    );
+  }
+
+  /**
    * getNumTxnsTxEpoch
    *
    * Gets the number of transactions procesed for a given Tx Epoch.
@@ -447,6 +479,23 @@ export class Blockchain implements ZilliqaModule {
       RPCMethod.GetPendingTxn,
       txId.replace('0x', '').toLowerCase(),
     );
+  }
+
+  /**
+   * getPendingTxns
+   *
+   * Returns the pending status of all unvalidated Transactions.
+   *
+   * For each entry, the possible results are:
+   *
+   * confirmed	code	     info
+   * false	     0	  Txn not pending
+   * false	     1	  Nonce too high
+   * false	     2	  Could not fit in as microblock gas limit reached
+   * false	     3	  Transaction valid but consensus not reached
+   */
+  getPendingTxns(): Promise<RPCResponse<PendingTxns, any>> {
+    return this.provider.send(RPCMethod.GetPendingTxns);
   }
 
   /**
