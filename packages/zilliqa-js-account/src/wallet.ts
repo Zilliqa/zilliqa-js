@@ -133,6 +133,28 @@ export class Wallet extends Signer {
   }
 
   /**
+   * addByMnemonicLedger
+   *
+   * Adds an `Account` by use of a mnemonic as specified in BIP-32 and BIP-39
+   * The key derivation path used in Ledger is different from that of
+   * addByMnemonic.
+   *
+   * @param {string} phrase - 12-word mnemonic phrase
+   * @param {number} index=0 - the number of the child key to add
+   * @returns {string} - the corresponding address
+   */
+  addByMnemonicLedger(phrase: string, index: number = 0): string {
+    if (!this.isValidMnemonic(phrase)) {
+      throw new Error(`Invalid mnemonic phrase: ${phrase}`);
+    }
+    const seed = bip39.mnemonicToSeed(phrase);
+    const hdKey = hdkey.fromMasterSeed(seed);
+    const childKey = hdKey.derive(`m/44'/313'/${index}'/0'/0'`);
+    const privateKey = childKey.privateKey.toString('hex');
+    return this.addByPrivateKey(privateKey);
+  }
+
+  /**
    * export
    *
    * Exports the specified account as a keystore file.
