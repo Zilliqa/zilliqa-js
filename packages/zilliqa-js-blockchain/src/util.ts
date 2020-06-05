@@ -59,6 +59,7 @@ export function toTxParams(
     nonce: parseInt(nonce, 10),
     receipt: {
       ...receipt,
+      accepted: receipt.accepted,
       errors: msg,
       cumulative_gas: parseInt(receipt.cumulative_gas, 10),
     },

@@ -185,6 +185,7 @@ export interface TransactionErrorObj {
 }
 
 export interface TransactionReceiptObj<TGas = string> {
+  accepted: boolean;
   cumulative_gas: TGas;
   epoch_num: string;
   event_logs: EventLogEntry[];
