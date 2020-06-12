@@ -16,7 +16,7 @@
 import { BN, Long } from '@zilliqa-js/util';
 import { TransactionReceiptObj } from '@zilliqa-js/core';
 
-export const enum TxStatus {
+export enum TxStatus {
   Initialised,
   Pending,
   Confirmed,
@@ -55,7 +55,7 @@ export interface TxParams {
   signature?: string;
 }
 
-export const enum TxEventName {
+export enum TxEventName {
   Error = 'error',
   Receipt = 'receipt',
   Track = 'track',

@@ -16,7 +16,7 @@
 import { Omit } from 'utility-types';
 import { TxParams } from '@zilliqa-js/account';
 
-export const enum ContractStatus {
+export enum ContractStatus {
   Deployed,
   Rejected,
   Initialised,

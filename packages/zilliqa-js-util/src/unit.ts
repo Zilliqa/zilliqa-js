@@ -18,7 +18,7 @@
  */
 import BN from 'bn.js';
 
-export const enum Units {
+export enum Units {
   Zil = 'zil',
   Li = 'li',
   Qa = 'qa',

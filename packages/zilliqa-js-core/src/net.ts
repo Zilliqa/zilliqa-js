@@ -20,7 +20,7 @@ import { WithRequest } from './util';
 /**
  * blockchain-side.
  */
-export const enum RPCMethod {
+export enum RPCMethod {
   // Network-related methods
   GetNetworkId = 'GetNetworkId',
 
@@ -70,7 +70,7 @@ export const enum RPCMethod {
   GetBalance = 'GetBalance',
 }
 
-export const enum RPCErrorCode {
+export enum RPCErrorCode {
   // Standard JSON-RPC 2.0 errors
   // RPC_INVALID_REQUEST is internally mapped to HTTP_BAD_REQUEST (400).
   // It should not be used for application-layer errors.
