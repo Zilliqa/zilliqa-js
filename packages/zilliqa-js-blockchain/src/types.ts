@@ -26,6 +26,8 @@ export interface TransactionObj {
   gasPrice: string;
   gasLimit: string;
   signature: string;
+  code: string;
+  data: string;
   receipt: TransactionReceiptObj;
 }
 
