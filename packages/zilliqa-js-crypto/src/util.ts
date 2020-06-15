@@ -131,10 +131,11 @@ export const compressPublicKey = (publicKey: string): string => {
  * @returns {string}
  */
 export const getAddressFromPublicKey = (publicKey: string) => {
+  const normalized = publicKey.toLowerCase().replace('0x', '');
   return toChecksumAddress(
     hashjs
       .sha256()
-      .update(publicKey, 'hex')
+      .update(normalized, 'hex')
       .digest('hex')
       .slice(24),
   );
