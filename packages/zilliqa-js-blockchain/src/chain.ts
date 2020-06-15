@@ -36,8 +36,6 @@ import {
   ZilliqaModule,
 } from '@zilliqa-js/core';
 
-import { Omit } from 'utility-types';
-
 import { toTxParams } from './util';
 
 export class Blockchain implements ZilliqaModule {
@@ -592,11 +590,9 @@ export class Blockchain implements ZilliqaModule {
    * getSmartContracts
    *
    * @param {string} address
-   * @returns {Promise<RPCResponse<Omit<ContractObj, 'init' | 'abi'>, string>>}
+   * @returns {Promise<RPCResponse<ContractObj[], string>>}
    */
-  getSmartContracts(
-    addr: string,
-  ): Promise<RPCResponse<Omit<ContractObj, 'init' | 'abi'>, string>> {
+  getSmartContracts(addr: string): Promise<RPCResponse<ContractObj[], string>> {
     const address = validation.isBech32(addr) ? fromBech32Address(addr) : addr;
     return this.provider.send(
       RPCMethod.GetSmartContracts,
