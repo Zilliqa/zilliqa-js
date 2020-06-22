@@ -1,6 +1,6 @@
 {
   "name": "@zilliqa-js/zilliqa",
-  "version": "0.10.1",
+  "version": "0.11.0",
   "description": "Main entry point to the Zilliqa JS client.",
   "author": "Ian Tan (https://github.com/iantanwx)",
   "maintainers": [
@@ -22,13 +22,13 @@
     "clean": "rimraf ./dist"
   },
   "dependencies": {
-    "@zilliqa-js/account": "0.10.1",
-    "@zilliqa-js/blockchain": "0.10.1",
-    "@zilliqa-js/contract": "0.10.1",
-    "@zilliqa-js/core": "0.10.1",
-    "@zilliqa-js/crypto": "0.10.1",
-    "@zilliqa-js/subscriptions": "0.10.1",
-    "@zilliqa-js/util": "0.10.1"
+    "@zilliqa-js/account": "0.11.0",
+    "@zilliqa-js/blockchain": "0.11.0",
+    "@zilliqa-js/contract": "0.11.0",
+    "@zilliqa-js/core": "0.11.0",
+    "@zilliqa-js/crypto": "0.11.0",
+    "@zilliqa-js/subscriptions": "0.11.0",
+    "@zilliqa-js/util": "0.11.0"
   },
   "engines": {
     "node": ">=10.0.0 <13"
