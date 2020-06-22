@@ -57,6 +57,8 @@ export function toTxParams(
     gasLimit: Long.fromString(gasLimit, 10),
     amount: new BN(amount),
     nonce: parseInt(nonce, 10),
+    code,
+    data,
     receipt: {
       ...receipt,
       accepted: receipt.accepted,
