@@ -390,4 +390,4 @@ are pointed to the `umd` bundle, and bundlers are pointed to `esm`.
 
 ## Licence 
 
-You can view our [licence here](https://github.com/Zilliqa/zilliqa/blob/master/LICENSE).
+You can view our [licence here](LICENSE).
