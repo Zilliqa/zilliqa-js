@@ -27,6 +27,7 @@ want to use it for.
 | [`@zilliqa-js/crypto`](./packages/zilliqa-js-crypto)     | Exposes several loosely-coupled cryptographic convenience functions for working with the Zilliqa blockchain and its cryptographic primitives, such as Schnorr signatures. | `@zilliqa-js/util`                                                                      |
 | [`@zilliqa-js/proto`](./packages/zilliqa-js-proto)      | Protobuf source files and corresponding generated JS modules.                                                                                                             | none                                                                                    |
 | [`@zilliqa-js/util`](./packages/zilliqa-js-util)       | Miscellaneous functions that take care of serialisation/deserialisation and validation.                                                                                   | none                                                                                    |
+| [`@zilliqa-js/viewblock`](https://github.com/Ashlar/zilliqa-js-viewblock)       | Library interfacing with ViewBlock's APIs                                                                                   | `@zilliqa-js/crypto`                                                                                    |
 
 ## Installation
 
