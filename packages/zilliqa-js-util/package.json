@@ -4,7 +4,7 @@
   "description": "Utilities for working with Zilliqa.",
   "author": "Ian Tan (https://github.com/iantanwx)",
   "maintainers": [
-    "Edison Lim <edison.limjh@gmail.com> (https://github.com/edisonljh)"
+    "Zilliqa Usability Team <maintainer@zilliqa.com> (https://github.com/zilliqa/)"
   ],
   "bugs": {
     "url": "https://github.com/Zilliqa/Zilliqa-JavaScript-Library/issues"
