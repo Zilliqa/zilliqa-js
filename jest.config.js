@@ -50,6 +50,7 @@ const config = {
     'jest-watch-typeahead/filename',
     'jest-watch-typeahead/testname',
   ],
+  modulePathIgnorePatterns: ['packages/zilliqa-js-viewblock'],
 };
 
 module.exports = config;
