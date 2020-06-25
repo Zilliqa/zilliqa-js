@@ -44,7 +44,8 @@ async function bundle() {
   try {
     const outputs = process.argv.slice(2)[0].split(',');
     const packages = project.packages.filter(
-      ({ name }) => name !== 'zilliqa-js-proto',
+      ({ name }) =>
+        name !== 'zilliqa-js-proto' && name !== 'zilliqa-js-viewblock',
     );
 
     const count = packages.length;
