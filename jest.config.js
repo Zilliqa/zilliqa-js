@@ -43,6 +43,7 @@ const config = {
   collectCoverageFrom: [
     '<rootDir>/packages/*/src/**/*.{ts,js}',
     '!**/node_modules/**',
+    '!<rootDir>/packages/zilliqa-js-viewblock/**',
   ],
   setupFiles: ['<rootDir>/jest-setup.js'],
   setupTestFrameworkScriptFile: '<rootDir>/jest-framework-setup.js',
