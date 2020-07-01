@@ -20,9 +20,10 @@ import { GET_TX_ATTEMPTS, Provider, RPCMethod, sign } from '@zilliqa-js/core';
 import {
   isValidChecksumAddress,
   normaliseAddress,
+  toBech32Address,
   toChecksumAddress,
 } from '@zilliqa-js/crypto';
-import { BN } from '@zilliqa-js/util';
+import { BN, validation } from '@zilliqa-js/util';
 
 import { Contracts } from './factory';
 import {
@@ -59,6 +60,7 @@ export class Contract {
     address?: string,
     init?: any,
     state?: any,
+    checkAddr: boolean = false,
   ) {
     this.factory = factory;
     this.provider = factory.provider;
@@ -66,7 +68,17 @@ export class Contract {
     // assume that we are accessing an existing contract
     if (address) {
       this.abi = abi;
-      this.address = normaliseAddress(address);
+      if (checkAddr) {
+        this.address = normaliseAddress(address);
+      } else {
+        // tslint:disable-next-line:prefer-conditional-expression
+        if (!validation.isBech32(address)) {
+          this.address = toBech32Address(address);
+        } else {
+          this.address = address;
+        }
+        console.log('addr = ', this.address);
+      }
       this.init = init;
       this.state = state;
       this.status = ContractStatus.Deployed;
@@ -146,6 +158,8 @@ export class Contract {
       RPCMethod.CreateTransaction,
       { ...tx.txParams, priority: tx.toDS },
     );
+
+    console.log(response);
 
     if (response.error || !response.result) {
       this.address = undefined;
