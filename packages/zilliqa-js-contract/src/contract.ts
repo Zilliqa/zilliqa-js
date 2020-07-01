@@ -159,8 +159,6 @@ export class Contract {
       { ...tx.txParams, priority: tx.toDS },
     );
 
-    console.log(response);
-
     if (response.error || !response.result) {
       this.address = undefined;
       this.error = response.error;
