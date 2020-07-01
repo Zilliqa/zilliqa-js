@@ -18,9 +18,9 @@
 import { Transaction, TxStatus, Wallet } from '@zilliqa-js/account';
 import { GET_TX_ATTEMPTS, Provider, RPCMethod, sign } from '@zilliqa-js/core';
 import {
+  fromBech32Address,
   isValidChecksumAddress,
   normaliseAddress,
-  toBech32Address,
   toChecksumAddress,
 } from '@zilliqa-js/crypto';
 import { BN, validation } from '@zilliqa-js/util';
@@ -71,13 +71,13 @@ export class Contract {
       if (checkAddr) {
         this.address = normaliseAddress(address);
       } else {
-        // tslint:disable-next-line:prefer-conditional-expression
-        if (!validation.isBech32(address)) {
-          this.address = toBech32Address(address);
-        } else {
+        if (validation.isBech32(address)) {
+          this.address = fromBech32Address(address);
+        } else if (isValidChecksumAddress(address)) {
           this.address = address;
+        } else {
+          this.address = toChecksumAddress(address);
         }
-        console.log('addr = ', this.address);
       }
       this.init = init;
       this.state = state;
