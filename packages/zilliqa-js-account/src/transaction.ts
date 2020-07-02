@@ -24,7 +24,11 @@ import {
   Signable,
   TxBlockObj,
 } from '@zilliqa-js/core';
-import { getAddressFromPublicKey, normaliseAddress } from '@zilliqa-js/crypto';
+import {
+  getAddressFromPublicKey,
+  normaliseAddress,
+  toChecksumAddress,
+} from '@zilliqa-js/crypto';
 import { BN, Long } from '@zilliqa-js/util';
 
 import {
@@ -136,10 +140,13 @@ export class Transaction implements Signable {
     provider: Provider,
     status: TxStatus = TxStatus.Initialised,
     toDS: boolean = false,
+    enableSecureToAddress: boolean = true,
   ) {
     // private members
     this.version = params.version;
-    this.toAddr = normaliseAddress(params.toAddr);
+    this.toAddr = enableSecureToAddress
+      ? normaliseAddress(params.toAddr)
+      : toChecksumAddress(params.toAddr);
     this.nonce = params.nonce;
     this.pubKey = params.pubKey;
     this.amount = params.amount;
