@@ -78,7 +78,6 @@ describe('Module: Blockchain', () => {
     fetch.mockResponses(...responses);
 
     const { txParams } = await blockchain.createTransaction(tx);
-    console.log('tx param = ', txParams);
 
     expect(txParams).toHaveProperty('signature');
     expect(txParams).toHaveProperty('pubKey');

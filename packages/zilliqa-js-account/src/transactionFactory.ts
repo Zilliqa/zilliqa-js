@@ -35,8 +35,18 @@ export class TransactionFactory implements ZilliqaModule {
     this.signer = signer;
   }
 
-  new(txParams: TxParams, toDs: boolean = false) {
-    return new Transaction(txParams, this.provider, TxStatus.Initialised, toDs);
+  new(
+    txParams: TxParams,
+    toDs: boolean = false,
+    enableSecureAddress: boolean = true,
+  ) {
+    return new Transaction(
+      txParams,
+      this.provider,
+      TxStatus.Initialised,
+      toDs,
+      enableSecureAddress,
+    );
   }
 
   /**

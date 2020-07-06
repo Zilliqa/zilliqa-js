@@ -630,9 +630,9 @@ describe('Contracts', () => {
     expect(callTx.isPending()).toBeTruthy();
   });
 
-  it('should normalise addresses to base16 checksum', () => {
+  it('should accept base16 address', () => {
     const contractAt = contractFactory.at(
-      'zil1az5e0c6e4s4pazgahhmlca2cvgamp6kjtaxf4q',
+      '0xE8A997e359AC2A1e891dBDf7fc7558623bB0eaD2'.toLocaleLowerCase(),
     );
     expect(isValidChecksumAddress(contractAt.address!)).toBe(true);
   });
@@ -642,7 +642,7 @@ describe('Contracts', () => {
     const b16 = fromBech32Address(b32)
       .replace('0x', '')
       .toLowerCase();
-    const contractAt = contractFactory.at(b32);
+    const contractAt = contractFactory.atBech32(b32);
 
     const sendMock = jest.fn().mockResolvedValue({ result: 'mock' });
 

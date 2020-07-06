@@ -18,11 +18,12 @@
 import { Transaction, TxStatus, Wallet } from '@zilliqa-js/account';
 import { GET_TX_ATTEMPTS, Provider, RPCMethod, sign } from '@zilliqa-js/core';
 import {
+  fromBech32Address,
   isValidChecksumAddress,
   normaliseAddress,
   toChecksumAddress,
 } from '@zilliqa-js/crypto';
-import { BN } from '@zilliqa-js/util';
+import { BN, validation } from '@zilliqa-js/util';
 
 import { Contracts } from './factory';
 import {
@@ -59,6 +60,7 @@ export class Contract {
     address?: string,
     init?: any,
     state?: any,
+    checkAddr: boolean = false,
   ) {
     this.factory = factory;
     this.provider = factory.provider;
@@ -66,7 +68,17 @@ export class Contract {
     // assume that we are accessing an existing contract
     if (address) {
       this.abi = abi;
-      this.address = normaliseAddress(address);
+      if (checkAddr) {
+        this.address = normaliseAddress(address);
+      } else {
+        if (validation.isBech32(address)) {
+          this.address = fromBech32Address(address);
+        } else if (isValidChecksumAddress(address)) {
+          this.address = address;
+        } else {
+          this.address = toChecksumAddress(address);
+        }
+      }
       this.init = init;
       this.state = state;
       this.status = ContractStatus.Deployed;

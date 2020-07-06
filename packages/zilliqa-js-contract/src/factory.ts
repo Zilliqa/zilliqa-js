@@ -78,6 +78,16 @@ export class Contracts implements ZilliqaModule {
     return new Contract(this, code, abi, address, init, state);
   }
 
+  atBech32(
+    address: string,
+    abi?: ABI,
+    code?: string,
+    init?: Init,
+    state?: State,
+  ): Contract {
+    return new Contract(this, code, abi, address, init, state, true);
+  }
+
   new(code: string, init: Init, abi?: ABI): Contract {
     return new Contract(this, code, abi, undefined, init);
   }
