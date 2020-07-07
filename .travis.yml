@@ -4,12 +4,18 @@ jobs:
   include:
     - os: linux
       dist: xenial
+      node_js:
+        - 10
+        - 12
     - os: linux
       dist: bionic
+      node_js:
+        - 10
+        - 12
     - os: osx
-node_js:
-  - 10
-  - 12
+      node_js:
+        - 10
+        - 12
 branches:
   except:
   - /^v[0-9]/
