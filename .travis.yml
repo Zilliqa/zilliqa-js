@@ -1,11 +1,12 @@
 language: node_js
 sudo: true
-os:
-  - linux
-  - osx
-dist:
-  - xenial
-  - bionic
+jobs:
+  include:
+    - os: linux
+      dist: xenial
+    - os: linux
+      dist: bionic
+    - os: osx
 node_js:
   - 10
   - 12
