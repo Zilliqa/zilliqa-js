@@ -3,6 +3,7 @@ sudo: true
 dist: trusty
 node_js:
   - 10
+  - 12
 branches:
   except:
   - /^v[0-9]/
