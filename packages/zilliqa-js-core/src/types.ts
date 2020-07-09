@@ -232,8 +232,9 @@ export interface PendingTxns {
 }
 
 export interface TransactionStatus {
-  Status: number;
+  code: number;
   TxnHash: string;
+  info: string;
 }
 
 export interface PendingTxnResult {

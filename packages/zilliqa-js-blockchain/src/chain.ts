@@ -25,6 +25,7 @@ import {
   DsBlockObj,
   GET_TX_ATTEMPTS,
   PendingTxnResult,
+  TransactionStatus,
   PendingTxns,
   Provider,
   RPCMethod,
@@ -522,16 +523,24 @@ export class Blockchain implements ZilliqaModule {
    *
    * Returns the pending status of all unvalidated Transactions.
    *
-   * For each entry, the possible results are:
-   *
-   * confirmed	code	     info
-   * false	     0	  Txn not pending
-   * false	     1	  Nonce too high
-   * false	     2	  Could not fit in as microblock gas limit reached
-   * false	     3	  Transaction valid but consensus not reached
    */
-  getPendingTxns(): Promise<RPCResponse<PendingTxns, any>> {
-    return this.provider.send(RPCMethod.GetPendingTxns);
+  async getPendingTxns(): Promise<PendingTxns> {
+    try {
+      const response = await this.provider.send(RPCMethod.GetPendingTxns);
+      if (response.error) {
+        return Promise.reject(response.error);
+      }
+
+      if (response.result.length > 0) {
+        response.result.forEach((tnx: TransactionStatus) => {
+          tnx.info = this.pendingErrorMap[tnx.code];
+        });
+      }
+
+      return response.result;
+    } catch (err) {
+      throw err;
+    }
   }
 
   /**
