@@ -16,7 +16,6 @@
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import { decodeBase58, encodeBase58, normalizePrivateKey } from '../src/util';
-import { randomBytes } from '../src/random';
 import testCases from './b58.fixtures.json';
 
 describe('crypto utils', () => {
@@ -35,7 +34,7 @@ describe('crypto utils', () => {
   });
 
   it('should encode and decode to the same strings', () => {
-    const b16 = randomBytes(20);
+    const b16 = 'fa629547ab288cdd7f726fc0610abe944c982a1d';
     const b58 = encodeBase58(b16);
     expect(decodeBase58(b58)).toEqual(b16);
   });

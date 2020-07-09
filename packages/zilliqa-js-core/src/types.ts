@@ -115,7 +115,7 @@ export interface BlockList {
   maxPages: number;
 }
 
-const enum TxBlockType {
+enum TxBlockType {
   MICRO,
   FINAL,
 }
@@ -209,6 +209,7 @@ export interface EventLogEntry {
 }
 
 export interface TransitionEntry {
+  accepted: boolean;
   addr: string;
   depth: number;
   msg: TransitionMsg;
@@ -232,8 +233,9 @@ export interface PendingTxns {
 }
 
 export interface TransactionStatus {
-  Status: number;
+  code: number;
   TxnHash: string;
+  info: string;
 }
 
 export interface PendingTxnResult {

@@ -25,6 +25,7 @@ import {
   DsBlockObj,
   GET_TX_ATTEMPTS,
   PendingTxnResult,
+  TransactionStatus,
   PendingTxns,
   Provider,
   RPCMethod,
@@ -43,6 +44,30 @@ import { toTxParams } from './util';
 export class Blockchain implements ZilliqaModule {
   signer: Wallet;
   provider: Provider;
+  pendingErrorMap: { [key: number]: string } = {
+    0: 'Txn was already processed and confirmed',
+    1: 'Pending - nonce too high',
+    2: 'Pending - blk gas limit exceeded',
+    3: 'Pending - consensus failure',
+    4: 'Error - txn not found',
+    10: 'Dropped - math error',
+    11: 'Dropped - scilla invocation error',
+    12: 'Dropped - account init error',
+    13: 'Dropped - invalid source account',
+    14: 'Dropped - gas limit too high',
+    15: 'Dropped - txn type unknown',
+    16: 'Dropped - txn in wrong shard',
+    17: 'Dropped - account in wrong shard',
+    18: 'Dropped - code size too large',
+    19: 'Dropped - txn verification error',
+    20: 'Dropped - gas limit too low',
+    21: 'Dropped - insuff balance',
+    22: 'Dropped - insuff gas for checker',
+    23: 'Dropped - duplicate txn found',
+    24: 'Dropped - txn w/ higher gas found',
+    25: 'Dropped - invalid dest account',
+    26: 'Dropped - state addition error',
+  };
 
   constructor(provider: Provider, signer: Wallet) {
     this.provider = provider;
@@ -474,11 +499,23 @@ export class Blockchain implements ZilliqaModule {
    * See the pending status of transaction
    * @param txId
    */
-  getPendingTxn(txId: string): Promise<RPCResponse<PendingTxnResult, string>> {
-    return this.provider.send(
-      RPCMethod.GetPendingTxn,
-      txId.replace('0x', '').toLowerCase(),
-    );
+  async getPendingTxn(txId: string): Promise<PendingTxnResult> {
+    try {
+      const response = await this.provider.send(
+        RPCMethod.GetPendingTxn,
+        txId.replace('0x', '').toLowerCase(),
+      );
+
+      if (response.error) {
+        return Promise.reject(response.error);
+      }
+
+      response.result.info = this.pendingErrorMap[response.result.code];
+
+      return response.result;
+    } catch (err) {
+      throw err;
+    }
   }
 
   /**
@@ -486,16 +523,24 @@ export class Blockchain implements ZilliqaModule {
    *
    * Returns the pending status of all unvalidated Transactions.
    *
-   * For each entry, the possible results are:
-   *
-   * confirmed	code	     info
-   * false	     0	  Txn not pending
-   * false	     1	  Nonce too high
-   * false	     2	  Could not fit in as microblock gas limit reached
-   * false	     3	  Transaction valid but consensus not reached
    */
-  getPendingTxns(): Promise<RPCResponse<PendingTxns, any>> {
-    return this.provider.send(RPCMethod.GetPendingTxns);
+  async getPendingTxns(): Promise<PendingTxns> {
+    try {
+      const response = await this.provider.send(RPCMethod.GetPendingTxns);
+      if (response.error) {
+        return Promise.reject(response.error);
+      }
+
+      if (response.result.Txns.length) {
+        response.result.Txns.forEach((txn: TransactionStatus) => {
+          txn.info = this.pendingErrorMap[txn.code];
+        });
+      }
+
+      return response.result;
+    } catch (err) {
+      throw err;
+    }
   }
 
   /**

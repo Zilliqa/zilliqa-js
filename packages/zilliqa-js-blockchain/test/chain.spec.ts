@@ -292,7 +292,7 @@ describe('Module: Blockchain', () => {
         result: {
           Txns: [
             {
-              Status: 1,
+              code: 1,
               TxnHash:
                 'ec5ef8110a285563d0104269081aa77820058067091a9b3f3ae70f38b94abda3',
             },
@@ -303,13 +303,14 @@ describe('Module: Blockchain', () => {
 
     fetch.mockResponses(...responses);
     const result = await blockchain.getPendingTxns();
-    expect(result.result).toBeDefined();
+    expect(result.Txns).toBeDefined();
     // @ts-ignore
-    expect(result.result.Txns).toEqual([
+    expect(result.Txns).toEqual([
       {
-        Status: 1,
+        code: 1,
         TxnHash:
           'ec5ef8110a285563d0104269081aa77820058067091a9b3f3ae70f38b94abda3',
+        info: 'Pending - nonce too high',
       },
     ]);
   });
