@@ -218,6 +218,7 @@ export const normaliseAddress = (address: string): string => {
 /**
  * encodeBase58
  *
+ * @deprecated since version 1.0.0
  * @param {string} hex - base 16 encoded string
  * @returns {string} - big endian base 58 encoded string
  */
@@ -253,6 +254,7 @@ export const encodeBase58 = (hex: string): string => {
 /**
  * decodeBase58
  *
+ * @deprecated since version 1.0.0
  * @param {string} raw - base 58 string
  * @returns {string} - big endian base 16 string
  */
