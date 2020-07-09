@@ -532,8 +532,8 @@ export class Blockchain implements ZilliqaModule {
       }
 
       if (response.result.Txns.length) {
-        response.result.Txns.forEach((tnx: TransactionStatus) => {
-          tnx.info = this.pendingErrorMap[tnx.code];
+        response.result.Txns.forEach((txn: TransactionStatus) => {
+          txn.info = this.pendingErrorMap[txn.code];
         });
       }
 
