@@ -285,12 +285,7 @@ export const decodeBase58 = (raw: string): string => {
   }
 
   let res = leader + n.toString('hex');
-
-  // handle corner case node12
-  if (res.length % 2 !== 0 && res.length > 40) {
-    res = res.substring(1);
-  }
-  if (res.length % 2 !== 0 && res.length < 40) {
+  if (res.length % 2 !== 0) {
     res = '0' + res;
   }
 
