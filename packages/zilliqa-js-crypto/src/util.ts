@@ -216,7 +216,7 @@ export const normaliseAddress = (address: string): string => {
 };
 
 /**
- * encodeBase58
+ * encodeBase58 -the function currently not in use, so we will deprecate it
  *
  * @deprecated since version 1.0.0
  * @param {string} hex - base 16 encoded string
@@ -252,7 +252,7 @@ export const encodeBase58 = (hex: string): string => {
 };
 
 /**
- * decodeBase58
+ * decodeBase58 - the function currently not in use, so we will deprecate it
  *
  * @deprecated since version 1.0.0
  * @param {string} raw - base 58 string
