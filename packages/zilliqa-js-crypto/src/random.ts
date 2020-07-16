@@ -34,7 +34,13 @@ export const randomBytes = (bytes: number) => {
   ) {
     randBz = window.crypto.getRandomValues(new Uint8Array(bytes));
   } else if (typeof require !== 'undefined') {
-    randBz = require('crypto').randomBytes(bytes);
+    const b = Buffer.allocUnsafe(bytes);
+    require('sodium').api.randombytes_buf(b, bytes);
+    randBz = new Uint8Array(
+      b.buffer,
+      b.byteOffset,
+      b.byteLength / Uint8Array.BYTES_PER_ELEMENT,
+    );
   } else {
     throw new Error('Unable to generate safe random numbers.');
   }
