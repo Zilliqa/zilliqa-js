@@ -93,6 +93,10 @@ export class Transaction implements Signable {
   private receipt?: TxReceipt;
   private signature?: string;
 
+  /**
+   * to get hash or transaction id of this transaction
+   * this can be identical returned by zilliqa network while calling CreateTransaction
+   */
   get hash(): string {
     const payload = this.bytes.toString('hex');
     return hashjs
