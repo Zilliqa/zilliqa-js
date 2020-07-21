@@ -385,6 +385,29 @@ describe('Transaction', () => {
     expect(state.receipt).toEqual({ success: true, cumulative_gas: 1000 });
     expect(confirmed.blockConfirmation).toEqual(1);
   });
+
+  it('should get hash without sending to network', async () => {
+    const tx = new Transaction(
+      {
+        version: 21823489,
+        nonce: 41,
+        toAddr: 'zil124sjf3g7jnxua7wnx4egu0vcnm4nzlef5zcdu3',
+        amount: new BN(100000000),
+        pubKey:
+          '026c7f3b8ac6f615c00c34186cbe4253a2c5acdc524b1cfae544c629d8e3564cfc',
+        gasPrice: new BN(1000000000),
+        gasLimit: Long.fromNumber(1),
+        signature:
+          '8bb3404b033b780421ae5d31b9e130161e58e750ca052ab07d9f71924d0353d525353ef6217b4c56303c7434245110c0e0faa578c6d993c2b91b5c8574b79cf7',
+      },
+      provider,
+    );
+
+    expect(tx.hash).toEqual(
+      'f0f1cefeed3e6124e80eadc668908a89fb45d130c90619004589b1c726fb178f',
+    );
+  });
+
   it('should use block confirm to reject a txn', async () => {
     const responses = [
       {

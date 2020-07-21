@@ -40,6 +40,8 @@ import {
 } from './types';
 import { encodeTransactionProto, sleep } from './util';
 
+import hashjs from 'hash.js';
+
 /**
  * Transaction
  *
@@ -90,6 +92,18 @@ export class Transaction implements Signable {
   private data: string = '';
   private receipt?: TxReceipt;
   private signature?: string;
+
+  /**
+   * to get hash or transaction id of this transaction
+   * this can be identical returned by zilliqa network while calling CreateTransaction
+   */
+  get hash(): string {
+    const payload = this.bytes.toString('hex');
+    return hashjs
+      .sha256()
+      .update(payload, 'hex')
+      .digest('hex');
+  }
 
   get bytes(): Buffer {
     return encodeTransactionProto(this.txParams);
@@ -231,7 +245,6 @@ export class Transaction implements Signable {
   observed(): EventEmitter<Transaction> {
     return this.eventEmitter;
   }
-
   /**
    * blockConfirm
    *
