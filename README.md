@@ -29,6 +29,23 @@ want to use it for.
 | [`@zilliqa-js/util`](./packages/zilliqa-js-util)       | Miscellaneous functions that take care of serialisation/deserialisation and validation.                                                                                   | none                                                                                    |
 | [`@zilliqa-js/viewblock`](https://github.com/Ashlar/zilliqa-js-viewblock)       | Library interfacing with ViewBlock's APIs                                                                                   | `@zilliqa-js/crypto`                                                                                    |
 
+
+## Pre-Requisite (Windows Users)
+
+`zilliqa-js` uses [`scrypt`](https://www.npmjs.com/package/scrypt) library which depends on `node-gyp` in order to compile the binaries from source on Windows. 
+`node-gyp` on Windows requires users to install additional Visual Studio Build tools.
+
+To install the required Visual Studio Build tools:
+
+```shell
+npm install --global --production windows-build-tools # from an elevated PowerShell or CMD.exe as Administrator
+
+npm config set msvs_version 2015 # 2015 is more compatible; though 2017 may work too
+```
+
+Refer to https://github.com/nodejs/node-gyp#installation for more information about `node-gyp` installation on Windows.
+
+
 ## Installation
 
 It is recommended that developers install the JavaScript client by making use
