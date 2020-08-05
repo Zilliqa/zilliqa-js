@@ -35,7 +35,8 @@ export const randomBytes = (bytes: number) => {
     randBz = window.crypto.getRandomValues(new Uint8Array(bytes));
   } else if (typeof require !== 'undefined') {
     const b = Buffer.allocUnsafe(bytes);
-    require('sodium').api.randombytes_buf(b, bytes);
+    const sodium = require('sodium-native');
+    sodium.randombytes_buf(b);
     randBz = new Uint8Array(
       b.buffer,
       b.byteOffset,
