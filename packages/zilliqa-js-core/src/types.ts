@@ -134,6 +134,7 @@ export interface TxBlockHeader {
   StateDeltaHash: string;
   StateRootHash: string;
   Timestamp: string;
+  TxnFees: string;
   Version: number;
 
   Type: TxBlockType;
@@ -241,7 +242,7 @@ export interface TransactionStatus {
 export interface PendingTxnResult {
   code: number;
   confirmed: boolean;
-  info: string;
+  pending: boolean;
 }
 
 export interface MinerInfo {
