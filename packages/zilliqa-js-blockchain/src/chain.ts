@@ -45,11 +45,10 @@ export class Blockchain implements ZilliqaModule {
   signer: Wallet;
   provider: Provider;
   pendingErrorMap: { [key: number]: string } = {
-    0: 'Txn was already processed and confirmed',
+    0: 'Not Present - Txn was already processed and confirmed or Txn does not exist',
     1: 'Pending - nonce too high',
     2: 'Pending - blk gas limit exceeded',
     3: 'Pending - consensus failure',
-    4: 'Error - txn not found',
     10: 'Dropped - math error',
     11: 'Dropped - scilla invocation error',
     12: 'Dropped - account init error',
@@ -67,6 +66,8 @@ export class Blockchain implements ZilliqaModule {
     24: 'Dropped - txn w/ higher gas found',
     25: 'Dropped - invalid dest account',
     26: 'Dropped - state addition error',
+    27: 'Dropped - Txn has lower nonce than expected',
+    255: 'Error - Internal database error',
   };
 
   constructor(provider: Provider, signer: Wallet) {
