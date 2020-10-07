@@ -38,7 +38,7 @@ Retrieves the public key of the given hex-encoded private key.
 
 **Returns**
 
-`string` - 20-byte hex-encoded address.
+`string` - 33-byte hex-encoded public key.
 
 
 ### `getAddressFromPrivateKey(privateKey: string): string`
