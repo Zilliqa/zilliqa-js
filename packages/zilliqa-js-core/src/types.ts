@@ -105,6 +105,7 @@ export interface TransactionStatusObj {
   success: boolean;
   toAddr: string;
   version: string;
+  statusMessage: string;
 }
 
 export interface StatusID {
