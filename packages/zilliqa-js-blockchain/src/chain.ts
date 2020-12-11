@@ -25,6 +25,7 @@ import {
   DsBlockObj,
   GET_TX_ATTEMPTS,
   PendingTxnResult,
+  TransactionStatusObj,
   TransactionStatus,
   PendingTxns,
   Provider,
@@ -412,6 +413,21 @@ export class Blockchain implements ZilliqaModule {
       return response.result.receipt.success
         ? Transaction.confirm(toTxParams(response), this.provider)
         : Transaction.reject(toTxParams(response), this.provider);
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async getTransactionStatus(txHash: string): Promise<TransactionStatusObj> {
+    try {
+      const response = await this.provider.send<TransactionStatusObj>(
+        RPCMethod.GetTransactionStatus,
+        txHash,
+      );
+      if (response.error) {
+        return Promise.reject(response.error);
+      }
+      return response.result;
     } catch (err) {
       throw err;
     }

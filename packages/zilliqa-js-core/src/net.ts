@@ -51,6 +51,7 @@ export enum RPCMethod {
   // Transaction-related methods
   CreateTransaction = 'CreateTransaction',
   GetTransaction = 'GetTransaction',
+  GetTransactionStatus = 'GetTransactionStatus',
   GetRecentTransactions = 'GetRecentTransactions',
   GetTransactionsForTxBlock = 'GetTransactionsForTxBlock',
   GetTxnBodiesForTxBlock = 'GetTxnBodiesForTxBlock',
