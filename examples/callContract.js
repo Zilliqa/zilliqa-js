@@ -88,6 +88,7 @@ async function testBlockchain() {
       false,
     );
 
+    console.log(callTx.bytes);
     // check the pending status
     const pendingStatus = await zilliqa.blockchain.getPendingTxn(callTx.id);
     console.log(`Pending status is: `);

@@ -1,4 +1,4 @@
-//  Copyright (C) 2018 Zilliqa
+//  Copyright (C) 2020 Zilliqa
 //
 //  This file is part of Zilliqa-Javascript-Library.
 //
