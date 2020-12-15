@@ -88,6 +88,30 @@ export interface TransactionObj {
   receipt: TransactionReceiptObj;
 }
 
+export interface TransactionStatusObj {
+  ID: string;
+  _id: StatusID;
+  amount: string;
+  epochInserted: string;
+  epochUpdated: string;
+  gasLimit: string;
+  gasPrice: string;
+  lastModified: string;
+  modificationState: number;
+  nonce: string;
+  senderAddr: string;
+  signature: string;
+  status: number;
+  success: boolean;
+  toAddr: string;
+  version: string;
+  statusMessage: string;
+}
+
+export interface StatusID {
+  $oid: string;
+}
+
 export interface DsBlockHeader {
   BlockNum: string;
   Difficulty: number;

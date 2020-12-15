@@ -284,6 +284,30 @@ describe('Module: Blockchain', () => {
     expect(result.result[0].ID).toEqual('some_hash');
   });
 
+  it('should receive transaction status with confirmed', async () => {
+    const responses = [
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          ID:
+            '96ba63371a57c9d4d7cbf448dbdd78d209c888a76a30413abd72691c16efffbb',
+          gasLimit: '1',
+          gasPrice: '2000000000',
+          modificationState: 2,
+          status: 3,
+        },
+      },
+    ].map((res) => [JSON.stringify(res)] as [string]);
+
+    fetch.mockResponses(...responses);
+
+    const result = await blockchain.getTransactionStatus(
+      '96ba63371a57c9d4d7cbf448dbdd78d209c888a76a30413abd72691c16efffbb',
+    );
+    expect(result.statusMessage).toEqual('Confirmed');
+  });
+
   it('should receive pending transaction list', async () => {
     const responses = [
       {

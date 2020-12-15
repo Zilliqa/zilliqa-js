@@ -25,6 +25,7 @@ import {
   DsBlockObj,
   GET_TX_ATTEMPTS,
   PendingTxnResult,
+  TransactionStatusObj,
   TransactionStatus,
   PendingTxns,
   Provider,
@@ -68,6 +69,38 @@ export class Blockchain implements ZilliqaModule {
     26: 'Dropped - state addition error',
     27: 'Dropped - Txn has lower nonce than expected',
     255: 'Error - Internal database error',
+  };
+
+  transactionStatusMap: { [key: number]: { [key: number]: string } } = {
+    0: { 0: 'Transaction not found', 1: ' Pending - Dispatched' },
+    1: {
+      2: 'Pending - Soft-confirmed (awaiting Tx block generation)',
+      4: 'Pending - Nonce is higher than expected',
+      5: 'Pending - Microblock gas limit exceeded',
+      6: 'Pending - Consensus failure in network',
+    },
+    2: {
+      3: 'Confirmed',
+      10: 'Rejected - Transaction caused math error',
+      11: 'Rejected - Scilla invocation error',
+      12: 'Rejected - Contract account initialization error',
+      13: 'Rejected - Invalid source account',
+      14: 'Rejected - Gas limit higher than shard gas limit',
+      15: 'Rejected - Unknown transaction type',
+      16: 'Rejected - Transaction sent to wrong shard',
+      17: 'Rejected - Contract & source account cross-shard issue',
+      18: 'Rejected - Code size exceeded limit',
+      19: 'Rejected - Transaction verification failed',
+      20: 'Rejected - Gas limit too low',
+      21: 'Rejected - Insufficient balance',
+      22: 'Rejected - Insufficient gas to invoke Scilla checker',
+      23: 'Rejected - Duplicate transaction exists',
+      24: 'Rejected - Transaction with higher gas price exists',
+      25: 'Rejected - Invalid destination address',
+      26: 'Rejected - Failed to add contract account to state',
+      27: 'Rejected - Nonce is lower than expected',
+      255: 'Rejected - Internal error',
+    },
   };
 
   constructor(provider: Provider, signer: Wallet) {
@@ -396,7 +429,7 @@ export class Blockchain implements ZilliqaModule {
    * a rejected Transaction instance is returned.
    *
    * @param {string} txHash
-   * @returns {Promise<any>}
+   * @returns {Promise<Transaction>}
    */
   async getTransaction(txHash: string): Promise<Transaction> {
     try {
@@ -412,6 +445,35 @@ export class Blockchain implements ZilliqaModule {
       return response.result.receipt.success
         ? Transaction.confirm(toTxParams(response), this.provider)
         : Transaction.reject(toTxParams(response), this.provider);
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  /**
+   * Returns the status of a specified transaction.
+   * This API is available from Zilliqa `V7.0.0` onwards and supports all transaction statuses
+   * (unconfirmed, confirmed, and rejected).
+   *
+   * @param txHash
+   * @returns {Promise<TransactionStatusObj>}
+   */
+  async getTransactionStatus(txHash: string): Promise<TransactionStatusObj> {
+    try {
+      const response = await this.provider.send<TransactionStatusObj>(
+        RPCMethod.GetTransactionStatus,
+        txHash,
+      );
+      if (response.error) {
+        return Promise.reject(response.error);
+      }
+
+      const modificationState = response.result.modificationState;
+      const status = response.result.status;
+      response.result.statusMessage = this.transactionStatusMap[
+        modificationState
+      ][status];
+      return response.result;
     } catch (err) {
       throw err;
     }
