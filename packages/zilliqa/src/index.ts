@@ -20,6 +20,8 @@ import { TransactionFactory, Wallet } from '@zilliqa-js/account';
 import { Contracts } from '@zilliqa-js/contract';
 import { Blockchain, Network } from '@zilliqa-js/blockchain';
 import { SubscriptionBuilder } from '@zilliqa-js/subscriptions';
+export * from '@zilliqa-js/util';
+export * from '@zilliqa-js/crypto'
 
 export class Zilliqa {
   provider: Provider;

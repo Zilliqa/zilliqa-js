@@ -396,16 +396,19 @@ yarn link @zilliqa-js/zilliqa
 
 ### Bundling
 
-`zilliqa-js` is bundled using `rollup`. Unfortunately, because `elliptic` is
-a major dependency and contains a circular dependency that causes `rollup` to
-choke, we also make use of `webpack` to pre-process and thereby eliminate the
-problem.
+#### rollup
 
-To build the distributable bundles, simple run `yarn bundle`. This will output
-two bundles, `*.umd.js` and `*.esm.js`, to `packages/*/dist`. Node.js clients
+`zilliqa-js` is bundled using `rollup`. To build the distributable bundles, simple run `yarn bundle`. 
+This will output two bundles, `*.umd.js` and `*.esm.js`, to `packages/*/dist`. Node.js clients
 are pointed to the `umd` bundle, and bundlers are pointed to `esm`.
 
 *NOTE: these bundles are _not_ minified.*
+
+#### webpack
+
+To build an all-in-one static js file, run `yarn build:web`. This will generate a `dist` folder in the current path, 
+which contains a file called `zilliqa.min.js`. It can be used in normal html file. (A more specific example please refer
+to `example/dist`)
 
 ## Licence 
 
