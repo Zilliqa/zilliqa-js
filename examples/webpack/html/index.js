@@ -4,7 +4,7 @@ async function test() {
   const msgVersion = 1;
   const VERSION = Zilliqa.bytes.pack(chainId, msgVersion);
   console.log(VERSION);
-// Populate the wallet with an account
+  // Populate the wallet with an account
   const privateKey =
     '3375F915F3F9AE35E6B301B7670F53AD1A5BE15D8221EC7FD5E503F21D3450C8';
 
@@ -12,7 +12,9 @@ async function test() {
 
   const address = Zilliqa.getAddressFromPrivateKey(privateKey);
   console.log(`My account address is: ${address}`);
-  console.log(`My account bech32 address is: ${Zilliqa.toBech32Address(address)}`);
+  console.log(
+    `My account bech32 address is: ${Zilliqa.toBech32Address(address)}`,
+  );
 
   // Get Balance
   const balance = await zilliqa.blockchain.getBalance(address);
@@ -29,7 +31,6 @@ async function test() {
   const isGasSufficient = myGasPrice.gte(new Zilliqa.BN(minGasPrice.result)); // Checks if your gas price is less than the minimum gas price
   console.log(`Is the gas price sufficient? ${isGasSufficient}`);
 
-
   // Send a transaction to the network
   console.log('Sending a payment transaction to the network...');
   const tx = await zilliqa.blockchain.createTransactionWithoutConfirm(
@@ -42,7 +43,9 @@ async function test() {
       {
         version: VERSION,
         toAddr: '0xA54E49719267E8312510D7b78598ceF16ff127CE',
-        amount: new Zilliqa.BN(Zilliqa.units.toQa('1', Zilliqa.units.Units.Zil)), // Sending an amount in Zil (1) and converting the amount to Qa
+        amount: new Zilliqa.BN(
+          Zilliqa.units.toQa('1', Zilliqa.units.Units.Zil),
+        ), // Sending an amount in Zil (1) and converting the amount to Qa
         gasPrice: myGasPrice, // Minimum gasPrice veries. Check the `GetMinimumGasPrice` on the blockchain
         gasLimit: Zilliqa.Long.fromNumber(1),
       },
@@ -58,5 +61,4 @@ async function test() {
   console.log(confirmedTxn.receipt);
 }
 
-test()
-
+test();
