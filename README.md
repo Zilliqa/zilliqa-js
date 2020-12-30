@@ -406,9 +406,10 @@ are pointed to the `umd` bundle, and bundlers are pointed to `esm`.
 
 #### webpack
 
-To build an all-in-one static js file, run `yarn build:web`. This will generate a `dist` folder in the current path, 
-which contains a file called `zilliqa.min.js`. It can be used in normal html file. (A more specific example please refer
-to `example/webpack`)
+To build an all-in-one static js file, first install `webpack` globally using `yarn global add webpack`. Then run `yarn build:web`. 
+This will generate a `dist` folder in the current path, which contains a file called `zilliqa.min.js`. It can be used in normal html file. (A more specific example please refer to `example/webpack`)
+
+*NOTE: there may be some issue to install webpack with npm, thus using yarn is a recommended way*
 
 ## Licence 
 
