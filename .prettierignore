@@ -3,6 +3,8 @@
 #################################
 .tmp/
 node_modules/
+examples/webpack/
 package.json
 .travis.yml
 *.md
+*.html
