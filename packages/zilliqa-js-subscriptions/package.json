@@ -1,6 +1,6 @@
 {
   "name": "@zilliqa-js/subscriptions",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Class(es) for interactiong with websocket API of Zilliqa node",
   "main": "dist/index.js",
   "node": "dist/index.js",
@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/Zilliqa/Zilliqa-Javascript-Library#readme",
   "dependencies": {
-    "@zilliqa-js/core": "2.0.0",
+    "@zilliqa-js/core": "2.1.0",
     "mock-socket": "^9.0.2",
     "websocket": "^1.0.28"
   }
