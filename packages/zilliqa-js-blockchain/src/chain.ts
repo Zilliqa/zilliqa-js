@@ -377,6 +377,29 @@ export class Blockchain implements ZilliqaModule {
     }
   }
 
+  async createBatchTransaction(
+    txList: Transaction[],
+    maxAttempts: number = GET_TX_ATTEMPTS,
+    interval: number = 1000,
+    blockConfirm: boolean = false,
+  ): Promise<Transaction[]> {
+    let batchResults = [];
+    for (let tx of txList) {
+      try {
+        let txn: Transaction = await this.createTransaction(
+          tx,
+          maxAttempts,
+          interval,
+          blockConfirm,
+        );
+        batchResults.push(txn);
+      } catch (err) {
+        throw err;
+      }
+    }
+    return batchResults;
+  }
+
   /**
    * createTransactionRaw
    *
