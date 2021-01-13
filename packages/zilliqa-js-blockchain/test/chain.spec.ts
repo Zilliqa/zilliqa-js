@@ -636,7 +636,6 @@ describe('Module: Blockchain', () => {
     fetch.mockResponses(...responses);
 
     const batchResults = await blockchain.createBatchTransaction(txList);
-
     for (const index in batchResults) {
       expect(batchResults[index]).toHaveProperty('signature');
       expect(batchResults[index]).toHaveProperty('pubKey');
@@ -705,6 +704,7 @@ describe('Module: Blockchain', () => {
 
     const batchResults = await blockchain.createBatchTransactionWithoutConfirm(
       txList,
+      1,
     );
 
     for (const index in batchResults) {

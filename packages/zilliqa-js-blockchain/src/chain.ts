@@ -445,11 +445,28 @@ export class Blockchain implements ZilliqaModule {
 
   async createBatchTransactionWithoutConfirm(
     txList: Transaction[],
+    nonce: number,
   ): Promise<Transaction[]> {
     let batchResults = [];
-    for (let tx of txList) {
+
+    if (!nonce) {
+      throw new Error("Please supply the account's current nonce");
+    }
+
+    // need to increment the nonce for each transaction
+    let initNonce = nonce + 1;
+    for (let index = 0; index < txList.length; index++) {
+      let currentNonce = initNonce + index;
       try {
-        let txn: Transaction = await this.createTransactionWithoutConfirm(tx);
+        const withNonce = txList[index].map((txObj) => {
+          return {
+            ...txObj,
+            nonce: currentNonce,
+          };
+        });
+        let txn: Transaction = await this.createTransactionWithoutConfirm(
+          withNonce,
+        );
         batchResults.push(txn);
       } catch (err) {
         throw err;
