@@ -639,7 +639,7 @@ describe('Module: Blockchain', () => {
 
   it('should send batch transactions without confirm', async () => {
     let txList = [];
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 1; i++) {
       const tx = new Transaction(
         {
           version: 1,
@@ -676,7 +676,6 @@ describe('Module: Blockchain', () => {
         result: {
           ID: 'some_hash',
           receipt: { success: true },
-          cumulative_gas: 1000,
         },
       },
       {
@@ -701,12 +700,12 @@ describe('Module: Blockchain', () => {
         result: {
           ID: 'some_hash',
           receipt: { success: true },
-          cumulative_gas: 1000,
         },
       },
     ].map((res) => [JSON.stringify(res)] as [string]);
 
     fetch.mockResponses(...responses);
+
     const batchResults = await blockchain.createBatchTransactionWithoutConfirm(
       txList,
     );
