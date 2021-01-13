@@ -79,6 +79,8 @@ describe('Module: Blockchain', () => {
 
     const { txParams } = await blockchain.createTransaction(tx);
 
+    console.log(txParams);
+
     expect(txParams).toHaveProperty('signature');
     expect(txParams).toHaveProperty('pubKey');
     expect(tx.isConfirmed()).toEqual(true);
@@ -558,5 +560,62 @@ describe('Module: Blockchain', () => {
     await expect(blockchain.createTransaction(tx, 4, 0, true)).rejects.toThrow(
       'The transaction is still not confirmed after 4 blocks.',
     );
+  });
+
+  it('should sign and send batch transactions with confirm', async () => {
+    let txList = [];
+    // let sigList = [
+    //   '57f7261f6200e44e5806a11cbf025a0b927c8b879578867e3791ec7581f881b9',
+    //   '58c38fb173e31dd65be3581dbab2cdc72c5cff99241d41853ae81de8b9b7d30e',
+    //   '801e60d8e3e4879ebdd474fcee4a79143ae5d2b771a350caf90a4c6adeb644ae'
+    // ];
+    for (let i = 0; i < 1; i++) {
+      // let nonce = i + 1;
+      const tx = new Transaction(
+        {
+          version: 1,
+          toAddr: '0x1234567890123456789012345678901234567890',
+          amount: new BN(0),
+          gasPrice: new BN(1000),
+          gasLimit: Long.fromNumber(1000),
+        },
+        provider,
+      );
+      txList.push(tx);
+    }
+
+    console.log(txList);
+
+    const responses = [
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: '39999999000000000',
+          nonce: 1,
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          TranID: 'some_hash',
+          Info: 'Non-contract txn, sent to shard',
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          ID: 'some_hash',
+          receipt: { success: true },
+        },
+      },
+    ].map((res) => [JSON.stringify(res)] as [string]);
+
+    fetch.mockResponses(...responses);
+    console.log(responses);
+    const batchResults = await blockchain.createBatchTransaction(txList);
+    console.log(batchResults);
   });
 });
