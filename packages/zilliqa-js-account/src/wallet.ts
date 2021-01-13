@@ -239,6 +239,40 @@ export class Wallet extends Signer {
     return this.signWith(tx, this.defaultAccount.address);
   }
 
+  signBatch(txList: Transaction[], nonce: number): Promise<Transaction>[] {
+    let batchResults: Promise<Transaction>[] = [];
+    if (!this.defaultAccount) {
+      throw new Error('This wallet has no default account.');
+    }
+
+    if (!nonce) {
+      throw new Error("Please supply the account's current nonce");
+    }
+
+    try {
+      // nonce is assumed to come from default account
+      const signer = this.accounts[this.defaultAccount.address];
+      let nextNonce = nonce + 1;
+
+      for (let index = 0; index < txList.length; index++) {
+        // increment nonce for each new transaction
+        const currentNonce = index + nextNonce;
+        const withNonceTx = txList[index].map((txObj) => {
+          return {
+            ...txObj,
+            nonce: currentNonce,
+            pubKey: signer.publicKey,
+          };
+        });
+        const signedTx = this.sign(withNonceTx);
+        batchResults.push(signedTx);
+      }
+    } catch (err) {
+      throw err;
+    }
+    return batchResults;
+  }
+
   /**
    * signWith
    *
