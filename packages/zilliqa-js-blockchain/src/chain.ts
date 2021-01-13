@@ -449,15 +449,8 @@ export class Blockchain implements ZilliqaModule {
     let batchResults = [];
     for (let tx of txList) {
       try {
-        const response = await this.provider.send(RPCMethod.CreateTransaction, {
-          ...tx.txParams,
-          priority: tx.toDS,
-        });
-        if (response.error) {
-          throw response.error;
-        }
-        tx.id = response.result.TranID;
-        batchResults.push(tx);
+        let txn: Transaction = await this.createTransactionWithoutConfirm(tx);
+        batchResults.push(txn);
       } catch (err) {
         throw err;
       }
