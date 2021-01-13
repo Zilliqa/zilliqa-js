@@ -562,6 +562,11 @@ describe('Module: Blockchain', () => {
 
   it('should sign and send batch transactions with confirm', async () => {
     let txList = [];
+    let mockTxIdList = [
+      'ffb54c1f25e4bf95747712aebd62a9451a77557f86fb6c4895ee54d07615c4c2',
+      'ca7f6a3001241eeb2fffbcb96bb4a60df23b2a94aafb921b26523813999f55b3',
+    ];
+
     for (let i = 0; i < 2; i++) {
       const tx = new Transaction(
         {
@@ -590,7 +595,7 @@ describe('Module: Blockchain', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
-          TranID: 'some_hash',
+          TranID: mockTxIdList[0],
           Info: 'Non-contract txn, sent to shard',
         },
       },
@@ -598,7 +603,7 @@ describe('Module: Blockchain', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
-          ID: 'some_hash',
+          ID: mockTxIdList[0],
           receipt: { success: true },
         },
       },
@@ -614,7 +619,7 @@ describe('Module: Blockchain', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
-          TranID: 'some_hash',
+          TranID: mockTxIdList[1],
           Info: 'Non-contract txn, sent to shard',
         },
       },
@@ -622,24 +627,32 @@ describe('Module: Blockchain', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
-          ID: 'some_hash',
+          ID: mockTxIdList[1],
           receipt: { success: true },
         },
       },
     ].map((res) => [JSON.stringify(res)] as [string]);
 
     fetch.mockResponses(...responses);
+
     const batchResults = await blockchain.createBatchTransaction(txList);
-    for (const batchTx of batchResults) {
-      expect(batchTx).toHaveProperty('signature');
-      expect(batchTx).toHaveProperty('pubKey');
-      expect(batchTx.isConfirmed()).toEqual(true);
+
+    for (const index in batchResults) {
+      expect(batchResults[index]).toHaveProperty('signature');
+      expect(batchResults[index]).toHaveProperty('pubKey');
+      expect(batchResults[index].isConfirmed()).toEqual(true);
+      expect(batchResults[index].id).toEqual(mockTxIdList[index]);
     }
   });
 
   it('should send batch transactions without confirm', async () => {
     let txList = [];
-    for (let i = 0; i < 1; i++) {
+    let mockTxIdList = [
+      'ffb54c1f25e4bf95747712aebd62a9451a77557f86fb6c4895ee54d07615c4c2',
+      'ca7f6a3001241eeb2fffbcb96bb4a60df23b2a94aafb921b26523813999f55b3',
+    ];
+
+    for (let i = 0; i < 2; i++) {
       const tx = new Transaction(
         {
           version: 1,
@@ -666,16 +679,8 @@ describe('Module: Blockchain', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
-          TranID: 'some_hash',
+          TranID: mockTxIdList[0],
           Info: 'Non-contract txn, sent to shard',
-        },
-      },
-      {
-        id: 1,
-        jsonrpc: '2.0',
-        result: {
-          ID: 'some_hash',
-          receipt: { success: true },
         },
       },
       {
@@ -690,16 +695,8 @@ describe('Module: Blockchain', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
-          TranID: 'some_hash',
+          TranID: mockTxIdList[1],
           Info: 'Non-contract txn, sent to shard',
-        },
-      },
-      {
-        id: 1,
-        jsonrpc: '2.0',
-        result: {
-          ID: 'some_hash',
-          receipt: { success: true },
         },
       },
     ].map((res) => [JSON.stringify(res)] as [string]);
@@ -710,9 +707,10 @@ describe('Module: Blockchain', () => {
       txList,
     );
 
-    for (const batchTx of batchResults) {
-      expect(batchTx).toHaveProperty('signature');
-      expect(batchTx).toHaveProperty('pubKey');
+    for (const index in batchResults) {
+      expect(batchResults[index]).toHaveProperty('signature');
+      expect(batchResults[index]).toHaveProperty('pubKey');
+      expect(batchResults[index].id).toEqual(mockTxIdList[index]);
     }
   });
 });
