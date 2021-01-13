@@ -206,4 +206,79 @@ describe('Wallet', () => {
 
     expect(() => wallet.sign(tx)).toThrow();
   });
+
+  it('should sign batch transactions with default account', async () => {
+    const [wallet] = createWallet(1);
+    const pubKey = (wallet.defaultAccount &&
+      wallet.defaultAccount.publicKey) as string;
+
+    let txList = [];
+    for (let i = 0; i < 2; i++) {
+      const tx = new Transaction(
+        {
+          version: 1,
+          toAddr: '0x1234567890123456789012345678901234567890',
+          amount: new BN(0),
+          gasPrice: new BN(1000),
+          gasLimit: Long.fromNumber(1000),
+          pubKey,
+        },
+        provider,
+      );
+      txList.push(tx);
+    }
+
+    fetch.once(
+      JSON.stringify({
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: '39999999000000000',
+          nonce: 1,
+        },
+      }),
+    );
+
+    const batchResult = await wallet.signBatch(txList, 1);
+
+    expect(fetch).toHaveBeenCalledTimes(2);
+
+    Promise.all(batchResult).then((signedTxList) => {
+      for (const signedTx of signedTxList) {
+        const signature = schnorr.toSignature(signedTx.txParams
+          .signature as string);
+        const lgtm = schnorr.verify(
+          signedTx.bytes,
+          signature,
+          Buffer.from(pubKey, 'hex'),
+        );
+        expect(lgtm).toBeTruthy();
+      }
+    });
+  });
+
+  it('should throw an error for sign batch with no default account', () => {
+    const pubKey = getPubKeyFromPrivateKey(schnorr.generatePrivateKey());
+    const [wallet] = createWallet(0);
+
+    let txList: Transaction[] = [];
+    for (let i = 0; i < 2; i++) {
+      const tx = new Transaction(
+        {
+          version: 1,
+          toAddr: '0x1234567890123456789012345678901234567890',
+          amount: new BN(0),
+          gasPrice: new BN(1000),
+          gasLimit: Long.fromNumber(1000),
+          pubKey,
+        },
+        provider,
+      );
+      txList.push(tx);
+    }
+
+    expect(() => wallet.signBatch(txList, 1)).toThrow(
+      'This wallet has no default account.',
+    );
+  });
 });
