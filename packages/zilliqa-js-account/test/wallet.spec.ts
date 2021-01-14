@@ -228,36 +228,61 @@ describe('Wallet', () => {
       txList.push(tx);
     }
 
-    fetch.once(
-      JSON.stringify({
+    // first balance is for get balance before looping txlist
+    // the other two balance is when it calls signWith
+    // the last is for return value
+    const responses = [
+      {
         id: 1,
         jsonrpc: '2.0',
         result: {
           balance: '39999999000000000',
           nonce: 1,
         },
-      }),
-    );
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: '39999999000000000',
+          nonce: 1,
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: '39999999000000000',
+          nonce: 1,
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          ID: 'some_hash',
+          receipt: { success: true },
+        },
+      },
+    ].map((res) => [JSON.stringify(res)] as [string]);
 
-    const batchResult = await wallet.signBatch(txList, 1);
+    fetch.mockResponses(...responses);
 
-    expect(fetch).toHaveBeenCalledTimes(2);
+    const batchResult = await wallet.signBatch(txList);
 
-    Promise.all(batchResult).then((signedTxList) => {
-      for (const signedTx of signedTxList) {
-        const signature = schnorr.toSignature(signedTx.txParams
-          .signature as string);
-        const lgtm = schnorr.verify(
-          signedTx.bytes,
-          signature,
-          Buffer.from(pubKey, 'hex'),
-        );
-        expect(lgtm).toBeTruthy();
-      }
-    });
+    for (const signedTx of batchResult) {
+      const signature = schnorr.toSignature(signedTx.txParams
+        .signature as string);
+      const lgtm = schnorr.verify(
+        signedTx.bytes,
+        signature,
+        Buffer.from(pubKey, 'hex'),
+      );
+      expect(lgtm).toBeTruthy();
+    }
   });
 
-  it('should throw an error for sign batch with no default account', () => {
+  it('should throw an error for sign batch with no default account', async () => {
     const pubKey = getPubKeyFromPrivateKey(schnorr.generatePrivateKey());
     const [wallet] = createWallet(0);
 
@@ -277,7 +302,7 @@ describe('Wallet', () => {
       txList.push(tx);
     }
 
-    expect(() => wallet.signBatch(txList, 1)).toThrow(
+    await expect(wallet.signBatch(txList)).rejects.toThrow(
       'This wallet has no default account.',
     );
   });
