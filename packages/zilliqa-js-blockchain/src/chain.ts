@@ -451,6 +451,10 @@ export class Blockchain implements ZilliqaModule {
 
     for (let signedTx of signedTxList) {
       try {
+        if (signedTx.txParams.signature === undefined) {
+          throw new Error('The transaction is not signed.');
+        }
+
         const response = await this.provider.send(RPCMethod.CreateTransaction, {
           ...signedTx.txParams,
           priority: signedTx.toDS,
