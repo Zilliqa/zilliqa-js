@@ -38,7 +38,7 @@ const address = getAddressFromPrivateKey(privateKey);
 console.log(`My account address is: ${address}`);
 console.log(`My account bech32 address is: ${toBech32Address(address)}`);
 
-async function testBatchTransaction() {
+async function testSignBatchTransaction() {
   try {
     let txList = [];
 
@@ -60,19 +60,23 @@ async function testBatchTransaction() {
 
     console.log('Batch transactions created:');
     console.log(txList);
-    console.log('Sending batch transactions...');
+    console.log('Signing batch transactions...');
 
-    // send the batch transaction sequentially
-    const batchResult = await zilliqa.blockchain.createBatchTransaction(txList);
+    // sign the batch transaction sequentially
+    const batchResult = await zilliqa.wallet.signBatch(txList);
 
-    console.log('Transactions created:...\n');
-    for (const confirmedTx of batchResult) {
-      console.log('The transaction id is: %o', confirmedTx.id);
-      console.log(`The transaction status is: %o\n`, confirmedTx.receipt);
+    console.log('Transactions signed...\n');
+    for (const signedTx of batchResult) {
+      // nonce must be different
+      console.log('The signed transaction nonce is: %o', signedTx.nonce);
+      console.log(
+        'The signed transaction signature is: %o\n',
+        signedTx.signature,
+      );
     }
   } catch (err) {
     console.error(err);
   }
 }
 
-testBatchTransaction();
+testSignBatchTransaction();

@@ -38,7 +38,7 @@ const address = getAddressFromPrivateKey(privateKey);
 console.log(`My account address is: ${address}`);
 console.log(`My account bech32 address is: ${toBech32Address(address)}`);
 
-async function testBatchTransaction() {
+async function testBatchTransactionWithoutConfirm() {
   try {
     let txList = [];
 
@@ -58,21 +58,30 @@ async function testBatchTransaction() {
       txList.push(tx);
     }
 
-    console.log('Batch transactions created:');
-    console.log(txList);
-    console.log('Sending batch transactions...');
+    console.log('Signing and sending transactions...\n');
 
-    // send the batch transaction sequentially
-    const batchResult = await zilliqa.blockchain.createBatchTransaction(txList);
+    // for batch transactions without confirm
+    // batch transactions must be signed first
+    // this would set the correct nonce for each transactions
+    const signedTxList = await zilliqa.wallet.signBatch(txList);
+    const batchResult = await zilliqa.blockchain.createBatchTransactionWithoutConfirm(
+      signedTxList,
+    );
 
-    console.log('Transactions created:...\n');
-    for (const confirmedTx of batchResult) {
-      console.log('The transaction id is: %o', confirmedTx.id);
-      console.log(`The transaction status is: %o\n`, confirmedTx.receipt);
+    for (const tx of batchResult) {
+      // nonce must be different
+      // signatures must be identical when comparing to after they are processed on the blockchain
+      console.log('The transaction id is: %o', tx.id);
+      console.log('The transaction nonce is: %o', tx.nonce);
+      console.log('Then transaction signature is: %o', tx.signature);
+      console.log(
+        'Is the current transaction confirmed?: %o\n',
+        tx.isConfirmed(),
+      );
     }
   } catch (err) {
     console.error(err);
   }
 }
 
-testBatchTransaction();
+testBatchTransactionWithoutConfirm();
