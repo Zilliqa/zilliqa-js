@@ -158,6 +158,93 @@ Creates a transaction and polls the lookup node for a transaction receipt. The t
 
 - `Promise<Transaction>` - the Transaction that has been signed and broadcasted to the network.
 
+### `createBatchTransaction(txList : Transaction[], maxAttempts? : number, interval? : interval) : Promise<Transaction[]>`
+
+Sends a batch of transactions and sequentially polls the lookup node for a transaction receipt for each transaction. The transaction is considered to be lost if it is not confirmed within the timeout period.
+
+**Parameters**
+- `txList`: `Transaction[]` - a list of transaction object
+- `attempts` (Optional - default 20): `number` - the number of times to poll the lookup node for transaction receipt.
+- `interval` (Optional - default 1000): `number` - the amount of time to wait between attempts. increases linearly (`numAttempts * interval`)
+
+**Returns** 
+
+- `Promise<Transaction[]>` - the list of Transaction that has been signed and broadcasted to the network.
+
+**Example**
+
+```json
+// zilliqa, wallet obj declaration omitted for clarity
+
+// prepare a list of transactions 
+let txList = [];
+for (let i = 0; i < 2; i++) {
+  const tx = new Transaction(
+    {
+      version: 1,
+      toAddr: '0x1234567890123456789012345678901234567890',
+      amount: new BN(0),
+      gasPrice: new BN(1000),
+      gasLimit: Long.fromNumber(1000),
+    },
+    provider,
+  );
+  txList.push(tx);
+}
+
+// transactions would be automatically signed with the default wallet
+// and broadcast to blockchain, pending for confirmation
+const batchResults = await blockchain.createBatchTransaction(txList);
+
+for (const confirmedTx of batchResults) {
+  console.log('The transaction id is: %o', confirmedTx.id);
+  console.log(`The transaction status is: %o\n`, confirmedTx.receipt);
+}
+```
+
+### `createBatchTransactionWithoutConfirm(signedTxList : Transaction[]) : Promise<Transaction[]>`
+
+Sends a batch of **signed transactions** to the blockchain. Does not poll the lookup node for a transaction receipt. Instead, a `id` is returned for each transaction. Users have to manually poll the blockchain using for e.g. `GetTransaction` with the `id` to get the latest transaction status.
+
+**Parameters**
+- `signedTxList`: `Transaction[]` - a list of transaction object already **signed**
+
+**Returns** 
+
+- `Promise<Transaction[]>` - the list of Transaction that has been broadcasted to the network.
+
+*Note: Users may use `signBatch` to sign a list of unsigned Transaction and used the returned results as input for this method. Alternatively, please see `createBatchTransaction` which would signed and broadcast the transactions.*
+
+**Example**
+
+```json
+// zilliqa, wallet obj declaration omitted for clarity
+
+// prepare a list of transactions 
+let txList = [];
+for (let i = 0; i < 2; i++) {
+  const tx = new Transaction(
+    {
+      version: 1,
+      toAddr: '0x1234567890123456789012345678901234567890',
+      amount: new BN(0),
+      gasPrice: new BN(1000),
+      gasLimit: Long.fromNumber(1000),
+    },
+    provider,
+  );
+  txList.push(tx);
+}
+
+const signedTxList = await wallet.signBatch(txList);  // sign the list of transactions
+const batchResults = await blockchain.createBatchTransactionWithoutConfirm(signedTxList); // send to blockchain without confirm
+
+// get the transaction id
+for (const tx of batchResults) {
+  console.log(tx.id);
+}
+```
+
 ### `getTxnBodiesForTxBlock(txBlock: number): Promise<RPCResponse<TransactionObj[], string>>`
 
 Returns the validated transactions (in verbose form) included within a specified final transaction block.
