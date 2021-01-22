@@ -15,35 +15,34 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-const hashjs = require('hash.js');
-const utils = require('web3-utils');
-
-utils.sha3 = (buffer: Buffer): string => {
-  return hashjs
-    .sha256()
-    .update(buffer, 'hex')
-    .digest('hex');
-};
+const { encryptPrivateKey, schnorr } = require('@zilliqa-js/crypto');
 
 const fs = require('fs');
-const Web3 = require('web3');
-const web3 = new Web3();
 
-const PASSPHRASE = 'stronk_password';
+const passphrase = 'strong_password';
+
 const KEYSTORE_NUMS = 10;
 
-const results = [];
-
-for (let i = 0; i < KEYSTORE_NUMS; i++) {
-  const { privateKey } = web3.eth.accounts.create();
-  const keystore = web3.eth.accounts.encrypt(privateKey, PASSPHRASE, {
-    kdf: Math.random() < 0.5 ? 'pbkdf2' : 'scrypt',
-  });
-  results.push({
-    privateKey,
-    passphrase: PASSPHRASE,
-    keystore,
-  });
+async function generateTestKeystores() {
+  let results = [];
+  for (let i = 0; i < KEYSTORE_NUMS; i++) {
+    const privateKey = schnorr.generatePrivateKey();
+    try {
+      const keystore = await encryptPrivateKey(
+        'scrypt',
+        privateKey,
+        passphrase,
+      );
+      results.push({
+        privateKey,
+        passphrase: passphrase,
+        keystore,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  fs.writeFileSync('./keystores_redux.json', JSON.stringify(results, null, 2));
 }
 
-fs.writeFileSync('./keystores.json', JSON.stringify(results, null, 2));
+generateTestKeystores();
