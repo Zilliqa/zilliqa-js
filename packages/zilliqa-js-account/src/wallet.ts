@@ -266,6 +266,13 @@ export class Wallet extends Signer {
 
     try {
       if (!tx.txParams.nonce) {
+        if (checkBalance == false) {
+          // no nonce detected when skipping balance check
+          throw new Error(
+            'No nonce detected in tx params when skipping balance check',
+          );
+        }
+
         if (typeof checkBalance === 'undefined' || checkBalance === true) {
           // retrieve latest nonce
           const balance = await this.provider.send(
