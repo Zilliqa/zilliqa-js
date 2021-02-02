@@ -535,4 +535,97 @@ describe('Transaction', () => {
       'The transaction is still not confirmed after 4 blocks.',
     );
   });
+
+  it('should not have error if sign checkBalance is false', async () => {
+    const responses = [
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          TranID: 'some_hash',
+          Info: 'Non-contract txn, sent to shard',
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          ID: 'some_hash',
+          receipt: { cumulative_gas: 1000, success: true },
+        },
+      },
+    ].map((res) => [JSON.stringify(res)] as [string]);
+
+    fetch.mockResponses(...responses);
+
+    const tx = new Transaction(
+      {
+        version: 1,
+        nonce: 1,
+        toAddr: '0x1234567890123456789012345678901234567890',
+        amount: new BN(0),
+        gasPrice: new BN(1000),
+        gasLimit: Long.fromNumber(1000),
+      },
+      provider,
+    );
+
+    const pending = await wallet.sign(tx, false);
+    await provider.send(RPCMethod.CreateTransaction, pending.txParams);
+    const confirmed = await pending.confirm('some_hash');
+    const state = confirmed.txParams;
+
+    expect(confirmed.isConfirmed()).toBeTruthy();
+    expect(state.receipt).toEqual({ success: true, cumulative_gas: 1000 });
+  });
+
+  it('should not have error if sign checkBalance is explicit true', async () => {
+    const responses = [
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: '39999999000000000',
+          nonce: 1,
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          TranID: 'some_hash',
+          Info: 'Non-contract txn, sent to shard',
+        },
+      },
+      {
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          ID: 'some_hash',
+          receipt: { cumulative_gas: 1000, success: true },
+        },
+      },
+    ].map((res) => [JSON.stringify(res)] as [string]);
+
+    fetch.mockResponses(...responses);
+
+    const tx = new Transaction(
+      {
+        version: 1,
+        toAddr: '0x1234567890123456789012345678901234567890',
+        amount: new BN(0),
+        gasPrice: new BN(1000),
+        gasLimit: Long.fromNumber(1000),
+      },
+      provider,
+    );
+
+    const pending = await wallet.sign(tx, true); // explicit TRUE
+    await provider.send(RPCMethod.CreateTransaction, pending.txParams);
+    const confirmed = await pending.confirm('some_hash');
+    const state = confirmed.txParams;
+
+    expect(confirmed.isConfirmed()).toBeTruthy();
+    expect(state.receipt).toEqual({ success: true, cumulative_gas: 1000 });
+  });
 });
