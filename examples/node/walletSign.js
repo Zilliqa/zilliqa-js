@@ -65,6 +65,7 @@ async function offlineSign() {
     const balance = await zilliqa.blockchain.getBalance(address);
     console.log('current nonce is: %o', balance.result.nonce);
 
+    // nonce must be EXPLICITLY DEFINED when flag is 'false'
     const tx = zilliqa.transactions.new(
       {
         version: VERSION,
