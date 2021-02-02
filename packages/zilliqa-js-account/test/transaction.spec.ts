@@ -536,7 +536,7 @@ describe('Transaction', () => {
     );
   });
 
-  it('should not have error if sign checkBalance is false', async () => {
+  it('should not have error if offline sign is false', async () => {
     const responses = [
       {
         id: 1,
@@ -579,7 +579,7 @@ describe('Transaction', () => {
     expect(state.receipt).toEqual({ success: true, cumulative_gas: 1000 });
   });
 
-  it('should not have error if sign checkBalance is explicit true', async () => {
+  it('should not have error if offline sign is explicit false', async () => {
     const responses = [
       {
         id: 1,
@@ -620,7 +620,7 @@ describe('Transaction', () => {
       provider,
     );
 
-    const pending = await wallet.sign(tx, true); // explicit TRUE
+    const pending = await wallet.sign(tx, false); // explicit FALSE
     await provider.send(RPCMethod.CreateTransaction, pending.txParams);
     const confirmed = await pending.confirm('some_hash');
     const state = confirmed.txParams;

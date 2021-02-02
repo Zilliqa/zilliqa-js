@@ -207,7 +207,7 @@ describe('Wallet', () => {
     expect(() => wallet.sign(tx)).toThrow();
   });
 
-  it('should throw an error if checkBalance is false and txn does not have explicit nonce', async () => {
+  it('should throw an error if offline sign is true and txn does not have explicit nonce', async () => {
     const [wallet] = createWallet(1);
     const pubKey = (wallet.defaultAccount &&
       wallet.defaultAccount.publicKey) as string;
@@ -224,10 +224,10 @@ describe('Wallet', () => {
       provider,
     );
 
-    await expect(wallet.sign(tx)).rejects.toThrow();
+    await expect(wallet.sign(tx, true)).rejects.toThrow();
   });
 
-  it('should not have error if checkBalance is false and txn HAS explicit nonce', async () => {
+  it('should not have error if offline sign is true and txn HAS explicit nonce', async () => {
     const [wallet] = createWallet(1);
     const pubKey = (wallet.defaultAccount &&
       wallet.defaultAccount.publicKey) as string;
@@ -245,7 +245,7 @@ describe('Wallet', () => {
       provider,
     );
 
-    const signed = await wallet.sign(tx, false);
+    const signed = await wallet.sign(tx, true);
     const signature = schnorr.toSignature(signed.txParams.signature as string);
     const lgtm = schnorr.verify(
       signed.bytes,
@@ -256,7 +256,7 @@ describe('Wallet', () => {
     expect(lgtm).toBeTruthy();
   });
 
-  it('should not have error if checkBalance is explicit true and no explicit nonce', async () => {
+  it('should not have error if offline sign is explicit false and no explicit nonce', async () => {
     const [wallet] = createWallet(1);
     const pubKey = (wallet.defaultAccount &&
       wallet.defaultAccount.publicKey) as string;
@@ -284,7 +284,7 @@ describe('Wallet', () => {
       }),
     );
 
-    const signed = await wallet.sign(tx, true); // explicit TRUE
+    const signed = await wallet.sign(tx, false); // explicit FALSE
     const signature = schnorr.toSignature(signed.txParams.signature as string);
     const lgtm = schnorr.verify(
       signed.bytes,
@@ -295,7 +295,7 @@ describe('Wallet', () => {
     expect(lgtm).toBeTruthy();
   });
 
-  it('should not have error if checkBalance is explicit true and txn HAS explicit nonce', async () => {
+  it('should not have error if offline sign is explicit false and txn HAS explicit nonce', async () => {
     const [wallet] = createWallet(1);
     const pubKey = (wallet.defaultAccount &&
       wallet.defaultAccount.publicKey) as string;
@@ -313,7 +313,7 @@ describe('Wallet', () => {
       provider,
     );
 
-    const signed = await wallet.sign(tx, true); // explicit TRUE
+    const signed = await wallet.sign(tx, false); // explicit FALSE
     const signature = schnorr.toSignature(signed.txParams.signature as string);
     const lgtm = schnorr.verify(
       signed.bytes,

@@ -215,10 +215,10 @@ export class Wallet extends Signer {
    * signs an unsigned transaction with the default account.
    *
    * @param {Transaction} tx
-   * @param {boolean} checkBalance
+   * @param {boolean} offlineSign
    * @returns {Transaction}
    */
-  sign(tx: Transaction, checkBalance?: boolean): Promise<Transaction> {
+  sign(tx: Transaction, offlineSign?: boolean): Promise<Transaction> {
     if (tx.txParams && tx.txParams.pubKey) {
       // attempt to find the address
       const senderAddress = zcrypto.getAddressFromPublicKey(tx.txParams.pubKey);
@@ -229,14 +229,14 @@ export class Wallet extends Signer {
         );
       }
 
-      return this.signWith(tx, senderAddress, checkBalance);
+      return this.signWith(tx, senderAddress, offlineSign);
     }
 
     if (!this.defaultAccount) {
       throw new Error('This wallet has no default account.');
     }
 
-    return this.signWith(tx, this.defaultAccount.address, checkBalance);
+    return this.signWith(tx, this.defaultAccount.address, offlineSign);
   }
 
   /**
@@ -244,13 +244,13 @@ export class Wallet extends Signer {
    *
    * @param {Transaction} tx
    * @param {string} account
-   * @param {boolean} checkBalance
+   * @param {boolean} offlineSign
    * @returns {Transaction}
    */
   async signWith(
     tx: Transaction,
     account: string,
-    checkBalance?: boolean,
+    offlineSign?: boolean,
   ): Promise<Transaction> {
     if (!this.accounts[account]) {
       throw new Error(
@@ -266,14 +266,13 @@ export class Wallet extends Signer {
 
     try {
       if (!tx.txParams.nonce) {
-        if (checkBalance == false) {
-          // no nonce detected when skipping balance check
+        if (offlineSign) {
           throw new Error(
-            'No nonce detected in tx params when skipping balance check',
+            'No nonce detected in tx params when signing in offline mode',
           );
         }
 
-        if (typeof checkBalance === 'undefined' || checkBalance === true) {
+        if (typeof offlineSign === 'undefined' || !offlineSign) {
           // retrieve latest nonce
           const balance = await this.provider.send(
             'GetBalance',
