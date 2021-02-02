@@ -237,7 +237,7 @@ See `examples/node/walletSign.js` for demonstration.
 
 - `Promise<Transaction>` - a signed transaction.
 
-### `signWith(transaction: Transaction, address: string, offlineSigning?: boolean): Promise<Transaction>`
+### `signWith(transaction: Transaction, address: string, offlineSign?: boolean): Promise<Transaction>`
 
 Sign a `Transaction` with the chosen `Account`. This method is asynchronous
 as it will attempt to obtain the `nonce` from the `Provider`.
