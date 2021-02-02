@@ -221,8 +221,8 @@ Sets the default account to sign with.
 ### `sign(transaction: Transaction, offlineSign?: boolean): Promise<Transaction>`
 
 Sign a `Transaction` with the default `Account`. This method is asynchronous
-as it will attempt to obtain the `nonce` from the `Provider`. Has an offline mode
-that can be activated manually by setting the optional `offlineSign` parameter.
+as it will attempt to obtain the `nonce` from the `Provider`. 
+There is an offline mode that can be activated manually by setting the optional `offlineSign` parameter.
 
 **Parameters**
 
@@ -240,8 +240,8 @@ See `examples/node/walletSign.js` for demonstration.
 ### `signWith(transaction: Transaction, address: string, offlineSigning?: boolean): Promise<Transaction>`
 
 Sign a `Transaction` with the chosen `Account`. This method is asynchronous
-as it will attempt to obtain the `nonce` from the `Provider`. Has an offline mode
-that can be activated manually by setting the optional `offlineSign` parameter.
+as it will attempt to obtain the `nonce` from the `Provider`.
+There is an offline mode that can be activated manually by setting the optional `offlineSign` parameter.
 
 **Parameters**
 
