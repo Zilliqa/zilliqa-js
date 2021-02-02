@@ -41,6 +41,7 @@ async function onlineSign() {
       false,
     );
     const result = await zilliqa.wallet.sign(tx);
+    console.log(result);
     console.log('txn nonce: %o', result.nonce);
     console.log('txn signature: %o', result.signature);
   } catch (err) {
@@ -50,8 +51,8 @@ async function onlineSign() {
 
 /**
  *
- * wallet.sign(tx, false)
- * explicit 'false' flag implies skipping balance check
+ * wallet.sign(tx, true)
+ * explicit 'true' flag implies offline mode which skips balance checks
  *
  * example of "offline" signing, nonce is REQUIRED in the Transaction obj
  * nonce MUST BE SUPPLIED
@@ -59,13 +60,13 @@ async function onlineSign() {
  */
 async function offlineSign() {
   try {
-    console.log('Offline signing with balance check...\n');
+    console.log('Offline signing...\n');
 
-    const address = getAddressFromPrivateKey(privateKey);
-    const balance = await zilliqa.blockchain.getBalance(address);
-    console.log('current nonce is: %o', balance.result.nonce);
+    // const address = getAddressFromPrivateKey(privateKey);
+    // const balance = await zilliqa.blockchain.getBalance(address);
+    // console.log('current nonce is: %o', balance.result.nonce);
 
-    // nonce must be EXPLICITLY DEFINED when flag is 'false'
+    // nonce must be EXPLICITLY DEFINED when flag is 'true'
     const tx = zilliqa.transactions.new(
       {
         version: VERSION,
@@ -77,7 +78,8 @@ async function offlineSign() {
       },
       false,
     );
-    const result = await zilliqa.wallet.sign(tx, false);
+    const result = await zilliqa.wallet.sign(tx, true);
+    console.log(result);
     console.log('txn nonce: %o', result.nonce);
     console.log('txn signature: %o', result.signature);
   } catch (err) {
@@ -86,5 +88,5 @@ async function offlineSign() {
 }
 
 // comment on/off as desired
-onlineSign();
-// offlineSign();
+// onlineSign();
+offlineSign();
