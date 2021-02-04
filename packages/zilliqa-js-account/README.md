@@ -227,7 +227,7 @@ There is an offline mode that can be activated manually by setting the optional 
 **Parameters**
 
 - `transaction`: `Transaction` - a `Transaction` instance.
-- `offlineSign`: `boolean` (optional) - toggles offline signing on/off. Defaults to `false`. If set to `true`, offline mode is used and does not require internet connection to sign a transaction. 
+- `offlineSign`: `boolean` (optional) - toggles offline signing on/off. Defaults to `false` if the field is not set. If explicitly set to `true`, offline mode is used and does not require internet connection to sign a transaction. 
 
 **Note**: In offline mode, the nonce must be explicitly set in the Transaction object.
 
@@ -247,7 +247,7 @@ There is an offline mode that can be activated manually by setting the optional 
 
 - `transaction`: `Transaction` - a `Transaction` instance.
 - `address`: `string` - the address of the `Account` to be used for signing.
-- `offlineSign`: `boolean` (optional) - toggles offline signing on/off. If set to `true`, offline mode is used and does not require internet connection to sign a transaction. 
+- `offlineSign`: `boolean` (optional) - toggles offline signing on/off. Defaults to `false` if the field is not set. If explicitly set to `true`, offline mode is used and does not require internet connection to sign a transaction. 
 
 **Note**: In offline mode, the nonce must be explicitly set in the Transaction object. 
 
