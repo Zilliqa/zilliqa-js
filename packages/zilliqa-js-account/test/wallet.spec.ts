@@ -206,4 +206,121 @@ describe('Wallet', () => {
 
     expect(() => wallet.sign(tx)).toThrow();
   });
+
+  it('should throw an error if offline sign is true and txn does not have explicit nonce', async () => {
+    const [wallet] = createWallet(1);
+    const pubKey = (wallet.defaultAccount &&
+      wallet.defaultAccount.publicKey) as string;
+
+    const tx = new Transaction(
+      {
+        version: 0,
+        toAddr: '0x1234567890123456789012345678901234567890',
+        amount: new BN(888),
+        gasPrice: new BN(888),
+        gasLimit: Long.fromNumber(888),
+        pubKey,
+      },
+      provider,
+    );
+
+    await expect(wallet.sign(tx, true)).rejects.toThrow();
+  });
+
+  it('should not have error if offline sign is true and txn HAS explicit nonce', async () => {
+    const [wallet] = createWallet(1);
+    const pubKey = (wallet.defaultAccount &&
+      wallet.defaultAccount.publicKey) as string;
+
+    const tx = new Transaction(
+      {
+        version: 1,
+        toAddr: '0x1234567890123456789012345678901234567890',
+        nonce: 1,
+        amount: new BN(0),
+        gasPrice: new BN(1000),
+        gasLimit: Long.fromNumber(1000),
+        pubKey,
+      },
+      provider,
+    );
+
+    const signed = await wallet.sign(tx, true);
+    const signature = schnorr.toSignature(signed.txParams.signature as string);
+    const lgtm = schnorr.verify(
+      signed.bytes,
+      signature,
+      Buffer.from(pubKey, 'hex'),
+    );
+
+    expect(lgtm).toBeTruthy();
+  });
+
+  it('should not have error if offline sign is explicit false and no explicit nonce', async () => {
+    const [wallet] = createWallet(1);
+    const pubKey = (wallet.defaultAccount &&
+      wallet.defaultAccount.publicKey) as string;
+
+    const tx = new Transaction(
+      {
+        version: 1,
+        toAddr: '0x1234567890123456789012345678901234567890',
+        amount: new BN(0),
+        gasPrice: new BN(1000),
+        gasLimit: Long.fromNumber(1000),
+        pubKey,
+      },
+      provider,
+    );
+
+    fetch.once(
+      JSON.stringify({
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          balance: '39999999000000000',
+          nonce: 1,
+        },
+      }),
+    );
+
+    const signed = await wallet.sign(tx, false); // explicit FALSE
+    const signature = schnorr.toSignature(signed.txParams.signature as string);
+    const lgtm = schnorr.verify(
+      signed.bytes,
+      signature,
+      Buffer.from(pubKey, 'hex'),
+    );
+
+    expect(lgtm).toBeTruthy();
+  });
+
+  it('should not have error if offline sign is explicit false and txn HAS explicit nonce', async () => {
+    const [wallet] = createWallet(1);
+    const pubKey = (wallet.defaultAccount &&
+      wallet.defaultAccount.publicKey) as string;
+
+    const tx = new Transaction(
+      {
+        version: 1,
+        toAddr: '0x1234567890123456789012345678901234567890',
+        nonce: 1,
+        amount: new BN(0),
+        gasPrice: new BN(1000),
+        gasLimit: Long.fromNumber(1000),
+        pubKey,
+      },
+      provider,
+    );
+
+    const signed = await wallet.sign(tx, false); // explicit FALSE
+    const signature = schnorr.toSignature(signed.txParams.signature as string);
+    const lgtm = schnorr.verify(
+      signed.bytes,
+      signature,
+      Buffer.from(pubKey, 'hex'),
+    );
+
+    expect(lgtm).toBeTruthy();
+  });
 });

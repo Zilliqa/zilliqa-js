@@ -53,7 +53,7 @@ async function testBlockchain() {
     console.log(`Your account balance is:`);
     console.log(balance.result);
     console.log(`Current Minimum Gas Price: ${minGasPrice.result}`);
-    const myGasPrice = units.toQa('1000', units.Units.Li); // Gas Price that will be used by all transactions
+    const myGasPrice = units.toQa('2000', units.Units.Li); // Gas Price that will be used by all transactions
     console.log(`My Gas Price ${myGasPrice.toString()}`);
     const isGasSufficient = myGasPrice.gte(new BN(minGasPrice.result)); // Checks if your gas price is less than the minimum gas price
     console.log(`Is the gas price sufficient? ${isGasSufficient}`);
