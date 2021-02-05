@@ -12,7 +12,7 @@
   "repository": "https://github.com/Zilliqa/Zilliqa-Javascript-Library",
   "author": "Ian Tan (https://github.com/iantanwx)",
   "maintainers": [
-    "Zilliqa Usability Team <maintainer@zilliqa.com> (https://github.com/zilliqa/)"
+    "Zilliqa Usability Team <maintainers@zilliqa.com> (https://github.com/zilliqa/)"
   ],
   "bugs": {
     "url": "https://github.com/Zilliqa/Zilliqa-JavaScript-Library/issues"
@@ -31,6 +31,6 @@
     "mitt": "^1.1.3"
   },
   "engines": {
-    "node": ">=10.0.0 <13"
+    "node": ">=10.0.0 <15"
   }
 }
