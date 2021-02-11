@@ -42,11 +42,12 @@ install:
   - yarn install
   - yarn global add codecov
   - yarn global add ts-node
+  - yarn global add webpack
 script:
   - yarn bootstrap
   - yarn run test
   - yarn bundle
-
+  - yarn build:web
 after_success:
   - codecov
 cache:
