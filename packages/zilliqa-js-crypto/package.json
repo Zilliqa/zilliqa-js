@@ -1,10 +1,10 @@
 {
   "name": "@zilliqa-js/crypto",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Core crypto utilities for signing/verification/hashing Zilliqa transactions.",
   "author": "Ian Tan (https://github.com/iantanwx)",
   "maintainers": [
-    "Zilliqa Usability Team <maintainer@zilliqa.com> (https://github.com/zilliqa/)"
+    "Zilliqa Usability Team <maintainers@zilliqa.com> (https://github.com/zilliqa/)"
   ],
   "bugs": {
     "url": "https://github.com/Zilliqa/Zilliqa-JavaScript-Library/issues"
@@ -24,11 +24,8 @@
   "scripts": {
     "clean": "rimraf ./dist"
   },
-  "optionalDependencies": {
-    "scrypt.js": "^0.3.0"
-  },
   "dependencies": {
-    "@zilliqa-js/util": "0.11.1",
+    "@zilliqa-js/util": "2.2.0",
     "aes-js": "^3.1.1",
     "bsert": "^0.0.4",
     "elliptic": "^6.5.0",

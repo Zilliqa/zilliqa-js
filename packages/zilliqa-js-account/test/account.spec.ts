@@ -50,7 +50,7 @@ describe('Account', () => {
   it('should create accounts from keystores', async () => {
     const content = await new Promise((resolve, reject) => {
       fs.readFile(
-        `${__dirname}/fixtures/keystores.json`,
+        `${__dirname}/fixtures/keystores_redux.json`,
         'utf8',
         (err, data) => {
           err ? reject(err) : resolve(data);
@@ -61,10 +61,7 @@ describe('Account', () => {
     const keystoreFixtures = JSON.parse(content as string);
     for (const keystoreFixture of keystoreFixtures) {
       const { privateKey, passphrase, keystore } = keystoreFixture;
-      const account = await Account.fromFile(
-        JSON.stringify(keystore),
-        passphrase,
-      );
+      const account = await Account.fromFile(keystore, passphrase);
       expect(account.privateKey).toEqual(privateKey);
     }
   });

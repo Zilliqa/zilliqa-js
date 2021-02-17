@@ -11,6 +11,10 @@ jobs:
       node_js:
         - 12
     - os: linux
+      dist: xenial
+      node_js:
+        - 14
+    - os: linux
       dist: bionic
       node_js:
         - 10
@@ -18,12 +22,19 @@ jobs:
       dist: bionic
       node_js:
         - 12
+    - os: linux
+      dist: bionic
+      node_js:
+        - 14
     - os: osx
       node_js:
         - 10
     - os: osx
       node_js:
         - 12
+    - os: osx
+      node_js:
+        - 14
 branches:
   except:
   - /^v[0-9]/
@@ -31,11 +42,12 @@ install:
   - yarn install
   - yarn global add codecov
   - yarn global add ts-node
+  - yarn global add webpack
 script:
   - yarn bootstrap
   - yarn run test
   - yarn bundle
-
+  - yarn build:web
 after_success:
   - codecov
 cache:

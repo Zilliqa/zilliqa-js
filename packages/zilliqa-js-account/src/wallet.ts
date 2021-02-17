@@ -215,10 +215,10 @@ export class Wallet extends Signer {
    * signs an unsigned transaction with the default account.
    *
    * @param {Transaction} tx
-   * @param {string} account
+   * @param {boolean} offlineSign
    * @returns {Transaction}
    */
-  sign(tx: Transaction): Promise<Transaction> {
+  sign(tx: Transaction, offlineSign?: boolean): Promise<Transaction> {
     if (tx.txParams && tx.txParams.pubKey) {
       // attempt to find the address
       const senderAddress = zcrypto.getAddressFromPublicKey(tx.txParams.pubKey);
@@ -229,14 +229,14 @@ export class Wallet extends Signer {
         );
       }
 
-      return this.signWith(tx, senderAddress);
+      return this.signWith(tx, senderAddress, offlineSign);
     }
 
     if (!this.defaultAccount) {
       throw new Error('This wallet has no default account.');
     }
 
-    return this.signWith(tx, this.defaultAccount.address);
+    return this.signWith(tx, this.defaultAccount.address, offlineSign);
   }
 
   async signBatch(txList: Transaction[]): Promise<Transaction[]> {
@@ -287,9 +287,14 @@ export class Wallet extends Signer {
    *
    * @param {Transaction} tx
    * @param {string} account
+   * @param {boolean} offlineSign
    * @returns {Transaction}
    */
-  async signWith(tx: Transaction, account: string): Promise<Transaction> {
+  async signWith(
+    tx: Transaction,
+    account: string,
+    offlineSign?: boolean,
+  ): Promise<Transaction> {
     if (!this.accounts[account]) {
       throw new Error(
         'The selected account does not exist on this Wallet instance.',
@@ -297,39 +302,51 @@ export class Wallet extends Signer {
     }
 
     const signer = this.accounts[account];
-
-    const balance = await this.provider.send(
-      'GetBalance',
-      signer.address.replace('0x', '').toLowerCase(),
-    );
-
-    if (balance.result === undefined) {
-      throw new Error('Could not get balance');
-    }
-
     const gasPrice = tx.txParams.gasPrice;
     const gasLimit = new BN(tx.txParams.gasLimit.toString());
     const debt = gasPrice.mul(gasLimit).add(tx.txParams.amount);
-    const bal = new BN(balance.result.balance);
-    if (debt.gt(bal)) {
-      throw new Error(
-        'You do not have enough funds, need ' +
-          debt.toString() +
-          ' but only have ' +
-          bal.toString(),
-      );
-    }
+    let currNonce: number = 0;
 
     try {
       if (!tx.txParams.nonce) {
-        if (typeof balance.result.nonce !== 'number') {
-          throw new Error('Could not get nonce');
+        if (offlineSign) {
+          throw new Error(
+            'No nonce detected in tx params when signing in offline mode',
+          );
+        }
+
+        if (typeof offlineSign === 'undefined' || !offlineSign) {
+          // retrieve latest nonce
+          const balance = await this.provider.send(
+            'GetBalance',
+            signer.address.replace('0x', '').toLowerCase(),
+          );
+
+          if (balance.result === undefined) {
+            throw new Error('Could not get balance');
+          }
+
+          const bal = new BN(balance.result.balance);
+          if (debt.gt(bal)) {
+            throw new Error(
+              'You do not have enough funds, need ' +
+                debt.toString() +
+                ' but only have ' +
+                bal.toString(),
+            );
+          }
+
+          if (typeof balance.result.nonce !== 'number') {
+            throw new Error('Could not get nonce');
+          }
+
+          currNonce = balance.result.nonce;
         }
 
         const withNonce = tx.map((txObj) => {
           return {
             ...txObj,
-            nonce: txObj.nonce || balance.result.nonce + 1,
+            nonce: txObj.nonce || currNonce + 1,
             pubKey: signer.publicKey,
           };
         });
