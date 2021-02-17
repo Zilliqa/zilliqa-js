@@ -712,11 +712,6 @@ export class Blockchain implements ZilliqaModule {
     );
   }
 
-  getBatchBalance(addrList: []): Promise<RPCResponse<any, string>> {
-    // const address = validation.isBech32(addr) ? fromBech32Address(addr) : addr;
-    return this.provider.sendBatch(RPCMethod.GetBalance, addrList);
-  }
-
   /**
    * getSmartContractCode - returns the smart contract code of a deployed contract.
    *
