@@ -64,6 +64,15 @@ async function testBatchTransactionWithoutConfirm() {
     // batch transactions must be signed first
     // this would set the correct nonce for each transactions
     const signedTxList = await zilliqa.wallet.signBatch(txList);
+
+    // output signature for comparison
+    for (const signedTx of signedTxList) {
+      console.log(
+        'The expected transaction signature (before sending) is: %o',
+        signedTx.txParams.signature,
+      );
+    }
+
     const batchResult = await zilliqa.blockchain.createBatchTransactionWithoutConfirm(
       signedTxList,
     );
@@ -73,7 +82,7 @@ async function testBatchTransactionWithoutConfirm() {
       // signatures must be identical when comparing to after they are processed on the blockchain
       console.log('The transaction id is: %o', tx.id);
       console.log('The transaction nonce is: %o', tx.nonce);
-      console.log('Then transaction signature is: %o', tx.signature);
+      console.log('The actual transaction signature is: %o', tx.signature);
       console.log(
         'Is the current transaction confirmed?: %o\n',
         tx.isConfirmed(),

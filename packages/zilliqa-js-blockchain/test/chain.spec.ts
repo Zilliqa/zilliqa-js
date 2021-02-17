@@ -584,6 +584,7 @@ describe('Module: Blockchain', () => {
     // mock the two transactions
     const responses = [
       {
+        // sign txn
         id: 1,
         jsonrpc: '2.0',
         result: {
@@ -592,50 +593,84 @@ describe('Module: Blockchain', () => {
         },
       },
       {
-        id: 1,
-        jsonrpc: '2.0',
-        result: {
-          TranID: mockTxIdList[0],
-          Info: 'Non-contract txn, sent to shard',
-        },
-      },
-      {
-        id: 1,
-        jsonrpc: '2.0',
-        result: {
-          ID: mockTxIdList[0],
-          receipt: { success: true },
-        },
-      },
-      {
+        // sign txn
         id: 1,
         jsonrpc: '2.0',
         result: {
           balance: '39999999000000000',
-          nonce: 2,
+          nonce: 1,
         },
       },
       {
+        // sign txn
         id: 1,
         jsonrpc: '2.0',
         result: {
-          TranID: mockTxIdList[1],
+          balance: '39999999000000000',
+          nonce: 1,
+        },
+      },
+      [
+        {
+          // batch response
+          id: 1,
+          jsonrpc: '2.0',
+          result: {
+            TranID: mockTxIdList[0],
+            receipt: {
+              cumulative_gas: '1000',
+              success: true,
+            },
+          },
+        },
+        {
+          // batch response
+          id: 1,
+          jsonrpc: '2.0',
+          result: {
+            TranID: mockTxIdList[1],
+            receipt: {
+              cumulative_gas: '1000',
+              success: true,
+            },
+          },
+        },
+      ],
+      {
+        // txn confirm
+        id: 1,
+        jsonrpc: '2.0',
+        result: {
+          ID: mockTxIdList[0],
+          TranID: mockTxIdList[0],
           Info: 'Non-contract txn, sent to shard',
+          receipt: {
+            cumulative_gas: '1000',
+            success: true,
+          },
         },
       },
       {
+        // txn confirm
         id: 1,
         jsonrpc: '2.0',
         result: {
           ID: mockTxIdList[1],
-          receipt: { success: true },
+          TranID: mockTxIdList[1],
+          Info: 'Non-contract txn, sent to shard',
+          receipt: {
+            cumulative_gas: '1000',
+            success: true,
+          },
         },
       },
     ].map((res) => [JSON.stringify(res)] as [string]);
 
     fetch.mockResponses(...responses);
 
-    const batchResults = await blockchain.createBatchTransaction(txList);
+    const signedTxList = await wallet.signBatch(txList);
+    const batchResults = await blockchain.createBatchTransaction(signedTxList);
+
     for (const index in batchResults) {
       expect(batchResults[index]).toHaveProperty('signature');
       expect(batchResults[index]).toHaveProperty('pubKey');
@@ -690,22 +725,24 @@ describe('Module: Blockchain', () => {
           nonce: 1,
         },
       },
-      {
-        id: 1,
-        jsonrpc: '2.0',
-        result: {
-          TranID: mockTxIdList[0],
-          Info: 'Non-contract txn, sent to shard',
+      [
+        {
+          id: 1,
+          jsonrpc: '2.0',
+          result: {
+            TranID: mockTxIdList[0],
+            Info: 'Non-contract txn, sent to shard',
+          },
         },
-      },
-      {
-        id: 1,
-        jsonrpc: '2.0',
-        result: {
-          TranID: mockTxIdList[1],
-          Info: 'Non-contract txn, sent to shard',
+        {
+          id: 1,
+          jsonrpc: '2.0',
+          result: {
+            TranID: mockTxIdList[1],
+            Info: 'Non-contract txn, sent to shard',
+          },
         },
-      },
+      ],
     ].map((res) => [JSON.stringify(res)] as [string]);
 
     fetch.mockResponses(...responses);
@@ -721,6 +758,28 @@ describe('Module: Blockchain', () => {
       expect(batchResults[index]).toHaveProperty('pubKey');
       expect(batchResults[index].id).toEqual(mockTxIdList[index]);
     }
+  });
+
+  it('should throw error if batch transactions with confirm is unsigned', async () => {
+    let txList = [];
+
+    for (let i = 0; i < 2; i++) {
+      const tx = new Transaction(
+        {
+          version: 1,
+          toAddr: '0x1234567890123456789012345678901234567890',
+          amount: new BN(0),
+          gasPrice: new BN(1000),
+          gasLimit: Long.fromNumber(1000),
+        },
+        provider,
+      );
+      txList.push(tx);
+    }
+
+    await expect(blockchain.createBatchTransaction(txList)).rejects.toThrow(
+      'The transaction is not signed.',
+    );
   });
 
   it('should throw error if batch transactions without confirm is unsigned', async () => {

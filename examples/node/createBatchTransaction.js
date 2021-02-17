@@ -62,13 +62,30 @@ async function testBatchTransaction() {
     console.log(txList);
     console.log('Sending batch transactions...');
 
-    // send the batch transaction sequentially
-    const batchResult = await zilliqa.blockchain.createBatchTransaction(txList);
+    // sign the batch transaction
+    const signedTxList = await zilliqa.wallet.signBatch(txList);
+
+    // output signature for comparison
+    for (const signedTx of signedTxList) {
+      console.log(
+        'The expected transaction signature (before sending) is: %o',
+        signedTx.txParams.signature,
+      );
+    }
+
+    // send batch transaction
+    const batchResult = await zilliqa.blockchain.createBatchTransaction(
+      signedTxList,
+    );
 
     console.log('Transactions created:...\n');
     for (const confirmedTx of batchResult) {
       console.log('The transaction id is: %o', confirmedTx.id);
-      console.log(`The transaction status is: %o\n`, confirmedTx.receipt);
+      console.log(`The transaction status is: %o`, confirmedTx.receipt);
+      console.log(
+        'Then actual transaction signature is: %o',
+        confirmedTx.signature,
+      );
     }
   } catch (err) {
     console.error(err);
