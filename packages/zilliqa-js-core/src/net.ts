@@ -118,12 +118,6 @@ export interface RPCRequest<T> {
   options?: RPCRequestOptions;
 }
 
-export interface BatchRPCRequest<T> {
-  url: string;
-  payload: RPCRequestPayload<T>[];
-  options?: RPCRequestOptions;
-}
-
 interface RPCResponseBase {
   jsonrpc: '2.0';
   id: '1';
