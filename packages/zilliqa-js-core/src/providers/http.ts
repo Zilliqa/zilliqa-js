@@ -16,7 +16,14 @@
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import { BaseProvider } from './base';
-import { RPCMethod, RPCRequest, RPCResponse, performRPC } from '../net';
+import {
+  RPCMethod,
+  RPCRequest,
+  RPCResponse,
+  performRPC,
+  performBatchRPC,
+  RPCRequestPayload,
+} from '../net';
 import { composeMiddleware } from '../util';
 import { Provider, Subscriber } from '../types';
 
@@ -28,17 +35,52 @@ export class HTTPProvider extends BaseProvider implements Provider {
     };
   }
 
+  buildBatchPayload<T extends any[]>(
+    method: RPCMethod,
+    paramsList: T[],
+  ): RPCRequest<T> {
+    let payloads: RPCRequestPayload<T>[] = [];
+    for (let payloadParam of paramsList) {
+      const params: any = [payloadParam];
+      payloads.push({
+        id: 1,
+        jsonrpc: '2.0',
+        method,
+        params,
+      });
+    }
+    return {
+      url: this.nodeURL,
+      payload: payloads,
+    };
+  }
+
   send<P extends any[], R = any, E = string>(
     method: RPCMethod,
     ...params: P
   ): Promise<RPCResponse<R, E>> {
     const [tReq, tRes] = this.getMiddleware(method);
+
     const reqMiddleware = composeMiddleware(...tReq);
     const resMiddleware = composeMiddleware(...tRes);
 
     const req = reqMiddleware(this.buildPayload(method, params));
 
     return performRPC(req, resMiddleware);
+  }
+
+  sendBatch<P extends any[], R = any, E = string>(
+    method: RPCMethod,
+    params: P[],
+  ): Promise<RPCResponse<R, E>> {
+    const [tReq, tRes] = this.getMiddleware(method);
+    const reqMiddleware = composeMiddleware(...tReq);
+    const resMiddleware = composeMiddleware(...tRes);
+
+    const batchPayload = this.buildBatchPayload(method, params);
+
+    const req = reqMiddleware(batchPayload);
+    return performBatchRPC(req, resMiddleware);
   }
 
   subscribe(event: string, subscriber: Subscriber): symbol {
