@@ -592,24 +592,6 @@ describe('Module: Blockchain', () => {
           nonce: 1,
         },
       },
-      {
-        // sign txn
-        id: 1,
-        jsonrpc: '2.0',
-        result: {
-          balance: '39999999000000000',
-          nonce: 1,
-        },
-      },
-      {
-        // sign txn
-        id: 1,
-        jsonrpc: '2.0',
-        result: {
-          balance: '39999999000000000',
-          nonce: 1,
-        },
-      },
       [
         {
           // batch response
@@ -709,37 +691,29 @@ describe('Module: Blockchain', () => {
           nonce: 1,
         },
       },
-      {
-        id: 1,
-        jsonrpc: '2.0',
-        result: {
-          balance: '39999999000000000',
-          nonce: 1,
-        },
-      },
-      {
-        id: 1,
-        jsonrpc: '2.0',
-        result: {
-          balance: '39999999000000000',
-          nonce: 1,
-        },
-      },
       [
         {
+          // batch response
           id: 1,
           jsonrpc: '2.0',
           result: {
             TranID: mockTxIdList[0],
-            Info: 'Non-contract txn, sent to shard',
+            receipt: {
+              cumulative_gas: '1000',
+              success: true,
+            },
           },
         },
         {
+          // batch response
           id: 1,
           jsonrpc: '2.0',
           result: {
             TranID: mockTxIdList[1],
-            Info: 'Non-contract txn, sent to shard',
+            receipt: {
+              cumulative_gas: '1000',
+              success: true,
+            },
           },
         },
       ],
@@ -748,7 +722,6 @@ describe('Module: Blockchain', () => {
     fetch.mockResponses(...responses);
 
     const signedTxList = await wallet.signBatch(txList);
-
     const batchResults = await blockchain.createBatchTransactionWithoutConfirm(
       signedTxList,
     );
