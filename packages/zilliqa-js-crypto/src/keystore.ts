@@ -18,7 +18,7 @@
 import aes from 'aes-js';
 import hashjs from 'hash.js';
 import { pbkdf2Sync } from 'pbkdf2';
-import crypto from 'crypto';
+import scrypt from 'scrypt-js';
 import uuid from 'uuid';
 
 import { bytes } from '@zilliqa-js/util';
@@ -60,7 +60,8 @@ async function getDerivedKey(
 
   if (kdf === 'scrypt') {
     const { n, r, p, dklen } = params as ScryptParams;
-    return crypto.scryptSync(key, salt, dklen, { N: n, r: r, p: p });
+    const derivedKeyInt8Array = scrypt.syncScrypt(key, salt, n, r, p, dklen);
+    return Buffer.from(derivedKeyInt8Array);
   }
 
   throw new Error('Only pbkdf2 and scrypt are supported');
