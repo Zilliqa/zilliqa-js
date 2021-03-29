@@ -72,7 +72,7 @@ async function testBlockchain() {
           toAddr: '0xA54E49719267E8312510D7b78598ceF16ff127CE',
           amount: new BN(units.toQa('1', units.Units.Zil)), // Sending an amount in Zil (1) and converting the amount to Qa
           gasPrice: myGasPrice, // Minimum gasPrice veries. Check the `GetMinimumGasPrice` on the blockchain
-          gasLimit: Long.fromNumber(1),
+          gasLimit: Long.fromNumber(50),
         },
         false,
       ),

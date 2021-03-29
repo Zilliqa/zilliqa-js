@@ -26,8 +26,8 @@ import { testContract, zrc20, simpleDEX as dex, touchAndPay } from './fixtures';
 const CHAIN_ID: number = parseInt(process.env.CHAIN_ID as string, 10);
 const MSG_VERSION = 1;
 const VERSION = bytes.pack(CHAIN_ID, MSG_VERSION);
-const MIN_GAS_PRICE = new BN(1000000000);
-const MIN_GAS_LIMIT = Long.fromNumber(1);
+const MIN_GAS_PRICE = new BN(2000000000);
+const MIN_GAS_LIMIT = Long.fromNumber(50);
 
 const provider = new HTTPProvider(process.env.HTTP_PROVIDER as string);
 const accounts = [new Account(process.env.GENESIS_PRIV_KEY as string)];
@@ -45,7 +45,7 @@ describe('Contract: touch and pay', () => {
       await contractFactory.new(touchAndPay, '' as any).deploy(
         {
           version: VERSION,
-          gasPrice: new BN(1000000000),
+          gasPrice: MIN_GAS_PRICE,
           gasLimit: Long.fromNumber(5000),
         },
         38,
@@ -71,8 +71,8 @@ describe('Contract: touch and pay', () => {
                 'd11238e5fcd70c817c22922c500830d00bc1e778',
               ),
               amount: new BN(888),
-              gasPrice: new BN(1000000000),
-              gasLimit: Long.fromNumber(1),
+              gasPrice: MIN_GAS_PRICE,
+              gasLimit: MIN_GAS_LIMIT,
               nonce: i,
             },
             provider,
@@ -108,7 +108,7 @@ describe('Contract: hello world', () => {
       .deploy(
         {
           version: VERSION,
-          gasPrice: new BN(1000000000),
+          gasPrice: MIN_GAS_PRICE,
           gasLimit: Long.fromNumber(10000),
         },
         38,
@@ -137,7 +137,7 @@ describe('Contract: hello world', () => {
       {
         version: VERSION,
         amount: new BN(0),
-        gasPrice: new BN(1000000000),
+        gasPrice: MIN_GAS_PRICE,
         gasLimit: Long.fromNumber(10000),
       },
       38,
@@ -167,7 +167,7 @@ describe('Contract: hello world', () => {
       {
         version: VERSION,
         amount: new BN(0),
-        gasPrice: new BN(1000000000),
+        gasPrice: MIN_GAS_PRICE,
         gasLimit: Long.fromNumber(1000),
       },
     );
@@ -257,7 +257,7 @@ describe('Contract: Simple DEX', () => {
         .deploy({
           version: VERSION,
           pubKey: `${token1Owner.publicKey}`,
-          gasPrice: new BN(1000000000),
+          gasPrice: MIN_GAS_PRICE,
           gasLimit: Long.fromNumber(30000),
         }),
       contractFactory
@@ -273,7 +273,7 @@ describe('Contract: Simple DEX', () => {
         .deploy({
           version: VERSION,
           pubKey: `${token2Owner.publicKey}`,
-          gasPrice: new BN(1000000000),
+          gasPrice: MIN_GAS_PRICE,
           gasLimit: Long.fromNumber(30000),
         }),
       contractFactory
@@ -288,7 +288,7 @@ describe('Contract: Simple DEX', () => {
         .deploy({
           version: VERSION,
           pubKey: `${simpleDexOwner.publicKey}`,
-          gasPrice: new BN(1000000000),
+          gasPrice: MIN_GAS_PRICE,
           gasLimit: Long.fromNumber(30000),
         }),
     ]);
@@ -318,7 +318,7 @@ describe('Contract: Simple DEX', () => {
           version: VERSION,
           pubKey: `${token1Owner.publicKey}`,
           amount: new BN(0),
-          gasPrice: new BN(1000000000),
+          gasPrice: MIN_GAS_PRICE,
           gasLimit: Long.fromNumber(10000),
         },
       ),
@@ -332,7 +332,7 @@ describe('Contract: Simple DEX', () => {
           version: VERSION,
           pubKey: `${token2Owner.publicKey}`,
           amount: new BN(0),
-          gasPrice: new BN(1000000000),
+          gasPrice: MIN_GAS_PRICE,
           gasLimit: Long.fromNumber(10000),
         },
       ),
@@ -371,7 +371,7 @@ describe('Contract: Simple DEX', () => {
           version: VERSION,
           pubKey: `${token1Holder.publicKey}`,
           amount: new BN(0),
-          gasPrice: new BN(1000000000),
+          gasPrice: MIN_GAS_PRICE,
           gasLimit: Long.fromNumber(10000),
         },
       ),
@@ -393,7 +393,7 @@ describe('Contract: Simple DEX', () => {
           version: VERSION,
           pubKey: `${token2Holder.publicKey}`,
           amount: new BN(0),
-          gasPrice: new BN(1000000000),
+          gasPrice: MIN_GAS_PRICE,
           gasLimit: Long.fromNumber(10000),
         },
       ),
@@ -454,7 +454,7 @@ describe('Contract: Simple DEX', () => {
         version: VERSION,
         pubKey: `${token1Holder.publicKey}`,
         amount: new BN(0),
-        gasPrice: new BN(1000000000),
+        gasPrice: MIN_GAS_PRICE,
         gasLimit: Long.fromNumber(10000),
       },
       38,
@@ -622,7 +622,7 @@ describe('Contract: HWGC', async () => {
       const [deployTx1, chainchain1] = await contract1.deploy(
         {
           version: VERSION,
-          gasPrice: units.toQa('1000', units.Units.Li), // Minimum gasPrice measured in Li, converting to Qa.
+          gasPrice: MIN_GAS_PRICE, // Minimum gasPrice measured in Li, converting to Qa.
           gasLimit: Long.fromNumber(10000),
         },
         38,
@@ -647,7 +647,7 @@ describe('Contract: HWGC', async () => {
       const [deployTx2, chainchain2] = await contract2.deploy(
         {
           version: VERSION,
-          gasPrice: units.toQa('1000', units.Units.Li), // Minimum gasPrice measured in Li, converting to Qa.
+          gasPrice: MIN_GAS_PRICE, // Minimum gasPrice measured in Li, converting to Qa.
           gasLimit: Long.fromNumber(10000),
         },
         38,
@@ -671,7 +671,7 @@ describe('Contract: HWGC', async () => {
       const [deployTx3, chainchain3] = await contract3.deploy(
         {
           version: VERSION,
-          gasPrice: units.toQa('1000', units.Units.Li), // Minimum gasPrice measured in Li, converting to Qa.
+          gasPrice: MIN_GAS_PRICE, // Minimum gasPrice measured in Li, converting to Qa.
           gasLimit: Long.fromNumber(10000),
         },
         38,
@@ -703,7 +703,7 @@ describe('Contract: HWGC', async () => {
           // version, amount, gasPrice and gasLimit must be explicitly provided
           version: VERSION,
           amount: new BN(0),
-          gasPrice: units.toQa('1000', units.Units.Li), // Minimum gasPrice measured in Li, converting to Qa.
+          gasPrice: MIN_GAS_PRICE, // Minimum gasPrice measured in Li, converting to Qa.
           gasLimit: Long.fromNumber(8000),
         },
         38,
@@ -737,7 +737,7 @@ describe('Contract: HWGC', async () => {
           // version, amount, gasPrice and gasLimit must be explicitly provided
           version: VERSION,
           amount: new BN(0),
-          gasPrice: units.toQa('1000', units.Units.Li), // Minimum gasPrice measured in Li, converting to Qa.
+          gasPrice: MIN_GAS_PRICE, // Minimum gasPrice measured in Li, converting to Qa.
           gasLimit: Long.fromNumber(8000),
         },
         38,
@@ -765,7 +765,7 @@ describe('Contract: HWGC', async () => {
           // version, amount, gasPrice and gasLimit must be explicitly provided
           version: VERSION,
           amount: new BN(10000),
-          gasPrice: units.toQa('1000', units.Units.Li), // Minimum gasPrice measured in Li, converting to Qa.
+          gasPrice: MIN_GAS_PRICE, // Minimum gasPrice measured in Li, converting to Qa.
           gasLimit: Long.fromNumber(8000),
         },
         38,
@@ -793,7 +793,7 @@ describe('Contract: HWGC', async () => {
           // version, amount, gasPrice and gasLimit must be explicitly provided
           version: VERSION,
           amount: new BN(0),
-          gasPrice: units.toQa('1000', units.Units.Li), // Minimum gasPrice measured in Li, converting to Qa.
+          gasPrice: MIN_GAS_PRICE, // Minimum gasPrice measured in Li, converting to Qa.
           gasLimit: Long.fromNumber(8000),
         },
         38,

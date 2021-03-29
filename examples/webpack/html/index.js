@@ -47,7 +47,7 @@ async function test() {
           Zilliqa.units.toQa('1', Zilliqa.units.Units.Zil),
         ), // Sending an amount in Zil (1) and converting the amount to Qa
         gasPrice: myGasPrice, // Minimum gasPrice veries. Check the `GetMinimumGasPrice` on the blockchain
-        gasLimit: Zilliqa.Long.fromNumber(1),
+        gasLimit: Zilliqa.Long.fromNumber(50),
       },
       false,
     ),
