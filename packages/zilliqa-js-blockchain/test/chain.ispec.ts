@@ -172,8 +172,8 @@ describe('[Integration]: Blockchain', () => {
         version: bytes.pack(CHAIN_ID, 1),
         toAddr: toChecksumAddress('d11238e5fcd70c817c22922c500830d00bc1e778'),
         amount: new BN(888),
-        gasPrice: new BN(1000000000),
-        gasLimit: Long.fromNumber(1),
+        gasPrice: new BN(2000000000),
+        gasLimit: Long.fromNumber(50),
       },
       provider,
     );
