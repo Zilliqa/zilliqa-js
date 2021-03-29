@@ -36,7 +36,7 @@ async function onlineSign() {
         toAddr: '0xA54E49719267E8312510D7b78598ceF16ff127CE',
         amount: new BN(units.toQa('1', units.Units.Zil)),
         gasPrice: myGasPrice,
-        gasLimit: Long.fromNumber(1),
+        gasLimit: Long.fromNumber(50),
       },
       false,
     );
@@ -74,7 +74,7 @@ async function offlineSign() {
         toAddr: '0xA54E49719267E8312510D7b78598ceF16ff127CE',
         amount: new BN(units.toQa('1', units.Units.Zil)),
         gasPrice: myGasPrice,
-        gasLimit: Long.fromNumber(1),
+        gasLimit: Long.fromNumber(50),
       },
       false,
     );

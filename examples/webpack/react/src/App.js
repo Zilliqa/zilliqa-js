@@ -47,7 +47,7 @@ function App() {
                     zilWindow.units.toQa('1', zilWindow.units.Units.Zil),
                   ), // Sending an amount in Zil (1) and converting the amount to Qa
           gasPrice: myGasPrice, // Minimum gasPrice varies. Check the `GetMinimumGasPrice` on the blockchain
-          gasLimit: zilWindow.Long.fromNumber(1),
+          gasLimit: zilWindow.Long.fromNumber(50),
         },
         false,
       ),
