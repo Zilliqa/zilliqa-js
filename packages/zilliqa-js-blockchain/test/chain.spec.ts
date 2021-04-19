@@ -334,7 +334,7 @@ describe('Module: Blockchain', () => {
         code: 1,
         TxnHash:
           'ec5ef8110a285563d0104269081aa77820058067091a9b3f3ae70f38b94abda3',
-        info: 'Pending - nonce too high',
+        info: 'Pending - Dispatched',
       },
     ]);
   });
