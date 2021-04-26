@@ -31,6 +31,11 @@ export interface Provider {
     ...params: any[]
   ): Promise<RPCResponse<R, E>>;
 
+  sendBatch<R = any, E = string>(
+    method: string,
+    ...params: any[]
+  ): Promise<RPCResponse<R, E>>;
+
   subscribe?(event: string, subscriber: Subscriber): symbol;
 
   unsubscribe?(token: symbol): void;

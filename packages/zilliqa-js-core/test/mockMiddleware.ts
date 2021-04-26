@@ -18,9 +18,19 @@
 import { ReqMiddlewareFn, ResMiddlewareFn } from '../src/util';
 
 export const mockReqMiddleware: ReqMiddlewareFn = (req) => {
+  if (!Array.isArray(req.payload)) {
+    return {
+      ...req,
+      payload: {
+        ...req.payload,
+        params: [...req.payload.params, 'I am a test'],
+      },
+    };
+  }
+  // batch
   return {
     ...req,
-    payload: { ...req.payload, params: [...req.payload.params, 'I am a test'] },
+    payload: { ...req.payload, params: [...req.payload, 'I am a test'] },
   };
 };
 

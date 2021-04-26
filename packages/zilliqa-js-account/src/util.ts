@@ -75,7 +75,40 @@ export const isTxParams = (obj: unknown): obj is TxParams => {
 };
 
 export const formatOutgoingTx: ReqMiddlewareFn<[TxParams]> = (req) => {
+  // if batch create transaction, payload is array
   if (
+    Array.isArray(req.payload) &&
+    req.payload[0].method === RPCMethod.CreateTransaction &&
+    isTxParams(req.payload[0].params[0])
+  ) {
+    // loop thru batch payloads and format the params
+    let payloads = [];
+    for (const txPayload of req.payload) {
+      const txConfig = txPayload.params[0];
+      payloads.push({
+        ...txPayload,
+        params: [
+          {
+            ...txConfig,
+            amount: txConfig.amount.toString(),
+            gasLimit: txConfig.gasLimit.toString(),
+            gasPrice: txConfig.gasPrice.toString(),
+          },
+        ],
+      });
+    }
+
+    const ret = {
+      ...req,
+      payload: payloads,
+    };
+
+    return ret;
+  }
+
+  // non-batch create transactions
+  if (
+    !Array.isArray(req.payload) &&
     req.payload.method === RPCMethod.CreateTransaction &&
     isTxParams(req.payload.params[0])
   ) {

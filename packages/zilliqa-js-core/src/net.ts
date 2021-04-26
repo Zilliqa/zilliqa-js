@@ -114,7 +114,7 @@ interface RPCRequestOptions {
 
 export interface RPCRequest<T> {
   url: string;
-  payload: RPCRequestPayload<T>;
+  payload: RPCRequestPayload<T> | RPCRequestPayload<T>[];
   options?: RPCRequestOptions;
 }
 
@@ -124,7 +124,8 @@ interface RPCResponseBase {
 }
 
 export interface RPCResponseSuccess<R = any> extends RPCResponseBase {
-  result: R;
+  batch_result?: R; // for batch response
+  result: R; // for non-batch response
   error: undefined;
 }
 
@@ -171,6 +172,53 @@ export const performRPC = async <R, E, D extends any[], T = RPCResponse<R, E>>(
         return { ...body, req: request };
       })
       .then(handler);
+  } catch (err) {
+    throw err;
+  }
+};
+
+// identical to performRPC; difference is the response
+export const performBatchRPC = async <
+  R,
+  E,
+  D extends any[],
+  T = RPCResponse<R, E>
+>(
+  request: RPCRequest<D>,
+  handler: RPCResponseHandler<R, E, T>,
+): Promise<T> => {
+  try {
+    const response = await fetch(request.url, {
+      method: 'POST',
+      cache: 'no-cache',
+      mode: 'cors',
+      redirect: 'follow',
+      referrer: 'no-referrer',
+      body: JSON.stringify(request.payload),
+      headers: {
+        ...DEFAULT_HEADERS,
+        ...((request.options && request.options.headers) || {}),
+      },
+    });
+
+    return (
+      response
+        .json()
+        .then((batch_result) => {
+          return { batch_result, req: request };
+        })
+        // no handler as compared to performRPC to preserve the body array
+        // e.g. response
+        /*
+      { body:
+        [ { id: 1, jsonrpc: '2.0', result: [Object] },
+          { id: 1, jsonrpc: '2.0', result: [Object] } ],
+       req:
+        { url: 'https://dev-api.zilliqa.com',
+          payload: [ [Object], [Object] ] } }
+      */
+        .then()
+    );
   } catch (err) {
     throw err;
   }

@@ -379,6 +379,58 @@ export class Blockchain implements ZilliqaModule {
     }
   }
 
+  // used together with signed batch
+  // this method waits for each txn to confirm
+  // see @createBatchTransactionWithoutConfirm for transactions without confirmation
+  async createBatchTransaction(
+    signedTxList: Transaction[],
+    maxAttempts: number = GET_TX_ATTEMPTS,
+    interval: number = 1000,
+    blockConfirm: boolean = false,
+  ): Promise<Transaction[]> {
+    try {
+      let txParamsList = [];
+      for (const signedTx of signedTxList) {
+        if (signedTx.txParams.signature === undefined) {
+          throw new Error('The transaction is not signed.');
+        }
+        txParamsList.push({
+          ...signedTx.txParams,
+          priority: signedTx.toDS,
+        });
+      }
+
+      const response = await this.provider.sendBatch(
+        RPCMethod.CreateTransaction,
+        txParamsList,
+      );
+
+      if (response.error) {
+        throw response.error;
+      }
+
+      // retrieve batch result
+      let batchResults = [];
+      for (let i = 0; i < signedTxList.length; i++) {
+        const tx = signedTxList[i];
+        const txRes = response.batch_result[i];
+
+        if (blockConfirm) {
+          batchResults.push(
+            await tx.blockConfirm(txRes.result.TranID, maxAttempts, interval),
+          );
+        } else {
+          batchResults.push(
+            await tx.confirm(txRes.result.TranID, maxAttempts, interval),
+          );
+        }
+      }
+      return batchResults;
+    } catch (err) {
+      throw err;
+    }
+  }
+
   /**
    * createTransactionRaw
    *
@@ -417,6 +469,44 @@ export class Blockchain implements ZilliqaModule {
       }
       tx.id = response.result.TranID;
       return tx;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  // used together with signed batch
+  async createBatchTransactionWithoutConfirm(
+    signedTxList: Transaction[],
+  ): Promise<Transaction[]> {
+    try {
+      let txParamsList = [];
+      for (let signedTx of signedTxList) {
+        if (signedTx.txParams.signature === undefined) {
+          throw new Error('The transaction is not signed.');
+        }
+        txParamsList.push({
+          ...signedTx.txParams,
+          priority: signedTx.toDS,
+        });
+      }
+
+      const response = await this.provider.sendBatch(
+        RPCMethod.CreateTransaction,
+        txParamsList,
+      );
+
+      if (response.error) {
+        throw response.error;
+      }
+
+      let batchResults = [];
+      for (let i = 0; i < signedTxList.length; i++) {
+        const tx = signedTxList[i];
+        const txRes = response.batch_result[i];
+        tx.id = txRes.result.TranID;
+        batchResults.push(tx);
+      }
+      return batchResults;
     } catch (err) {
       throw err;
     }

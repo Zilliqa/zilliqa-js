@@ -255,6 +255,51 @@ There is an offline mode that can be activated manually by setting the optional 
 
 - `Promise<Transaction>` - a signed transaction.
 
+### `signBatch(txList: Transaction[]): Promise<Transaction[]>`
+
+Sign a list of `Transaction` with the default `Account`. This method is asynchronous
+as it will attempt to obtain the `nonce` from the `Provider`.
+
+**Parameters**
+
+- `txList`: `Transaction[]` - a list of `Transaction` instances.
+
+**Returns**
+
+- `Promise<Transaction[]>` - a list of signed transactions.
+
+**Example**
+
+```json
+// zilliqa, wallet obj declaration omitted for clarity
+
+let txList = [];
+for (let i = 0; i < 2; i++) {
+  // create a new transaction object
+  const tx = zilliqa.transactions.new(
+    {
+      version: VERSION,
+      toAddr: '0xA54E49719267E8312510D7b78598ceF16ff127CE',
+      amount: new BN(units.toQa('1', units.Units.Zil)),
+      gasPrice: units.toQa('2000', units.Units.Li),
+      gasLimit: Long.fromNumber(1),
+    },
+    false,
+  );
+
+  txList.push(tx);
+}
+
+// sign the batch transactions sequentially
+const batchResult = await zilliqa.wallet.signBatch(txList);
+
+for (const signedTx of batchResult) {
+  // nonce must be different
+  console.log('The signed transaction nonce is: %o', signedTx.nonce);
+  console.log('The signed transaction signature is: %o\n', signedTx.signature);
+}
+```
+
 ## `Transaction`
 
 A class that represents a single `Transaction` on the Zilliqa network. It is a functor. Its purpose is to encode the possible states a Transaction can be in:  Confirmed, Rejected, Pending, or Initialised (i.e., not broadcasted).
