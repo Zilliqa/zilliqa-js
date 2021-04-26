@@ -24,7 +24,6 @@ import {
   BlockList,
   DsBlockObj,
   GET_TX_ATTEMPTS,
-  PendingTxnResult,
   TransactionStatusObj,
   TransactionStatus,
   PendingTxns,
@@ -46,29 +45,32 @@ export class Blockchain implements ZilliqaModule {
   signer: Wallet;
   provider: Provider;
   pendingErrorMap: { [key: number]: string } = {
-    0: 'Not Present - Txn was already processed and confirmed or Txn does not exist',
-    1: 'Pending - nonce too high',
-    2: 'Pending - blk gas limit exceeded',
-    3: 'Pending - consensus failure',
-    10: 'Dropped - math error',
-    11: 'Dropped - scilla invocation error',
-    12: 'Dropped - account init error',
-    13: 'Dropped - invalid source account',
-    14: 'Dropped - gas limit too high',
-    15: 'Dropped - txn type unknown',
-    16: 'Dropped - txn in wrong shard',
-    17: 'Dropped - account in wrong shard',
-    18: 'Dropped - code size too large',
-    19: 'Dropped - txn verification error',
-    20: 'Dropped - gas limit too low',
-    21: 'Dropped - insuff balance',
-    22: 'Dropped - insuff gas for checker',
-    23: 'Dropped - duplicate txn found',
-    24: 'Dropped - txn w/ higher gas found',
-    25: 'Dropped - invalid dest account',
-    26: 'Dropped - state addition error',
-    27: 'Dropped - Txn has lower nonce than expected',
-    255: 'Error - Internal database error',
+    0: 'Transaction not found',
+    1: 'Pending - Dispatched',
+    2: 'Pending - Soft-confirmed (awaiting Tx block generation)',
+    4: 'Pending - Nonce is higher than expected',
+    5: 'Pending - Microblock gas limit exceeded',
+    6: 'Pending - Consensus failure in network',
+    3: 'Confirmed',
+    10: 'Rejected - Transaction caused math error',
+    11: 'Rejected - Scilla invocation error',
+    12: 'Rejected - Contract account initialization error',
+    13: 'Rejected - Invalid source account',
+    14: 'Rejected - Gas limit higher than shard gas limit',
+    15: 'Rejected - Unknown transaction type',
+    16: 'Rejected - Transaction sent to wrong shard',
+    17: 'Rejected - Contract & source account cross-shard issue',
+    18: 'Rejected - Code size exceeded limit',
+    19: 'Rejected - Transaction verification failed',
+    20: 'Rejected - Gas limit too low',
+    21: 'Rejected - Insufficient balance',
+    22: 'Rejected - Insufficient gas to invoke Scilla checker',
+    23: 'Rejected - Duplicate transaction exists',
+    24: 'Rejected - Transaction with same nonce but same/higher gas price exists',
+    25: 'Rejected - Invalid destination address',
+    26: 'Rejected - Failed to add contract account to state',
+    27: 'Rejected - Nonce is lower than expected',
+    255: 'Rejected - Internal error',
   };
 
   transactionStatusMap: { [key: number]: { [key: number]: string } } = {
@@ -555,30 +557,6 @@ export class Blockchain implements ZilliqaModule {
    */
   getMinimumGasPrice() {
     return this.provider.send<string, string>(RPCMethod.GetMinimumGasPrice);
-  }
-
-  /**
-   * getPendingTxn
-   * See the pending status of transaction
-   * @param txId
-   */
-  async getPendingTxn(txId: string): Promise<PendingTxnResult> {
-    try {
-      const response = await this.provider.send(
-        RPCMethod.GetPendingTxn,
-        txId.replace('0x', '').toLowerCase(),
-      );
-
-      if (response.error) {
-        return Promise.reject(response.error);
-      }
-
-      response.result.info = this.pendingErrorMap[response.result.code];
-
-      return response.result;
-    } catch (err) {
-      throw err;
-    }
   }
 
   /**

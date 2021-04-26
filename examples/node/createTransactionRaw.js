@@ -32,10 +32,6 @@ async function testBlockchain() {
     const tx = JSON.parse(payload);
     const id = await zilliqa.blockchain.createTransactionRaw(payload);
 
-    // check the pending status
-    const pendingStatus = await zilliqa.blockchain.getPendingTxn(id);
-    console.log(`Pending status is: `);
-    console.log(pendingStatus);
 
     // process confirm
     console.log(`The transaction id is:`, id);
