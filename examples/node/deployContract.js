@@ -131,11 +131,6 @@ async function testBlockchain() {
       false,
     );
 
-    // check the pending status
-    const pendingStatus = await zilliqa.blockchain.getPendingTxn(deployTx.id);
-    console.log(`Pending status is: `);
-    console.log(pendingStatus);
-
     // process confirm
     console.log(`The transaction id is:`, deployTx.id);
     console.log(`Waiting transaction be confirmed`);

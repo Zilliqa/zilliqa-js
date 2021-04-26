@@ -24,7 +24,6 @@ import {
   BlockList,
   DsBlockObj,
   GET_TX_ATTEMPTS,
-  PendingTxnResult,
   TransactionStatusObj,
   TransactionStatus,
   PendingTxns,
@@ -558,30 +557,6 @@ export class Blockchain implements ZilliqaModule {
    */
   getMinimumGasPrice() {
     return this.provider.send<string, string>(RPCMethod.GetMinimumGasPrice);
-  }
-
-  /**
-   * getPendingTxn
-   * See the pending status of transaction
-   * @param txId
-   */
-  async getPendingTxn(txId: string): Promise<PendingTxnResult> {
-    try {
-      const response = await this.provider.send(
-        RPCMethod.GetPendingTxn,
-        txId.replace('0x', '').toLowerCase(),
-      );
-
-      if (response.error) {
-        return Promise.reject(response.error);
-      }
-
-      response.result.info = this.pendingErrorMap[response.result.code];
-
-      return response.result;
-    } catch (err) {
-      throw err;
-    }
   }
 
   /**
