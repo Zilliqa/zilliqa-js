@@ -1,6 +1,6 @@
 {
   "name": "@zilliqa-js/crypto",
-  "version": "2.2.1",
+  "version": "2.3.0-alpha.0",
   "description": "Core crypto utilities for signing/verification/hashing Zilliqa transactions.",
   "author": "Ian Tan (https://github.com/iantanwx)",
   "maintainers": [
