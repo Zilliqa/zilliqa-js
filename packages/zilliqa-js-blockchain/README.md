@@ -257,9 +257,9 @@ Returns the status of a specified transaction. This API is available from Zilliq
 
 **Returns**
 
-- `Promise<RPCResponse<TransactionStatusObj>` - Status code of the transaction. Refer to [GetTransactionStatus](https://dev.zilliqa.com/docs/apis/api-transaction-get-transaction-status) for the list of status code
+- `Promise<RPCResponse<TransactionStatusObj>` - Status code of the transaction. Refer to [GetTransactionStatus](https://dev.zilliqa.com/docs/apis/api-transaction-get-transaction-status) for the full list of status code.
 
-*The GetTransactionStatus API is available only on https://api.zilliqa.com/. It is disabled for community-hosted or private-hosted seed nodes.*
+*Note: This API is available only on https://api.zilliqa.com/. It is disabled for community-hosted or private-hosted seed nodes.*
 
 ### `getTxnBodiesForTxBlock(txBlock: number): Promise<RPCResponse<TransactionObj[], string>>`
 
