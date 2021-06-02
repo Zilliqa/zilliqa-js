@@ -25,8 +25,6 @@ import {
   DsBlockObj,
   GET_TX_ATTEMPTS,
   TransactionStatusObj,
-  TransactionStatus,
-  PendingTxns,
   Provider,
   RPCMethod,
   RPCResponse,
@@ -647,31 +645,6 @@ export class Blockchain implements ZilliqaModule {
    */
   getMinimumGasPrice() {
     return this.provider.send<string, string>(RPCMethod.GetMinimumGasPrice);
-  }
-
-  /**
-   * getPendingTxns
-   *
-   * Returns the pending status of all unvalidated Transactions.
-   *
-   */
-  async getPendingTxns(): Promise<PendingTxns> {
-    try {
-      const response = await this.provider.send(RPCMethod.GetPendingTxns);
-      if (response.error) {
-        return Promise.reject(response.error);
-      }
-
-      if (response.result.Txns.length) {
-        response.result.Txns.forEach((txn: TransactionStatus) => {
-          txn.info = this.pendingErrorMap[txn.code];
-        });
-      }
-
-      return response.result;
-    } catch (err) {
-      throw err;
-    }
   }
 
   /**
