@@ -5,10 +5,6 @@ jobs:
     - os: linux
       dist: xenial
       node_js:
-        - 10
-    - os: linux
-      dist: xenial
-      node_js:
         - 12
     - os: linux
       dist: xenial
@@ -17,18 +13,11 @@ jobs:
     - os: linux
       dist: bionic
       node_js:
-        - 10
-    - os: linux
-      dist: bionic
-      node_js:
         - 12
     - os: linux
       dist: bionic
       node_js:
         - 14
-    - os: osx
-      node_js:
-        - 10
     - os: osx
       node_js:
         - 12

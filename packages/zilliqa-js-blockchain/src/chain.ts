@@ -765,6 +765,21 @@ export class Blockchain implements ZilliqaModule {
   }
 
   /**
+   * getSmartContractSubStateBatch - Quires the contract state using batch rpc.
+   * @param reqs array of address variableName indices
+   *  e.g ["5938fc8af82250ad6cf1da3bb92f4aa005cb2717","balances",['0x381f4008505e940ad7681ec3468a719060caf796']]
+   * @returns 
+   */
+  getSmartContractSubStateBatch(
+    reqs: any[]
+  ): Promise<RPCResponse<any, any>>{
+    return this.provider.sendBatch(
+      RPCMethod.GetSmartContractSubState,
+      reqs,
+    );
+  }
+
+  /**
    * getSmartContracts
    *
    * @param {string} address

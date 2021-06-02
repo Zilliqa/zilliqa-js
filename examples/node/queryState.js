@@ -67,6 +67,21 @@ async function test() {
     ['0x381f4008505e940ad7681ec3468a719060caf796'],
   );
   console.log(state4.result);
+
+  console.log(
+    `\n\nGet substate using batch api.`,
+  );
+  const req1 = ["5938fc8af82250ad6cf1da3bb92f4aa005cb2717","balances",['0x381f4008505e940ad7681ec3468a719060caf796']]
+  const req2 = ["5938fc8af82250ad6cf1da3bb92f4aa005cb2717","balances",['0xa476fcedc061797fa2a6f80bd9e020a056904298']]
+
+  const state5 = await zilliqa.blockchain.getSmartContractSubStateBatch(
+    [
+        req1,req2
+    ]
+  );
+
+  const batchResult = JSON.stringify(state5.batch_result);
+  console.log(batchResult);
 }
 
 test();

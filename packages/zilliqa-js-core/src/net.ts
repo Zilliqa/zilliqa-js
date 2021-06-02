@@ -101,7 +101,7 @@ export enum RPCErrorCode {
 }
 
 export interface RPCRequestPayload<T> {
-  id: 1;
+  id: number;
   jsonrpc: '2.0';
   method: RPCMethod;
   params: T;
@@ -120,7 +120,7 @@ export interface RPCRequest<T> {
 
 interface RPCResponseBase {
   jsonrpc: '2.0';
-  id: '1';
+  id: number;
 }
 
 export interface RPCResponseSuccess<R = any> extends RPCResponseBase {
