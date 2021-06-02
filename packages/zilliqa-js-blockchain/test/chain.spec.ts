@@ -308,37 +308,6 @@ describe('Module: Blockchain', () => {
     expect(result.statusMessage).toEqual('Confirmed');
   });
 
-  it('should receive pending transaction list', async () => {
-    const responses = [
-      {
-        id: 1,
-        jsonrpc: '2.0',
-        result: {
-          Txns: [
-            {
-              code: 1,
-              TxnHash:
-                'ec5ef8110a285563d0104269081aa77820058067091a9b3f3ae70f38b94abda3',
-            },
-          ],
-        },
-      },
-    ].map((res) => [JSON.stringify(res)] as [string]);
-
-    fetch.mockResponses(...responses);
-    const result = await blockchain.getPendingTxns();
-    expect(result.Txns).toBeDefined();
-    // @ts-ignore
-    expect(result.Txns).toEqual([
-      {
-        code: 1,
-        TxnHash:
-          'ec5ef8110a285563d0104269081aa77820058067091a9b3f3ae70f38b94abda3',
-        info: 'Pending - Dispatched',
-      },
-    ]);
-  });
-
   it('should receive miner info', async () => {
     const responses = [
       {

@@ -258,20 +258,10 @@ export interface EventParam {
   value: any;
 }
 
-export interface PendingTxns {
-  Txns: TransactionStatus[];
-}
-
 export interface TransactionStatus {
   code: number;
   TxnHash: string;
   info: string;
-}
-
-export interface PendingTxnResult {
-  code: number;
-  confirmed: boolean;
-  pending: boolean;
 }
 
 export interface MinerInfo {

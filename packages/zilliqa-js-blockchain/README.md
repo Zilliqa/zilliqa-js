@@ -248,6 +248,19 @@ for (const tx of batchResults) {
 }
 ```
 
+### `getTransactionStatus(txHash: string): Promise<RPCResponse<TransactionStatusObj>`
+
+Returns the status of a specified transaction. This API is available from Zilliqa V7.0.0 onwards and supports all transaction statuses (unconfirmed, confirmed, and rejected).
+
+**Parameters**
+- `txHash`: `string` - Specified TX id to check for the status.
+
+**Returns**
+
+- `Promise<RPCResponse<TransactionStatusObj>` - Status code of the transaction. Refer to [GetTransactionStatus](https://dev.zilliqa.com/docs/apis/api-transaction-get-transaction-status) for the list of status code
+
+*The GetTransactionStatus API is available only on https://api.zilliqa.com/. It is disabled for community-hosted or private-hosted seed nodes.*
+
 ### `getTxnBodiesForTxBlock(txBlock: number): Promise<RPCResponse<TransactionObj[], string>>`
 
 Returns the validated transactions (in verbose form) included within a specified final transaction block.

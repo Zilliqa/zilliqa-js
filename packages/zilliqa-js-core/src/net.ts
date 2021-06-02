@@ -58,8 +58,6 @@ export enum RPCMethod {
   GetNumTxnsTxEpoch = 'GetNumTxnsTxEpoch',
   GetNumTxnsDSEpoch = 'GetNumTxnsDSEpoch',
   GetMinimumGasPrice = 'GetMinimumGasPrice',
-  GetPendingTxn = 'GetPendingTxn',
-  GetPendingTxns = 'GetPendingTxns',
 
   // Contract-related methods
   GetSmartContracts = 'GetSmartContracts',
