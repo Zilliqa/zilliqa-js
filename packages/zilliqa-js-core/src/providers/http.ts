@@ -52,9 +52,8 @@ export class HTTPProvider extends BaseProvider implements Provider {
       } else {
         params = [payloadParams];
       }
-      console.log('i is :%o\n', i);
       payloads.push({
-        id: i + 1,
+        id: i,
         jsonrpc: '2.0',
         method,
         params,
