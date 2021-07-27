@@ -32,7 +32,6 @@ async function testBlockchain() {
     const tx = JSON.parse(payload);
     const id = await zilliqa.blockchain.createTransactionRaw(payload);
 
-
     // process confirm
     console.log(`The transaction id is:`, id);
     console.log(`Waiting transaction be confirmed`);
