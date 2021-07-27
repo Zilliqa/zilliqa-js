@@ -240,7 +240,7 @@ export class Wallet extends Signer {
   }
 
   async signBatch(txList: Transaction[]): Promise<Transaction[]> {
-    let batchResults = [];
+    const batchResults = [];
     if (!this.defaultAccount) {
       throw new Error('This wallet has no default account.');
     }
@@ -261,7 +261,7 @@ export class Wallet extends Signer {
         throw new Error('Could not get nonce');
       }
 
-      let nextNonce = balance.result.nonce + 1;
+      const nextNonce = balance.result.nonce + 1;
 
       for (let index = 0; index < txList.length; index++) {
         // increment nonce for each new transaction

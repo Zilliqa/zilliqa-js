@@ -24,7 +24,7 @@ const passphrase = 'strong_password';
 const KEYSTORE_NUMS = 10;
 
 async function generateTestKeystores() {
-  let results = [];
+  const results = [];
   for (let i = 0; i < KEYSTORE_NUMS; i++) {
     const privateKey = schnorr.generatePrivateKey();
     try {

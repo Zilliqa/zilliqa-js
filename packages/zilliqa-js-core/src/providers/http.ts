@@ -39,12 +39,12 @@ export class HTTPProvider extends BaseProvider implements Provider {
     method: RPCMethod,
     paramsList: T[],
   ): RPCRequest<T> {
-    let payloads: RPCRequestPayload<T>[] = [];
+    const payloads: RPCRequestPayload<T>[] = [];
     for (let i = 0; i < paramsList.length; i++) {
       // most of the payloads should be a single param, e.g. GetTransaction
       // however, there are special cases e.g. GetSmartContractSubState & GetTransactionsForTxBlockEx
       // where the param field is a list
-      let payloadParams = paramsList[i];
+      const payloadParams = paramsList[i];
       let params: any;
       if (Array.isArray(payloadParams)) {
         // for those param field that is already a list

@@ -212,7 +212,7 @@ describe('Wallet', () => {
     const pubKey = (wallet.defaultAccount &&
       wallet.defaultAccount.publicKey) as string;
 
-    let txList = [];
+    const txList = [];
     for (let i = 0; i < 2; i++) {
       const tx = new Transaction(
         {
@@ -286,7 +286,7 @@ describe('Wallet', () => {
     const pubKey = getPubKeyFromPrivateKey(schnorr.generatePrivateKey());
     const [wallet] = createWallet(0);
 
-    let txList: Transaction[] = [];
+    const txList: Transaction[] = [];
     for (let i = 0; i < 2; i++) {
       const tx = new Transaction(
         {

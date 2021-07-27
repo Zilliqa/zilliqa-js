@@ -387,7 +387,7 @@ export class Blockchain implements ZilliqaModule {
     blockConfirm: boolean = false,
   ): Promise<Transaction[]> {
     try {
-      let txParamsList = [];
+      const txParamsList = [];
       for (const signedTx of signedTxList) {
         if (signedTx.txParams.signature === undefined) {
           throw new Error('The transaction is not signed.');
@@ -408,7 +408,7 @@ export class Blockchain implements ZilliqaModule {
       }
 
       // retrieve batch result
-      let batchResults = [];
+      const batchResults = [];
       for (let i = 0; i < signedTxList.length; i++) {
         const tx = signedTxList[i];
         const txRes = response.batch_result[i];
@@ -477,8 +477,8 @@ export class Blockchain implements ZilliqaModule {
     signedTxList: Transaction[],
   ): Promise<Transaction[]> {
     try {
-      let txParamsList = [];
-      for (let signedTx of signedTxList) {
+      const txParamsList = [];
+      for (const signedTx of signedTxList) {
         if (signedTx.txParams.signature === undefined) {
           throw new Error('The transaction is not signed.');
         }
@@ -497,7 +497,7 @@ export class Blockchain implements ZilliqaModule {
         throw response.error;
       }
 
-      let batchResults = [];
+      const batchResults = [];
       for (let i = 0; i < signedTxList.length; i++) {
         const tx = signedTxList[i];
         const txRes = response.batch_result[i];
@@ -741,15 +741,10 @@ export class Blockchain implements ZilliqaModule {
    * getSmartContractSubStateBatch - Quires the contract state using batch rpc.
    * @param reqs array of address variableName indices
    *  e.g ["5938fc8af82250ad6cf1da3bb92f4aa005cb2717","balances",['0x381f4008505e940ad7681ec3468a719060caf796']]
-   * @returns 
+   * @returns
    */
-  getSmartContractSubStateBatch(
-    reqs: any[]
-  ): Promise<RPCResponse<any, any>>{
-    return this.provider.sendBatch(
-      RPCMethod.GetSmartContractSubState,
-      reqs,
-    );
+  getSmartContractSubStateBatch(reqs: any[]): Promise<RPCResponse<any, any>> {
+    return this.provider.sendBatch(RPCMethod.GetSmartContractSubState, reqs);
   }
 
   /**
