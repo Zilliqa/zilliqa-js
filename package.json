@@ -23,8 +23,10 @@
     "test:build": "cross-env TEST_ENV=unit jest -c jest.build.config.js",
     "test:integration": "cross-env TEST_ENV=integration jest -c jest.iconfig.js --runInBand --verbose --collectCoverage=false",
     "release": "yarn bootstrap && yarn bundle && lerna publish --exact",
+    "prettier": "prettier --write '**/*.{ts,tsx,js}' --config .prettierrc",
+    "format": "npm run prettier -- --write",
     "lint": "eslint . --ext .ts -c .eslintrc.js",
-    "format": "prettier --write '**/*.{ts,tsx,js}' --config .prettierrc"
+    "validate": "npm run lint && npm run prettier -- --list-different"
   },
   "workspaces": [
     "packages/*"
