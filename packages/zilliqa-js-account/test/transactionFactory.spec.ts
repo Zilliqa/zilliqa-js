@@ -21,7 +21,6 @@ import { BN, Long } from '@zilliqa-js/util';
 import { Transaction } from '../src/transaction';
 import { TransactionFactory } from '../src/transactionFactory';
 import { Wallet } from '../src/wallet';
-// tslint:disable-next-line: no-implicit-dependencies
 import fetch from 'jest-fetch-mock';
 
 const provider = new HTTPProvider('https://mock.com');

@@ -34,9 +34,7 @@ export class WebSocketProvider {
     url: string,
     options?: SubscriptionOption,
   ): WebSocket | W3CWebsocket {
-    // tslint:disable-next-line: no-string-literal
     if (typeof window !== 'undefined' && (<any>window).WebSocket) {
-      // tslint:disable-next-line: no-string-literal
       return new WebSocket(url, options !== undefined ? options.protocol : []);
     } else {
       const headers = options !== undefined ? options.headers || {} : undefined;

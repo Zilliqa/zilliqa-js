@@ -43,7 +43,6 @@ const GENERATOR = [0x3b6a57b2, 0x26508e6d, 0x1ea119fa, 0x3d4233dd, 0x2a1462b3];
 
 const polymod = (values: Buffer): number => {
   let chk = 1;
-  // tslint:disable-next-line
   for (let p = 0; p < values.length; ++p) {
     const top = chk >> 25;
     chk = ((chk & 0x1ffffff) << 5) ^ values[p];
@@ -91,7 +90,6 @@ function createChecksum(hrp: string, data: Buffer) {
 export const encode = (hrp: string, data: Buffer) => {
   const combined = Buffer.concat([data, createChecksum(hrp, data)]);
   let ret = hrp + '1';
-  // tslint:disable-next-line
   for (let p = 0; p < combined.length; ++p) {
     ret += CHARSET.charAt(combined[p]);
   }
@@ -166,7 +164,6 @@ export const convertBits = (
   let bits = 0;
   const ret = [];
   const maxv = (1 << toWidth) - 1;
-  // tslint:disable-next-line
   for (let p = 0; p < data.length; ++p) {
     const value = data[p];
     if (value < 0 || value >> fromWidth !== 0) {
