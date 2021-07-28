@@ -82,7 +82,7 @@ export const formatOutgoingTx: ReqMiddlewareFn<[TxParams]> = (req) => {
     isTxParams(req.payload[0].params[0])
   ) {
     // loop thru batch payloads and format the params
-    let payloads = [];
+    const payloads = [];
     for (const txPayload of req.payload) {
       const txConfig = txPayload.params[0];
       payloads.push({

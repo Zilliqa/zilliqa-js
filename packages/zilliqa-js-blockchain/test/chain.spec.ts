@@ -530,8 +530,8 @@ describe('Module: Blockchain', () => {
   });
 
   it('should sign and send batch transactions with confirm', async () => {
-    let txList = [];
-    let mockTxIdList = [
+    const txList = [];
+    const mockTxIdList = [
       'ffb54c1f25e4bf95747712aebd62a9451a77557f86fb6c4895ee54d07615c4c2',
       'ca7f6a3001241eeb2fffbcb96bb4a60df23b2a94aafb921b26523813999f55b3',
     ];
@@ -631,8 +631,8 @@ describe('Module: Blockchain', () => {
   });
 
   it('should send batch transactions without confirm', async () => {
-    let txList = [];
-    let mockTxIdList = [
+    const txList = [];
+    const mockTxIdList = [
       'ffb54c1f25e4bf95747712aebd62a9451a77557f86fb6c4895ee54d07615c4c2',
       'ca7f6a3001241eeb2fffbcb96bb4a60df23b2a94aafb921b26523813999f55b3',
     ];
@@ -703,7 +703,7 @@ describe('Module: Blockchain', () => {
   });
 
   it('should throw error if batch transactions with confirm is unsigned', async () => {
-    let txList = [];
+    const txList = [];
 
     for (let i = 0; i < 2; i++) {
       const tx = new Transaction(
@@ -725,7 +725,7 @@ describe('Module: Blockchain', () => {
   });
 
   it('should throw error if batch transactions without confirm is unsigned', async () => {
-    let txList = [];
+    const txList = [];
 
     for (let i = 0; i < 2; i++) {
       const tx = new Transaction(

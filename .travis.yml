@@ -35,6 +35,7 @@ install:
 script:
   - yarn bootstrap
   - yarn run test
+  - yarn validate
   - yarn bundle
   - yarn build:web
 after_success:

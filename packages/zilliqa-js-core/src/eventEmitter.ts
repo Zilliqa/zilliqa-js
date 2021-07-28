@@ -30,7 +30,6 @@ class EventEmitter<T> {
     this.emitter = new mitt(this.handlers);
     this.off = this.emitter.off.bind(this);
     this.emit = this.emitter.emit.bind(this);
-    // tslint:disable-next-line: no-empty
     this.promise = new Promise((resolve, reject) => {
       this.resolve = resolve;
       this.reject = reject;
@@ -39,7 +38,6 @@ class EventEmitter<T> {
   }
 
   resetHandlers() {
-    // tslint:disable-next-line: forin
     for (const i in this.handlers) {
       delete this.handlers[i];
     }
