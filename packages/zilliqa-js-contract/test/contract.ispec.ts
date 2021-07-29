@@ -237,8 +237,6 @@ describe('Contract: Simple DEX', () => {
         return blockchain.createTransaction(tx, 33, 1500);
       }),
     );
-
-    console.log('Distributed tokens.');
   });
 
   // deploy our contracts;

@@ -19,6 +19,7 @@ module.exports = {
   },
   plugins: ['react', '@typescript-eslint'],
   rules: {
+    'no-unreachable': 2,
     // The following rules are added to minimize changeset
     // Reduce the following rules gradually
     '@typescript-eslint/no-explicit-any': 0,
