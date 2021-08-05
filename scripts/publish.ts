@@ -19,7 +19,7 @@ import lerna from 'lerna';
 import * as childproc from 'child_process';
 
 import project from './project';
-import { createLogger, c } from './logger';
+import { createLogger } from './logger';
 
 const DIST_TAG = 'next';
 

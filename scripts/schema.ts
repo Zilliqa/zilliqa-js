@@ -20,7 +20,6 @@ import * as path from 'path';
 import * as tjs from 'typescript-json-schema';
 
 import project from './project';
-import tsConfig from '../tsconfig.base.json';
 
 const outputs = process.argv.slice(2)[0].split(',');
 

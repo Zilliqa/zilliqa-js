@@ -16,7 +16,6 @@
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import BN from 'bn.js';
-import hash from 'hash.js';
 
 declare namespace Elliptic {
   type HexEnc = 'hex';
