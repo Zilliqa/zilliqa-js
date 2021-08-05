@@ -30,7 +30,6 @@ import ts from 'typescript';
 import project from './project';
 import { c, createLogger } from './logger';
 
-const logPreProcess = createLogger('preprocess');
 const logBundle = createLogger('bundle');
 
 function getKeys(p) {
