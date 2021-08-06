@@ -4,7 +4,7 @@ This example will demonstrate how to use the **webpack variant** of ZilliqaJS in
 The webpack variant comes in a `zilliqa.min.js` file and is meant for users who wishes to use ZilliqaJS functions in traditional HTML. Users need to build the webpack variant and import the js file in the HTML.
 
 ## Note: Frontend Framework Users
-If you are using a frontend framework such as React, Vue, AngularJS, etc, we strongly recommend you to use our **node version** instead of the webpack variant as the schematic is easier to work with. Skip to the [main readme](../../../README.md#Installation) for the node examples. If you are still interested in using the webpack variant, continue below.
+If you are using a frontend framework such as React, Vue, AngularJS, etc, we **strongly recommend you to use our node version** instead of the webpack variant as the schematic is easier to work with. Skip to the [main readme](../../../README.md#Installation) for the node examples. If you are still interested in using the webpack variant, continue below.
 
 ## How to get started
 
@@ -26,6 +26,7 @@ yarn start
 
 
 You should see a sample project that looks like this:
+![image](https://user-images.githubusercontent.com/6906654/128447864-54f5e5ab-f7c3-464f-b829-85cf3b874ca9.png)
 
 
 Try it by clicking on the 'Send Payment' button!
