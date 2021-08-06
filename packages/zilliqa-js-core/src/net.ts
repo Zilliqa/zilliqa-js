@@ -161,7 +161,7 @@ export const performRPC = async <R, E, D extends any[], T = RPCResponse<R, E>>(
       headers: {
         ...DEFAULT_HEADERS,
         ...((request.options && request.options.headers) || {}),
-      },
+      } as HeadersInit,
     });
 
     return response
@@ -196,7 +196,7 @@ export const performBatchRPC = async <
       headers: {
         ...DEFAULT_HEADERS,
         ...((request.options && request.options.headers) || {}),
-      },
+      } as HeadersInit,
     });
 
     return (
