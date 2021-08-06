@@ -137,6 +137,6 @@ export const formatOutgoingTx: ReqMiddlewareFn<[TxParams]> = (req) => {
 
 export async function sleep(ms: number) {
   return new Promise((resolve) => {
-    setTimeout(() => resolve(), ms);
+    setTimeout(() => resolve(undefined), ms);
   });
 }
