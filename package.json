@@ -31,9 +31,6 @@
   "workspaces": [
     "packages/*"
   ],
-  "nohoist": [
-    "packages/zilliqa-js-viewblock/*"
-  ],
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.56",
     "@babel/core": "7.0.0-beta.54",

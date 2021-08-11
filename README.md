@@ -326,7 +326,6 @@ these are links to the respective `README` documents.
 - [`crypto`](./packages/zilliqa-js-crypto/README.md)
 - [`proto`](./packages/zilliqa-js-proto/README.md)
 - [`util`](./packages/zilliqa-js-util/README.md)
-- [`viewblock`](https://github.com/Ashlar/zilliqa-js-viewblock/blob/master/README.md)
 
 ## Development
 
