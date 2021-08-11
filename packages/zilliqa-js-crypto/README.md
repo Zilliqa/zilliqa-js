@@ -5,7 +5,7 @@
 
 ### `randomBytes(bytes: number): string`
 
-Safely generates bytes using [`Window.crypto`](https://developer.mozilla.org/en-US/docs/Web/API/Window/crypto) in the browser or the built-in `crypto` in node.
+Safely generates bytes using [sodium-native](https://github.com/sodium-friends/sodium-native).
 
 **Parameters**
 
