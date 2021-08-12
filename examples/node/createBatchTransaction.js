@@ -50,7 +50,7 @@ async function testBatchTransaction() {
           toAddr: '0xA54E49719267E8312510D7b78598ceF16ff127CE',
           amount: new BN(units.toQa('1', units.Units.Zil)),
           gasPrice: units.toQa('2000', units.Units.Li),
-          gasLimit: Long.fromNumber(1),
+          gasLimit: Long.fromNumber(50),
         },
         false,
       );
