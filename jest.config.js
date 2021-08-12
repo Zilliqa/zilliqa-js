@@ -43,7 +43,6 @@ const config = {
   collectCoverageFrom: [
     '<rootDir>/packages/*/src/**/*.{ts,js}',
     '!**/node_modules/**',
-    '!<rootDir>/packages/zilliqa-js-viewblock/**',
   ],
   setupFiles: ['<rootDir>/jest-setup.js'],
   setupTestFrameworkScriptFile: '<rootDir>/jest-framework-setup.js',
@@ -51,7 +50,6 @@ const config = {
     'jest-watch-typeahead/filename',
     'jest-watch-typeahead/testname',
   ],
-  modulePathIgnorePatterns: ['packages/zilliqa-js-viewblock'],
 };
 
 module.exports = config;
