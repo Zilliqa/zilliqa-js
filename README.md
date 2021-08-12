@@ -327,6 +327,8 @@ these are links to the respective `README` documents.
 - [`proto`](./packages/zilliqa-js-proto/README.md)
 - [`util`](./packages/zilliqa-js-util/README.md)
 
+Also, you can use [viewblock library](https://github.com/Ashlar/zilliqa-js-viewblock) to interface with ViewBlock's APIs.
+
 ## Development
 
 This repository makes use of several technologies to provide a better and
