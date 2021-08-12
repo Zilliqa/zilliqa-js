@@ -552,7 +552,7 @@ export class Blockchain implements ZilliqaModule {
     try {
       const response = await this.provider.send<TransactionStatusObj>(
         RPCMethod.GetTransactionStatus,
-        txHash,
+        txHash.replace('0x', ''),
       );
       if (response.error) {
         return Promise.reject(response.error);
