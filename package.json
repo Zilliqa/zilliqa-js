@@ -104,7 +104,7 @@
     "ts-loader": "8.0.4",
     "ts-node": "^7.0.1",
     "tslib": "^2.3.0",
-    "typescript": "^3.2",
+    "typescript": "3.9.10",
     "typescript-json-schema": "^0.32.0",
     "webpack": "^4.20.2",
     "webpack-command": "^0.4.1"
