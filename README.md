@@ -314,10 +314,9 @@ An example of a transaction receipt is this:
 
 `success` indicates if the transaction is successful.
 
-## API Documentation and examples
+## API Documentation
 
-Each package contains its own examples and API documentation. For convenience,
-these are links to the respective `README` documents.
+Each package contains API documentation. For convenience, these are links to the respective `README` documents.
 
 - [`account`](./packages/zilliqa-js-account/README.md)
 - [`blockchain`](./packages/zilliqa-js-blockchain/README.md)

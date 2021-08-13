@@ -435,7 +435,7 @@ export class Blockchain implements ZilliqaModule {
    * Create a transaction by using a exist signed transaction payload
    * This payload may come form some offline signing software like ledger
    * Currently we haven't supported convert a singed transaction back to transaction param, so we won't perform
-   * confirm logic here, but there is another convenient way to do so, can refer examples/createTransactionRaw.js
+   * confirm logic here.
    *
    * @param payload
    */
