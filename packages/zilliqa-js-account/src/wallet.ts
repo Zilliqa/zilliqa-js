@@ -17,7 +17,7 @@
 
 import bip39 from 'bip39';
 import hdkey from 'hdkey';
-import { Signer, Provider } from '@zilliqa-js/core';
+import { Signer, Provider, RPCMethod } from '@zilliqa-js/core';
 import * as zcrypto from '@zilliqa-js/crypto';
 
 import { Account } from './account';
@@ -249,7 +249,7 @@ export class Wallet extends Signer {
       // nonce is assumed to come from default account
       const signer = this.accounts[this.defaultAccount.address];
       const balance = await this.provider.send(
-        'GetBalance',
+        RPCMethod.GetBalance,
         signer.address.replace('0x', '').toLowerCase(),
       );
 
@@ -318,7 +318,7 @@ export class Wallet extends Signer {
         if (typeof offlineSign === 'undefined' || !offlineSign) {
           // retrieve latest nonce
           const balance = await this.provider.send(
-            'GetBalance',
+            RPCMethod.GetBalance,
             signer.address.replace('0x', '').toLowerCase(),
           );
 
