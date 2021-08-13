@@ -56,7 +56,7 @@ export class TransactionFactory implements ZilliqaModule {
    */
   async payment(txParams: TxParams) {
     const defaultAccount = this.signer.defaultAccount;
-    if (defaultAccount != null) {
+    if (defaultAccount !== undefined) {
       const addr = defaultAccount.address;
       const response = await this.provider.send(
         RPCMethod.GetBalance,
