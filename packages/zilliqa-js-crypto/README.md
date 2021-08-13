@@ -5,7 +5,7 @@
 
 ### `randomBytes(bytes: number): string`
 
-Safely generates bytes using [sodium-native](https://github.com/sodium-friends/sodium-native).
+Safely generates bytes using [sodium-universal](https://github.com/sodium-friends/sodium-universal).
 
 **Parameters**
 
