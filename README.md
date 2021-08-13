@@ -270,7 +270,6 @@ async function testBlockchain() {
 testBlockchain();
 
 ```
-
 ### Notes on the Quick Start script
 
 #### Note 1: Account balance
@@ -313,6 +312,10 @@ An example of a transaction receipt is this:
 `event_logs` comprises of all the events emitted in the transaction. For example, if your transaction calls a transition which emits 3 events, it will be an array of three events. The `address` is the contract address of the contract which emits the event.
 
 `success` indicates if the transaction is successful.
+
+
+## Examples
+For more examples, visit this [repository](https://github.com/Zilliqa/Zilliqa-JavaScript-Library-Examples).
 
 ## API Documentation
 
