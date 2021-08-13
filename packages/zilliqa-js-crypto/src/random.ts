@@ -26,17 +26,16 @@
  */
 export const randomBytes = (bytes: number) => {
   let randBz: number[] | Uint8Array;
-
-  if (typeof require !== 'undefined') {
+  try {
     const b = Buffer.allocUnsafe(bytes);
-    const sodium = require('sodium-native');
+    const sodium = require('sodium-universal');
     sodium.randombytes_buf(b);
     randBz = new Uint8Array(
       b.buffer,
       b.byteOffset,
       b.byteLength / Uint8Array.BYTES_PER_ELEMENT,
     );
-  } else {
+  } catch {
     throw new Error('Unable to generate safe random numbers.');
   }
 
