@@ -231,8 +231,6 @@ There is an offline mode that can be activated manually by setting the optional 
 
 **Note**: In offline mode, the nonce must be explicitly set in the Transaction object.
 
-See `examples/node/walletSign.js` for demonstration.
-
 **Returns**
 
 - `Promise<Transaction>` - a signed transaction.

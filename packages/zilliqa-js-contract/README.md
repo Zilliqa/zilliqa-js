@@ -268,7 +268,7 @@ If the `subState` is not found, this returns a `null` response.
 **Parameters**
 
 - `variableName`: `string` - the variable name within a state
-- `indices` : `string[]` - optional variable. If the `variableName` is a `Map`, an array of indices may be provided. See `examples/` to see how to use this method.
+- `indices` : `string[]` - optional variable. If the `variableName` is a `Map`, an array of indices may be provided.
 
 **Returns**
 

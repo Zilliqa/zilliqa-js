@@ -270,7 +270,6 @@ async function testBlockchain() {
 testBlockchain();
 
 ```
-
 ### Notes on the Quick Start script
 
 #### Note 1: Account balance
@@ -314,10 +313,13 @@ An example of a transaction receipt is this:
 
 `success` indicates if the transaction is successful.
 
-## API Documentation and examples
 
-Each package contains its own examples and API documentation. For convenience,
-these are links to the respective `README` documents.
+## Examples
+For more examples, visit this [repository](https://github.com/Zilliqa/Zilliqa-JavaScript-Library-Examples).
+
+## API Documentation
+
+Each package contains API documentation. For convenience, these are links to the respective `README` documents.
 
 - [`account`](./packages/zilliqa-js-account/README.md)
 - [`blockchain`](./packages/zilliqa-js-blockchain/README.md)
