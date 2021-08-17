@@ -202,13 +202,8 @@ describe('Contract: Simple DEX', () => {
     }
 
     // set up 5 accounts: simple-dex owner, token1 owner, token2 owner, token1 holder, token2 holder
-    [
-      simpleDexOwner,
-      token1Owner,
-      token2Owner,
-      token1Holder,
-      token2Holder,
-    ] = actors;
+    [simpleDexOwner, token1Owner, token2Owner, token1Holder, token2Holder] =
+      actors;
 
     const balance = await blockchain.getBalance(banker.address);
 

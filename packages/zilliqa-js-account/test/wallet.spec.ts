@@ -271,8 +271,9 @@ describe('Wallet', () => {
     const batchResult = await wallet.signBatch(txList);
 
     for (const signedTx of batchResult) {
-      const signature = schnorr.toSignature(signedTx.txParams
-        .signature as string);
+      const signature = schnorr.toSignature(
+        signedTx.txParams.signature as string,
+      );
       const lgtm = schnorr.verify(
         signedTx.bytes,
         signature,

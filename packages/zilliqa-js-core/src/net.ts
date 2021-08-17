@@ -180,7 +180,7 @@ export const performBatchRPC = async <
   R,
   E,
   D extends any[],
-  T = RPCResponse<R, E>
+  T = RPCResponse<R, E>,
 >(
   request: RPCRequest<D>,
   handler: RPCResponseHandler<R, E, T>,

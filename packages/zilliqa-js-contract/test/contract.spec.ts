@@ -639,9 +639,7 @@ describe('Contracts', () => {
 
   it('should call getState and getInit with the correct parameters', async () => {
     const b32 = 'zil1az5e0c6e4s4pazgahhmlca2cvgamp6kjtaxf4q';
-    const b16 = fromBech32Address(b32)
-      .replace('0x', '')
-      .toLowerCase();
+    const b16 = fromBech32Address(b32).replace('0x', '').toLowerCase();
     const contractAt = contractFactory.atBech32(b32);
 
     const sendMock = jest.fn().mockResolvedValue({ result: 'mock' });
