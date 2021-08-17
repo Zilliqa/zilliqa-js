@@ -39,11 +39,7 @@ export const getAddressFromPrivateKey = (privateKey: string): string => {
   const pub = keyPair.getPublic(true, 'hex');
 
   return toChecksumAddress(
-    hashjs
-      .sha256()
-      .update(pub, 'hex')
-      .digest('hex')
-      .slice(24),
+    hashjs.sha256().update(pub, 'hex').digest('hex').slice(24),
   );
 };
 
@@ -135,11 +131,7 @@ export const compressPublicKey = (publicKey: string): string => {
 export const getAddressFromPublicKey = (publicKey: string) => {
   const normalized = publicKey.toLowerCase().replace('0x', '');
   return toChecksumAddress(
-    hashjs
-      .sha256()
-      .update(normalized, 'hex')
-      .digest('hex')
-      .slice(24),
+    hashjs.sha256().update(normalized, 'hex').digest('hex').slice(24),
   );
 };
 
@@ -157,10 +149,7 @@ export const toChecksumAddress = (address: string): string => {
   }
 
   address = address.toLowerCase().replace('0x', '');
-  const hash = hashjs
-    .sha256()
-    .update(address, 'hex')
-    .digest('hex');
+  const hash = hashjs.sha256().update(address, 'hex').digest('hex');
   const v = new BN(hash, 'hex', 'be');
   let ret = '0x';
 

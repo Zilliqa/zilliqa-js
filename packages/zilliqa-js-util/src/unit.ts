@@ -77,10 +77,7 @@ export const fromQa = (
   const base = new BN(baseStr, 10);
   const baseNumDecimals = baseStr.length - 1;
 
-  let fraction = qa
-    .abs()
-    .mod(base)
-    .toString(10);
+  let fraction = qa.abs().mod(base).toString(10);
 
   // prepend 0s to the fraction half
   while (fraction.length < baseNumDecimals) {

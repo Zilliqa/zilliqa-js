@@ -560,9 +560,8 @@ export class Blockchain implements ZilliqaModule {
 
       const modificationState = response.result.modificationState;
       const status = response.result.status;
-      response.result.statusMessage = this.transactionStatusMap[
-        modificationState
-      ][status];
+      response.result.statusMessage =
+        this.transactionStatusMap[modificationState][status];
       return response.result;
     } catch (err) {
       throw err;

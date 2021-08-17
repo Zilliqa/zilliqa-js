@@ -39,12 +39,9 @@ export class Wallet extends Signer {
   constructor(provider: Provider, accounts: Account[] = []) {
     super();
     if (accounts.length) {
-      this.accounts = accounts.reduce(
-        (acc, account) => {
-          return { ...acc, [account.address]: account };
-        },
-        {} as any,
-      );
+      this.accounts = accounts.reduce((acc, account) => {
+        return { ...acc, [account.address]: account };
+      }, {} as any);
     }
 
     this.provider = provider;

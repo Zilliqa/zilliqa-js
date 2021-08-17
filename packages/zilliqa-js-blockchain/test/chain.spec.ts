@@ -290,8 +290,7 @@ describe('Module: Blockchain', () => {
         id: 1,
         jsonrpc: '2.0',
         result: {
-          ID:
-            '96ba63371a57c9d4d7cbf448dbdd78d209c888a76a30413abd72691c16efffbb',
+          ID: '96ba63371a57c9d4d7cbf448dbdd78d209c888a76a30413abd72691c16efffbb',
           gasLimit: '1',
           gasPrice: '2000000000',
           modificationState: 2,

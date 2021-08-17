@@ -99,10 +99,7 @@ export class Transaction implements Signable {
    */
   get hash(): string {
     const payload = this.bytes.toString('hex');
-    return hashjs
-      .sha256()
-      .update(payload, 'hex')
-      .digest('hex');
+    return hashjs.sha256().update(payload, 'hex').digest('hex');
   }
 
   get bytes(): Buffer {

@@ -231,9 +231,7 @@ export class WebSocketProvider {
       }
 
       const connectHandler = () => {
-        this.send(query)
-          .then(resolve)
-          .catch(reject);
+        this.send(query).then(resolve).catch(reject);
       };
 
       const offConnectHandler = () => {
