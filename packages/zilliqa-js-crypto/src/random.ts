@@ -25,7 +25,6 @@
  * @returns {string}
  */
 export const randomBytes = (bytes: number) => {
-  let randBz: number[] | Uint8Array;
   const b = Buffer.allocUnsafe(bytes);
   const n = b.byteLength;
 
@@ -59,8 +58,7 @@ export const randomBytes = (bytes: number) => {
   } else {
     throw new Error('No secure random number generator available');
   }
-
-  randBz = new Uint8Array(
+  const randBz = new Uint8Array(
     b.buffer,
     b.byteOffset,
     b.byteLength / Uint8Array.BYTES_PER_ELEMENT,
