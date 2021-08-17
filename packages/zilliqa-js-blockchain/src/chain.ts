@@ -15,10 +15,10 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { Transaction, util, Wallet } from '@zilliqa-js/account';
-import { fromBech32Address } from '@zilliqa-js/crypto';
-import { validation } from '@zilliqa-js/util';
-import { ContractObj, Value } from '@zilliqa-js/contract';
+import {Transaction, util, Wallet} from '@zilliqa-js/account';
+import {fromBech32Address} from '@zilliqa-js/crypto';
+import {validation} from '@zilliqa-js/util';
+import {ContractObj, Value} from '@zilliqa-js/contract';
 import {
   BlockchainInfo,
   BlockList,
@@ -37,12 +37,12 @@ import {
   ZilliqaModule,
 } from '@zilliqa-js/core';
 
-import { toTxParams } from './util';
+import {toTxParams} from './util';
 
 export class Blockchain implements ZilliqaModule {
   signer: Wallet;
   provider: Provider;
-  pendingErrorMap: { [key: number]: string } = {
+  pendingErrorMap: {[key: number]: string} = {
     0: 'Transaction not found',
     1: 'Pending - Dispatched',
     2: 'Pending - Soft-confirmed (awaiting Tx block generation)',
@@ -71,8 +71,8 @@ export class Blockchain implements ZilliqaModule {
     255: 'Rejected - Internal error',
   };
 
-  transactionStatusMap: { [key: number]: { [key: number]: string } } = {
-    0: { 0: 'Transaction not found', 1: ' Pending - Dispatched' },
+  transactionStatusMap: {[key: number]: {[key: number]: string}} = {
+    0: {0: 'Transaction not found', 1: ' Pending - Dispatched'},
     1: {
       2: 'Pending - Soft-confirmed (awaiting Tx block generation)',
       4: 'Pending - Nonce is higher than expected',
@@ -461,7 +461,7 @@ export class Blockchain implements ZilliqaModule {
   // Returns the Scilla code associated with a smart contract address
   getSmartContractCode(
     addr: string,
-  ): Promise<RPCResponse<{ code: string }, string>> {
+  ): Promise<RPCResponse<{code: string}, string>> {
     const address = validation.isBech32(addr) ? fromBech32Address(addr) : addr;
     return this.provider.send(
       RPCMethod.GetSmartContractCode,
@@ -526,6 +526,32 @@ export class Blockchain implements ZilliqaModule {
     return this.provider.send(
       RPCMethod.GetContractAddressFromTransactionID,
       txHash,
+    );
+  }
+
+  // Returns the state proof for the corresponding TxBlock for a smart contract.
+  getStateProof(
+    contractAddress: string,
+    sha256Hash: string,
+    txBlock: string,
+  ): Promise<RPCResponse<any, string>> {
+    const address = validation.isBech32(contractAddress)
+      ? fromBech32Address(contractAddress)
+      : contractAddress;
+
+    const isLatestStr = txBlock === 'latest';
+    const isFiniteInteger =
+      Number.isFinite(Number(txBlock)) && Number.isInteger(Number(txBlock));
+    const isValid = isLatestStr || isFiniteInteger;
+    if (!isValid) {
+      throw new Error('invalid txBlock');
+    }
+
+    return this.provider.send(
+      RPCMethod.GetStateProof,
+      address.replace('0x', '').toLowerCase(),
+      sha256Hash,
+      txBlock,
     );
   }
 }
