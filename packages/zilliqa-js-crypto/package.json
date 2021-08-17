@@ -35,7 +35,7 @@
     "randombytes": "^2.0.6",
     "scrypt-js": "^3.0.1",
     "scryptsy": "^2.1.0",
-    "sodium-universal": "3.0.4",
+    "sodium-native": "^3.2.1",
     "uuid": "^3.3.2"
   }
 }
