@@ -19,7 +19,7 @@
     "bundle": "ts-node -P scripts/tsconfig.json scripts/bundle.ts umd,esm",
     "clean": "lerna clean --yes && lerna run clean && rimraf includes",
     "schema": "ts-node -P scripts/tsconfig.json scripts/schema.ts core",
-    "test": "cross-env TEST_ENV=unit jest -c jest.config.js --rootDir=.",
+    "test": "cross-env TEST_ENV=unit jest --verbose -c jest.config.js --rootDir=.",
     "test:build": "cross-env TEST_ENV=unit jest -c jest.build.config.js",
     "test:integration": "cross-env TEST_ENV=integration jest -c jest.iconfig.js --runInBand --verbose --collectCoverage=false",
     "release": "yarn bootstrap && yarn bundle && lerna publish --exact",
