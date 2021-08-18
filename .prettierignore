@@ -8,3 +8,4 @@ package.json
 *.md
 *.html
 dist
+coverage
