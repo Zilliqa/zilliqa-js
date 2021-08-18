@@ -31,6 +31,18 @@ for (let i = 0; i < 10; i++) {
 
 const blockchain = new Blockchain(provider, wallet);
 
+const getExpectedReq = (method: string, params: any) => {
+  return {
+    url: 'https://mock.com',
+    payload: {
+      id: 1,
+      jsonrpc: '2.0',
+      method,
+      params,
+    },
+  };
+};
+
 describe('Module: Blockchain', () => {
   afterEach(() => {
     fetch.resetMocks();
@@ -743,5 +755,145 @@ describe('Module: Blockchain', () => {
     await expect(
       blockchain.createBatchTransactionWithoutConfirm(txList),
     ).rejects.toThrow('The transaction is not signed.');
+  });
+
+  it('validates params for GetStateProof', async () => {
+    const sampleResponse = {
+      id: 1,
+      jsonrpc: '2.0',
+      result: {
+        accountProof: [
+          'F851808080A0C7083D05AC726A32DC3313B5CA7526449EFCADAB51179A47B60901C63B108E908080A0BC76B4E969C8214F2DF641D3F387AA35CDBF17EEB54D23F5F01B4E688AB2A21980808080808080808080',
+          'F871808080A0D5FE2E3CEA6C64AD708DFAD93B79FC9894C5A5AE59372D3C3872C1C8143CD749A087B1E084016657B3F8D32B429AE8055A63F12811DDFDC3AA8E863F25A03781F4A0AEDA08F7295A9E63544F9EAE728EBF98D571A07757E4BD95C91749CE9CC40B858080808080808080808080',
+          'F887A820376538396338303535623466306165633037376235396535646461326662346331346638313466B85C080112120A10000000000000000000000000000000001800222045EEB1C2D2462F819E2CA893329EEB25FA29199160C28C8DDF30A10E04CCF05D2A20DDD90D4C45815116C8F23802FC3E5ED0B6D8B6A2A25EAF63680A406A33094A85',
+        ],
+        stateProof: [
+          'E213A01CE797360949BDEBE357D68D54CD592D300084732CEE4F93A4ED41BDDBACD016',
+          'E216A042A6C50E3845BDB58866500B65D1721DD45AC4E8BE0A4FEE6AEB4E0140D9E4E3',
+          'F841B83E203533393936303466316439303130376230396232393832326630643534636638633038656532623931663165353062316435363336643331393062376532',
+          'F851808080A04569AAF476CCD06BA5F31049E02C00C6FD1B6AF44C90F9EF139F6DA919B0D1FA8080A0F27A4D7A3733D624A18316E4F9D1785349462FE39EA3842A62CDF2B4D7A29B8880808080808080808080',
+          'F8518080A0CA36C33D7030330EA93A73F03A8E8B05F3661C268D79184168BA5D93B0F91009808080A053C216D9015F58FF44AC4984F2482A4B06E27B7284680D9DF0BDF5494F0048EF80808080808080808080',
+          'F85180A0F61D98347C0929D0A2F9354110BB4FD2F0DE083AE1B1D8AEDAA961FA5D7803108080A0F637E8D9A259DF234DB75FF9983B10D57C8B0B8015D07003F0EB6C86732465DF808080808080808080808080',
+          'F90111A098D43DC741B140DDAC365E4AF6C49E4C4E9C30D2B589C85490527ADB5407682880A0B8E67BDA2445251B34AE4E78D06E60CE7C5394127B0D847E79A618F53B4064DCA0278A99201A4DB0533B1DD2AF5674B4F7A4242B95675E3014AEAB6792B102B96FA0BEE54BAD23D8DCC3C04FEF75278186234CD3AEB04A0ED5873B36E18B30DFD882A01B2ACF79D7F6064E6A1EBE1084EC8A934EAE06DCEDA8FE58AC709A0821B1251D80A0D2745A95263E0BAEDEDBDD60E3ADBEB9010DA902701263792193B27B1C06EDE9A08578DA8C3BD2970F97D569AD389222809409B7960783033BF2D5614162EA3D66A07D115995BCF7A4E9920F0A34A5BE6F0A43A21A734A5E7C421F76B5F5BFF6128380808080808080',
+        ],
+      },
+    };
+    fetch.mockResponse(JSON.stringify(sampleResponse));
+
+    const testCases = [
+      // Nagative Test Cases
+      {
+        params: [
+          '6d84363526a2d764835f8cf52dfeefe80a360fac',
+          'A0BD91DE66D97E6930118179BA4F1836C366C4CB3309A6B354D26F52ABB2AAC6',
+          0.1234,
+        ],
+        expectedReqParams: undefined,
+        result: undefined,
+        error: 'invalid txBlock',
+      },
+      {
+        params: [
+          '6d84363526a2d764835f8cf52dfeefe80a360fac',
+          'A0BD91DE66D97E6930118179BA4F1836C366C4CB3309A6B354D26F52ABB2AAC6',
+          Infinity,
+        ],
+        expectedReqParams: undefined,
+        result: undefined,
+        error: 'invalid txBlock',
+      },
+      {
+        params: [
+          '6d84363526a2d764835f8cf52dfeefe80a360fac',
+          'A0BD91DE66D97E6930118179BA4F1836C366C4CB3309A6B354D26F52ABB2AAC6',
+          'last',
+        ],
+        expectedReqParams: undefined,
+        result: undefined,
+        error: 'invalid txBlock',
+      },
+
+      // Positive Test Cases
+      {
+        params: [
+          'zil1z98c4cgz8c6k3sxpakv7vfsa6k04hpvn7lf8sr',
+          'A0BD91DE66D97E6930118179BA4F1836C366C4CB3309A6B354D26F52ABB2AAC6',
+          10,
+        ],
+        expectedReqParams: [
+          '114f8ae1023e3568c0c1ed99e6261dd59f5b8593',
+          'A0BD91DE66D97E6930118179BA4F1836C366C4CB3309A6B354D26F52ABB2AAC6',
+          '10',
+        ],
+        result: sampleResponse,
+        error: undefined,
+      },
+      {
+        params: [
+          '0x6d84363526a2d764835f8cf52dfeefe80a360fac',
+          'A0BD91DE66D97E6930118179BA4F1836C366C4CB3309A6B354D26F52ABB2AAC6',
+          10,
+        ],
+        expectedReqParams: [
+          '6d84363526a2d764835f8cf52dfeefe80a360fac',
+          'A0BD91DE66D97E6930118179BA4F1836C366C4CB3309A6B354D26F52ABB2AAC6',
+          '10',
+        ],
+        result: sampleResponse,
+        error: undefined,
+      },
+      {
+        params: [
+          '6d84363526a2d764835f8cf52dfeefe80a360fac',
+          'A0BD91DE66D97E6930118179BA4F1836C366C4CB3309A6B354D26F52ABB2AAC6',
+          10,
+        ],
+        expectedReqParams: [
+          '6d84363526a2d764835f8cf52dfeefe80a360fac',
+          'A0BD91DE66D97E6930118179BA4F1836C366C4CB3309A6B354D26F52ABB2AAC6',
+          '10',
+        ],
+        result: sampleResponse,
+        error: undefined,
+      },
+      {
+        params: [
+          '6d84363526a2d764835f8cf52dfeefe80a360fac',
+          'A0BD91DE66D97E6930118179BA4F1836C366C4CB3309A6B354D26F52ABB2AAC6',
+          'latest',
+        ],
+        expectedReqParams: [
+          '6d84363526a2d764835f8cf52dfeefe80a360fac',
+          'A0BD91DE66D97E6930118179BA4F1836C366C4CB3309A6B354D26F52ABB2AAC6',
+          'latest',
+        ],
+        result: sampleResponse,
+        error: undefined,
+      },
+    ];
+
+    for (const t of testCases) {
+      if (t.error) {
+        try {
+          await blockchain.getStateProof(
+            t.params[0] as string,
+            t.params[1] as string,
+            t.params[2],
+          );
+          expect(true).toBe(false);
+        } catch (error) {
+          expect(error.message).toBe(t.error);
+        }
+      } else {
+        const res = await blockchain.getStateProof(
+          t.params[0] as string,
+          t.params[1] as string,
+          t.params[2],
+        );
+        const req = getExpectedReq('GetStateProof', t.expectedReqParams);
+        const expectedRes = { req, ...t.result };
+        expect(res).toEqual(expectedRes);
+      }
+    }
   });
 });

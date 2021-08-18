@@ -60,12 +60,13 @@ export enum RPCMethod {
   GetMinimumGasPrice = 'GetMinimumGasPrice',
 
   // Contract-related methods
+  GetContractAddressFromTransactionID = 'GetContractAddressFromTransactionID',
   GetSmartContracts = 'GetSmartContracts',
   GetSmartContractCode = 'GetSmartContractCode',
   GetSmartContractInit = 'GetSmartContractInit',
   GetSmartContractState = 'GetSmartContractState',
   GetSmartContractSubState = 'GetSmartContractSubState',
-  GetContractAddressFromTransactionID = 'GetContractAddressFromTransactionID',
+  GetStateProof = 'GetStateProof',
 
   // Account-related methods
   GetBalance = 'GetBalance',

@@ -528,4 +528,30 @@ export class Blockchain implements ZilliqaModule {
       txHash,
     );
   }
+
+  // Returns the state proof for the corresponding TxBlock for a smart contract.
+  getStateProof(
+    contractAddress: string,
+    sha256Hash: string,
+    txBlock: number | string,
+  ): Promise<RPCResponse<any, string>> {
+    const address = validation.isBech32(contractAddress)
+      ? fromBech32Address(contractAddress)
+      : contractAddress;
+
+    const isLatestStr = txBlock === 'latest';
+    const isFiniteInteger =
+      Number.isFinite(txBlock) && Number.isInteger(txBlock);
+    const isValid = isLatestStr || isFiniteInteger;
+    if (!isValid) {
+      throw new Error('invalid txBlock');
+    }
+
+    return this.provider.send(
+      RPCMethod.GetStateProof,
+      address.replace('0x', '').toLowerCase(),
+      sha256Hash,
+      txBlock.toString(),
+    );
+  }
 }
