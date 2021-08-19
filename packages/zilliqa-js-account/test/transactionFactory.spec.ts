@@ -21,7 +21,7 @@ import { BN, Long } from '@zilliqa-js/util';
 import { Transaction } from '../src/transaction';
 import { TransactionFactory } from '../src/transactionFactory';
 import { Wallet } from '../src/wallet';
-import fetch from 'jest-fetch-mock';
+import fetch, { MockParams } from 'jest-fetch-mock';
 
 const provider = new HTTPProvider('https://mock.com');
 const wallet = new Wallet(provider);
@@ -94,7 +94,9 @@ describe('TransactionFactory', () => {
           nonce: 1,
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
 
@@ -119,7 +121,9 @@ describe('TransactionFactory', () => {
           nonce: 1,
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
 

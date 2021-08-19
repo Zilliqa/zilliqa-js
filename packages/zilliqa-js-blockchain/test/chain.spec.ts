@@ -21,7 +21,7 @@ import { BN, Long } from '@zilliqa-js/util';
 
 import { Blockchain } from '../src/chain';
 
-import fetch from 'jest-fetch-mock';
+import fetch, { MockParams } from 'jest-fetch-mock';
 
 const provider = new HTTPProvider('https://mock.com');
 const wallet = new Wallet(provider);
@@ -85,7 +85,9 @@ describe('Module: Blockchain', () => {
           receipt: { success: true },
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
 
@@ -109,7 +111,9 @@ describe('Module: Blockchain', () => {
           receipt: { success: true },
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
     const id = await blockchain.createTransactionRaw(payload);
@@ -129,7 +133,9 @@ describe('Module: Blockchain', () => {
           message: 'Nonce (1012) lower than current (1012)',
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
     try {
@@ -184,7 +190,9 @@ describe('Module: Blockchain', () => {
           receipt: { cumulative_gas: '1000', success: true },
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
 
@@ -254,7 +262,9 @@ describe('Module: Blockchain', () => {
           },
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
 
@@ -284,7 +294,9 @@ describe('Module: Blockchain', () => {
           },
         ],
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
 
@@ -309,7 +321,9 @@ describe('Module: Blockchain', () => {
           status: 3,
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
 
@@ -362,7 +376,9 @@ describe('Module: Blockchain', () => {
           ],
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
 
@@ -520,7 +536,9 @@ describe('Module: Blockchain', () => {
           receipt: { cumulative_gas: '1000', success: true },
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
 
@@ -626,7 +644,9 @@ describe('Module: Blockchain', () => {
           },
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
 
@@ -697,7 +717,9 @@ describe('Module: Blockchain', () => {
           },
         },
       ],
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
 

@@ -15,7 +15,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 if (process.env.TEST_ENV === 'unit') {
-  window.fetch = global.fetch = require('jest-fetch-mock');
+  require('jest-fetch-mock').enableMocks();
 }
 
 require('dotenv').config('.env');

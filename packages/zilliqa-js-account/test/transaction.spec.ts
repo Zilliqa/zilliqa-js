@@ -26,7 +26,7 @@ import { BN, Long } from '@zilliqa-js/util';
 
 import { Transaction } from '../src/transaction';
 import { Wallet } from '../src/wallet';
-import fetch from 'jest-fetch-mock';
+import fetch, { MockParams } from 'jest-fetch-mock';
 
 const provider = new HTTPProvider('https://mock.com');
 const wallet = new Wallet(provider);
@@ -124,7 +124,9 @@ describe('Transaction', () => {
           receipt: { cumulative_gas: 1000, success: true },
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
 
@@ -207,7 +209,9 @@ describe('Transaction', () => {
           receipt: { cumulative_gas: 1000, success: false },
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
 
@@ -274,7 +278,9 @@ describe('Transaction', () => {
           receipt: { cumulative_gas: 1000, success: true },
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
 
@@ -360,7 +366,9 @@ describe('Transaction', () => {
           receipt: { cumulative_gas: 1000, success: true },
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
     const tx = await wallet.sign(
@@ -512,7 +520,9 @@ describe('Transaction', () => {
           },
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
     const tx = await wallet.sign(
@@ -553,7 +563,9 @@ describe('Transaction', () => {
           receipt: { cumulative_gas: 1000, success: true },
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
 
@@ -604,7 +616,9 @@ describe('Transaction', () => {
           receipt: { cumulative_gas: 1000, success: true },
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
 

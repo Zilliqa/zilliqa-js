@@ -15,7 +15,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import fetch from 'jest-fetch-mock';
+import fetch, { MockParams } from 'jest-fetch-mock';
 import { RPCMethod } from '../src/net';
 import { HTTPProvider } from '../src/providers/http';
 
@@ -30,7 +30,8 @@ describe('HTTPProvider', () => {
     fetch.once(JSON.stringify({ data: 'something' }));
 
     await http.send(RPCMethod.CreateTransaction, 'MyParam');
-    const payload = JSON.parse(fetch.mock.calls[0][1].body);
+    const body = fetch.mock.calls[0][1]?.body as string;
+    const payload = JSON.parse(body);
 
     expect(fetch).toHaveBeenCalled();
     expect(payload).toMatchObject({
@@ -55,7 +56,8 @@ describe('HTTPProvider', () => {
     fetch.mockResponseOnce(JSON.stringify({ data: 'something' }));
     await withMiddleware.send(RPCMethod.CreateTransaction, 'first param');
 
-    const payload = JSON.parse(fetch.mock.calls[0][1].body);
+    const body = fetch.mock.calls[0][1]?.body as string;
+    const payload = JSON.parse(body);
     expect(payload).toMatchObject({
       id: 1,
       jsonrpc: '2.0',
@@ -119,7 +121,9 @@ describe('HTTPProvider', () => {
           nonce: 1,
         },
       },
-    ].map((res) => [JSON.stringify({ data: res })] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
     await withMiddleware.send(RPCMethod.GetTransaction, 'some_hash');
