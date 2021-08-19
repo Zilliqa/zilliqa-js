@@ -28,7 +28,6 @@ const config = {
   moduleFileExtensions: ['js', 'ts', 'node', 'json'],
   globals: {
     'ts-jest': {
-      babelConfig: true,
       tsConfig: './tsconfig.test.json',
     },
   },
