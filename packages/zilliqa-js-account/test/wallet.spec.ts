@@ -19,7 +19,7 @@ import { HTTPProvider } from '@zilliqa-js/core';
 import { getPubKeyFromPrivateKey, schnorr } from '@zilliqa-js/crypto';
 import { BN, Long } from '@zilliqa-js/util';
 
-import fetch from 'jest-fetch-mock';
+import fetch, { MockParams } from 'jest-fetch-mock';
 
 import { createWallet } from './util';
 import { Account } from '../src/account';
@@ -264,7 +264,9 @@ describe('Wallet', () => {
           receipt: { success: true },
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
 

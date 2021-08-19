@@ -20,7 +20,7 @@ import { HTTPProvider } from '@zilliqa-js/core';
 import { fromBech32Address, isValidChecksumAddress } from '@zilliqa-js/crypto';
 import { BN, bytes, Long } from '@zilliqa-js/util';
 
-import fetch from 'jest-fetch-mock';
+import fetch, { MockParams } from 'jest-fetch-mock';
 
 import { Contracts, ContractStatus } from '../src/index';
 import { abi } from './test.abi';
@@ -93,7 +93,9 @@ describe('Contracts', () => {
           receipt: { success: true, cumulative_gas: '1000' },
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
 
@@ -155,7 +157,9 @@ describe('Contracts', () => {
           receipt: { success: true, cumulative_gas: '1000' },
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
 
@@ -212,7 +216,9 @@ describe('Contracts', () => {
           receipt: { success: true, cumulative_gas: '1000' },
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
 
@@ -262,7 +268,9 @@ describe('Contracts', () => {
           message: 'Mega fail',
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
 
@@ -309,10 +317,12 @@ describe('Contracts', () => {
           Info: 'Non-contract txn, sent to shard',
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch
-      .mockResponses(...responses)
+      .mockResponses(...(responses as any))
       .mockRejectOnce(new Error('something bad happened'));
 
     await expect(
@@ -342,7 +352,9 @@ describe('Contracts', () => {
           message: 'Mega fail',
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
 
@@ -400,7 +412,9 @@ describe('Contracts', () => {
           },
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
 
@@ -486,7 +500,9 @@ describe('Contracts', () => {
           },
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
 
@@ -588,7 +604,9 @@ describe('Contracts', () => {
           },
         },
       },
-    ].map((res) => [JSON.stringify(res)] as [string]);
+    ].map(
+      (res) => [JSON.stringify(res), { status: 200 }] as [string, MockParams],
+    );
 
     fetch.mockResponses(...responses);
 
