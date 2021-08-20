@@ -110,7 +110,7 @@ const secp256k1 = elliptic.ec('secp256k1');
 
 describe('schnorr', () => {
   it('should fail for bad signatures', () => {
-    schnorrVectors.slice(0, 100).forEach(({ priv, k }, idx) => {
+    schnorrVectors.forEach(({ priv, k }, idx) => {
       const pub = secp256k1.keyFromPrivate(priv, 'hex').getPublic(true, 'hex');
       const badPrivateKey = pairs[0].private;
 
@@ -157,7 +157,7 @@ describe('schnorr', () => {
   });
 
   it('should match the C++ Schnorr implementation', () => {
-    schnorrVectors.slice(0, 100).forEach(({ msg, priv, pub, k, r, s }) => {
+    schnorrVectors.forEach(({ msg, priv, pub, k, r, s }) => {
       let sig: Signature | null = null;
       while (!sig) {
         sig = schnorr.trySign(
