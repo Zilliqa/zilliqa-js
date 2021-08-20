@@ -1,4 +1,3 @@
 {
     "extends": "../tsconfig.test.json",
-    "include": ["schnorr.fixtures.json"]
 }
