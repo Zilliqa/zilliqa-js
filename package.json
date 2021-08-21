@@ -24,7 +24,7 @@
     "prettier": "prettier '**/*.{ts,tsx,js}' --config .prettierrc",
     "format": "yarn prettier -- --write",
     "lint": "eslint . --ext .ts -c .eslintrc.js",
-    "validate": "yarn lint && yarn prettier -- --list-different"
+    "validate": "yarn lint && yarn prettier -- --list-different && yarn bootstrap && yarn test"
   },
   "workspaces": [
     "packages/*"
