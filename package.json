@@ -56,7 +56,6 @@
     "jest-watch-typeahead": "^0.2.0",
     "lerna": "^3.18.1",
     "prettier": "^2.3.2",
-    "protobufjs": "^6.8.8",
     "rimraf": "^2.6.2",
     "rollup": "0.66.6",
     "rollup-plugin-alias": "^1.4.0",
