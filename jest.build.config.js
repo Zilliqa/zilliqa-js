@@ -32,11 +32,6 @@ const config = {
     },
   },
   testURL: 'http://localhost',
-  setupFiles: ['<rootDir>/jest-setup.js'],
-  watchPlugins: [
-    'jest-watch-typeahead/filename',
-    'jest-watch-typeahead/testname',
-  ],
 };
 
 module.exports = config;
