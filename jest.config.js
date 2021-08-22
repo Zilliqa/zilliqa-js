@@ -30,11 +30,10 @@ const config = {
     '^@zilliqa-js/zilliqa': '<rootDir>/packages/zilliqa/src/index.ts',
     '^@zilliqa-js/proto$': '<rootDir>/packages/zilliqa-js-proto/dist/index.js',
     '^@zilliqa-js/(.*)$': '<rootDir>/packages/zilliqa-js-$1/src/index.ts',
-    'cross-fetch': 'jest-fetch-mock',
   },
   globals: {
     'ts-jest': {
-      tsConfig: './tsconfig.test.json',
+      tsconfig: './tsconfig.test.json',
     },
   },
   testURL: 'http://localhost',
@@ -43,6 +42,8 @@ const config = {
     '<rootDir>/packages/*/src/**/*.{ts,js}',
     '!**/node_modules/**',
   ],
+  automock: false,
+  resetMocks: false,
   setupFiles: ['<rootDir>/jest-setup.js'],
 };
 
