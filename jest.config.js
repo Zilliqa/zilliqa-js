@@ -33,7 +33,7 @@ const config = {
   },
   globals: {
     'ts-jest': {
-      tsConfig: './tsconfig.test.json',
+      tsconfig: './tsconfig.test.json',
     },
   },
   testURL: 'http://localhost',
