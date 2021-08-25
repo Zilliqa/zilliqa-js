@@ -37,5 +37,13 @@
     "scryptsy": "^2.1.0",
     "sodium-native": "^3.2.1",
     "uuid": "^3.3.2"
-  }
+  },
+  "files": [
+    "packages/**/dist",
+    "packages/**/node_modules",
+    "packages/**/package.json",
+    "packages/**/LICENSE",
+    "packages/**/CHANGELOG.md",
+    "packages/**/README.md"
+  ]
 }

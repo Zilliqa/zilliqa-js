@@ -30,6 +30,14 @@
     "bn.js": "^4.11.8",
     "long": "^4.0.0"
   },
+  "files": [
+    "packages/**/dist",
+    "packages/**/node_modules",
+    "packages/**/package.json",
+    "packages/**/LICENSE",
+    "packages/**/CHANGELOG.md",
+    "packages/**/README.md"
+  ],
   "engines": {
     "node": ">=12.0.0 <15"
   }
