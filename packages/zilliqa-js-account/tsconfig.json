@@ -6,8 +6,8 @@
   },
   "include": ["src", "../../typings/**/*.d.ts"],
   "references": [
-    {"path": "../zilliqa-js-core"},
-    {"path": "../zilliqa-js-crypto"},
-    {"path": "../zilliqa-js-util"}
+    { "path": "../zilliqa-js-core" },
+    { "path": "../zilliqa-js-crypto" },
+    { "path": "../zilliqa-js-util" }
   ]
 }

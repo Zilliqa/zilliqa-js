@@ -1,5 +1,7 @@
 # @zilliqa-js/core
+
 > Core abstractions required for interacting with the blockchain.
+
 # Classes
 
 ## `BaseProvider`

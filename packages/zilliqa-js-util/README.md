@@ -1,4 +1,5 @@
 # @zilliqa-js/util
+
 > Utility functions useful in Zilliqa-related programs.
 
 ## Classes
@@ -46,7 +47,6 @@ Converts an integer to a `Uint8Array` (i.e., byte array).
 
 - `Uint8Array` - byte array, padded to `size`.
 
-
 ### `hexToByteArray(hex: string): Uint8Array`
 
 Converts a hex-encoded `string` to a `Uint8Array`. Endianess is not important.
@@ -58,7 +58,6 @@ Converts a hex-encoded `string` to a `Uint8Array`. Endianess is not important.
 **Returns**
 
 - `Uint8Array`
-
 
 ### `hexToIntArray(hex: string): number[]`
 
@@ -196,7 +195,6 @@ Determines if a given value is an instance of `BN.js`.
 
 - `boolean` - `true` if the value is a `BN` instance.
 
-
 ### `isString(x: unknown): boolean`
 
 Determines if a given value is a valid JS `string`.
@@ -253,4 +251,3 @@ Converts `zil` or `li` to `qa` (smallest unit).
 
 - `input`: `string | number | BN` - the value to convert from.
 - `unit`: `Units` - the unit to be converted _from_ (`'zil' | 'li'`).
-

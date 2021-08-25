@@ -3,12 +3,12 @@
   "files": [],
   "include": ["./typings/**/*.d.ts"],
   "references": [
-    {"path": "packages/zilliqa-js"},
-    {"path": "packages/zilliqa-js-account"},
-    {"path": "packages/zilliqa-js-blockchain"},
-    {"path": "packages/zilliqa-js-contract"},
-    {"path": "packages/zilliqa-js-core"},
-    {"path": "packages/zilliqa-js-crypto"},
-    {"path": "packages/zilliqa-js-util"}
+    { "path": "packages/zilliqa-js" },
+    { "path": "packages/zilliqa-js-account" },
+    { "path": "packages/zilliqa-js-blockchain" },
+    { "path": "packages/zilliqa-js-contract" },
+    { "path": "packages/zilliqa-js-core" },
+    { "path": "packages/zilliqa-js-crypto" },
+    { "path": "packages/zilliqa-js-util" }
   ]
 }

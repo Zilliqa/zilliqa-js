@@ -3,9 +3,5 @@
 #################################
 .tmp/
 node_modules/
-package.json
-.travis.yml
-*.md
-*.html
 dist
 coverage
