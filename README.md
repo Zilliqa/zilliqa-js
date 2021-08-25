@@ -358,9 +358,11 @@ Tests for each package reside in `packages/src/*/tests`, and are run using
 `jest`.
 
 ### Simulating a Publish with Verdaccio
+
 We can easily simulate a publish using [Verdaccio](https://verdaccio.org/) which is a private npm proxy registry. For installation check [this link](https://verdaccio.org/docs/installation).
 
 Once it has been installed and executed, you can run `yarn release:local` to simulate a publish.
+
 ### Bundling
 
 #### rollup
