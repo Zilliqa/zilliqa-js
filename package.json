@@ -21,6 +21,7 @@
     "clean": "lerna clean --yes && lerna run clean && rimraf includes",
     "test": "jest --verbose -c jest.config.js --rootDir=.",
     "release": "yarn bootstrap && yarn bundle && lerna publish --exact",
+    "release:local": "yarn bootstrap && yarn bundle && lerna exec 'npm publish --registry http://localhost:4873'",
     "prettier": "prettier '**/*.{ts,tsx,js}' --config .prettierrc",
     "format": "yarn prettier -- --write",
     "lint": "eslint . --ext .ts -c .eslintrc.js",
