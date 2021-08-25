@@ -1,4 +1,5 @@
 # @zilliqa-js/proto
+
 > Protobuf source files and generated JS modules.
 
 For API documentation, see [protobuf.js](https://github.com/dcodeIO/ProtoBuf.js/).

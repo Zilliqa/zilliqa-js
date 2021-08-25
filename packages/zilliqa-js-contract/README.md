@@ -1,4 +1,5 @@
 # @zilliqa-js/contract
+
 > Classes for managing Scilla smart contracts on the Zilliqa blockchain.
 
 # Interfaces
@@ -123,10 +124,10 @@ The contract may subsequently be deployed.
 
 - `Contract` - a `Contract` instance.
 
-### `Contract(factory: Contracts, code?: string, address?: string, abi?: ABI,  init?: Init, state?: State): Contracts`
+### `Contract(factory: Contracts, code?: string, address?: string, abi?: ABI, init?: Init, state?: State): Contracts`
 
 A class representing a single smart contract. Allows for deployment and
-calling the smart contract's transitions. 
+calling the smart contract's transitions.
 
 **Parameters**
 
@@ -261,7 +262,7 @@ None
 
 ### `getSubState(variableName: string, indices: string[]): Promise<State>`
 
-Queries the contract state, filtered by the variable names. This function is the filtered version of `getState`. As `getSubState` performs the filtering, `variableName` of a field is required. 
+Queries the contract state, filtered by the variable names. This function is the filtered version of `getState`. As `getSubState` performs the filtering, `variableName` of a field is required.
 
 If the `subState` is not found, this returns a `null` response.
 
@@ -273,6 +274,3 @@ If the `subState` is not found, this returns a `null` response.
 **Returns**
 
 - `Promise<State>` - the Contract Init.
-
-
-

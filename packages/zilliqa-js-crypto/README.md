@@ -1,4 +1,5 @@
 # @zilliqa-js/crypto
+
 > Cryptographic abstractions for working with Zilliqa's crypto primitives
 
 ## Functions
@@ -30,7 +31,6 @@ None
 
 `string` - 32-byte hex-encoded private key.
 
-
 ### `getPubKeyFromPrivateKey(privateKey: string): string`
 
 Retrieves the public key of the given hex-encoded private key.
@@ -43,7 +43,6 @@ Retrieves the public key of the given hex-encoded private key.
 
 `string` - 33-byte hex-encoded public key.
 
-
 ### `getAddressFromPrivateKey(privateKey: string): string`
 
 Retrieves the address from the given hex-encoded private key.
@@ -55,7 +54,6 @@ Retrieves the address from the given hex-encoded private key.
 **Returns**
 
 `string` - 20-byte hex-encoded address.
-
 
 ### `compressPublicKey(publicKey: string): string`
 
@@ -108,7 +106,6 @@ blockchain.
 **Returns**
 
 `boolean`
-
 
 ### `encryptPrivateKey(kdf: KDF, privateKey: string, passphrase: string): Promise<string>`
 

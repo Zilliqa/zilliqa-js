@@ -1,4 +1,5 @@
 # Zilliqa-JavaScript-Library API
+
 [![Build Status](https://travis-ci.com/Zilliqa/Zilliqa-JavaScript-Library.svg?branch=dev)](https://travis-ci.com/Zilliqa/Zilliqa-JavaScript-Library)
 [![codecov](https://codecov.io/gh/Zilliqa/Zilliqa-JavaScript-Library/branch/feature/monorepo/graph/badge.svg)](https://codecov.io/gh/Zilliqa/Zilliqa)
 [![Discord Chat](https://img.shields.io/discord/308323056592486420.svg)](https://discord.gg/XMRE9tt)  
@@ -18,21 +19,20 @@ other modules to function.
 The following table provides a description of each module and what you may
 want to use it for.
 
-| package                  | description                                                                                                                                                               | dependencies                                                                            |
-| ---                      | ---                                                                                                                                                                       | ---                                                                                     |
-| [`@zilliqa-js/core`](./packages/zilliqa-js-core)      | Core abstractions and base classes, such as `HTTPProvider` and network logic for interfacing with the Zilliqa JSON-RPC.                                                   | none                                                                                    |
-| [`@zilliqa-js/account`](./packages/zilliqa-js-account)     | `Wallet`, `Account` and `Transaction` abstractions live in this package.                                                                                                  | `@zilliqa-js/core`, `@zilliqa-js/crypto`, `@zilliqa-js/util`, `@zilliqa-js/proto`       |
-| [`@zilliqa-js/blockchain`](./packages/zilliqa-js-blockchain) | Main interface to the Zilliqa `JSON-RPC`.                                                                                                                                 | none                                                                                    |
-| [`@zilliqa-js/contract`](./packages/zilliqa-js-contract)   | Exposes a `Contracts` module that takes care of smart contract deployment and interaction.                                                                                | `@zilliqa-js/account`, `@zilliqa-js/blockchain`, `@zilliqa-js/core`, `@zilliqa-js/util` |
-| [`@zilliqa-js/crypto`](./packages/zilliqa-js-crypto)     | Exposes several loosely-coupled cryptographic convenience functions for working with the Zilliqa blockchain and its cryptographic primitives, such as Schnorr signatures. | `@zilliqa-js/util`                                                                      |
-| [`@zilliqa-js/proto`](./packages/zilliqa-js-proto)      | Protobuf source files and corresponding generated JS modules.                                                                                                             | none                                                                                    |
-| [`@zilliqa-js/util`](./packages/zilliqa-js-util)       | Miscellaneous functions that take care of serialisation/deserialisation and validation.                                                                                   | none                                                                                    |
-| [`@zilliqa-js/viewblock`](https://github.com/Ashlar/zilliqa-js-viewblock)       | Library interfacing with ViewBlock's APIs                                                                                   | `@zilliqa-js/crypto`                                                                                    |
-
+| package                                                                   | description                                                                                                                                                               | dependencies                                                                            |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| [`@zilliqa-js/core`](./packages/zilliqa-js-core)                          | Core abstractions and base classes, such as `HTTPProvider` and network logic for interfacing with the Zilliqa JSON-RPC.                                                   | none                                                                                    |
+| [`@zilliqa-js/account`](./packages/zilliqa-js-account)                    | `Wallet`, `Account` and `Transaction` abstractions live in this package.                                                                                                  | `@zilliqa-js/core`, `@zilliqa-js/crypto`, `@zilliqa-js/util`, `@zilliqa-js/proto`       |
+| [`@zilliqa-js/blockchain`](./packages/zilliqa-js-blockchain)              | Main interface to the Zilliqa `JSON-RPC`.                                                                                                                                 | none                                                                                    |
+| [`@zilliqa-js/contract`](./packages/zilliqa-js-contract)                  | Exposes a `Contracts` module that takes care of smart contract deployment and interaction.                                                                                | `@zilliqa-js/account`, `@zilliqa-js/blockchain`, `@zilliqa-js/core`, `@zilliqa-js/util` |
+| [`@zilliqa-js/crypto`](./packages/zilliqa-js-crypto)                      | Exposes several loosely-coupled cryptographic convenience functions for working with the Zilliqa blockchain and its cryptographic primitives, such as Schnorr signatures. | `@zilliqa-js/util`                                                                      |
+| [`@zilliqa-js/proto`](./packages/zilliqa-js-proto)                        | Protobuf source files and corresponding generated JS modules.                                                                                                             | none                                                                                    |
+| [`@zilliqa-js/util`](./packages/zilliqa-js-util)                          | Miscellaneous functions that take care of serialisation/deserialisation and validation.                                                                                   | none                                                                                    |
+| [`@zilliqa-js/viewblock`](https://github.com/Ashlar/zilliqa-js-viewblock) | Library interfacing with ViewBlock's APIs                                                                                                                                 | `@zilliqa-js/crypto`                                                                    |
 
 ## Pre-Requisite (Windows Users)
 
-`zilliqa-js` uses [`scrypt`](https://www.npmjs.com/package/scrypt) library which depends on `node-gyp` in order to compile the binaries from source on Windows. 
+`zilliqa-js` uses [`scrypt`](https://www.npmjs.com/package/scrypt) library which depends on `node-gyp` in order to compile the binaries from source on Windows.
 `node-gyp` on Windows requires users to install additional Visual Studio Build tools.
 
 To install the required Visual Studio Build tools:
@@ -44,7 +44,6 @@ npm config set msvs_version 2015 # 2015 is more compatible; though 2017 may work
 ```
 
 Refer to https://github.com/nodejs/node-gyp#installation for more information about `node-gyp` installation on Windows.
-
 
 ## Installation
 
@@ -62,17 +61,15 @@ yarn add bn.js
 
 ## Quick Start
 
->**Ideally, you should [Create a new Nucleus Wallet](https://dev-wallet.zilliqa.com/generate) (an [open source](https://github.com/Zilliqa/nucleus-wallet) Zilliqa testnet wallet)**.
+> **Ideally, you should [Create a new Nucleus Wallet](https://dev-wallet.zilliqa.com/generate) (an [open source](https://github.com/Zilliqa/nucleus-wallet) Zilliqa testnet wallet)**.
 >
->You should 'fund' the wallet by sending testnet ZIL tokens from the [ZIL faucet](https://dev-wallet.zilliqa.com/faucet)
+> You should 'fund' the wallet by sending testnet ZIL tokens from the [ZIL faucet](https://dev-wallet.zilliqa.com/faucet)
 >
->You should then replace the value of `const privateKey` with the one from this wallet.
+> You should then replace the value of `const privateKey` with the one from this wallet.
 >
->The code should work with the existing private key but this cannot be guaranteed.
-
+> The code should work with the existing private key but this cannot be guaranteed.
 
 ```javascript
-
 const { BN, Long, bytes, units } = require('@zilliqa-js/util');
 const { Zilliqa } = require('@zilliqa-js/zilliqa');
 const {
@@ -268,15 +265,15 @@ async function testBlockchain() {
 }
 
 testBlockchain();
-
 ```
+
 ### Notes on the Quick Start script
 
 #### Note 1: Account balance
 
-The account balance is an object with two fields, `balance` and `nonce`. 
+The account balance is an object with two fields, `balance` and `nonce`.
 
-`balance` is the account balance in Qa, which is the lowest denomination in Zilliqa. 
+`balance` is the account balance in Qa, which is the lowest denomination in Zilliqa.
 For more information about gas accounting, please refer to here: https://forum.zilliqa.com/t/gas-accounting-in-zilliqa/199
 
 `nonce` is a counter that keeps track of how many transactions are sent from a given address. In Zilliqa, every transaction sent from an address must have a unique nonce.
@@ -288,24 +285,25 @@ For more information about gas accounting, please refer to here: https://forum.z
 #### Note 2: Retrieving transaction receipt
 
 An example of a transaction receipt is this:
+
 ```json
 {
-    "cumulative_gas": 357,
-    "epoch_num": "676201",
-    "event_logs": [
+  "cumulative_gas": 357,
+  "epoch_num": "676201",
+  "event_logs": [
+    {
+      "_eventname": "setHello()",
+      "address": "0x7a4aa130650396ab7c4006c471576a8404f5092b",
+      "params": [
         {
-            "_eventname": "setHello()",
-            "address": "0x7a4aa130650396ab7c4006c471576a8404f5092b",
-            "params": [
-                {
-                    "type": "Int32",
-                    "value": "2",
-                    "vname": "code"
-                }
-            ]
+          "type": "Int32",
+          "value": "2",
+          "vname": "code"
         }
-    ],
-    "success": true
+      ]
+    }
+  ],
+  "success": true
 }
 ```
 
@@ -313,8 +311,8 @@ An example of a transaction receipt is this:
 
 `success` indicates if the transaction is successful.
 
-
 ## Examples
+
 For more examples, visit this [repository](https://github.com/Zilliqa/Zilliqa-JavaScript-Library-Examples).
 
 ## API Documentation
@@ -352,6 +350,7 @@ yarn bootstrap
 # watch TS source files and recompile on change
 yarn build:ts -w
 ```
+
 ### Tests
 
 Tests for each package reside in `packages/src/*/tests`, and are run using
@@ -367,20 +366,19 @@ Once it has been installed and executed, you can run `yarn release:local` to sim
 
 #### rollup
 
-`zilliqa-js` is bundled using `rollup`. To build the distributable bundles, simple run `yarn bundle`. 
+`zilliqa-js` is bundled using `rollup`. To build the distributable bundles, simple run `yarn bundle`.
 This will output two bundles, `*.umd.js` and `*.esm.js`, to `packages/*/dist`. Node.js clients
 are pointed to the `umd` bundle, and bundlers are pointed to `esm`.
 
-*NOTE: these bundles are _not_ minified.*
+_NOTE: these bundles are *not* minified._
 
 #### webpack
 
-To build an all-in-one static js file, first install `webpack` globally using `yarn global add webpack`. Then run `yarn build:web`. 
+To build an all-in-one static js file, first install `webpack` globally using `yarn global add webpack`. Then run `yarn build:web`.
 This will generate a `dist` folder in the current path, which contains a file called `zilliqa.min.js`. It can be used in normal html file. (A more specific example please refer to `example/webpack`)
 
-*NOTE: there may be some issue to install webpack with npm, thus using yarn is a recommended way*
+_NOTE: there may be some issue to install webpack with npm, thus using yarn is a recommended way_
 
-## Licence 
+## Licence
 
 You can view our [licence here](LICENSE).
-
