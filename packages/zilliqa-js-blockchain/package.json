@@ -33,12 +33,12 @@
     "utility-types": "^3.4.1"
   },
   "files": [
-    "packages/**/dist",
-    "packages/**/node_modules",
-    "packages/**/package.json",
-    "packages/**/LICENSE",
-    "packages/**/CHANGELOG.md",
-    "packages/**/README.md"
+    "dist",
+    "node_modules",
+    "package.json",
+    "LICENSE",
+    "CHANGELOG.md",
+    "README.md"
   ],
   "engines": {
     "node": ">=12.0.0 <15"
