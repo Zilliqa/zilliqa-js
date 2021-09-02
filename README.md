@@ -360,7 +360,12 @@ Tests for each package reside in `packages/src/*/tests`, and are run using
 
 We can easily simulate a publish using [Verdaccio](https://verdaccio.org/) which is a private npm proxy registry. For installation check [this link](https://verdaccio.org/docs/installation).
 
-Once it has been installed and executed, you can run `yarn release:local` to simulate a publish.
+Once it has been installed and executed, you can run the following:
+
+- `npm adduser --registry http://localhost:4873/` to login
+- `yarn release:local` to simulate a publish
+
+Now you should be able to install private packages hosted on your Verdaccio. e.g. `yarn add @zilliqa-js/zilliqa --registry=http://localhost:4873`
 
 ### Bundling
 
