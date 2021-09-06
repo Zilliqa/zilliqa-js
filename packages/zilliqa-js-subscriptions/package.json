@@ -26,7 +26,6 @@
   },
   "homepage": "https://github.com/Zilliqa/Zilliqa-Javascript-Library#readme",
   "dependencies": {
-    "@zilliqa-js/core": "3.0.0",
     "mock-socket": "^9.0.2",
     "websocket": "^1.0.28"
   },
