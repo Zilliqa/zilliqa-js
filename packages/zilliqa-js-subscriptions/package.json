@@ -25,8 +25,10 @@
     "url": "https://github.com/Zilliqa/Zilliqa-Javascript-Library/issues"
   },
   "homepage": "https://github.com/Zilliqa/Zilliqa-Javascript-Library#readme",
+  "devDependencies": {
+    "mock-socket": "^9.0.2"
+  },
   "dependencies": {
-    "mock-socket": "^9.0.2",
     "websocket": "^1.0.28"
   },
   "files": [
