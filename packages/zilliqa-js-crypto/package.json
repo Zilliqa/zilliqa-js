@@ -1,6 +1,6 @@
 {
   "name": "@zilliqa-js/crypto",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Core crypto utilities for signing/verification/hashing Zilliqa transactions.",
   "author": "Ian Tan (https://github.com/iantanwx)",
   "maintainers": [
@@ -25,7 +25,7 @@
     "clean": "rimraf ./dist"
   },
   "dependencies": {
-    "@zilliqa-js/util": "3.0.0",
+    "@zilliqa-js/util": "3.1.0",
     "aes-js": "^3.1.1",
     "bsert": "^0.0.4",
     "elliptic": "^6.5.0",

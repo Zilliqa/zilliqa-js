@@ -1,6 +1,6 @@
 {
   "name": "@zilliqa-js/subscriptions",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Class(es) for interactiong with websocket API of Zilliqa node",
   "main": "dist/index.js",
   "node": "dist/index.js",
