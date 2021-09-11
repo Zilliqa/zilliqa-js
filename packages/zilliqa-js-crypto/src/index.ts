@@ -15,6 +15,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import Signature from 'elliptic/lib/elliptic/ec/signature';
 import * as schnorr from './schnorr';
 
 /**
@@ -47,10 +48,9 @@ export const sign = (
   return r + s;
 };
 
-export { schnorr };
+export { schnorr, Signature };
 export * from './util';
 export * from './keystore';
 export * from './random';
 export * from './types';
-export * from './signature';
 export * from './bech32';
