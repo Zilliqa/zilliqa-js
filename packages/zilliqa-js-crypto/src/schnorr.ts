@@ -22,7 +22,7 @@ import DRBG from 'hmac-drbg';
 import { BN } from '@zilliqa-js/util';
 
 import { randomBytes } from './random';
-import { Signature } from './signature';
+import Signature from 'elliptic/lib/elliptic/ec/signature';
 
 const secp256k1 = elliptic.ec('secp256k1');
 const curve = secp256k1.curve;
