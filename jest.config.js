@@ -42,6 +42,7 @@ const config = {
     '<rootDir>/packages/*/src/**/*.{ts,js}',
     '!**/node_modules/**',
   ],
+  testEnvironment: 'jsdom',
   automock: false,
   resetMocks: false,
   setupFiles: ['<rootDir>/jest-setup.js'],
