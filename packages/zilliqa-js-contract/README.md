@@ -189,8 +189,6 @@ and sign the underlying `Transaction` and broadcast it. The status of the
 `Contract` may then be ascertained by using `isRejected` or `isDeployed`, once
 the `Promise` resolves.
 
-_This API is unstable and subject to breaking changes pre-main net_
-
 **Parameters**
 
 - `params`: `DeployParams` - a subset of TxParams. Passed to the underlying
@@ -213,8 +211,6 @@ _This API is unstable and subject to breaking changes pre-main net_
 
 Calls a transition of the current contract. At the moment, this is a low-level
 interface for interacting with simple smart contracts.
-
-_This API is unstable and subject to breaking changes pre-main net_
 
 **Parameters**
 
