@@ -91,10 +91,12 @@ describe('Transaction', () => {
         provider,
       );
       console.log(tx.txParams);
-    } catch (e) {
-      expect(e.message).toEqual(
-        'Wrong address format, should be either bech32 or checksummed address',
-      );
+    } catch (error) {
+      if (error instanceof Error) {
+        expect(error.message).toEqual(
+          'Wrong address format, should be either bech32 or checksummed address',
+        );
+      }
     }
   });
 
