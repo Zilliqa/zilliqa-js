@@ -41,8 +41,10 @@ describe('Account', () => {
 
     try {
       await Account.fromFile(keystore, 'weak_password');
-    } catch (err) {
-      expect(err.message).toEqual('Could not decrypt keystore file.');
+    } catch (error) {
+      if (error instanceof Error) {
+        expect(error.message).toEqual('Could not decrypt keystore file.');
+      }
     }
   });
 

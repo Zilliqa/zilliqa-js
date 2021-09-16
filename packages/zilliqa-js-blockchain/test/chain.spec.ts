@@ -904,7 +904,9 @@ describe('Module: Blockchain', () => {
           );
           expect(true).toBe(false);
         } catch (error) {
-          expect(error.message).toBe(t.error);
+          if (error instanceof Error) {
+            expect(error.message).toBe(t.error);
+          }
         }
       } else {
         const res = await blockchain.getStateProof(
