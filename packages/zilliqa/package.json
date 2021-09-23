@@ -19,7 +19,7 @@
     "access": "public"
   },
   "scripts": {
-    "clean": "rimraf ./dist"
+    "clean": "rimraf ./dist ./tsconfig.tsbuildinfo"
   },
   "dependencies": {
     "@zilliqa-js/account": "3.1.0",

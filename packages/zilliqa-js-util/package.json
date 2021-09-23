@@ -22,7 +22,7 @@
     "access": "public"
   },
   "scripts": {
-    "clean": "rimraf ./dist"
+    "clean": "rimraf ./dist ./tsconfig.tsbuildinfo"
   },
   "dependencies": {
     "@types/bn.js": "^4.11.3",

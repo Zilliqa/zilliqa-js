@@ -22,7 +22,7 @@
     "access": "public"
   },
   "scripts": {
-    "clean": "rimraf ./dist"
+    "clean": "rimraf ./dist ./tsconfig.tsbuildinfo"
   },
   "dependencies": {
     "cross-fetch": "2.2.5",
