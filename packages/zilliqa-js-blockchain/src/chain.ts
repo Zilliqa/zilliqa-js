@@ -18,7 +18,6 @@
 import { Transaction, util, Wallet } from '@zilliqa-js/account';
 import { fromBech32Address } from '@zilliqa-js/crypto';
 import { validation } from '@zilliqa-js/util';
-import { ContractObj, Value } from '@zilliqa-js/contract';
 import {
   BlockchainInfo,
   BlockList,
@@ -471,7 +470,7 @@ export class Blockchain implements ZilliqaModule {
 
   // Returns the initialization (immutable) parameters of
   // a given smart contract, represented in a JSON format.
-  getSmartContractInit(addr: string): Promise<RPCResponse<Value[], string>> {
+  getSmartContractInit(addr: string): Promise<RPCResponse<any, string>> {
     const address = validation.isBech32(addr) ? fromBech32Address(addr) : addr;
     return this.provider.send(
       RPCMethod.GetSmartContractInit,
@@ -512,7 +511,7 @@ export class Blockchain implements ZilliqaModule {
     return this.provider.sendBatch(RPCMethod.GetSmartContractSubState, reqs);
   }
 
-  getSmartContracts(addr: string): Promise<RPCResponse<ContractObj[], string>> {
+  getSmartContracts(addr: string): Promise<RPCResponse<any, string>> {
     const address = validation.isBech32(addr) ? fromBech32Address(addr) : addr;
     return this.provider.send(
       RPCMethod.GetSmartContracts,

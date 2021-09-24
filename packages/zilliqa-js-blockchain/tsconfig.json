@@ -7,7 +7,7 @@
   "include": ["src", "../../typings/**/*.d.ts"],
   "references": [
     { "path": "../zilliqa-js-account" },
-    { "path": "../zilliqa-js-contract" },
+    { "path": "../zilliqa-js-crypto" },
     { "path": "../zilliqa-js-core" }
   ]
 }
