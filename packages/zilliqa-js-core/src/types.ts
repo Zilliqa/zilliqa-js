@@ -152,6 +152,7 @@ export interface TxBlockHeader {
   MbInfoHash: string;
   MinerPubKey: string;
   NumMicroBlocks: number;
+  NumPages: number;
   NumTxns: number;
   PrevBlockHash: string;
   Rewards: string;
