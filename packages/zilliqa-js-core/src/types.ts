@@ -144,11 +144,6 @@ export interface BlockList {
   maxPages: number;
 }
 
-enum TxBlockType {
-  MICRO,
-  FINAL,
-}
-
 export interface TxBlockHeader {
   BlockNum: string;
   DSBlockNum: string;
@@ -165,8 +160,6 @@ export interface TxBlockHeader {
   Timestamp: string;
   TxnFees: string;
   Version: number;
-
-  Type: TxBlockType;
 }
 
 export interface MicroBlockInfoObj {
