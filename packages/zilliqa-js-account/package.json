@@ -22,7 +22,7 @@
     "access": "public"
   },
   "scripts": {
-    "clean": "rimraf ./dist"
+    "clean": "rimraf ./dist ./tsconfig.tsbuildinfo"
   },
   "dependencies": {
     "@types/bip39": "^2.4.0",

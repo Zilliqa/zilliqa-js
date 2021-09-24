@@ -2,6 +2,7 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
+    "incremental": true,
     "composite": true,
     "declaration": true,
     "declarationMap": true,

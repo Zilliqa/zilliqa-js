@@ -25,7 +25,7 @@
     "build": "yarn clean && mkdir dist && yarn gen:js && yarn gen:ts",
     "gen:js": "pbjs --target static-module --wrap commonjs --out ./dist/index.js ./src/messages.proto",
     "gen:ts": "pbts --out ./dist/index.d.ts --name zproto ./dist/index.js",
-    "clean": "rimraf ./dist"
+    "clean": "rimraf ./dist ./tsconfig.tsbuildinfo"
   },
   "dependencies": {
     "protobufjs": "^6.8.8"
