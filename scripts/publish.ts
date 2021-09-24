@@ -16,7 +16,6 @@
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import lerna from 'lerna';
-import * as childproc from 'child_process';
 
 import project from './project';
 import { createLogger } from './logger';
@@ -38,18 +37,6 @@ const getVersion = async () => {
   return { major, minor, patch };
 };
 
-const getCommitSHA = async () => {
-  return new Promise((resolve, reject) => {
-    childproc.exec('git rev-parse --short=7 HEAD', (err, stdout) => {
-      if (err) {
-        return reject(err);
-      }
-
-      resolve(stdout);
-    });
-  });
-};
-
 const getDate = (sep?: string): string => {
   const s = sep === undefined ? '' : sep;
   const raw = new Date()
@@ -69,7 +56,6 @@ const publish = async () => {
 
   try {
     const { major, minor, patch } = await getVersion();
-    const sha = await getCommitSHA();
     const version = `${major}.${minor}.${patch}-${DIST_TAG}.${getDate()}`;
 
     lerna([
