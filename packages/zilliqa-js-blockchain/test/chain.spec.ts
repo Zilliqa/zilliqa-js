@@ -808,6 +808,16 @@ describe('Module: Blockchain', () => {
         params: [
           '6d84363526a2d764835f8cf52dfeefe80a360fac',
           'A0BD91DE66D97E6930118179BA4F1836C366C4CB3309A6B354D26F52ABB2AAC6',
+          -1,
+        ],
+        expectedReqParams: undefined,
+        result: undefined,
+        error: 'invalid txBlock',
+      },
+      {
+        params: [
+          '6d84363526a2d764835f8cf52dfeefe80a360fac',
+          'A0BD91DE66D97E6930118179BA4F1836C366C4CB3309A6B354D26F52ABB2AAC6',
           0.1234,
         ],
         expectedReqParams: undefined,
