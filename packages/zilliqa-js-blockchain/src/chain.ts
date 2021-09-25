@@ -422,6 +422,22 @@ export class Blockchain implements ZilliqaModule {
     );
   }
 
+  // returns the transactions in batches (or pages) of 2,500.
+  // This API behaves similar to GetTxBodiesForTxBlock
+  getTransactionsForTxBlockEx(
+    txBlock: number,
+  ): Promise<RPCResponse<any, string>> {
+    const isBlockNumber =
+      Number.isFinite(txBlock) && Number.isInteger(txBlock) && txBlock >= 0;
+    if (!isBlockNumber) {
+      throw new Error('invalid txBlock');
+    }
+    return this.provider.send(
+      RPCMethod.GetTransactionsForTxBlockEx,
+      txBlock.toString(),
+    );
+  }
+
   // Returns the validated transactions (in verbose form)
   // included within a specified final transaction block.
   getTxnBodiesForTxBlock(

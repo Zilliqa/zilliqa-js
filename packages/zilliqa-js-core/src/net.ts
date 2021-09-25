@@ -52,6 +52,7 @@ export enum RPCMethod {
   GetTransactionStatus = 'GetTransactionStatus',
   GetRecentTransactions = 'GetRecentTransactions',
   GetTransactionsForTxBlock = 'GetTransactionsForTxBlock',
+  GetTransactionsForTxBlockEx = 'GetTransactionsForTxBlockEx',
   GetTxnBodiesForTxBlock = 'GetTxnBodiesForTxBlock',
   GetTxnBodiesForTxBlockEx = 'GetTxnBodiesForTxBlockEx',
   GetNumTxnsTxEpoch = 'GetNumTxnsTxEpoch',
