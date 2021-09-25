@@ -423,7 +423,7 @@ export class Blockchain implements ZilliqaModule {
   }
 
   // returns the transactions in batches (or pages) of 2,500.
-  // This API behaves similar to GetTxBodiesForTxBlock
+  // This API behaves similar to GetTransactionsForTxBlock
   getTransactionsForTxBlockEx(
     txBlock: number,
   ): Promise<RPCResponse<any, string>> {
