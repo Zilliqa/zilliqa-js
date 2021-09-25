@@ -28,14 +28,24 @@ export const randomBytes = (bytes: number) => {
   const b = Buffer.allocUnsafe(bytes);
   const n = b.byteLength;
 
-  let crypto = global.crypto;
-  if (crypto === undefined) {
+  const isBrowserEnv =
+    typeof window !== 'undefined' && typeof window.document !== 'undefined';
+  const isWebWorkerEnv =
+    typeof self === 'object' &&
+    self.constructor?.name === 'DedicatedWorkerGlobalScope';
+  const isNodeEnv = typeof process?.versions?.node === 'string';
+
+  let crypto = undefined;
+  if (isBrowserEnv) {
+    // Browser Environment
     // @ts-ignore
-    // for IE 11
-    crypto = global.msCrypto;
+    crypto = window.crypto || window.msCrypto; // for IE 11
+  } else if (isWebWorkerEnv) {
+    // Web Worker Environment
+    // @ts-ignore
+    crypto = self.crypto || self.msCrypto; // for IE 11
   }
 
-  const isNodeEnv = typeof process?.versions?.node === 'string';
   if (isNodeEnv) {
     // For node enviroment, use sodium-native
     // https://paragonie.com/blog/2016/05/how-generate-secure-random-numbers-in-various-programming-languages#nodejs-csprng
