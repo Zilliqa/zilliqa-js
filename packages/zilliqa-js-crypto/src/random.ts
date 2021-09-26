@@ -28,21 +28,23 @@ export const randomBytes = (bytes: number) => {
   const b = Buffer.allocUnsafe(bytes);
   const n = b.byteLength;
 
-  let crypto = global.crypto;
-  if (crypto === undefined) {
-    // @ts-ignore
-    // for IE 11
-    crypto = global.msCrypto;
-  }
+  const isBrowserEnv =
+    typeof window !== 'undefined' && typeof window.document !== 'undefined';
+
+  const isWebWorkerEnv =
+    typeof self === 'object' &&
+    self.constructor?.name === 'DedicatedWorkerGlobalScope';
 
   const isNodeEnv = typeof process?.versions?.node === 'string';
-  if (isNodeEnv) {
-    // For node enviroment, use sodium-native
-    // https://paragonie.com/blog/2016/05/how-generate-secure-random-numbers-in-various-programming-languages#nodejs-csprng
 
-    const sodium = require('sodium-native');
-    sodium.randombytes_buf(b);
-  } else if (crypto && crypto.getRandomValues) {
+  let crypto = undefined;
+  if (isBrowserEnv || isWebWorkerEnv) {
+    // web worker: self.crypto
+    // browser: window.crypto
+    // @ts-ignore
+    crypto = global.crypto || global.msCrypto; // for IE 11
+  }
+  if (typeof crypto?.getRandomValues === 'function') {
     // For browser or web worker enviroment, use window.crypto.getRandomValues()
     // https://paragonie.com/blog/2016/05/how-generate-secure-random-numbers-in-various-programming-languages#js-csprng
 
@@ -51,10 +53,18 @@ export const randomBytes = (bytes: number) => {
     // https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues#exceptions
     const MAX_BYTES = 65536;
     for (let i = 0; i < n; i += MAX_BYTES) {
+      // typedArray = crypto.getRandomValues(typedArray);
+      // Note that typedArray is modified in-place, and no copy is made.
       crypto.getRandomValues(
         new Uint8Array(b.buffer, i + b.byteOffset, Math.min(n - i, MAX_BYTES)),
       );
     }
+  } else if (isNodeEnv) {
+    // For node enviroment, use sodium-native
+    // https://paragonie.com/blog/2016/05/how-generate-secure-random-numbers-in-various-programming-languages#nodejs-csprng
+
+    const sodium = require('sodium-native');
+    sodium.randombytes_buf(b);
   } else {
     throw new Error('No secure random number generator available');
   }
