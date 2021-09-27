@@ -121,7 +121,7 @@ export interface DsBlockHeader {
   BlockNum: string;
   Difficulty: number;
   DifficultyDS: number;
-  GasPrice: number;
+  GasPrice: string;
   LeaderPubKey: string;
   PoWWinners: string[];
   PrevHash: string;
