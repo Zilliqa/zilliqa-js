@@ -422,6 +422,22 @@ export class Blockchain implements ZilliqaModule {
     );
   }
 
+  // returns the transactions in batches (or pages) of 2,500.
+  // This API behaves similar to GetTransactionsForTxBlock
+  getTransactionsForTxBlockEx(
+    txBlock: number,
+  ): Promise<RPCResponse<any, string>> {
+    const isBlockNumber =
+      Number.isFinite(txBlock) && Number.isInteger(txBlock) && txBlock >= 0;
+    if (!isBlockNumber) {
+      throw new Error('invalid txBlock');
+    }
+    return this.provider.send(
+      RPCMethod.GetTransactionsForTxBlockEx,
+      txBlock.toString(),
+    );
+  }
+
   // Returns the validated transactions (in verbose form)
   // included within a specified final transaction block.
   getTxnBodiesForTxBlock(
@@ -429,6 +445,20 @@ export class Blockchain implements ZilliqaModule {
   ): Promise<RPCResponse<TransactionObj[], string>> {
     return this.provider.send(
       RPCMethod.GetTxnBodiesForTxBlock,
+      txBlock.toString(),
+    );
+  }
+
+  // Returns the transactions in batches (or pages) of 2,500
+  // This API behaves similar to GetTxBodiesForTxBlock
+  getTxnBodiesForTxBlockEx(txBlock: number): Promise<RPCResponse<any, string>> {
+    const isBlockNumber =
+      Number.isFinite(txBlock) && Number.isInteger(txBlock) && txBlock >= 0;
+    if (!isBlockNumber) {
+      throw new Error('invalid txBlock');
+    }
+    return this.provider.send(
+      RPCMethod.GetTxnBodiesForTxBlockEx,
       txBlock.toString(),
     );
   }

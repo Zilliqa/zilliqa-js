@@ -283,6 +283,99 @@ describe('Module: Blockchain', () => {
     ]);
   });
 
+  it('validates params for GetTransactionsForTxBlockEx', async () => {
+    const sampleResponse = {
+      id: '1',
+      jsonrpc: '2.0',
+      result: {
+        CurrPage: 2,
+        NumPages: 5,
+        Transactions: [
+          [
+            '0a9b4733bff6be2d48020f42e561a89d735eeb809eda257b6a56712223e842eb',
+            '01924067b8d120de35c72bf7213faa12d8b6d20dfc867a027a39799090fd2bad',
+            '321fe2ed656c622c14d4c7919080086bc95fa57f52a235966cf2c3661dc2fbc5',
+            '3e0eee38171169b7f179035fd02e40f74d698d05733597115ef67ae2034a7b48',
+          ],
+          [
+            '000d1ab6963ff7c3db82fcce858e93fa264f7d39010099482ab965a518566195',
+            '6374f8d23d2aa96e3b205a677ad0569bf087d8a099ce90c2869bfca8588f11eb',
+            '6ad9c1aca7106ace4b836c677ac4a850f611349725358c541741842fb12b4d8d',
+            'd116b78ddd5a30bc1a27495f9227af1cd62a90766eaaba7610a395aeab78ee10',
+          ],
+          [],
+          [],
+        ],
+      },
+    };
+    fetch.mockResponse(JSON.stringify(sampleResponse));
+
+    const testCases = [
+      // Nagative Test Cases
+      {
+        params: [-1],
+        expectedReqParams: undefined,
+        result: undefined,
+        error: 'invalid txBlock',
+      },
+      {
+        params: [0.1234],
+        expectedReqParams: undefined,
+        result: undefined,
+        error: 'invalid txBlock',
+      },
+      {
+        params: [Infinity],
+        expectedReqParams: undefined,
+        result: undefined,
+        error: 'invalid txBlock',
+      },
+      {
+        params: ['one'],
+        expectedReqParams: undefined,
+        result: undefined,
+        error: 'invalid txBlock',
+      },
+
+      // Positive Test Cases
+      {
+        params: [0],
+        expectedReqParams: ['0'],
+        result: sampleResponse,
+        error: undefined,
+      },
+      {
+        params: [10],
+        expectedReqParams: ['10'],
+        result: sampleResponse,
+        error: undefined,
+      },
+    ];
+
+    for (const t of testCases) {
+      if (t.error) {
+        try {
+          await blockchain.getTransactionsForTxBlockEx(t.params[0] as number);
+          expect(true).toBe(false);
+        } catch (error) {
+          if (error instanceof Error) {
+            expect(error.message).toBe(t.error);
+          }
+        }
+      } else {
+        const res = await blockchain.getTransactionsForTxBlockEx(
+          t.params[0] as number,
+        );
+        const req = getExpectedReq(
+          'GetTransactionsForTxBlockEx',
+          t.expectedReqParams,
+        );
+        const expectedRes = { req, ...t.result };
+        expect(res).toEqual(expectedRes);
+      }
+    }
+  });
+
   it('should receive transaction bodies', async () => {
     const responses = [
       {
@@ -306,6 +399,121 @@ describe('Module: Blockchain', () => {
     expect(result.result.length).toEqual(1);
     // @ts-ignore
     expect(result.result[0].ID).toEqual('some_hash');
+  });
+
+  it('validates params for GetTxnBodiesForTxBlockEx', async () => {
+    const sampleResponse = {
+      id: '1',
+      jsonrpc: '2.0',
+      result: {
+        CurrPage: 2,
+        NumPages: 5,
+        Transactions: [
+          {
+            ID: '0a9b4733bff6be2d48020f42e561a89d735eeb809eda257b6a56712223e842eb',
+            amount: '0',
+            gasLimit: '1',
+            gasPrice: '2000000000',
+            nonce: '96538',
+            receipt: {
+              cumulative_gas: '1',
+              epoch_num: '1002353',
+              success: true,
+            },
+            senderPubKey:
+              '0x0235372F21184432428ABCDF99385FFF3A4EC346942B51FACBE9589DDF482C5D45',
+            signature:
+              '0x1A7CD80504D1BD75C50F751C08FC36ACC0F1A94852048179BCC927A3D5BC297AF01FB0A9CADBEC9AB870D330C8E2931E7025AE1293CE66B7429ABC44E785F16B',
+            toAddr: '43b358e23092e2d367cedcd08c513fdca2162c01',
+            version: '65537',
+          },
+          {
+            ID: 'd116b78ddd5a30bc1a27495f9227af1cd62a90766eaaba7610a395aeab78ee10',
+            amount: '0',
+            gasLimit: '1',
+            gasPrice: '2000000000',
+            nonce: '98068',
+            receipt: {
+              cumulative_gas: '1',
+              epoch_num: '1002353',
+              success: true,
+            },
+            senderPubKey:
+              '0x02FBB56136F2BBC10C963CCB8FA19287926A655023AB137BB018D2C65238D0F481',
+            signature:
+              '0xC6C4B4060026631F6F79BB5D6B163A51729E11A92D0E217F3ABCD38D2A8E733C62A9EBADA184DEAD5859BBE68ABD888E3A0B194B260FF7A9ACD58523A37EF896',
+            toAddr: '43b358e23092e2d367cedcd08c513fdca2162c01',
+            version: '65537',
+          },
+        ],
+      },
+    };
+    fetch.mockResponse(JSON.stringify(sampleResponse));
+
+    const testCases = [
+      // Nagative Test Cases
+      {
+        params: [-1],
+        expectedReqParams: undefined,
+        result: undefined,
+        error: 'invalid txBlock',
+      },
+      {
+        params: [0.1234],
+        expectedReqParams: undefined,
+        result: undefined,
+        error: 'invalid txBlock',
+      },
+      {
+        params: [Infinity],
+        expectedReqParams: undefined,
+        result: undefined,
+        error: 'invalid txBlock',
+      },
+      {
+        params: ['one'],
+        expectedReqParams: undefined,
+        result: undefined,
+        error: 'invalid txBlock',
+      },
+
+      // Positive Test Cases
+      {
+        params: [0],
+        expectedReqParams: ['0'],
+        result: sampleResponse,
+        error: undefined,
+      },
+      {
+        params: [10],
+        expectedReqParams: ['10'],
+        result: sampleResponse,
+        error: undefined,
+      },
+    ];
+
+    for (const t of testCases) {
+      if (t.error) {
+        try {
+          await blockchain.getTxnBodiesForTxBlockEx(t.params[0] as number);
+          expect(true).toBe(false);
+        } catch (error) {
+          if (error instanceof Error) {
+            expect(error.message).toBe(t.error);
+          }
+        }
+      } else {
+        const res = await blockchain.getTxnBodiesForTxBlockEx(
+          t.params[0] as number,
+        );
+        const req = getExpectedReq(
+          'GetTxnBodiesForTxBlockEx',
+          t.expectedReqParams,
+        );
+        const expectedRes = { req, ...t.result };
+        expect(res).toEqual(expectedRes);
+      }
+    }
   });
 
   it('should receive transaction status with confirmed', async () => {
