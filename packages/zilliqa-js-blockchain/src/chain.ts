@@ -539,9 +539,11 @@ export class Blockchain implements ZilliqaModule {
       : contractAddress;
 
     const isLatestStr = txBlock === 'latest';
-    const isFiniteInteger =
-      Number.isFinite(txBlock) && Number.isInteger(txBlock);
-    const isValid = isLatestStr || isFiniteInteger;
+
+    const isBlockNumber =
+      Number.isFinite(txBlock) && Number.isInteger(txBlock) && txBlock >= 0;
+
+    const isValid = isLatestStr || isBlockNumber;
     if (!isValid) {
       throw new Error('invalid txBlock');
     }
