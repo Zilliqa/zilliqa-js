@@ -52,9 +52,9 @@ of the umbrella package `@zilliqa-js/zilliqa`. This takes care of bootstrapping 
 `Zilliqa` class.
 
 ```shell
+npm i @zilliqa-js/zilliqa
+# or
 yarn add @zilliqa-js/zilliqa
-# bn.js should be added with the above package. if it is not, install it manually.
-yarn add bn.js
 ```
 
 ## Quick Start
