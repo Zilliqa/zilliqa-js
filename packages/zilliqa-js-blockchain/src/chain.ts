@@ -38,6 +38,9 @@ import {
 
 import { toTxParams } from './util';
 
+const isBlockNumber = (blockNum: number) =>
+  Number.isFinite(blockNum) && Number.isInteger(blockNum) && blockNum >= 0;
+
 export class Blockchain implements ZilliqaModule {
   signer: Wallet;
   provider: Provider;
@@ -427,9 +430,7 @@ export class Blockchain implements ZilliqaModule {
   getTransactionsForTxBlockEx(
     txBlock: number,
   ): Promise<RPCResponse<any, string>> {
-    const isBlockNumber =
-      Number.isFinite(txBlock) && Number.isInteger(txBlock) && txBlock >= 0;
-    if (!isBlockNumber) {
+    if (!isBlockNumber(txBlock)) {
       throw new Error('invalid txBlock');
     }
     return this.provider.send(
@@ -452,9 +453,7 @@ export class Blockchain implements ZilliqaModule {
   // Returns the transactions in batches (or pages) of 2,500
   // This API behaves similar to GetTxBodiesForTxBlock
   getTxnBodiesForTxBlockEx(txBlock: number): Promise<RPCResponse<any, string>> {
-    const isBlockNumber =
-      Number.isFinite(txBlock) && Number.isInteger(txBlock) && txBlock >= 0;
-    if (!isBlockNumber) {
+    if (!isBlockNumber(txBlock)) {
       throw new Error('invalid txBlock');
     }
     return this.provider.send(
@@ -569,11 +568,7 @@ export class Blockchain implements ZilliqaModule {
       : contractAddress;
 
     const isLatestStr = txBlock === 'latest';
-
-    const isBlockNumber =
-      Number.isFinite(txBlock) && Number.isInteger(txBlock) && txBlock >= 0;
-
-    const isValid = isLatestStr || isBlockNumber;
+    const isValid = isLatestStr || isBlockNumber(Number(txBlock));
     if (!isValid) {
       throw new Error('invalid txBlock');
     }
