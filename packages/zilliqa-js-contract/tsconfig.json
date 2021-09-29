@@ -8,6 +8,7 @@
   "references": [
     { "path": "../zilliqa-js-account" },
     { "path": "../zilliqa-js-core" },
-    { "path": "../zilliqa-js-util" }
+    { "path": "../zilliqa-js-util" },
+    { "path": "../zilliqa-js-blockchain" }
   ]
 }
