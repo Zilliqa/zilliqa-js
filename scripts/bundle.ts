@@ -93,7 +93,6 @@ async function bundle() {
           }),
         ],
         // mark all packages that are not *this* package as external so they don't get included in the bundle
-        // include tslib in the bundles since only __decorate is really used by multiple packages (we can figure out a way to deduplicate that later on if need be)
         external: getKeys(pkg.name),
         // external: project.packages
         //   .filter((p) => p.name !== pkg.name)
@@ -133,7 +132,6 @@ async function bundle() {
               }
               return g;
             }, {}),
-            tslib: 'tslib',
           },
           format: 'umd',
           sourcemap: true,

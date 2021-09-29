@@ -22,6 +22,7 @@
     "clean": "rimraf ./dist ./tsconfig.tsbuildinfo"
   },
   "dependencies": {
+    "tslib": "2.3.1",
     "@zilliqa-js/account": "3.2.0",
     "@zilliqa-js/blockchain": "3.2.0",
     "@zilliqa-js/contract": "3.2.0",
