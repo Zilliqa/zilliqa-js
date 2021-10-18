@@ -39,6 +39,7 @@ branches:
   except:
   - /^v[0-9]/
 install:
+  - npm install --global yarn
   - yarn install
   - yarn global add codecov
   - yarn global add ts-node
