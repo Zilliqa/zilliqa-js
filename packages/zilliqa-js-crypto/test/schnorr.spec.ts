@@ -15,10 +15,10 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import BN from 'bn.js';
+import { BN } from '@zilliqa-js/util';
 import { randomBytes } from 'crypto';
-import elliptic from 'elliptic';
-import Signature from 'elliptic/lib/elliptic/ec/signature';
+import { ec } from 'elliptic';
+import { Signature } from '../src/index';
 
 const schnorrVectors = [
   {
@@ -82,7 +82,7 @@ const pairs = [
 
 import * as schnorr from '../src/schnorr';
 
-const secp256k1 = elliptic.ec('secp256k1');
+const secp256k1 = new ec('secp256k1');
 
 describe('schnorr', () => {
   it('should fail for bad signatures', () => {
@@ -92,7 +92,7 @@ describe('schnorr', () => {
 
       const msg = randomBytes(128);
 
-      let sig;
+      let sig: ec.Signature | null = null;
       while (!sig) {
         sig = schnorr.trySign(
           msg,
@@ -134,7 +134,7 @@ describe('schnorr', () => {
 
   it('should match the C++ Schnorr implementation', () => {
     schnorrVectors.forEach(({ msg, priv, pub, k, r, s }) => {
-      let sig: Signature | null = null;
+      let sig: ec.Signature | null = null;
       while (!sig) {
         sig = schnorr.trySign(
           Buffer.from(msg, 'hex'),

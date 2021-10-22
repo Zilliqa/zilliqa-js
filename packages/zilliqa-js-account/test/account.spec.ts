@@ -15,11 +15,10 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import Signature from 'elliptic/lib/elliptic/ec/signature';
 import { HTTPProvider } from '@zilliqa-js/core';
 import * as zcrypto from '@zilliqa-js/crypto';
 import { BN, Long } from '@zilliqa-js/util';
-
+const { Signature } = zcrypto;
 import { Account } from '../src/account';
 import { Transaction } from '../src/transaction';
 

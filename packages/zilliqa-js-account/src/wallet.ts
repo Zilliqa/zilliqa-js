@@ -22,7 +22,7 @@ import * as zcrypto from '@zilliqa-js/crypto';
 
 import { Account } from './account';
 import { Transaction } from './transaction';
-import BN from 'bn.js';
+import { BN } from '@zilliqa-js/util';
 
 export class Wallet extends Signer {
   accounts: { [address: string]: Account } = {};

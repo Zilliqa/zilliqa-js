@@ -22,7 +22,7 @@ import { BN, validation } from '@zilliqa-js/util';
 
 import { fromBech32Address, toBech32Address } from './bech32';
 
-const secp256k1 = elliptic.ec('secp256k1');
+const secp256k1 = new elliptic.ec('secp256k1');
 
 /**
  * getAddressFromPrivateKey
