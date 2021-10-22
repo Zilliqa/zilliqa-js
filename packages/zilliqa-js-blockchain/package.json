@@ -26,7 +26,6 @@
   },
   "dependencies": {
     "@zilliqa-js/account": "3.3.0",
-    "@zilliqa-js/contract": "3.3.0",
     "@zilliqa-js/core": "3.3.0",
     "@zilliqa-js/crypto": "3.3.0",
     "@zilliqa-js/util": "3.3.0",
