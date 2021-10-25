@@ -20,7 +20,7 @@ import { Transaction } from './transaction';
 import { TxParams, TxStatus } from './types';
 import { formatOutgoingTx } from './util';
 import { Wallet } from './wallet';
-import BN from 'bn.js';
+import { BN } from '@zilliqa-js/util';
 
 export class TransactionFactory implements ZilliqaModule {
   provider: Provider;

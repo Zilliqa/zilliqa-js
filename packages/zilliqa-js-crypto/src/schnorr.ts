@@ -15,16 +15,16 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import elliptic from 'elliptic';
+import { ec } from 'elliptic';
 import hashjs from 'hash.js';
 import DRBG from 'hmac-drbg';
 
 import { BN } from '@zilliqa-js/util';
 
 import { randomBytes } from './random';
-import Signature from 'elliptic/lib/elliptic/ec/signature';
+import { Signature } from '.';
 
-const secp256k1 = elliptic.ec('secp256k1');
+const secp256k1 = new ec('secp256k1');
 const curve = secp256k1.curve;
 const PRIVKEY_SIZE_BYTES = 32;
 // Public key is a point (x, y) on the curve.
@@ -92,7 +92,7 @@ export const sign = (
   msg: Buffer,
   privKey: Buffer,
   pubKey: Buffer,
-): Signature => {
+): ec.Signature => {
   const prv = new BN(privKey);
   const drbg = getDRBG(msg);
   const len = curve.n.byteLength();
@@ -121,7 +121,7 @@ export const trySign = (
   k: BN,
   privKey: BN,
   pubKey: Buffer,
-): Signature | null => {
+): ec.Signature | null => {
   if (privKey.isZero()) {
     throw new Error('Bad private key.');
   }
@@ -181,7 +181,7 @@ export const trySign = (
  * 4. r' = H(Q, kpub, m)
  * 5. return r' == r
  */
-export const verify = (msg: Buffer, signature: Signature, key: Buffer) => {
+export const verify = (msg: Buffer, signature: ec.Signature, key: Buffer) => {
   const sig = new Signature(signature);
 
   if (sig.s.isZero() || sig.r.isZero()) {
@@ -221,7 +221,7 @@ export const verify = (msg: Buffer, signature: Signature, key: Buffer) => {
   return r1.eq(sig.r);
 };
 
-export const toSignature = (serialised: string): Signature => {
+export const toSignature = (serialised: string): ec.Signature => {
   const r = serialised.slice(0, 64);
   const s = serialised.slice(64);
 
