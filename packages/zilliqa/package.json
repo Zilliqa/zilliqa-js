@@ -1,6 +1,6 @@
 {
   "name": "@zilliqa-js/zilliqa",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "description": "Main entry point to the Zilliqa JS client.",
   "author": "Ian Tan (https://github.com/iantanwx)",
   "maintainers": [
@@ -22,13 +22,13 @@
     "clean": "rimraf ./dist ./tsconfig.tsbuildinfo"
   },
   "dependencies": {
-    "@zilliqa-js/account": "3.3.0",
-    "@zilliqa-js/blockchain": "3.3.0",
-    "@zilliqa-js/contract": "3.3.0",
+    "@zilliqa-js/account": "3.3.1",
+    "@zilliqa-js/blockchain": "3.3.1",
+    "@zilliqa-js/contract": "3.3.1",
     "@zilliqa-js/core": "3.3.0",
-    "@zilliqa-js/crypto": "3.3.0",
+    "@zilliqa-js/crypto": "3.3.1",
     "@zilliqa-js/subscriptions": "3.3.0",
-    "@zilliqa-js/util": "3.3.0",
+    "@zilliqa-js/util": "3.3.1",
     "tslib": "2.3.1"
   },
   "files": [

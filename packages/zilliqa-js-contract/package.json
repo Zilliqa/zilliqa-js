@@ -1,6 +1,6 @@
 {
   "name": "@zilliqa-js/contract",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "description": "Contract-related functionality.",
   "main": "dist/index.js",
   "node": "dist/index.js",
@@ -25,11 +25,11 @@
     "clean": "rimraf ./dist ./tsconfig.tsbuildinfo"
   },
   "dependencies": {
-    "@zilliqa-js/account": "3.3.0",
-    "@zilliqa-js/blockchain": "3.3.0",
+    "@zilliqa-js/account": "3.3.1",
+    "@zilliqa-js/blockchain": "3.3.1",
     "@zilliqa-js/core": "3.3.0",
-    "@zilliqa-js/crypto": "3.3.0",
-    "@zilliqa-js/util": "3.3.0",
+    "@zilliqa-js/crypto": "3.3.1",
+    "@zilliqa-js/util": "3.3.1",
     "hash.js": "^1.1.5",
     "tslib": "2.3.1",
     "utility-types": "^2.1.0"
