@@ -42,13 +42,13 @@ install:
   - npm install --global yarn
   - yarn install
   - yarn global add codecov
-  - yarn global add ts-node
   - yarn global add webpack
 script:
   - yarn bootstrap
-  - yarn run test
   - yarn validate
   - yarn bundle
+  - bash tasks/local-registry.sh
+  - bash tasks/tsc.sh
   - yarn build:web
 after_success:
   - codecov
