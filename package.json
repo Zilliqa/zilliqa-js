@@ -36,7 +36,6 @@
     "@types/node": "^16.6.1",
     "@types/uuid": "^3.4.4",
     "@types/webpack": "^4.4.17",
-    "@types/websocket": "^1.0.0",
     "@typescript-eslint/eslint-plugin": "^4.31.1",
     "@typescript-eslint/parser": "^4.31.1",
     "camelcase": "^5.0.0",
