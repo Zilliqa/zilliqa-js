@@ -3,18 +3,6 @@ sudo: true
 jobs:
   include:
     - os: linux
-      dist: xenial
-      node_js:
-        - 12
-    - os: linux
-      dist: xenial
-      node_js:
-        - 14
-    - os: linux
-      dist: xenial
-      node_js:
-        - 16
-    - os: linux
       dist: bionic
       node_js:
         - 12
