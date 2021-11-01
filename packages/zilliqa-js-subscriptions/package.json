@@ -1,6 +1,6 @@
 {
   "name": "@zilliqa-js/subscriptions",
-  "version": "3.3.0",
+  "version": "3.3.2",
   "description": "Class(es) for interactiong with websocket API of Zilliqa node",
   "main": "dist/index.js",
   "node": "dist/index.js",
@@ -30,8 +30,8 @@
   },
   "dependencies": {
     "@types/websocket": "1.0.4",
-    "tslib": "2.3.1",
     "mitt": "^1.1.3",
+    "tslib": "2.3.1",
     "websocket": "^1.0.28"
   },
   "files": [

@@ -1,6 +1,6 @@
 {
   "name": "@zilliqa-js/account",
-  "version": "3.3.1",
+  "version": "3.3.2",
   "author": "Ian Tan (https://github.com/iantanwx)",
   "maintainers": [
     "Zilliqa Usability Team <maintainers@zilliqa.com> (https://github.com/zilliqa/)"
@@ -27,10 +27,10 @@
   "dependencies": {
     "@types/bip39": "^2.4.0",
     "@types/hdkey": "^0.7.0",
-    "@zilliqa-js/core": "3.3.0",
-    "@zilliqa-js/crypto": "3.3.1",
-    "@zilliqa-js/proto": "3.2.0",
-    "@zilliqa-js/util": "3.3.1",
+    "@zilliqa-js/core": "^3.3.2",
+    "@zilliqa-js/crypto": "^3.3.2",
+    "@zilliqa-js/proto": "^3.3.2",
+    "@zilliqa-js/util": "^3.3.2",
     "bip39": "^2.5.0",
     "hdkey": "^1.1.0",
     "tslib": "2.3.1"
