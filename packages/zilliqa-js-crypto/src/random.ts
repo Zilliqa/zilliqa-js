@@ -68,16 +68,6 @@ export const randomBytes = (bytes: number) => {
   } else {
     throw new Error('No secure random number generator available');
   }
-  const randBz = new Uint8Array(
-    b.buffer,
-    b.byteOffset,
-    b.byteLength / Uint8Array.BYTES_PER_ELEMENT,
-  );
 
-  let randStr = '';
-  for (let i = 0; i < bytes; i++) {
-    randStr += ('00' + randBz[i].toString(16)).slice(-2);
-  }
-
-  return randStr;
+  return b.toString('hex');
 };
