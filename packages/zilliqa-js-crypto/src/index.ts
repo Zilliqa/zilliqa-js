@@ -16,30 +16,7 @@
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import * as schnorr from './schnorr';
-
-// This is a workaround. We need to improve it.
-const Signature = require('elliptic/lib/elliptic/ec/signature');
-// Q. Why do we use require() here?
-// A. At the moment, Signature() in 'elliptic' is can only be imported
-// from 'elliptic/lib/elliptic/ec/signature'. If we use ES6 import syntax,
-// TS will try to generate d.ts from 'elliptic/lib/elliptic/ec/signature'
-// causing an error with 'Could not find a declaration file for module ...' message.
-// Therefore, we use require() here.
-//
-// Q. Why don't we use `ec.Signature` type for 'Signature()'?
-// A. `Signature()` is a function while @types/elliptic defines it as following
-//
-// class Signature {
-//   r: BN;
-//   s: BN;
-//   recoveryParam: number | null;
-//   constructor(options: SignatureInput, enc?: string);
-//   toDER(enc?: string | null): any; // ?
-// }
-//
-// With the above `ec.Signature` type, `new Signature()` will throw an error
-// since it doesn't have constructor().
-// Therefore, we keep the type of Signature() as any.
+import Signature from 'elliptic/lib/elliptic/ec/signature.js'
 
 /**
  * sign
