@@ -16,6 +16,7 @@ module.exports = {
   plugins: ['@typescript-eslint'],
   rules: {
     'no-unreachable': 2,
+    '@typescript-eslint/no-require-imports': 2,
     eqeqeq: 2,
     // The following rules are added to minimize changeset
     // Reduce the following rules gradually

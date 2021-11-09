@@ -18,6 +18,7 @@
 import * as schnorr from './schnorr';
 
 // This is a workaround. We need to improve it.
+// eslint-disable-next-line
 const Signature = require('elliptic/lib/elliptic/ec/signature');
 // Q. Why do we use require() here?
 // A. At the moment, Signature() in 'elliptic' is can only be imported
