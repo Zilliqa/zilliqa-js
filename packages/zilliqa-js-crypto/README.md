@@ -9,7 +9,7 @@
 Safely generates random bytes.
 
 - For browser and web worker environment, we use [window.crypto.getRandomValues()](https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues)
-- For node environment, we use [sodium-native](https://github.com/sodium-friends/sodium-native)
+- For node environment, we use [crypto.randomBytes](https://nodejs.org/api/crypto.html#cryptorandombytessize-callback)
 
 **Parameters**
 

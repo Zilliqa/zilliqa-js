@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@types/elliptic": "^6.4.13",
+    "@types/randombytes": "2.0.0",
     "@zilliqa-js/util": "^3.3.2",
     "aes-js": "^3.1.1",
     "bsert": "^0.0.4",
@@ -33,10 +34,9 @@
     "hash.js": "^1.1.5",
     "hmac-drbg": "^1.0.1",
     "pbkdf2": "^3.0.16",
-    "randombytes": "^2.0.6",
+    "randombytes": "2.1.0",
     "scrypt-js": "^3.0.1",
     "scryptsy": "^2.1.0",
-    "sodium-native": "^3.2.1",
     "tslib": "2.3.1",
     "uuid": "^3.3.2"
   },
