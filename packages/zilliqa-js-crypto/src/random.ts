@@ -63,6 +63,7 @@ export const randomBytes = (bytes: number) => {
     // For node enviroment, use sodium-native
     // https://paragonie.com/blog/2016/05/how-generate-secure-random-numbers-in-various-programming-languages#nodejs-csprng
 
+    // eslint-disable-next-line
     const sodium = require('sodium-native');
     sodium.randombytes_buf(b);
   } else {
