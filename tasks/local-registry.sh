@@ -11,8 +11,6 @@ npx wait-port $port
 
 git checkout -b e2e
 
-npx lerna version patch --force-publish=* --no-push --no-git-tag-version --yes
-
-git commit --no-verify -a -m 'version-bump'
-
-npx lerna publish --registry $local_registry --no-verify-access --ignore-scripts --dist-tag e2e --canary --yes
+npx lerna publish patch --registry $local_registry \
+--no-verify-access --force-publish=* --no-push \
+--ignore-scripts --dist-tag e2e --yes
