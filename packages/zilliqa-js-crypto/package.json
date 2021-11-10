@@ -1,6 +1,6 @@
 {
   "name": "@zilliqa-js/crypto",
-  "version": "3.3.2",
+  "version": "3.3.3",
   "description": "Core crypto utilities for signing/verification/hashing Zilliqa transactions.",
   "author": "Ian Tan (https://github.com/iantanwx)",
   "maintainers": [
@@ -25,9 +25,9 @@
     "clean": "rimraf ./dist ./tsconfig.tsbuildinfo"
   },
   "dependencies": {
-    "@types/uuid": "8.3.1",
     "@types/elliptic": "^6.4.13",
-    "@zilliqa-js/util": "^3.3.2",
+    "@types/uuid": "8.3.1",
+    "@zilliqa-js/util": "^3.3.3",
     "aes-js": "^3.1.1",
     "bsert": "^0.0.4",
     "elliptic": "^6.5.0",
