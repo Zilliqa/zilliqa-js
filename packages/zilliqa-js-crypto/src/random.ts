@@ -15,6 +15,8 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import sodium from 'sodium-native';
+
 /**
  * randomBytes
  *
@@ -24,6 +26,7 @@
  * @param {number} bytes
  * @returns {string}
  */
+
 export const randomBytes = (bytes: number) => {
   const b = Buffer.allocUnsafe(bytes);
   const n = b.byteLength;
@@ -60,11 +63,10 @@ export const randomBytes = (bytes: number) => {
       );
     }
   } else if (isNodeEnv) {
-    // For node enviroment, use sodium-native
-    // https://paragonie.com/blog/2016/05/how-generate-secure-random-numbers-in-various-programming-languages#nodejs-csprng
-
-    // eslint-disable-next-line
-    const sodium = require('sodium-native');
+    // For node enviroment, use sodium-native because we prefer kernel CSPRNG.
+    // References:
+    // - https://paragonie.com/blog/2016/05/how-generate-secure-random-numbers-in-various-programming-languages#nodejs-csprng
+    // - https://github.com/nodejs/node/issues/5798
     sodium.randombytes_buf(b);
   } else {
     throw new Error('No secure random number generator available');

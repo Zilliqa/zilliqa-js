@@ -25,6 +25,7 @@
     "clean": "rimraf ./dist ./tsconfig.tsbuildinfo"
   },
   "dependencies": {
+    "@types/sodium-native": "2.3.5",
     "@types/elliptic": "^6.4.13",
     "@zilliqa-js/util": "^3.3.2",
     "aes-js": "^3.1.1",
@@ -38,7 +39,7 @@
     "scryptsy": "^2.1.0",
     "sodium-native": "^3.2.1",
     "tslib": "2.3.1",
-    "uuid": "^3.3.2"
+    "uuid": "8.3.2"
   },
   "files": [
     "dist",
