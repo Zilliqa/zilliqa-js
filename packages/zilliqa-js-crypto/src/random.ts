@@ -38,7 +38,9 @@ export const randomBytes = (bytes: number) => {
     typeof self === 'object' &&
     self.constructor?.name === 'DedicatedWorkerGlobalScope';
 
-  const isNodeEnv = typeof process?.versions?.node === 'string';
+  const isNodeEnv =
+    typeof process !== 'undefined' &&
+    typeof process?.versions?.node === 'string';
 
   let crypto = undefined;
   if (isBrowserEnv || isWebWorkerEnv) {
