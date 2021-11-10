@@ -21,18 +21,6 @@
 
 import { randomBytes } from '../src/random';
 
-const mockFn = jest.fn();
-
-jest.mock('sodium-native');
-
-// eslint-disable-next-line
-const sodium = require('sodium-native');
-
-sodium.randombytes_buf.mockImplementation(() => {
-  mockFn();
-  return global.Buffer.allocUnsafe(16).fill(0);
-});
-
 beforeEach(() => {
   jest.resetModules();
 });
@@ -45,6 +33,11 @@ describe('random', () => {
       value: {
         allocUnsafe: mockAllocUnsafe,
       },
+    });
+
+    const mockFn = jest.fn();
+    jest.doMock('sodium-native', () => {
+      return { randombytes_buf: mockFn };
     });
 
     const want = '00000000000000000000000000000000';

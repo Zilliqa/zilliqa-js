@@ -15,8 +15,6 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import sodium from 'sodium-native';
-
 /**
  * randomBytes
  *
@@ -69,6 +67,15 @@ export const randomBytes = (bytes: number) => {
     // References:
     // - https://paragonie.com/blog/2016/05/how-generate-secure-random-numbers-in-various-programming-languages#nodejs-csprng
     // - https://github.com/nodejs/node/issues/5798
+    //
+    // This logic should run only in node env. Otherwise, it will throw an error 'require is not defined'.
+    //
+    // Consider using createRequire when typescipt 4.5 is available.
+    // https://devblogs.microsoft.com/typescript/announcing-typescript-4-5-beta
+    // https://nodejs.org/api/module.html#modulecreaterequirefilename
+    //
+    // eslint-disable-next-line
+    const sodium = require('sodium-native');
     sodium.randombytes_buf(b);
   } else {
     throw new Error('No secure random number generator available');
