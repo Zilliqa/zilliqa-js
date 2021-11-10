@@ -15,43 +15,25 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import * as schnorr from './schnorr';
+import { BN } from '@zilliqa-js/util';
 
-import { Signature } from './signature';
+interface SignatureOptions {
+  r: number | string | number[] | Uint8Array | Buffer | BN;
+  s: number | string | number[] | Uint8Array | Buffer | BN;
+}
 
-/**
- * sign
- *
- * @param {string} hash - hex-encoded hash of the data to be signed
- *
- * @returns {string} the signature
- */
-export const sign = (
-  msg: Buffer,
-  privateKey: string,
-  pubKey: string,
-): string => {
-  const sig = schnorr.sign(
-    msg,
-    Buffer.from(privateKey, 'hex'),
-    Buffer.from(pubKey, 'hex'),
-  );
-
-  let r = sig.r.toString('hex');
-  let s = sig.s.toString('hex');
-  while (r.length < 64) {
-    r = '0' + r;
+// This replaces `elliptic/lib/elliptic/ec/signature`.
+// Q. Why do we replace `elliptic/lib/elliptic/ec/signature` with this?
+// A. At the moment, Signature() in 'elliptic' is not exposed.
+export class Signature {
+  r: BN;
+  s: BN;
+  constructor(options: SignatureOptions) {
+    const isValid = options.r && options.s;
+    if (!isValid) {
+      throw new Error('Signature without r or s');
+    }
+    this.r = new BN(options.r, 16);
+    this.s = new BN(options.s, 16);
   }
-  while (s.length < 64) {
-    s = '0' + s;
-  }
-
-  return r + s;
-};
-
-export { schnorr, Signature };
-export * from './util';
-export * from './keystore';
-export * from './random';
-export * from './types';
-export * from './bech32';
+}
