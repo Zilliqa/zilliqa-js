@@ -25,6 +25,7 @@
     "clean": "rimraf ./dist ./tsconfig.tsbuildinfo"
   },
   "dependencies": {
+    "@types/uuid": "8.3.1",
     "@types/sodium-native": "2.3.5",
     "@types/elliptic": "^6.4.13",
     "@zilliqa-js/util": "^3.3.2",
