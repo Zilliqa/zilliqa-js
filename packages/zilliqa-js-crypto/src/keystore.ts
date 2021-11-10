@@ -19,7 +19,7 @@ import aes from 'aes-js';
 import hashjs from 'hash.js';
 import { pbkdf2Sync } from 'pbkdf2';
 import scrypt from 'scrypt-js';
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 import { bytes } from '@zilliqa-js/util';
 
@@ -137,7 +137,7 @@ export const encryptPrivateKey = async (
         )
         .digest('hex'),
     },
-    id: uuid.v4({ random: bytes.hexToIntArray(randomBytes(16)) }),
+    id: uuidv4({ random: bytes.hexToIntArray(randomBytes(16)) }),
     version: 3,
   });
 };
