@@ -92,7 +92,7 @@ export const sign = (
   msg: Buffer,
   privKey: Buffer,
   pubKey: Buffer,
-): ec.Signature => {
+): Signature => {
   const prv = new BN(privKey);
   const drbg = getDRBG(msg);
   const len = curve.n.byteLength();
@@ -121,7 +121,7 @@ export const trySign = (
   k: BN,
   privKey: BN,
   pubKey: Buffer,
-): ec.Signature | null => {
+): Signature | null => {
   if (privKey.isZero()) {
     throw new Error('Bad private key.');
   }
@@ -181,7 +181,7 @@ export const trySign = (
  * 4. r' = H(Q, kpub, m)
  * 5. return r' == r
  */
-export const verify = (msg: Buffer, signature: ec.Signature, key: Buffer) => {
+export const verify = (msg: Buffer, signature: Signature, key: Buffer) => {
   const sig = new Signature(signature);
 
   if (sig.s.isZero() || sig.r.isZero()) {
@@ -221,7 +221,7 @@ export const verify = (msg: Buffer, signature: ec.Signature, key: Buffer) => {
   return r1.eq(sig.r);
 };
 
-export const toSignature = (serialised: string): ec.Signature => {
+export const toSignature = (serialised: string): Signature => {
   const r = serialised.slice(0, 64);
   const s = serialised.slice(64);
 

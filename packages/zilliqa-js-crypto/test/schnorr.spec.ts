@@ -92,7 +92,7 @@ describe('schnorr', () => {
 
       const msg = randomBytes(128);
 
-      let sig: ec.Signature | null = null;
+      let sig: Signature | null = null;
       while (!sig) {
         sig = schnorr.trySign(
           msg,
@@ -134,7 +134,7 @@ describe('schnorr', () => {
 
   it('should match the C++ Schnorr implementation', () => {
     schnorrVectors.forEach(({ msg, priv, pub, k, r, s }) => {
-      let sig: ec.Signature | null = null;
+      let sig: Signature | null = null;
       while (!sig) {
         sig = schnorr.trySign(
           Buffer.from(msg, 'hex'),
