@@ -132,7 +132,7 @@ export class Transaction implements Signable {
 
   get payload() {
     return {
-      version: 0,
+      version: this.version,
       toAddr: this.toAddr,
       nonce: this.nonce,
       pubKey: this.pubKey,
