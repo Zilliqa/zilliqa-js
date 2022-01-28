@@ -1,9 +1,14 @@
-# Zilliqa-JavaScript-Library API
+<div align="center">
+  <h1>
+  zilliqa-js
+  </h1>
+  <strong>
+  Allows you to interact with the Zilliqa network nodes
+  </strong>
+</div>
+<hr/>
 
-[![Build Status](https://travis-ci.com/Zilliqa/Zilliqa-JavaScript-Library.svg?branch=dev)](https://travis-ci.com/Zilliqa/Zilliqa-JavaScript-Library)
-[![codecov](https://codecov.io/gh/Zilliqa/Zilliqa-JavaScript-Library/branch/feature/monorepo/graph/badge.svg)](https://codecov.io/gh/Zilliqa/Zilliqa)
-[![Discord Chat](https://img.shields.io/discord/308323056592486420.svg)](https://discord.gg/XMRE9tt)  
-[![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
+[![Build Status](https://travis-ci.com/Zilliqa/Zilliqa-JavaScript-Library.svg?branch=dev)](https://travis-ci.com/Zilliqa/Zilliqa-JavaScript-Library) [![codecov](https://codecov.io/gh/Zilliqa/Zilliqa-JavaScript-Library/branch/feature/monorepo/graph/badge.svg)](https://codecov.io/gh/Zilliqa/Zilliqa) [![Discord Chat](https://img.shields.io/discord/308323056592486420.svg)](https://discord.gg/XMRE9tt) [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
 
 ## Introduction
 
