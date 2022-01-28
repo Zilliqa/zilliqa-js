@@ -17,14 +17,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Zilliqa/Zilliqa-Javascript-Library.git"
+    "url": "git+https://github.com/Zilliqa/zilliqa-js.git"
   },
   "author": "renlulu (https://github.com/renlulu)",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/Zilliqa/Zilliqa-Javascript-Library/issues"
+    "url": "https://github.com/Zilliqa/zilliqa-js/issues"
   },
-  "homepage": "https://github.com/Zilliqa/Zilliqa-Javascript-Library#readme",
+  "homepage": "https://github.com/Zilliqa/zilliqa-js#readme",
   "devDependencies": {
     "mock-socket": "^9.0.2"
   },
