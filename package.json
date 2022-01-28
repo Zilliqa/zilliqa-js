@@ -1,12 +1,12 @@
 {
   "description": "Root repository for the zilliqa-js suite of tools",
-  "repository": "https://github.com/Zilliqa/Zilliqa-Javascript-Library",
+  "repository": "https://github.com/Zilliqa/zilliqa-js",
   "author": "Ian Tan (https://github.com/iantanwx)",
   "maintainers": [
     "Zilliqa Usability Team <maintainers@zilliqa.com> (https://github.com/zilliqa/)"
   ],
   "bugs": {
-    "url": "https://github.com/Zilliqa/Zilliqa-JavaScript-Library/issues"
+    "url": "https://github.com/Zilliqa/zilliqa-js/issues"
   },
   "private": true,
   "license": "GPL-3.0",

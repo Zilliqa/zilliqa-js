@@ -1,6 +1,6 @@
 //  Copyright (C) 2018 Zilliqa
 //
-//  This file is part of Zilliqa-Javascript-Library.
+//  This file is part of zilliqa-js
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -62,7 +62,7 @@ export const getPubKeyFromPrivateKey = (privateKey: string) => {
  * getAccountFrom0xPrivateKey
  *
  * Utility method for recovering account from 0x private key.
- * See https://github.com/Zilliqa/Zilliqa-JavaScript-Library/pull/159
+ * See https://github.com/Zilliqa/zilliqa-js/pull/159
  * @param privateKeyWith0x : private key with 0x prefix
  */
 

@@ -6,7 +6,7 @@
     "Zilliqa Usability Team <maintainers@zilliqa.com> (https://github.com/zilliqa/)"
   ],
   "bugs": {
-    "url": "https://github.com/Zilliqa/Zilliqa-JavaScript-Library/issues"
+    "url": "https://github.com/Zilliqa/zilliqa-js/issues"
   },
   "description": "Used for signing transactions.",
   "main": "dist/index.js",
@@ -16,7 +16,7 @@
   "jsnext:main": "dist/index.esm.js",
   "types": "dist/index.d.ts",
   "typings": "dist/index.d.ts",
-  "repository": "https://github.com/Zilliqa/Zilliqa-Javascript-Library",
+  "repository": "https://github.com/Zilliqa/zilliqa-js",
   "license": "GPL-3.0",
   "publishConfig": {
     "access": "public"

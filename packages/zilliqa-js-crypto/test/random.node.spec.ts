@@ -4,7 +4,7 @@
 
 //  Copyright (C) 2018 Zilliqa
 //
-//  This file is part of Zilliqa-Javascript-Library.
+//  This file is part of zilliqa-js
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by

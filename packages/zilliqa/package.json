@@ -10,9 +10,9 @@
   "node": "dist/index.js",
   "types": "dist/index.d.ts",
   "typings": "dist/index.d.ts",
-  "repository": "https://www.github.com/Zilliqa/Zilliqa-Javascript-Library",
+  "repository": "https://www.github.com/Zilliqa/zilliqa-js",
   "bugs": {
-    "url": "https://github.com/Zilliqa/Zilliqa-JavaScript-Library/issues"
+    "url": "https://github.com/Zilliqa/zilliqa-js/issues"
   },
   "license": "GPL-3.0",
   "publishConfig": {
