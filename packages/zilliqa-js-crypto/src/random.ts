@@ -25,61 +25,14 @@
  * @returns {string}
  */
 
+import sodium from 'sodium-universal';
+
 export const randomBytes = (bytes: number) => {
-  const b = Buffer.allocUnsafe(bytes);
-  const n = b.byteLength;
-
-  const isBrowserEnv =
-    typeof window !== 'undefined' && typeof window.document !== 'undefined';
-
-  const isWebWorkerEnv =
-    typeof self === 'object' &&
-    self.constructor?.name === 'DedicatedWorkerGlobalScope';
-
-  const isNodeEnv =
-    typeof process !== 'undefined' &&
-    typeof process?.versions?.node === 'string';
-
-  let crypto = undefined;
-  if (isBrowserEnv || isWebWorkerEnv) {
-    // web worker: self.crypto
-    // browser: window.crypto
-    // @ts-ignore
-    crypto = global.crypto || global.msCrypto; // for IE 11
-  }
-  if (typeof crypto?.getRandomValues === 'function') {
-    // For browser or web worker enviroment, use window.crypto.getRandomValues()
-    // https://paragonie.com/blog/2016/05/how-generate-secure-random-numbers-in-various-programming-languages#js-csprng
-
-    // limit of getRandomValues()
-    // The requested length exceeds 65536 bytes.
-    // https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues#exceptions
-    const MAX_BYTES = 65536;
-    for (let i = 0; i < n; i += MAX_BYTES) {
-      // typedArray = crypto.getRandomValues(typedArray);
-      // Note that typedArray is modified in-place, and no copy is made.
-      crypto.getRandomValues(
-        new Uint8Array(b.buffer, i + b.byteOffset, Math.min(n - i, MAX_BYTES)),
-      );
-    }
-  } else if (isNodeEnv) {
-    // For node enviroment, use sodium-native because we prefer kernel CSPRNG.
-    // References:
-    // - https://paragonie.com/blog/2016/05/how-generate-secure-random-numbers-in-various-programming-languages#nodejs-csprng
-    // - https://github.com/nodejs/node/issues/5798
-    //
-    // This logic should run only in node env. Otherwise, it will throw an error 'require is not defined'.
-    //
-    // Consider using createRequire when typescipt 4.5 is available.
-    // https://devblogs.microsoft.com/typescript/announcing-typescript-4-5-beta
-    // https://nodejs.org/api/module.html#modulecreaterequirefilename
-    //
-    // eslint-disable-next-line
-    const sodium = require('sodium-native');
-    sodium.randombytes_buf(b);
-  } else {
-    throw new Error('No secure random number generator available');
-  }
-
-  return b.toString('hex');
+  // For node enviroment, use sodium-native because we prefer kernel CSPRNG.
+  // References:
+  // - https://paragonie.com/blog/2016/05/how-generate-secure-random-numbers-in-various-programming-languages#nodejs-csprng
+  // - https://github.com/nodejs/node/issues/5798
+  const rnd = Buffer.allocUnsafe(bytes);
+  sodium.randombytes_buf(rnd);
+  return rnd.toString('hex');
 };

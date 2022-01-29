@@ -52,6 +52,7 @@
     "rollup-plugin-node-globals": "^1.4.0",
     "rollup-plugin-node-resolve": "^3.4.0",
     "rollup-plugin-typescript2": "0.17.1",
+    "sodium-universal": "^3.0.4",
     "ts-jest": "27.0.5",
     "ts-loader": "8.0.4",
     "ts-node": "^7.0.1",
