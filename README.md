@@ -8,7 +8,7 @@
 </div>
 <hr/>
 
-[![Build Status](https://travis-ci.com/Zilliqa/zilliqa-js.svg?branch=dev)](https://travis-ci.com/Zilliqa/zilliqa-js) [![codecov](https://codecov.io/gh/Zilliqa/zilliqa-js/branch/feature/monorepo/graph/badge.svg)](https://codecov.io/gh/Zilliqa/Zilliqa) [![Discord Chat](https://img.shields.io/discord/308323056592486420.svg)](https://discord.gg/XMRE9tt) [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
+[![Build Status](https://travis-ci.com/Zilliqa/zilliqa-js.svg?branch=dev)](https://travis-ci.com/Zilliqa/zilliqa-js) [![codecov](https://codecov.io/gh/Zilliqa/zilliqa-js/branch/dev/graph/badge.svg?token=3EupxbfA4Q)](https://codecov.io/gh/Zilliqa/zilliqa-js) [![Discord Chat](https://img.shields.io/discord/308323056592486420.svg)](https://discord.gg/XMRE9tt) [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
 
 ## Introduction
 
