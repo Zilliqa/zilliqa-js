@@ -16,3 +16,5 @@ npx tsc ./index.ts --target es5 --noEmit \
 --strict --skipLibCheck false
 
 echo "PASS:tsc"
+
+cd $HOME

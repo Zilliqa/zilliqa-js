@@ -29,7 +29,6 @@ branches:
 install:
   - npm install --global yarn
   - yarn install
-  - yarn global add codecov
   - yarn global add webpack
 script:
   - yarn bootstrap
@@ -39,7 +38,10 @@ script:
   - bash tasks/tsc.sh
   - yarn build:web
 after_success:
-  - codecov
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]] ; then OS_NAME=macos ; else OS_NAME=$TRAVIS_OS_NAME ; fi
+  - curl -Os https://uploader.codecov.io/latest/$OS_NAME/codecov
+  - chmod +x codecov
+  - ./codecov -t ${CODECOV_TOKEN} -f coverage/coverage-final.json -Z
 cache:
   directories:
   - "$HOME/.yarn-cache"
