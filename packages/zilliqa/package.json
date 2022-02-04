@@ -2,7 +2,6 @@
   "name": "@zilliqa-js/zilliqa",
   "version": "3.3.4",
   "description": "Main entry point to the Zilliqa JS client.",
-  "author": "Ian Tan (https://github.com/iantanwx)",
   "maintainers": [
     "Zilliqa Usability Team <maintainers@zilliqa.com> (https://github.com/zilliqa/)"
   ],

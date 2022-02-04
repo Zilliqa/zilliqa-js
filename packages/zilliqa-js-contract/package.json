@@ -10,7 +10,6 @@
   "types": "dist/index.d.ts",
   "typings": "dist/index.d.ts",
   "repository": "https://github.com/Zilliqa/zilliqa-js",
-  "author": "Ian Tan (https://github.com/iantanwx)",
   "maintainers": [
     "Zilliqa Usability Team <maintainers@zilliqa.com> (https://github.com/zilliqa/)"
   ],
