@@ -1,7 +1,6 @@
 {
   "description": "Root repository for the zilliqa-js suite of tools",
   "repository": "https://github.com/Zilliqa/zilliqa-js",
-  "author": "Ian Tan (https://github.com/iantanwx)",
   "maintainers": [
     "Zilliqa Usability Team <maintainers@zilliqa.com> (https://github.com/zilliqa/)"
   ],
