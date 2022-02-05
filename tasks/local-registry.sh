@@ -12,5 +12,5 @@ npx wait-port $port
 git checkout -b e2e
 
 npx lerna publish patch --registry $local_registry \
---no-verify-access --force-publish=* --no-push \
+--no-verify-access --force-publish=* --no-push --allow-branch=e2e \
 --ignore-scripts --dist-tag e2e --yes
