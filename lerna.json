@@ -8,8 +8,7 @@
   "command": {
     "publish": {
       "allowBranch": [
-        "e2e",
-        "dev"
+        "main"
       ],
       "message": "chore(release): publish %v"
     }
