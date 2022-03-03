@@ -64,13 +64,7 @@ yarn add @zilliqa-js/zilliqa
 
 ## Quick Start
 
-> **Ideally, you should [Create a new Nucleus Wallet](https://dev-wallet.zilliqa.com/generate) (an [open source](https://github.com/Zilliqa/nucleus-wallet) Zilliqa testnet wallet)**.
->
-> You should 'fund' the wallet by sending testnet ZIL tokens from the [ZIL faucet](https://dev-wallet.zilliqa.com/faucet)
->
-> You should then replace the value of `const privateKey` with the one from this wallet.
->
-> The code should work with the existing private key but this cannot be guaranteed.
+You can create a test account by using [Zilliqa Dev Wallet](https://github.com/Zilliqa/dev-wallet) and request funds by using [ZIL Faucet service](https://dev-wallet.zilliqa.com/faucet).
 
 ```javascript
 const { BN, Long, bytes, units } = require('@zilliqa-js/util');
