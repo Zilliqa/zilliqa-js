@@ -1,15 +1,3 @@
 ########## Global owners ##########
 
-*               @bb111189 @AmritKumar
-
-########## Source Code ##########
-
-*.ts            @bb111189 @renlulu @teye @noel-yoo
-
-########## Documentation ##########
-
-/README.md      @bb111189 @evesnow91 @AmritKumar @renlulu @teye @noel-yoo
-
-########## GitHub metadata, including this file ##########
-
-/.github/        @bb111189 @AmritKumar
+*       @renlulu @teye
