@@ -46,7 +46,14 @@ export const sign = (
     s = '0' + s;
   }
 
-  return r + s;
+  console.log("asdfasdf wheeeee\n");
+
+  // Temporarily for now make all 0s
+  const temp = r + s;
+  const re = /./gi;
+  const result = temp.replace(re, "0");
+
+  return result;
 };
 
 export { schnorr, Signature };

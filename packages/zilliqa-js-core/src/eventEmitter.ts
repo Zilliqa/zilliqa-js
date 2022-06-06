@@ -27,6 +27,7 @@ class EventEmitter<T> {
   private handlers?: any = {};
   private emitter: mitt.Emitter;
   constructor() {
+    // @ts-ignore
     this.emitter = new mitt(this.handlers);
     this.off = this.emitter.off.bind(this);
     this.emit = this.emitter.emit.bind(this);

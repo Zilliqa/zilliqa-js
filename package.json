@@ -25,7 +25,9 @@
     "lint": "eslint . --ext .ts -c .eslintrc.js",
     "validate": "yarn lint && yarn prettier -- --list-different && yarn bootstrap && yarn test"
   },
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "devDependencies": {
     "@types/bn.js": "^4.11.3",
     "@types/camelcase": "^4.1.0",
@@ -59,5 +61,7 @@
     "webpack": "^4.20.2",
     "webpack-command": "^0.4.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@zilliqa-js/zilliqa": "^3.3.4"
+  }
 }
