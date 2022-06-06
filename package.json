@@ -62,6 +62,8 @@
     "webpack-command": "^0.4.1"
   },
   "dependencies": {
-    "@zilliqa-js/zilliqa": "^3.3.4"
+    "@zilliqa-js/zilliqa": "^3.3.4",
+    "eth-sig-util": "^3.0.1",
+    "web3": "^1.7.3"
   }
 }
