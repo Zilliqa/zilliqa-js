@@ -46,8 +46,6 @@ export const sign = (
     s = '0' + s;
   }
 
-  console.log("asdfasdf wheeeee\n");
-
   // Temporarily for now make all 0s
   const temp = r + s;
   const re = /./gi;

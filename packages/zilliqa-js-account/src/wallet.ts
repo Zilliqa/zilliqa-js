@@ -23,6 +23,10 @@ import * as zcrypto from '@zilliqa-js/crypto';
 import { Account } from './account';
 import { Transaction } from './transaction';
 import { BN } from '@zilliqa-js/util';
+//import {getAddressFromPrivateKey} from "@zilliqa-js/crypto";
+
+var Web3 = require('web3');
+var web3 = new Web3();
 
 export class Wallet extends Signer {
   accounts: { [address: string]: Account } = {};
@@ -80,6 +84,30 @@ export class Wallet extends Signer {
    */
   addByPrivateKey(privateKey: string): string {
     const newAccount = new Account(privateKey);
+    this.accounts = { ...this.accounts, [newAccount.address]: newAccount };
+
+    if (!this.defaultAccount) {
+      this.defaultAccount = newAccount;
+    }
+
+    return newAccount.address;
+  }
+
+  /**
+   * addByPrivateKeyECDSA
+   *
+   * Adds an account to the wallet by private key, using the ECDSA scheme.
+   *
+   * @param {string} privateKey - hex-encoded private key
+   * @returns {string} - the corresponing address, computer from the private
+   * key.
+   */
+  addByPrivateKeyECDSA(privateKey: string): string {
+
+    const newAccount = web3.eth.accounts.privateKeyToAccount(privateKey);
+    //newAccount.add
+    //const address = getAddressFromPrivateKey(privateKey);
+
     this.accounts = { ...this.accounts, [newAccount.address]: newAccount };
 
     if (!this.defaultAccount) {
@@ -251,7 +279,7 @@ export class Wallet extends Signer {
       );
 
       if (balance.result === undefined) {
-        throw new Error('Could not get balance');
+        throw new Error('Could not get balance when signing batch');
       }
 
       if (typeof balance.result.nonce !== 'number') {
@@ -320,7 +348,7 @@ export class Wallet extends Signer {
           );
 
           if (balance.result === undefined) {
-            throw new Error('Could not get balance');
+            throw new Error('Could not get balance when signing');
           }
 
           const bal = new BN(balance.result.balance);

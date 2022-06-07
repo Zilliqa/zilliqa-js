@@ -16,7 +16,7 @@ console.log("account :", account_test);
 
 //web3.eth.signTypedData("whoee", addr);
 //accounts._signTypedData();
-web3.eth.signTypedDat
+//web3.eth.signTypedDat
 
 let data      = accounts.signTransaction({
     to: addr,
