@@ -63,7 +63,10 @@
   },
   "dependencies": {
     "@zilliqa-js/zilliqa": "^3.3.4",
+    "eth-crypto": "^2.3.0",
     "eth-sig-util": "^3.0.1",
+    "ethereumjs-util": "^7.1.5",
+    "ethereumjs-wallet": "^1.0.2",
     "web3": "^1.7.3"
   }
 }

@@ -28,6 +28,11 @@ import { BN } from '@zilliqa-js/util';
 var Web3 = require('web3');
 var web3 = new Web3();
 
+var WalletEth = require('ethereumjs-wallet');
+var EthUtil = require('ethereumjs-util');
+
+var EthCrypto = require('eth-crypto');
+
 export class Wallet extends Signer {
   accounts: { [address: string]: Account } = {};
   defaultAccount?: Account;
@@ -104,7 +109,29 @@ export class Wallet extends Signer {
    */
   addByPrivateKeyECDSA(privateKey: string): string {
 
+    console.log("Setting current provider...");
+    web3.eth.setProvider(new Web3.providers.HttpProvider('http://localhost:5555'));
     const newAccount = web3.eth.accounts.privateKeyToAccount(privateKey);
+
+    ////// Get a wallet instance from a private key
+    const privateKeyBuffer = EthUtil.toBuffer('0x' + privateKey);
+    const wal = WalletEth.default.fromPrivateKey(privateKeyBuffer);
+    ////const wallet = WalletEth.fromPrivateKey(privateKeyBuffer);
+
+    const publicKeyXx = EthCrypto.publicKey.compress(EthCrypto.publicKeyByPrivateKey( privateKey ));
+
+    //// Get a public key
+    const publicKey = wal.getPublicKeyString();
+    const xx = wal.getPublicKey().toString('hex');
+    const yy = wal.getPublicKey().toString();
+    console.log("hoo boy");
+    console.log(publicKey);
+    console.log(xx);
+    console.log(yy);
+    console.log(publicKeyXx);
+    //EthUtil.compress;
+
+    newAccount.publicKey = publicKeyXx;
     //newAccount.add
     //const address = getAddressFromPrivateKey(privateKey);
 
