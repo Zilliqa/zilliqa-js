@@ -46,7 +46,7 @@ async function executeEVMTransaction(privateKeyEth) {
     console.log('Sending an amount to the address we want the contract to be at');
 
     const inject_signature = zilliqa.wallet.defaultAccount.sign("0").signature.slice(2);
-    const publicKey = zilliqa.wallet.defaultAccount.publicKey.slice(2);
+    const publicKey = zilliqa.wallet.defaultAccount.publicKey;
     //const xx = web3.eth.accounts.privateKeyToAccount(privateKey);
 
     const tx = await zilliqa.blockchain.createTransactionWithoutConfirmNoSign(

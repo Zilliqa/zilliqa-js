@@ -28,8 +28,8 @@ import { BN } from '@zilliqa-js/util';
 var Web3 = require('web3');
 var web3 = new Web3();
 
-var WalletEth = require('ethereumjs-wallet');
-var EthUtil = require('ethereumjs-util');
+//var WalletEth = require('ethereumjs-wallet');
+//var EthUtil = require('ethereumjs-util');
 
 var EthCrypto = require('eth-crypto');
 
@@ -114,21 +114,28 @@ export class Wallet extends Signer {
     const newAccount = web3.eth.accounts.privateKeyToAccount(privateKey);
 
     ////// Get a wallet instance from a private key
-    const privateKeyBuffer = EthUtil.toBuffer('0x' + privateKey);
-    const wal = WalletEth.default.fromPrivateKey(privateKeyBuffer);
+    //const privateKeyBuffer = EthUtil.toBuffer('0x' + privateKey);
+    //const wal = WalletEth.default.fromPrivateKey(privateKeyBuffer);
     ////const wallet = WalletEth.fromPrivateKey(privateKeyBuffer);
 
     const publicKeyXx = EthCrypto.publicKey.compress(EthCrypto.publicKeyByPrivateKey( privateKey ));
 
-    //// Get a public key
-    const publicKey = wal.getPublicKeyString();
-    const xx = wal.getPublicKey().toString('hex');
-    const yy = wal.getPublicKey().toString();
-    console.log("hoo boy");
-    console.log(publicKey);
-    console.log(xx);
-    console.log(yy);
+    const identity = EthCrypto.createIdentity();
+    const compressedPub = EthCrypto.publicKey.compress(identity.publicKey);
+
+    ////// Get a public key
+    //const publicKey = wal.getPublicKeyString();
+    //const xx = wal.getPublicKey().toString('hex');
+    //const yy = wal.getPublicKey().toString();
+    //console.log("hoo boy");
+    //console.log(publicKey);
+    //console.log(xx);
+
+    console.log("testme");
+    console.log(compressedPub);
     console.log(publicKeyXx);
+    console.log(compressedPub.length);
+    console.log(publicKeyXx.length);
     //EthUtil.compress;
 
     newAccount.publicKey = publicKeyXx;
