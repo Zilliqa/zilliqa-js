@@ -26,6 +26,7 @@ const {
 //const {Wallet} = require('ethereumjs-wallet');
 var Wallet = require('ethereumjs-wallet');
 var EthUtil = require('ethereumjs-util');
+//import EthUtil from 'ethereumjs-util';
 
 // Constants
 const chainId = 1; // chainId of the developer testnet
@@ -45,7 +46,10 @@ async function executeEVMTransaction(privateKeyEth) {
     // Send a transaction to the network
     console.log('Sending an amount to the address we want the contract to be at');
 
-    const inject_signature = zilliqa.wallet.defaultAccount.sign("0").signature.slice(2);
+    const inject = zilliqa.wallet.defaultAccount.sign("");
+    const inject_signature = inject.signature.slice(2);
+    console.log(`The message hash being signed is ${inject.messageHash}`);
+    console.log(inject);
     const publicKey = zilliqa.wallet.defaultAccount.publicKey;
     //const xx = web3.eth.accounts.privateKeyToAccount(privateKey);
 

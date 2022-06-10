@@ -118,29 +118,16 @@ export class Wallet extends Signer {
     //const wal = WalletEth.default.fromPrivateKey(privateKeyBuffer);
     ////const wallet = WalletEth.fromPrivateKey(privateKeyBuffer);
 
-    const publicKeyXx = EthCrypto.publicKey.compress(EthCrypto.publicKeyByPrivateKey( privateKey ));
+    const identity = EthCrypto.publicKeyByPrivateKey(privateKey);
+    const compressedPub = EthCrypto.publicKey.compress(identity);
 
-    const identity = EthCrypto.createIdentity();
-    const compressedPub = EthCrypto.publicKey.compress(identity.publicKey);
+    //const identity = EthCrypto.createIdentity();
+    //const compressedPub = EthCrypto.publicKey.compress(identity.publicKey);
 
-    ////// Get a public key
-    //const publicKey = wal.getPublicKeyString();
-    //const xx = wal.getPublicKey().toString('hex');
-    //const yy = wal.getPublicKey().toString();
-    //console.log("hoo boy");
-    //console.log(publicKey);
-    //console.log(xx);
+    console.log(`The uncompressed pub key is: ${identity}`);
+    console.log(`The compressed pub key is: ${compressedPub}`);
 
-    console.log("testme");
-    console.log(compressedPub);
-    console.log(publicKeyXx);
-    console.log(compressedPub.length);
-    console.log(publicKeyXx.length);
-    //EthUtil.compress;
-
-    newAccount.publicKey = publicKeyXx;
-    //newAccount.add
-    //const address = getAddressFromPrivateKey(privateKey);
+    newAccount.publicKey = compressedPub;
 
     this.accounts = { ...this.accounts, [newAccount.address]: newAccount };
 
