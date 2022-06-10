@@ -51,7 +51,6 @@ async function executeEVMTransaction(privateKeyEth) {
     console.log(`The message hash being signed is ${inject.messageHash}`);
     console.log(inject);
     const publicKey = zilliqa.wallet.defaultAccount.publicKey;
-    //const xx = web3.eth.accounts.privateKeyToAccount(privateKey);
 
     const tx = await zilliqa.blockchain.createTransactionWithoutConfirmNoSign(
       // Notice here we have a default function parameter named toDs which means the priority of the transaction.

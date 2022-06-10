@@ -23,14 +23,9 @@ import * as zcrypto from '@zilliqa-js/crypto';
 import { Account } from './account';
 import { Transaction } from './transaction';
 import { BN } from '@zilliqa-js/util';
-//import {getAddressFromPrivateKey} from "@zilliqa-js/crypto";
 
 var Web3 = require('web3');
 var web3 = new Web3();
-
-//var WalletEth = require('ethereumjs-wallet');
-//var EthUtil = require('ethereumjs-util');
-
 var EthCrypto = require('eth-crypto');
 
 export class Wallet extends Signer {
@@ -101,31 +96,18 @@ export class Wallet extends Signer {
   /**
    * addByPrivateKeyECDSA
    *
-   * Adds an account to the wallet by private key, using the ECDSA scheme.
+   * Adds an account to the wallet by private key, using the ECDSA/Eth scheme.
    *
    * @param {string} privateKey - hex-encoded private key
    * @returns {string} - the corresponing address, computer from the private
    * key.
    */
   addByPrivateKeyECDSA(privateKey: string): string {
-
-    console.log("Setting current provider...");
     web3.eth.setProvider(new Web3.providers.HttpProvider('http://localhost:5555'));
     const newAccount = web3.eth.accounts.privateKeyToAccount(privateKey);
 
-    ////// Get a wallet instance from a private key
-    //const privateKeyBuffer = EthUtil.toBuffer('0x' + privateKey);
-    //const wal = WalletEth.default.fromPrivateKey(privateKeyBuffer);
-    ////const wallet = WalletEth.fromPrivateKey(privateKeyBuffer);
-
     const identity = EthCrypto.publicKeyByPrivateKey(privateKey);
     const compressedPub = EthCrypto.publicKey.compress(identity);
-
-    //const identity = EthCrypto.createIdentity();
-    //const compressedPub = EthCrypto.publicKey.compress(identity.publicKey);
-
-    console.log(`The uncompressed pub key is: ${identity}`);
-    console.log(`The compressed pub key is: ${compressedPub}`);
 
     newAccount.publicKey = compressedPub;
 

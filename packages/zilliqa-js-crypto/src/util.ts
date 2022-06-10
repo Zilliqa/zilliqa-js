@@ -195,6 +195,10 @@ export const normaliseAddress = (address: string): string => {
     return fromBech32Address(address);
   }
 
+  if (!isValidChecksumAddress(address)) {
+    console.log("FAILED CHECKSUM CHECK");
+  }
+
   //if (!isValidChecksumAddress(address)) {
   //  throw Error(
   //    'Wrong address format! Should be either bech32 or checksummed address',

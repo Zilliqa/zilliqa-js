@@ -329,6 +329,7 @@ export class Blockchain implements ZilliqaModule {
     }
   }
 
+  // Temporary function, just send the TX, do not sign it.
   async createTransactionWithoutConfirmNoSign(tx: Transaction): Promise<Transaction> {
     try {
       const response = await this.provider.send(RPCMethod.CreateTransaction, {

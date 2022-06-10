@@ -46,11 +46,6 @@ export const sign = (
     s = '0' + s;
   }
 
-  //// Temporarily for now make all 0s
-  //const temp = r + s;
-  //const re = /./gi;
-  //const result = temp.replace(re, "0");
-  //return result;
   return r + s;
 };
 
