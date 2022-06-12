@@ -26,6 +26,16 @@ import { BN } from '@zilliqa-js/util';
 
 var Web3 = require('web3');
 var web3 = new Web3();
+
+interface SignedTransaction {
+  message?: string;
+  messageHash?: string;
+  r: string;
+  s: string;
+  v: string;
+  signature: string;
+}
+
 var EthCrypto = require('eth-crypto');
 
 export class Wallet extends Signer {
@@ -110,6 +120,12 @@ export class Wallet extends Signer {
     const compressedPub = EthCrypto.publicKey.compress(identity);
 
     newAccount.publicKey = compressedPub;
+
+    //newAccount.sign = (bytes: Buffer) => {
+    //  console.log("SIGNME1");
+    //  return "xxyy";
+    //};
+    //newAccount.signTransaction = (bytes: Buffer) => { console.log("SIGNME"); return "xxyy";};
 
     this.accounts = { ...this.accounts, [newAccount.address]: newAccount };
 
@@ -237,6 +253,39 @@ export class Wallet extends Signer {
     this.defaultAccount = this.accounts[address];
   }
 
+
+  async signRet(
+    tx: Transaction,
+    signature: string,
+    addr: string,
+    publicKey: string,
+  ): Promise<Transaction> {
+
+    const balance = await this.provider.send(
+      RPCMethod.GetBalance,
+      addr.replace('0x', '').toLowerCase(),
+    );
+
+    if (balance.result === undefined) {
+      throw new Error(`Could not get balance when signing tx to: ${addr}`);
+    }
+
+    if (typeof balance.result.nonce !== 'number') {
+      throw new Error('Could not get nonce');
+    }
+
+    const nextNonce = balance.result.nonce + 1;
+
+    return tx.map((txObj) => {
+      return {
+        ...txObj,
+        signature: signature,
+        nonce: nextNonce,
+        pubKey: publicKey,
+      };
+    });
+  }
+
   /**
    * sign
    *
@@ -247,6 +296,28 @@ export class Wallet extends Signer {
    * @returns {Transaction}
    */
   sign(tx: Transaction, offlineSign?: boolean): Promise<Transaction> {
+
+    // Code path for eth style signing
+    if (tx.txParams.version === 65538 && this.defaultAccount) {
+      console.log("signing eth style TX - alternate code path!");
+
+      const acct = this.defaultAccount;
+      const inject = acct.sign("") as unknown as SignedTransaction;
+      const inject_signature = inject.signature.slice(2);
+      console.log("SIG", inject_signature);
+      //tx.txParams.signature = inject.signature;
+      //tx.txParams.signature = "0xasdfsdf";
+      //tx.txParams.version = 65537;
+
+      return this.signRet(tx, inject_signature, acct.address, acct.publicKey);
+
+      //return new Promise<Transaction>(() =>{
+      //  console.log("returning TX ", tx);
+      //  return tx;
+      //})
+    }
+    console.log("signing eth style TX - non-alternate code path!");
+
     if (tx.txParams && tx.txParams.pubKey) {
       // attempt to find the address
       const senderAddress = zcrypto.getAddressFromPublicKey(tx.txParams.pubKey);

@@ -16,6 +16,7 @@
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import * as zcrypto from '@zilliqa-js/crypto';
+//import {signTransaction} from "eth-crypto";
 
 export class Account {
   /**
@@ -85,6 +86,18 @@ export class Account {
    */
   signTransaction(bytes: Buffer) {
     return zcrypto.sign(bytes, this.privateKey, this.publicKey);
+  }
+
+  /**
+   * sign - XXX DELETEME
+   *
+   * @param {string} bytes - the data to be signed
+   *
+   * @returns {string} - the hex encoded signature. it is a concatenation of
+   * the r and s values in hex, each padded to a length of 64.
+   */
+  sign(bytes: string) {
+    return this.signTransaction(Buffer.from(bytes));
   }
 
   private normalizePrivateKey(privateKey: string) {

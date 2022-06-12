@@ -29,6 +29,7 @@ var EthUtil = require('ethereumjs-util');
 const chainId = 1; // chainId of the developer testnet
 const msgVersion = 1; // current msgVersion
 const VERSION = bytes.pack(chainId, msgVersion);
+const VERSION_UPGRADE = bytes.pack(chainId, msgVersion + 1);
 
 async function executeEVMTransaction(privateKeyEth) {
   try {
@@ -43,11 +44,11 @@ async function executeEVMTransaction(privateKeyEth) {
     // Send a transaction to the network
     console.log('Sending an amount to the address we want the contract to be at');
 
-    const inject = zilliqa.wallet.defaultAccount.sign("");
-    const inject_signature = inject.signature.slice(2);
+    //const inject = zilliqa.wallet.defaultAccount.sign("");
+    //const inject_signature = inject.signature.slice(2);
     const publicKey = zilliqa.wallet.defaultAccount.publicKey;
 
-    const tx = await zilliqa.blockchain.createTransactionWithoutConfirmNoSign(
+    const tx = await zilliqa.blockchain.createTransactionWithoutConfirm(
       // Notice here we have a default function parameter named toDs which means the priority of the transaction.
       // If the value of toDs is false, then the transaction will be sent to a normal shard, otherwise, the transaction.
       // will be sent to ds shard. More info on design of sharding for smart contract can be found in.
@@ -55,11 +56,11 @@ async function executeEVMTransaction(privateKeyEth) {
       // For payment transaction, it should always be false.
       zilliqa.transactions.new(
         {
-          version: VERSION,
+          version: VERSION_UPGRADE,
           toAddr: '0xA54E49719267E8312510D7b78598ceF16ff127CE',
           pubKey: publicKey,
-          nonce: 1,
-          signature: inject_signature,
+          //nonce: 1, // todo: make sure noncing is correct (?)
+          //signature: inject_signature,
           amount: new BN(units.toQa('1', units.Units.Zil)), // Sending an amount in Zil (1) and converting the amount to Qa
           gasPrice: myGasPrice, // Minimum gasPrice veries. Check the `GetMinimumGasPrice` on the blockchain
           gasLimit: Long.fromNumber(50),
@@ -67,6 +68,12 @@ async function executeEVMTransaction(privateKeyEth) {
         false,
       ),
     );
+
+    console.log(`The transaction id is:`, tx.id);
+    const confirmedTxn = await tx.confirm(tx.id);
+
+    console.log(`The transaction status is:`);
+    console.log(confirmedTxn.receipt);
 
     // Deploy a contract
     console.log(`Deploying a new contract....`);
@@ -90,12 +97,14 @@ async function executeEVMTransaction(privateKeyEth) {
     // Instance of class Contract
     const contract = zilliqa.contracts.new(code, init);
 
+    console.log("Deploying contract proper.");
+
     // Deploy the contract.
     // Also notice here we have a default function parameter named toDs as mentioned above.
     // A contract can be deployed at either the shard or at the DS. Always set this value to false.
     const [deployTx, hello] = await contract.deploy(
       {
-        version: VERSION,
+        version: VERSION_UPGRADE,
         gasPrice: myGasPrice,
         gasLimit: Long.fromNumber(6000000),
       },
@@ -133,7 +142,7 @@ async function executeEVMTransaction(privateKeyEth) {
       ],
       {
         // amount, gasPrice and gasLimit must be explicitly provided
-        version: VERSION,
+        version: VERSION_UPGRADE,
         amount: new BN(0),
         gasPrice: myGasPrice,
         gasLimit: Long.fromNumber(600000),
