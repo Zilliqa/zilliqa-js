@@ -87,6 +87,11 @@ export class Account {
     return zcrypto.sign(bytes, this.privateKey, this.publicKey);
   }
 
+  // Temporary work-around to be able to use web3
+  sign(bytes: string) {
+    return this.signTransaction(Buffer.from(bytes));
+  }
+
   private normalizePrivateKey(privateKey: string) {
     return zcrypto.normalizePrivateKey(privateKey);
   }
