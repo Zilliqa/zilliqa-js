@@ -26,7 +26,9 @@ import { BN } from '@zilliqa-js/util';
 
 var Web3 = require('web3');
 var web3 = new Web3();
+var EthCrypto = require('eth-crypto');
 
+// Temporarily used for casting to web3 style transaction
 interface SignedTransaction {
   message?: string;
   messageHash?: string;
@@ -35,8 +37,6 @@ interface SignedTransaction {
   v: string;
   signature: string;
 }
-
-var EthCrypto = require('eth-crypto');
 
 export class Wallet extends Signer {
   accounts: { [address: string]: Account } = {};
@@ -120,12 +120,6 @@ export class Wallet extends Signer {
     const compressedPub = EthCrypto.publicKey.compress(identity);
 
     newAccount.publicKey = compressedPub;
-
-    //newAccount.sign = (bytes: Buffer) => {
-    //  console.log("SIGNME1");
-    //  return "xxyy";
-    //};
-    //newAccount.signTransaction = (bytes: Buffer) => { console.log("SIGNME"); return "xxyy";};
 
     this.accounts = { ...this.accounts, [newAccount.address]: newAccount };
 
@@ -254,7 +248,7 @@ export class Wallet extends Signer {
   }
 
 
-  async signRet(
+  async signTXAlt(
     tx: Transaction,
     signature: string,
     addr: string,
@@ -299,24 +293,13 @@ export class Wallet extends Signer {
 
     // Code path for eth style signing
     if (tx.txParams.version === 65538 && this.defaultAccount) {
-      console.log("signing eth style TX - alternate code path!");
 
       const acct = this.defaultAccount;
       const inject = acct.sign("") as unknown as SignedTransaction;
       const inject_signature = inject.signature.slice(2);
-      console.log("SIG", inject_signature);
-      //tx.txParams.signature = inject.signature;
-      //tx.txParams.signature = "0xasdfsdf";
-      //tx.txParams.version = 65537;
 
-      return this.signRet(tx, inject_signature, acct.address, acct.publicKey);
-
-      //return new Promise<Transaction>(() =>{
-      //  console.log("returning TX ", tx);
-      //  return tx;
-      //})
+      return this.signTXAlt(tx, inject_signature, acct.address, acct.publicKey);
     }
-    console.log("signing eth style TX - non-alternate code path!");
 
     if (tx.txParams && tx.txParams.pubKey) {
       // attempt to find the address

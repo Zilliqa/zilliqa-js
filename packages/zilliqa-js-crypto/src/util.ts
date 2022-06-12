@@ -199,6 +199,7 @@ export const normaliseAddress = (address: string): string => {
     return fromBech32Address(address);
   }
 
+  // Now, addresses can be valid as eth-style or zil-style
   if (!isValidChecksumAddress(address) && !web3.utils.checkAddressChecksum(address)) {
       throw Error(
         'Wrong address format! Should be either bech32 or checksummed address (zil or eth style)',

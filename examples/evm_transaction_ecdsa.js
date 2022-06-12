@@ -29,7 +29,7 @@ var EthUtil = require('ethereumjs-util');
 const chainId = 1; // chainId of the developer testnet
 const msgVersion = 1; // current msgVersion
 const VERSION = bytes.pack(chainId, msgVersion);
-const VERSION_UPGRADE = bytes.pack(chainId, msgVersion + 1);
+const VERSION_UPGRADE = bytes.pack(chainId, msgVersion + 1); // send eth-style TXs with new version(!)
 
 async function executeEVMTransaction(privateKeyEth) {
   try {
@@ -44,8 +44,6 @@ async function executeEVMTransaction(privateKeyEth) {
     // Send a transaction to the network
     console.log('Sending an amount to the address we want the contract to be at');
 
-    //const inject = zilliqa.wallet.defaultAccount.sign("");
-    //const inject_signature = inject.signature.slice(2);
     const publicKey = zilliqa.wallet.defaultAccount.publicKey;
 
     const tx = await zilliqa.blockchain.createTransactionWithoutConfirm(
@@ -59,8 +57,6 @@ async function executeEVMTransaction(privateKeyEth) {
           version: VERSION_UPGRADE,
           toAddr: '0xA54E49719267E8312510D7b78598ceF16ff127CE',
           pubKey: publicKey,
-          //nonce: 1, // todo: make sure noncing is correct (?)
-          //signature: inject_signature,
           amount: new BN(units.toQa('1', units.Units.Zil)), // Sending an amount in Zil (1) and converting the amount to Qa
           gasPrice: myGasPrice, // Minimum gasPrice veries. Check the `GetMinimumGasPrice` on the blockchain
           gasLimit: Long.fromNumber(50),
@@ -175,7 +171,6 @@ async function moveFundsFn(amount, toAddr, privateKey) {
     console.log('moving funds to address...');
 
     zilliqa.wallet.addByPrivateKey(privateKey);
-    //const address = getAddressFromPrivateKey(privateKey);
     const address = zilliqa.wallet.defaultAccount.address;
     const balance = await zilliqa.blockchain.getBalance(address);
     console.log('current nonce is: %o', balance.result.nonce);
@@ -217,7 +212,6 @@ async function main() {
     // New way - add ecdsa wallet
     zilliqa.wallet.addByPrivateKeyECDSA(privateKeyEth);
 
-    //const ethAddr = 'df262dbc7d6f68f2a03043d5c99a4ae5a7396ce9';
     const ethAddr = zilliqa.wallet.defaultAccount.address;
     const address = getAddressFromPrivateKey(privateKeyVanilla);
     const addressIncorrect = getAddressFromPrivateKey(privateKeyEth);

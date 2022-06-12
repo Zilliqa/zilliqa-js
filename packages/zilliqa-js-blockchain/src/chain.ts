@@ -329,23 +329,6 @@ export class Blockchain implements ZilliqaModule {
     }
   }
 
-  // Temporary function, just send the TX, do not sign it.
-  async createTransactionWithoutConfirmNoSign(tx: Transaction): Promise<Transaction> {
-    try {
-      const response = await this.provider.send(RPCMethod.CreateTransaction, {
-        ...tx.txParams,
-        priority: tx.toDS,
-      });
-      if (response.error) {
-        throw response.error;
-      }
-      tx.id = response.result.TranID;
-      return tx;
-    } catch (err) {
-      throw err;
-    }
-  }
-
   // used together with signed batch
   async createBatchTransactionWithoutConfirm(
     signedTxList: Transaction[],
