@@ -173,7 +173,6 @@ async function moveFundsFn(amount, toAddr, privateKey) {
     zilliqa.wallet.addByPrivateKey(privateKey);
     const address = zilliqa.wallet.defaultAccount.address;
     const balance = await zilliqa.blockchain.getBalance(address);
-    console.log('current nonce is: %o', balance.result.nonce);
 
     const tx_to_send =       zilliqa.transactions.new(
       {
