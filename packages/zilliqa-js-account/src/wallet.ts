@@ -24,6 +24,20 @@ import { Account } from './account';
 import { Transaction } from './transaction';
 import { BN } from '@zilliqa-js/util';
 
+var Web3 = require('web3');
+var web3 = new Web3();
+var EthCrypto = require('eth-crypto');
+
+// Temporarily used for casting to web3 style transaction
+interface SignedTransaction {
+  message?: string;
+  messageHash?: string;
+  r: string;
+  s: string;
+  v: string;
+  signature: string;
+}
+
 export class Wallet extends Signer {
   accounts: { [address: string]: Account } = {};
   defaultAccount?: Account;
@@ -80,6 +94,33 @@ export class Wallet extends Signer {
    */
   addByPrivateKey(privateKey: string): string {
     const newAccount = new Account(privateKey);
+    this.accounts = { ...this.accounts, [newAccount.address]: newAccount };
+
+    if (!this.defaultAccount) {
+      this.defaultAccount = newAccount;
+    }
+
+    return newAccount.address;
+  }
+
+  /**
+   * addByPrivateKeyECDSA
+   *
+   * Adds an account to the wallet by private key, using the ECDSA/Eth scheme.
+   *
+   * @param {string} privateKey - hex-encoded private key
+   * @returns {string} - the corresponing address, computer from the private
+   * key.
+   */
+  addByPrivateKeyECDSA(privateKey: string): string {
+    web3.eth.setProvider(new Web3.providers.HttpProvider('http://localhost:5555'));
+    const newAccount = web3.eth.accounts.privateKeyToAccount(privateKey);
+
+    const identity = EthCrypto.publicKeyByPrivateKey(privateKey);
+    const compressedPub = EthCrypto.publicKey.compress(identity);
+
+    newAccount.publicKey = compressedPub;
+
     this.accounts = { ...this.accounts, [newAccount.address]: newAccount };
 
     if (!this.defaultAccount) {
@@ -206,6 +247,39 @@ export class Wallet extends Signer {
     this.defaultAccount = this.accounts[address];
   }
 
+
+  async signTXAlt(
+    tx: Transaction,
+    signature: string,
+    addr: string,
+    publicKey: string,
+  ): Promise<Transaction> {
+
+    const balance = await this.provider.send(
+      RPCMethod.GetBalance,
+      addr.replace('0x', '').toLowerCase(),
+    );
+
+    if (balance.result === undefined) {
+      throw new Error(`Could not get balance when signing tx to: ${addr}`);
+    }
+
+    if (typeof balance.result.nonce !== 'number') {
+      throw new Error('Could not get nonce');
+    }
+
+    const nextNonce = balance.result.nonce + 1;
+
+    return tx.map((txObj) => {
+      return {
+        ...txObj,
+        signature: signature,
+        nonce: nextNonce,
+        pubKey: publicKey,
+      };
+    });
+  }
+
   /**
    * sign
    *
@@ -216,6 +290,17 @@ export class Wallet extends Signer {
    * @returns {Transaction}
    */
   sign(tx: Transaction, offlineSign?: boolean): Promise<Transaction> {
+
+    // Code path for eth style signing
+    if (tx.txParams.version === 65538 && this.defaultAccount) {
+
+      const acct = this.defaultAccount;
+      const inject = acct.sign("") as unknown as SignedTransaction;
+      const inject_signature = inject.signature.slice(2);
+
+      return this.signTXAlt(tx, inject_signature, acct.address, acct.publicKey);
+    }
+
     if (tx.txParams && tx.txParams.pubKey) {
       // attempt to find the address
       const senderAddress = zcrypto.getAddressFromPublicKey(tx.txParams.pubKey);
@@ -251,7 +336,7 @@ export class Wallet extends Signer {
       );
 
       if (balance.result === undefined) {
-        throw new Error('Could not get balance');
+        throw new Error('Could not get balance when signing batch');
       }
 
       if (typeof balance.result.nonce !== 'number') {
@@ -320,7 +405,7 @@ export class Wallet extends Signer {
           );
 
           if (balance.result === undefined) {
-            throw new Error('Could not get balance');
+            throw new Error('Could not get balance when signing');
           }
 
           const bal = new BN(balance.result.balance);

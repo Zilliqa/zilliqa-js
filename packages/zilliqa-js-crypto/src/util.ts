@@ -21,6 +21,10 @@ import hashjs from 'hash.js';
 import { BN, validation } from '@zilliqa-js/util';
 
 import { fromBech32Address, toBech32Address } from './bech32';
+//import
+
+var Web3 = require('web3');
+var web3 = new Web3();
 
 const secp256k1 = new elliptic.ec('secp256k1');
 
@@ -169,7 +173,7 @@ export const toChecksumAddress = (address: string): string => {
 /**
  * isValidChecksumAddress
  *
- * takes hex-encoded string and returns boolean if address is checksumed
+ * takes hex-encoded string and returns boolean if address is checksummed
  *
  * @param {string} address
  * @returns {boolean}
@@ -195,10 +199,11 @@ export const normaliseAddress = (address: string): string => {
     return fromBech32Address(address);
   }
 
-  if (!isValidChecksumAddress(address)) {
-    throw Error(
-      'Wrong address format, should be either bech32 or checksummed address',
-    );
+  // Now, addresses can be valid as eth-style or zil-style
+  if (!isValidChecksumAddress(address) && !web3.utils.checkAddressChecksum(address)) {
+      throw Error(
+        'Wrong address format! Should be either bech32 or checksummed address (zil or eth style)',
+      );
   }
 
   return address;

@@ -74,6 +74,7 @@ export class WebSocketProvider {
   constructor(url: string, options?: SubscriptionOption) {
     this.url = url;
     this.options = options;
+    // @ts-ignore
     this.emitter = new mitt(this.handlers);
     this.websocket = WebSocketProvider.NewWebSocket(url, options);
     this.subscriptions = {};
