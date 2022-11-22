@@ -329,7 +329,7 @@ An example of a transaction receipt is this:
 
 ## Examples
 
-For more examples, visit this [repository](https://github.com/Zilliqa/zilliqa-js-Examples).
+For more examples, visit this [repository](https://github.com/Zilliqa/Zilliqa-JavaScript-Library-Examples).
 
 ## API Documentation
 
